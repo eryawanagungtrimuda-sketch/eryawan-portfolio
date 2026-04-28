@@ -52,7 +52,18 @@ const impacts = [
   { label: 'Clarity Brief', direction: 'up' },
 ];
 
-const portfolio = ['Residential Strategy', 'Interior System', 'Spatial Planning'];
+const portfolioWorks = [
+  {
+    title: 'Alana Resident',
+    category: 'Interior — Rumah Tinggal',
+    image: '/portfolio/alana-resident.jpg',
+  },
+  {
+    title: 'Citraland: JADE Lakefront Hillside Living',
+    category: 'Interior — Rumah Tinggal',
+    image: '/portfolio/jade-lakefront.jpg',
+  },
+];
 
 export default function Home() {
   return (
@@ -285,29 +296,41 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="portfolio" className="px-5 py-24 md:px-10 lg:px-16 lg:py-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
+      <section id="portfolio" className="relative overflow-hidden bg-[#142233] px-5 py-24 text-white md:px-10 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_38%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[1fr_0.42fr] lg:items-center">
             <div>
-              <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#d6a84f]">Portfolio</p>
-              <h2 className="font-display mt-5 max-w-4xl text-6xl font-normal leading-[0.92] tracking-[-0.045em] md:text-8xl">Hasil Perancangan Terukur</h2>
+              <p className="font-mono text-[11px] font-black uppercase tracking-[0.52em] text-[#ffc400]">Portfolio Framework</p>
+              <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[0.95] tracking-[-0.045em] text-white md:text-7xl">
+                Hasil Perancangan Terukur
+              </h2>
+              <div className="mt-10 flex items-start gap-8">
+                <span className="mt-2 h-10 w-px bg-[#ffc400]/50" />
+                <p className="max-w-3xl text-2xl italic leading-9 text-white/42 md:text-3xl">
+                  “Strategi terlihat jelas dalam hasil yang nyata.”
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-semibold leading-snug text-[#f5f1e8]/78">Strategi terlihat jelas dalam hasil yang nyata.</p>
-              <p className="font-signature mt-5 text-5xl text-[#ffc400]/75">selected works</p>
-            </div>
+
+            <a href="#contact" className="group inline-flex items-center gap-4 justify-self-start font-mono text-xs font-black uppercase tracking-[0.18em] text-white transition hover:text-[#ffc400] lg:justify-self-end">
+              Lihat Semua Karya
+              <MoveRight className="text-[#ffc400] transition group-hover:translate-x-1" size={20} />
+            </a>
           </div>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            {portfolio.map((item, index) => (
-              <article key={item} className="group relative min-h-[420px] overflow-hidden border border-[#d6a84f]/18 bg-[#11110f] p-7">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,196,0,0.22),transparent_34%),linear-gradient(135deg,rgba(245,241,232,0.08),transparent)] opacity-80 transition group-hover:scale-105" />
-                <div className="relative flex h-full flex-col justify-between">
-                  <span className="font-mono text-sm font-black text-[#d6a84f]">0{index + 1}</span>
-                  <div>
-                    <h3 className="font-display text-4xl font-normal uppercase tracking-[-0.03em]">{item}</h3>
-                    <p className="mt-4 leading-7 text-[#f5f1e8]/58">Placeholder project untuk studi kasus terukur, visual final, dan keputusan strategis di balik perancangan.</p>
-                  </div>
+          <div className="mt-20 grid gap-10 lg:grid-cols-2">
+            {portfolioWorks.map((work) => (
+              <article key={work.title} className="group relative min-h-[390px] overflow-hidden rounded-sm bg-[#0d0e10] md:min-h-[440px]">
+                <img src={work.image} alt={work.title} className="absolute inset-0 h-full w-full object-cover opacity-62 transition duration-700 group-hover:scale-105 group-hover:opacity-78" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.18)_0%,rgba(8,8,7,0.42)_38%,rgba(8,8,7,0.94)_100%)]" />
+                <div className="relative z-10 flex min-h-[390px] flex-col justify-end p-8 md:min-h-[440px] md:p-12">
+                  <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#ffc400]">
+                    {work.category}
+                  </p>
+                  <h3 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-none tracking-[-0.035em] text-white md:text-5xl">
+                    {work.title}
+                  </h3>
                 </div>
               </article>
             ))}
