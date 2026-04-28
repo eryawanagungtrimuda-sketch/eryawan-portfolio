@@ -40,9 +40,18 @@ const differentiations = [
 ];
 
 const decisions = [
-  'Optimalisasi sirkulasi linear mengurangi gesekan fungsi dan meningkatkan efisiensi waktu.',
-  'Integrasi pantry mengurangi friksi sirkulasi dan mempercepat ritme aktivitas.',
-  'Variabel pencahayaan alami adalah komponen krusial dalam pembentukan atmosfer ruang yang logis.',
+  {
+    title: 'Optimalisasi sirkulasi linear mengurangi gesekan fungsi dan meningkatkan efisiensi waktu.',
+    description: 'Menghilangkan hambatan dalam pergerakan harian untuk menciptakan alur hidup yang lebih tenang.',
+  },
+  {
+    title: 'Integrasi pantry mengurangi friksi sirkulasi dan mempercepat ritme aktivitas.',
+    description: 'Menciptakan keterbukaan visual sekaligus memperluas impresi ruang secara signifikan.',
+  },
+  {
+    title: 'Variabel pencahayaan alami adalah komponen krusial dalam pembentukan atmosfer ruang yang logis.',
+    description: 'Bukan sekadar estetika, tapi keputusan strategis untuk kesehatan mental dan efisiensi energi.',
+  },
 ];
 
 const impacts = [
@@ -197,18 +206,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-24 md:px-10 lg:px-16 lg:py-32">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr]">
-          <div>
-            <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#d6a84f]">Design Decisions</p>
-            <h2 className="font-display mt-5 text-6xl font-normal leading-[0.9] tracking-[-0.045em] md:text-8xl">Desain = Keputusan</h2>
+      <section id="design-decisions" className="relative overflow-hidden bg-[#050505] px-5 py-24 text-white md:px-10 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
+        <div className="relative mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:gap-24">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.52em] text-[#ffc400]">Design Decisions</p>
+            <h2 className="font-display mt-6 text-5xl font-normal leading-[0.95] tracking-[-0.045em] text-white md:text-7xl">
+              Desain = Keputusan
+            </h2>
+            <p className="mt-8 max-w-xl text-xl italic leading-9 text-white/42 md:text-2xl">
+              “Estetika adalah efek samping dari keputusan-keputusan fungsional yang diambil dengan sadar.”
+            </p>
+            <a href="#portfolio" className="group mt-10 inline-flex items-center gap-4 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#ffc400] transition hover:text-white">
+              Lihat Bukti di Proyek
+              <MoveRight size={18} className="transition group-hover:translate-x-1" />
+            </a>
           </div>
-          <div className="space-y-5">
-            {decisions.map((decision, index) => (
-              <div key={decision} className="grid gap-5 border-t border-[#d6a84f]/20 py-7 md:grid-cols-[80px_1fr]">
-                <span className="font-mono text-sm font-black text-[#d6a84f]">0{index + 1}</span>
-                <p className="text-xl font-medium leading-8 text-[#f5f1e8]/78">{decision}</p>
-              </div>
+
+          <div className="space-y-10 lg:pt-2">
+            {decisions.map((decision) => (
+              <article key={decision.title} className="border-l border-white/10 pl-8 md:pl-10">
+                <h3 className="max-w-2xl text-xl font-black leading-7 tracking-[-0.04em] text-white md:text-2xl">
+                  {decision.title}
+                </h3>
+                <p className="mt-5 max-w-2xl text-base leading-8 text-white/36 md:text-lg">
+                  {decision.description}
+                </p>
+              </article>
             ))}
           </div>
         </div>
