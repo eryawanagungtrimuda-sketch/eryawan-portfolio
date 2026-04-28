@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ArrowUpRight, CheckCircle2, Compass, Instagram, Mail, MoveRight, Search, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 
 const framework = [
   {
@@ -70,24 +70,24 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden bg-[#080807] font-sans text-[#f5f1e8]">
       <section
         id="home"
-        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-6 py-7 md:px-10 lg:px-16 xl:px-24"
+        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-6 py-7 md:px-10 lg:px-20 xl:px-32"
         style={{
           backgroundImage:
-            "linear-gradient(90deg, rgba(8,8,7,0.91) 0%, rgba(8,8,7,0.73) 34%, rgba(8,8,7,0.43) 62%, rgba(8,8,7,0.16) 100%), linear-gradient(180deg, rgba(8,8,7,0.32) 0%, rgba(8,8,7,0.08) 42%, rgba(8,8,7,0.64) 100%), url('/hero.jpg')",
+            "linear-gradient(90deg, rgba(8,8,7,0.78) 0%, rgba(8,8,7,0.66) 34%, rgba(8,8,7,0.38) 64%, rgba(8,8,7,0.16) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 42%, rgba(8,8,7,0.68) 100%), url('/hero.jpg')",
         }}
       >
         <nav className="relative z-10 flex items-start justify-between gap-8">
-          <a href="#home" className="group inline-flex flex-col gap-1">
-            <span className="text-lg font-black uppercase leading-none tracking-[0.16em] text-[#ffc400] md:text-2xl">
+          <a href="#home" className="group inline-flex flex-col gap-1.5">
+            <span className="text-xl font-black uppercase leading-none tracking-[0.14em] text-[#ffc400] md:text-[1.72rem]">
               Eryawan Studio
             </span>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-white/72">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.36em] text-white/72">
               Ruang yang masuk akal
             </span>
           </a>
 
-          <div className="hidden items-center gap-12 text-sm font-bold text-white/82 lg:flex">
-            <a className="border-b-2 border-[#ffc400] pb-3 text-[#ffc400]" href="#home">Beranda</a>
+          <div className="hidden items-start gap-10 text-base font-extrabold text-white/86 lg:flex">
+            <a className="border-b-[3px] border-[#ffc400] pb-3 text-[#ffc400]" href="#home">Beranda</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#portfolio">Karya</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#framework">Wawasan</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#contact">Kontak</a>
@@ -95,67 +95,57 @@ export default function Home() {
 
           <a
             href="mailto:eryawanagungtrimuda@gmail.com"
-            className="hidden rounded-md bg-[#ffc400] px-7 py-4 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
+            className="hidden rounded-[5px] bg-[#ffc400] px-8 py-4 font-mono text-[12px] font-black uppercase tracking-[0.24em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
           >
             Hubungi Studio
           </a>
         </nav>
 
-        <div className="relative z-10 grid flex-1 items-center pt-20 lg:grid-cols-[1fr_0.58fr] lg:pt-10">
-          <div className="max-w-5xl lg:pl-14 xl:pl-20">
-            <p className="mb-8 font-mono text-[11px] font-black uppercase tracking-[0.58em] text-[#ffc400]">
+        <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.52fr] lg:pt-4">
+          <div className="max-w-5xl lg:pl-10 xl:pl-14">
+            <p className="mb-8 font-mono text-[12px] font-black uppercase tracking-[0.62em] text-[#ffc400]">
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-5xl text-[clamp(4.2rem,8.9vw,9.4rem)] font-normal uppercase leading-[0.79] tracking-[-0.06em] text-white">
+            <h1 className="max-w-5xl font-sans text-[clamp(4.25rem,7.35vw,7.8rem)] font-black uppercase leading-[0.92] tracking-[-0.055em] text-white">
               Desain Sebagai<br />
-              <span className="block text-[#ffc400] italic tracking-[-0.075em]">Keputusan</span>
-              <span className="block text-[#ffc400] italic tracking-[-0.075em]">Strategis.</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.07em]">Keputusan</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.07em]">Strategis.</span>
             </h1>
 
-            <div className="mt-7 flex max-w-3xl flex-col gap-3 md:flex-row md:items-end">
-              <p className="max-w-2xl text-lg italic leading-8 text-white/72 md:text-2xl">
-                “Mengubah ruang menjadi keputusan yang berdampak jangka panjang.”
-              </p>
-              <span className="font-signature text-4xl leading-none text-[#ffc400]/86 md:text-5xl">Eryawan</span>
-            </div>
+            <p className="mt-7 max-w-[680px] text-[1.35rem] italic leading-8 text-white/86 drop-shadow-md md:text-[1.55rem]">
+              “Mengubah ruang menjadi keputusan yang berdampak jangka panjang.”
+            </p>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-14 flex flex-col gap-7 sm:flex-row">
               <a
                 href="mailto:eryawanagungtrimuda@gmail.com"
-                className="inline-flex items-center justify-center rounded-md bg-[#ffc400] px-8 py-5 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#080807] transition hover:bg-[#ffd84d] md:px-10"
+                className="inline-flex min-w-[325px] items-center justify-center rounded-[4px] bg-[#ffc400] px-9 py-5 font-mono text-[12px] font-black uppercase tracking-[0.28em] text-[#080807] transition hover:bg-[#ffd84d]"
               >
                 Mulai Konsultasi Strategis
               </a>
               <a
                 href="#framework"
-                className="inline-flex items-center justify-center rounded-md border border-white/12 bg-[#11151b]/78 px-8 py-5 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-white/88 backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400] md:px-10"
+                className="inline-flex min-w-[285px] items-center justify-center rounded-[4px] border border-white/14 bg-[#22272e]/88 px-9 py-5 font-mono text-[12px] font-black uppercase tracking-[0.28em] text-white/92 shadow-[0_12px_32px_rgba(0,0,0,0.25)] backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400]"
               >
                 Eksplorasi Framework
               </a>
             </div>
           </div>
-
-          <aside className="mt-16 hidden max-w-sm self-end justify-self-end border-l border-white/20 pl-7 pb-20 lg:block">
-            <p className="font-mono text-[11px] font-black uppercase tracking-[0.34em] text-[#ffc400]">Studio Principle</p>
-            <p className="mt-5 text-xl font-medium leading-8 text-white/70">
-              Desain bukan dekorasi. Ia adalah proses menentukan apa yang paling masuk akal untuk ruang, fungsi, dan nilai aset.
-            </p>
-          </aside>
         </div>
 
-        <div className="relative z-10 hidden items-center justify-between pb-2 text-white/62 md:flex">
+        <div className="relative z-10 hidden items-center justify-between pb-2 text-white/70 md:flex">
           <div className="flex items-center gap-5">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 font-mono text-sm">N</span>
-            <span className="h-10 w-px bg-white/22" />
-            <span className="text-sm font-medium">Scroll untuk eksplorasi</span>
+            <span className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/22 font-mono text-sm text-white/62 xl:flex">N</span>
+            <span className="h-12 w-px bg-white/32" />
+            <span className="text-sm font-medium text-white/72">Scroll untuk eksplorasi</span>
           </div>
           <a
             href="#contact"
-            className="flex h-14 w-14 items-center justify-center rounded-md bg-[#ffc400] text-[#080807] transition hover:bg-[#ffd84d]"
+            className="flex h-14 w-14 items-center justify-center rounded-[5px] bg-[#ffc400] text-[#080807] transition hover:bg-[#ffd84d]"
             aria-label="Hubungi studio"
           >
-            <ArrowUpRight size={20} />
+            <MessageSquare size={20} strokeWidth={2.1} />
           </a>
         </div>
       </section>
