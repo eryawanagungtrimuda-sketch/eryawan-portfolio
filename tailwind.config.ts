@@ -6,11 +6,14 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui'],
+        display: ['var(--font-display)', 'Cormorant Garamond', 'ui-serif', 'Georgia'],
       },
       colors: {
         ink: '#111827',
         sand: '#f4efe7',
         clay: '#b86f52',
+        gold: '#ffc400',
+        night: '#080807',
       },
       boxShadow: {
         soft: '0 24px 80px rgba(17, 24, 39, 0.12)',
