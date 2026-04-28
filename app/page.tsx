@@ -24,6 +24,21 @@ const framework = [
   },
 ];
 
+const differentiations = [
+  {
+    title: 'Bukan Sekadar Visual Menarik.',
+    description: 'Setiap proyek berbasis analisis mendalam dan struktur keputusan yang terarah.',
+  },
+  {
+    title: 'Bukan Sekadar Mengikuti Tren.',
+    description: 'Pendekatan kami berbasis konteks tapak dan tujuan fungsional jangka panjang.',
+  },
+  {
+    title: 'Bukan Sekadar Ruang.',
+    description: 'Kami merancang sistem yang mendukung performa dan kesejahteraan manusia di dalamnya.',
+  },
+];
+
 const decisions = [
   'Optimalisasi sirkulasi linear mengurangi gesekan fungsi dan meningkatkan efisiensi waktu.',
   'Integrasi pantry mengurangi friksi sirkulasi dan mempercepat ritme aktivitas.',
@@ -129,23 +144,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="border-y border-[#d6a84f]/15 px-5 py-24 md:px-10 lg:px-16 lg:py-32">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-          <div>
-            <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#d6a84f]">Tentang Kami</p>
-            <p className="font-signature mt-7 text-5xl leading-none text-[#ffc400]/72 md:text-7xl">Studio of Reason</p>
-          </div>
-          <div>
-            <h2 className="font-display max-w-4xl text-5xl font-normal leading-[0.92] tracking-[-0.045em] md:text-7xl">
-              Desain dengan Logika,<br />Dibangun dengan Tujuan.
-            </h2>
-            <p className="mt-8 max-w-3xl text-lg leading-9 text-[#f5f1e8]/68">
-              Kami percaya bahwa setiap ruang memiliki potensi untuk memberi dampak nyata. Melalui pendekatan strategis, kami mengubah kebutuhan menjadi keputusan desain yang fungsional, estetis, dan berkelanjutan.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section id="framework" className="relative overflow-hidden bg-[#30302f] px-5 py-24 md:px-10 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,196,0,0.10),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent_55%)]" />
         <div className="pointer-events-none absolute left-1/2 top-0 h-full w-px bg-white/[0.035]" />
@@ -229,6 +227,39 @@ export default function Home() {
                 </div>
                 <p className="mt-12 text-2xl font-black uppercase leading-tight tracking-[-0.04em]">{impact}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="differentiation" className="relative overflow-hidden bg-[#30302f] px-5 py-24 md:px-10 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#ffc400]/12" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#080807]/50" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.56em] text-[#ffc400]">Differentiation</p>
+            <h2 className="font-display mt-6 text-5xl font-normal leading-[0.95] tracking-[-0.045em] text-white md:text-7xl">
+              Apa yang Membedakan
+            </h2>
+          </div>
+
+          <div className="mt-16 grid gap-10 lg:grid-cols-3">
+            {differentiations.map((item) => (
+              <article key={item.title} className="group">
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="mt-1 shrink-0 text-[#ffc400]" size={18} strokeWidth={2.4} />
+                  <div>
+                    <h3 className="text-lg font-black uppercase leading-snug tracking-[-0.035em] text-white md:text-xl">
+                      {item.title}
+                    </h3>
+                    <div className="mt-6 border-l border-white/12 pl-6">
+                      <p className="max-w-sm text-base leading-8 text-white/38 transition group-hover:text-white/58">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         </div>
