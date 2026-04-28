@@ -1,20 +1,23 @@
-import { ArrowUpRight, BarChart3, CheckCircle2, Compass, Layers3, MoveRight, Target } from 'lucide-react';
+import { ArrowUpRight, BarChart3, CheckCircle2, Compass, Layers3, MoveRight, Search, Target, Zap } from 'lucide-react';
 
 const framework = [
   {
     title: 'Context Reading',
-    description: 'Membaca konteks ruang, perilaku, dan nilai investasi secara mendalam.',
-    icon: Compass,
+    description: 'Membaca konteks ruang, perilaku, dan nilai investasi secara mendalam sebelum keputusan visual dibuat.',
+    icon: Search,
+    number: '01',
   },
   {
     title: 'Spatial Logic',
-    description: 'Mengubah kompleksitas menjadi sistem ruang yang jelas dan sistematis.',
-    icon: Layers3,
+    description: 'Mengubah kompleksitas kebutuhan menjadi sistem ruang yang jelas, efisien, dan mudah dijalankan.',
+    icon: Compass,
+    number: '02',
   },
   {
     title: 'Strategic Solution',
-    description: 'Setiap keputusan desain memiliki alasan logis dan dampak yang terukur.',
-    icon: Target,
+    description: 'Merancang keputusan desain dengan alasan logis, prioritas yang tegas, dan dampak yang dapat dibaca.',
+    icon: Zap,
+    number: '03',
   },
 ];
 
@@ -26,11 +29,7 @@ const decisions = [
 
 const impacts = ['Efisiensi Sirkulasi', 'Waktu Ambil Keputusan', 'Revisi Desain', 'Clarity Brief'];
 
-const portfolio = [
-  'Residential Strategy',
-  'Interior System',
-  'Spatial Planning',
-];
+const portfolio = ['Residential Strategy', 'Interior System', 'Spatial Planning'];
 
 export default function Home() {
   return (
@@ -74,10 +73,10 @@ export default function Home() {
               Strategic Design Intelligence
             </p>
 
-            <h1 className="max-w-5xl text-[clamp(3.6rem,8.4vw,8.8rem)] font-black uppercase leading-[0.86] tracking-[-0.075em] text-white">
+            <h1 className="font-display max-w-5xl text-[clamp(4rem,8.7vw,9.2rem)] font-bold uppercase leading-[0.78] tracking-[-0.065em] text-white">
               Desain Sebagai<br />
-              <span className="block text-[#ffc400] italic tracking-[-0.095em]">Keputusan</span>
-              <span className="block text-[#ffc400] italic tracking-[-0.095em]">Strategis.</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.085em]">Keputusan</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.085em]">Strategis.</span>
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg italic leading-8 text-white/72 md:text-2xl">
@@ -128,7 +127,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <p className="text-xs font-black uppercase tracking-[0.42em] text-[#d6a84f]">Tentang Kami</p>
           <div>
-            <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] tracking-[-0.05em] md:text-6xl">
+            <h2 className="font-display max-w-4xl text-5xl font-bold leading-[0.92] tracking-[-0.055em] md:text-7xl">
               Desain dengan Logika,<br />Dibangun dengan Tujuan.
             </h2>
             <p className="mt-8 max-w-3xl text-lg leading-9 text-[#f5f1e8]/68">
@@ -138,26 +137,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="framework" className="px-5 py-24 md:px-10 lg:px-16 lg:py-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <section id="framework" className="relative overflow-hidden bg-[#30302f] px-5 py-24 md:px-10 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(255,196,0,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.035),transparent_55%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.42em] text-[#d6a84f]">Framework</p>
-              <h2 className="mt-5 text-5xl font-black uppercase tracking-[-0.06em] md:text-7xl">Cara Kami Berpikir</h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.52em] text-[#ffc400]">Framework</p>
+              <h2 className="font-display mt-5 max-w-2xl text-5xl font-bold leading-[0.95] tracking-[-0.055em] text-white md:text-7xl">
+                Cara Kami Berpikir
+              </h2>
             </div>
-            <blockquote className="border-l border-[#d6a84f] pl-6 text-2xl font-semibold leading-snug text-[#f5f1e8]/82 md:text-3xl">
-              Desain bukan gaya. Ia adalah sistem keputusan yang berdampak.
+            <blockquote className="font-display max-w-3xl text-3xl italic leading-[1.08] tracking-[-0.025em] text-white/68 md:text-5xl">
+              “Desain bukan gaya. Ia adalah sistem keputusan yang berdampak.”
             </blockquote>
           </div>
 
-          <div className="mt-16 grid gap-px overflow-hidden border border-[#d6a84f]/18 bg-[#d6a84f]/18 md:grid-cols-3">
+          <div className="mt-20 grid gap-8 lg:grid-cols-3">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group bg-[#0e0e0c] p-8 transition hover:bg-[#15130f] md:p-10">
-                  <Icon className="text-[#d6a84f]" size={32} />
-                  <h3 className="mt-16 text-2xl font-black uppercase tracking-[-0.03em]">{item.title}</h3>
-                  <p className="mt-5 leading-8 text-[#f5f1e8]/62">{item.description}</p>
+                <article key={item.title} className="group border-t border-[#ffc400]/35 pt-8">
+                  <div className="mb-14 flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-[0.28em] text-white/34">{item.number}</span>
+                    <span className="grid h-12 w-12 place-items-center border border-[#ffc400]/35 text-[#ffc400] transition group-hover:bg-[#ffc400] group-hover:text-[#080807]">
+                      <Icon size={21} strokeWidth={1.9} />
+                    </span>
+                  </div>
+                  <h3 className="font-display text-3xl font-bold uppercase leading-none tracking-[-0.035em] text-white md:text-4xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-5 max-w-sm text-base leading-8 text-white/42 transition group-hover:text-white/62">
+                    {item.description}
+                  </p>
                 </article>
               );
             })}
@@ -169,7 +180,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr]">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.42em] text-[#d6a84f]">Design Decisions</p>
-            <h2 className="mt-5 text-5xl font-black uppercase tracking-[-0.06em] md:text-7xl">Desain = Keputusan</h2>
+            <h2 className="font-display mt-5 text-6xl font-bold leading-[0.9] tracking-[-0.06em] md:text-8xl">Desain = Keputusan</h2>
           </div>
           <div className="space-y-5">
             {decisions.map((decision, index) => (
@@ -187,7 +198,7 @@ export default function Home() {
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.42em] text-[#080807]/60">Impact</p>
-              <h2 className="mt-5 text-5xl font-black uppercase tracking-[-0.06em] md:text-7xl">Dampak yang Terukur</h2>
+              <h2 className="font-display mt-5 text-6xl font-bold leading-[0.9] tracking-[-0.06em] md:text-8xl">Dampak yang Terukur</h2>
             </div>
             <BarChart3 size={56} className="hidden md:block" />
           </div>
@@ -207,7 +218,7 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.42em] text-[#d6a84f]">Portfolio</p>
-              <h2 className="mt-5 max-w-4xl text-5xl font-black uppercase tracking-[-0.06em] md:text-7xl">Hasil Perancangan Terukur</h2>
+              <h2 className="font-display mt-5 max-w-4xl text-6xl font-bold leading-[0.92] tracking-[-0.06em] md:text-8xl">Hasil Perancangan Terukur</h2>
             </div>
             <p className="text-2xl font-semibold leading-snug text-[#f5f1e8]/78">Strategi terlihat jelas dalam hasil yang nyata.</p>
           </div>
@@ -219,7 +230,7 @@ export default function Home() {
                 <div className="relative flex h-full flex-col justify-between">
                   <span className="text-sm font-black text-[#d6a84f]">0{index + 1}</span>
                   <div>
-                    <h3 className="text-3xl font-black uppercase tracking-[-0.05em]">{item}</h3>
+                    <h3 className="font-display text-4xl font-bold uppercase tracking-[-0.05em]">{item}</h3>
                     <p className="mt-4 leading-7 text-[#f5f1e8]/58">Placeholder project untuk studi kasus terukur, visual final, dan keputusan strategis di balik perancangan.</p>
                   </div>
                 </div>
@@ -234,7 +245,7 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[1fr_0.52fr] lg:items-end">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.42em] text-[#080807]/50">Closing CTA</p>
-              <h2 className="mt-5 max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl">
+              <h2 className="font-display mt-5 max-w-4xl text-6xl font-bold leading-[0.86] tracking-[-0.07em] md:text-8xl">
                 Bangun Ruang yang Bekerja untuk Anda.
               </h2>
               <p className="mt-8 text-xl font-medium text-[#080807]/62">Saatnya mengubah ruang menjadi aset bernilai.</p>
