@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ArrowUpRight, CheckCircle2, Compass, MoveRight, Search, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, CheckCircle2, Compass, Instagram, Mail, MoveRight, Search, Zap } from 'lucide-react';
 
 const framework = [
   {
@@ -338,22 +338,59 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="px-5 pb-8 md:px-10 lg:px-16">
-        <div className="mx-auto max-w-7xl bg-[#f5f1e8] px-6 py-16 text-[#080807] md:px-12 lg:px-16 lg:py-24">
-          <div className="grid gap-10 lg:grid-cols-[1fr_0.52fr] lg:items-end">
-            <div>
-              <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#080807]/50">Closing CTA</p>
-              <h2 className="font-display mt-5 max-w-4xl text-6xl font-normal leading-[0.86] tracking-[-0.055em] md:text-8xl">
-                Bangun Ruang yang Bekerja untuk Anda.
-              </h2>
-              <div className="mt-8 flex flex-col gap-3 md:flex-row md:items-end">
-                <p className="text-xl font-medium text-[#080807]/62">Saatnya mengubah ruang menjadi aset bernilai.</p>
-                <span className="font-signature text-5xl leading-none text-[#080807]/62">with intention</span>
-              </div>
-            </div>
-            <a href="mailto:eryawanagungtrimuda@gmail.com" className="group inline-flex items-center justify-center gap-3 bg-[#080807] px-8 py-5 font-mono text-[11px] font-black uppercase tracking-[0.16em] text-[#f5f1e8] transition hover:bg-[#d6a84f] hover:text-[#080807]">
-              Konsultasi Eksklusif <ArrowUpRight size={18} className="transition group-hover:-translate-y-1 group-hover:translate-x-1" />
+      <section id="contact" className="relative overflow-hidden bg-[#050505] px-5 py-24 text-white md:px-10 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,196,0,0.04),transparent_28%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.52em] text-[#ffc400]">
+              Mulai Kolaborasi
+            </p>
+            <h2 className="font-display mt-8 text-5xl font-normal italic leading-[0.98] tracking-[-0.05em] text-white md:text-7xl lg:text-8xl">
+              Bangun Ruang yang Bekerja untuk Anda.
+            </h2>
+            <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-white/42 md:text-2xl">
+              Saatnya Mengubah Ruang Menjadi Aset Bernilai.
+            </p>
+
+            <a
+              href="mailto:eryawanagungtrimuda@gmail.com"
+              className="mt-14 inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-10 py-6 font-mono text-xs font-black uppercase tracking-[0.34em] text-[#080807] transition hover:bg-[#ffd84d] md:min-w-[420px]"
+            >
+              Konsultasi Eksklusif
             </a>
+
+            <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/18">
+              Respon langsung oleh desainer, bukan bot.
+            </p>
+
+            <div className="mt-8 flex items-center justify-center gap-8 text-white/38">
+              <a
+                href="https://instagram.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-[#ffc400]"
+                aria-label="Instagram"
+              >
+                <Instagram size={20} strokeWidth={1.8} />
+              </a>
+              <a
+                href="mailto:eryawanagungtrimuda@gmail.com"
+                className="transition hover:text-[#ffc400]"
+                aria-label="Email"
+              >
+                <Mail size={20} strokeWidth={1.8} />
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-20 h-px w-full bg-white/8" />
+
+          <div className="mt-14 flex flex-col gap-6 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-white/24 md:flex-row md:items-center md:justify-between">
+            <p>© 2026 Eryawan Studio — Strategic Design & Spatial Logic</p>
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
+              <span>Panel</span>
+              <span>Surabaya • Melayani Indonesia</span>
+            </div>
           </div>
         </div>
       </section>
