@@ -78,7 +78,7 @@ export default function Home() {
       >
         <nav className="relative z-10 flex items-start justify-between gap-8">
           <a href="#home" className="group inline-flex flex-col gap-1.5">
-            <span className="text-lg font-black uppercase leading-none tracking-[0.14em] text-[#ffc400] md:text-[1.45rem]">
+            <span className="font-display text-2xl font-normal uppercase leading-none tracking-[0.06em] text-[#ffc400] md:text-[1.75rem]">
               Eryawan Studio
             </span>
             <span className="font-mono text-[9px] font-bold uppercase tracking-[0.34em] text-white/68">
@@ -95,7 +95,7 @@ export default function Home() {
 
           <a
             href="mailto:eryawanagungtrimuda@gmail.com"
-            className="hidden rounded-[5px] bg-[#ffc400] px-7 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
+            className="hidden rounded-[5px] bg-[#ffc400] px-7 py-3.5 font-sans text-sm font-bold uppercase tracking-[0.08em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
           >
             Hubungi Studio
           </a>
@@ -120,13 +120,13 @@ export default function Home() {
             <div className="mt-12 flex flex-col gap-5 sm:flex-row">
               <a
                 href="mailto:eryawanagungtrimuda@gmail.com"
-                className="inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-8 py-4.5 font-mono text-[11px] font-black uppercase tracking-[0.26em] text-[#080807] transition hover:bg-[#ffd84d]"
+                className="inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.08em] text-[#080807] transition hover:bg-[#ffd84d]"
               >
                 Mulai Konsultasi Strategis
               </a>
               <a
                 href="#framework"
-                className="inline-flex min-w-[265px] items-center justify-center rounded-[4px] border border-white/14 bg-[#22272e]/88 px-8 py-4.5 font-mono text-[11px] font-black uppercase tracking-[0.26em] text-white/90 shadow-[0_12px_32px_rgba(0,0,0,0.25)] backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400]"
+                className="inline-flex min-w-[265px] items-center justify-center rounded-[4px] border border-white/14 bg-[#22272e]/88 px-8 py-4 font-sans text-sm font-bold uppercase tracking-[0.08em] text-white/90 shadow-[0_12px_32px_rgba(0,0,0,0.25)] backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400]"
               >
                 Eksplorasi Framework
               </a>
