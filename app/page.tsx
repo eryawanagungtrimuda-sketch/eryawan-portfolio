@@ -78,16 +78,16 @@ export default function Home() {
       >
         <nav className="relative z-10 flex items-start justify-between gap-8">
           <a href="#home" className="group inline-flex flex-col gap-1.5">
-            <span className="text-xl font-black uppercase leading-none tracking-[0.14em] text-[#ffc400] md:text-[1.72rem]">
+            <span className="text-lg font-black uppercase leading-none tracking-[0.14em] text-[#ffc400] md:text-[1.45rem]">
               Eryawan Studio
             </span>
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.36em] text-white/72">
+            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.34em] text-white/68">
               Ruang yang masuk akal
             </span>
           </a>
 
-          <div className="hidden items-start gap-10 text-base font-extrabold text-white/86 lg:flex">
-            <a className="border-b-[3px] border-[#ffc400] pb-3 text-[#ffc400]" href="#home">Beranda</a>
+          <div className="hidden items-start gap-8 text-sm font-bold text-white/82 lg:flex">
+            <a className="border-b-2 border-[#ffc400] pb-3 text-[#ffc400]" href="#home">Beranda</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#portfolio">Karya</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#framework">Wawasan</a>
             <a className="pb-3 transition hover:text-[#ffc400]" href="#contact">Kontak</a>
@@ -95,7 +95,7 @@ export default function Home() {
 
           <a
             href="mailto:eryawanagungtrimuda@gmail.com"
-            className="hidden rounded-[5px] bg-[#ffc400] px-8 py-4 font-mono text-[12px] font-black uppercase tracking-[0.24em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
+            className="hidden rounded-[5px] bg-[#ffc400] px-7 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
           >
             Hubungi Studio
           </a>
@@ -103,30 +103,30 @@ export default function Home() {
 
         <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.52fr] lg:pt-4">
           <div className="max-w-5xl lg:pl-10 xl:pl-14">
-            <p className="mb-8 font-mono text-[12px] font-black uppercase tracking-[0.62em] text-[#ffc400]">
+            <p className="mb-7 font-mono text-[11px] font-black uppercase tracking-[0.58em] text-[#ffc400]">
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-5xl text-[clamp(4.7rem,7.9vw,8.55rem)] font-normal uppercase leading-[0.82] tracking-[-0.062em] text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
+            <h1 className="font-display max-w-5xl text-[clamp(3.8rem,6.8vw,7.35rem)] font-normal uppercase leading-[0.84] tracking-[-0.055em] text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
               Desain Sebagai<br />
-              <span className="block text-[#ffc400] italic tracking-[-0.08em]">Keputusan</span>
-              <span className="block text-[#ffc400] italic tracking-[-0.08em]">Strategis.</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.072em]">Keputusan</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.072em]">Strategis.</span>
             </h1>
 
-            <p className="mt-7 max-w-[680px] text-[1.35rem] italic leading-8 text-white/86 drop-shadow-md md:text-[1.55rem]">
+            <p className="mt-7 max-w-[680px] text-[1.18rem] italic leading-8 text-white/84 drop-shadow-md md:text-[1.35rem]">
               “Mengubah ruang menjadi keputusan yang berdampak jangka panjang.”
             </p>
 
-            <div className="mt-14 flex flex-col gap-7 sm:flex-row">
+            <div className="mt-12 flex flex-col gap-5 sm:flex-row">
               <a
                 href="mailto:eryawanagungtrimuda@gmail.com"
-                className="inline-flex min-w-[325px] items-center justify-center rounded-[4px] bg-[#ffc400] px-9 py-5 font-mono text-[12px] font-black uppercase tracking-[0.28em] text-[#080807] transition hover:bg-[#ffd84d]"
+                className="inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-8 py-4.5 font-mono text-[11px] font-black uppercase tracking-[0.26em] text-[#080807] transition hover:bg-[#ffd84d]"
               >
                 Mulai Konsultasi Strategis
               </a>
               <a
                 href="#framework"
-                className="inline-flex min-w-[285px] items-center justify-center rounded-[4px] border border-white/14 bg-[#22272e]/88 px-9 py-5 font-mono text-[12px] font-black uppercase tracking-[0.28em] text-white/92 shadow-[0_12px_32px_rgba(0,0,0,0.25)] backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400]"
+                className="inline-flex min-w-[265px] items-center justify-center rounded-[4px] border border-white/14 bg-[#22272e]/88 px-8 py-4.5 font-mono text-[11px] font-black uppercase tracking-[0.26em] text-white/90 shadow-[0_12px_32px_rgba(0,0,0,0.25)] backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400]"
               >
                 Eksplorasi Framework
               </a>
@@ -136,7 +136,6 @@ export default function Home() {
 
         <div className="relative z-10 hidden items-center justify-between pb-2 text-white/70 md:flex">
           <div className="flex items-center gap-5">
-            <span className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/22 font-mono text-sm text-white/62 xl:flex">N</span>
             <span className="h-12 w-px bg-white/32" />
             <span className="text-sm font-medium text-white/72">Scroll untuk eksplorasi</span>
           </div>
