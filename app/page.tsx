@@ -1,4 +1,4 @@
-import { ArrowUpRight, BarChart3, CheckCircle2, Compass, MoveRight, Search, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, CheckCircle2, Compass, MoveRight, Search, Zap } from 'lucide-react';
 
 const framework = [
   {
@@ -45,7 +45,12 @@ const decisions = [
   'Variabel pencahayaan alami adalah komponen krusial dalam pembentukan atmosfer ruang yang logis.',
 ];
 
-const impacts = ['Efisiensi Sirkulasi', 'Waktu Ambil Keputusan', 'Revisi Desain', 'Clarity Brief'];
+const impacts = [
+  { label: 'Efisiensi Sirkulasi', direction: 'up' },
+  { label: 'Waktu Ambil Keputusan', direction: 'down' },
+  { label: 'Revisi Desain', direction: 'down' },
+  { label: 'Clarity Brief', direction: 'up' },
+];
 
 const portfolio = ['Residential Strategy', 'Interior System', 'Spatial Planning'];
 
@@ -209,25 +214,40 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="impact" className="bg-[#d6a84f] px-5 py-24 text-[#080807] md:px-10 lg:px-16 lg:py-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div>
-              <p className="font-mono text-[11px] font-black uppercase tracking-[0.42em] text-[#080807]/60">Impact</p>
-              <h2 className="font-display mt-5 text-6xl font-normal leading-[0.9] tracking-[-0.045em] md:text-8xl">Dampak yang Terukur</h2>
-            </div>
-            <BarChart3 size={56} className="hidden md:block" />
+      <section id="impact" className="relative overflow-hidden bg-[#142233] px-5 py-28 text-white md:px-10 lg:px-16 lg:py-36">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,196,0,0.055),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.018),transparent_42%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="text-center">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.52em] text-[#ffc400]">Impact</p>
+            <h2 className="font-display mt-5 text-5xl font-normal leading-[0.95] tracking-[-0.04em] text-white md:text-7xl">
+              Dampak yang Terukur
+            </h2>
           </div>
-          <div className="mt-16 grid gap-px bg-[#080807]/20 md:grid-cols-4">
-            {impacts.map((impact, index) => (
-              <div key={impact} className="bg-[#d6a84f] p-7 md:min-h-48 md:p-8">
-                <div className="flex items-center justify-between">
-                  <CheckCircle2 size={24} />
-                  <span className="font-mono text-xs font-black text-[#080807]/40">0{index + 1}</span>
+
+          <div className="mt-20 grid gap-14 md:grid-cols-2 lg:grid-cols-4">
+            {impacts.map((impact) => (
+              <div key={impact.label} className="flex flex-col items-center text-center">
+                <div className="mb-5 text-[#7d6726]">
+                  {impact.direction === 'up' ? (
+                    <ArrowUp size={58} strokeWidth={1.7} />
+                  ) : (
+                    <ArrowDown size={58} strokeWidth={1.7} />
+                  )}
                 </div>
-                <p className="mt-12 text-2xl font-black uppercase leading-tight tracking-[-0.04em]">{impact}</p>
+                <p className="font-mono text-xs font-black uppercase tracking-[0.22em] text-[#a9b3c0]">
+                  {impact.label}
+                </p>
               </div>
             ))}
+          </div>
+
+          <div className="mx-auto mt-20 max-w-3xl text-center">
+            <p className="text-lg italic leading-8 text-white/55 md:text-2xl">
+              “Desain yang terukur menghasilkan keputusan yang lebih pasti.”
+            </p>
+            <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/24">
+              * Parameter optimasi pada setiap fase kolaborasi.
+            </p>
           </div>
         </div>
       </section>
