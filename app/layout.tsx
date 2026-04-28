@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { Belleza, Great_Vibes, Inter } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const cormorant = Cormorant_Garamond({
+const belleza = Belleza({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: '400',
+});
+const greatVibes = Great_Vibes({
+  subsets: ['latin'],
+  variable: '--font-signature',
+  weight: '400',
 });
 
 export const metadata: Metadata = {
@@ -18,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body className={`${inter.variable} ${cormorant.variable} bg-[#080807] text-[#f5f1e8] antialiased`}>
+      <body className={`${inter.variable} ${belleza.variable} ${greatVibes.variable} bg-[#080807] text-[#f5f1e8] antialiased`}>
         {children}
       </body>
     </html>
