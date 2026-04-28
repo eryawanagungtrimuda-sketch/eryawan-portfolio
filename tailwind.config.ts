@@ -6,7 +6,9 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'ui-sans-serif', 'system-ui'],
-        display: ['var(--font-display)', 'Cormorant Garamond', 'ui-serif', 'Georgia'],
+        display: ['var(--font-display)', 'Belleza', 'ui-serif', 'Georgia'],
+        signature: ['var(--font-signature)', 'Great Vibes', 'cursive'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       colors: {
         ink: '#111827',
