@@ -107,10 +107,10 @@ export default function Home() {
               Strategic Design Intelligence
             </p>
 
-            <h1 className="max-w-5xl font-sans text-[clamp(4.25rem,7.35vw,7.8rem)] font-black uppercase leading-[0.92] tracking-[-0.055em] text-white">
+            <h1 className="font-display max-w-5xl text-[clamp(4.7rem,7.9vw,8.55rem)] font-normal uppercase leading-[0.82] tracking-[-0.062em] text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)]">
               Desain Sebagai<br />
-              <span className="block text-[#ffc400] italic tracking-[-0.07em]">Keputusan</span>
-              <span className="block text-[#ffc400] italic tracking-[-0.07em]">Strategis.</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.08em]">Keputusan</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.08em]">Strategis.</span>
             </h1>
 
             <p className="mt-7 max-w-[680px] text-[1.35rem] italic leading-8 text-white/86 drop-shadow-md md:text-[1.55rem]">
