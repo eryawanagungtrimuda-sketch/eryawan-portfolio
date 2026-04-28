@@ -37,45 +37,90 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden bg-[#080807] text-[#f5f1e8]">
       <section
         id="home"
-        className="relative flex min-h-screen flex-col bg-cover bg-center px-5 py-6 md:px-10 lg:px-16"
-        style={{ backgroundImage: "linear-gradient(90deg, rgba(8,8,7,0.94) 0%, rgba(8,8,7,0.82) 42%, rgba(8,8,7,0.46) 100%), url('/hero.jpg')" }}
+        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-6 py-7 md:px-10 lg:px-16 xl:px-24"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, rgba(8,8,7,0.90) 0%, rgba(8,8,7,0.72) 34%, rgba(8,8,7,0.42) 62%, rgba(8,8,7,0.16) 100%), linear-gradient(180deg, rgba(8,8,7,0.32) 0%, rgba(8,8,7,0.08) 42%, rgba(8,8,7,0.62) 100%), url('/hero.jpg')",
+        }}
       >
-        <nav className="relative z-10 flex items-center justify-between border-b border-[#d6a84f]/20 pb-6">
-          <a href="#home" className="text-sm font-black uppercase tracking-[0.34em] text-[#d6a84f]">
-            Eryawan Studio
+        <nav className="relative z-10 flex items-start justify-between gap-8">
+          <a href="#home" className="group inline-flex flex-col gap-1">
+            <span className="text-lg font-black uppercase leading-none tracking-[0.16em] text-[#ffc400] md:text-2xl">
+              Eryawan Studio
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/72">
+              Ruang yang masuk akal
+            </span>
           </a>
-          <div className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.24em] text-[#f5f1e8]/60 md:flex">
-            <a className="transition hover:text-[#d6a84f]" href="#framework">Framework</a>
-            <a className="transition hover:text-[#d6a84f]" href="#impact">Impact</a>
-            <a className="transition hover:text-[#d6a84f]" href="#portfolio">Portfolio</a>
+
+          <div className="hidden items-center gap-12 text-sm font-bold text-white/82 lg:flex">
+            <a className="border-b-2 border-[#ffc400] pb-3 text-[#ffc400]" href="#home">Beranda</a>
+            <a className="pb-3 transition hover:text-[#ffc400]" href="#portfolio">Karya</a>
+            <a className="pb-3 transition hover:text-[#ffc400]" href="#framework">Wawasan</a>
+            <a className="pb-3 transition hover:text-[#ffc400]" href="#contact">Kontak</a>
           </div>
+
+          <a
+            href="mailto:eryawanagungtrimuda@gmail.com"
+            className="hidden rounded-md bg-[#ffc400] px-7 py-4 text-xs font-black uppercase tracking-[0.22em] text-[#080807] shadow-[0_16px_40px_rgba(255,196,0,0.18)] transition hover:bg-[#ffd84d] md:inline-flex"
+          >
+            Hubungi Studio
+          </a>
         </nav>
 
-        <div className="relative z-10 grid flex-1 items-end gap-12 pb-12 pt-24 lg:grid-cols-[1fr_0.72fr] lg:pb-20">
-          <div>
-            <p className="mb-8 text-xs font-bold uppercase tracking-[0.42em] text-[#d6a84f]">Ruang yang masuk akal</p>
-            <h1 className="max-w-5xl text-[clamp(3.4rem,11vw,9.5rem)] font-black uppercase leading-[0.82] tracking-[-0.08em]">
-              Desain Sebagai<br />Keputusan Strategis.
-            </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#f5f1e8]/72 md:text-xl">
-              Mengubah ruang menjadi keputusan yang berdampak jangka panjang.
+        <div className="relative z-10 grid flex-1 items-center pt-20 lg:grid-cols-[1fr_0.58fr] lg:pt-10">
+          <div className="max-w-5xl lg:pl-14 xl:pl-20">
+            <p className="mb-8 text-[11px] font-black uppercase tracking-[0.58em] text-[#ffc400]">
+              Strategic Design Intelligence
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a href="mailto:eryawanagungtrimuda@gmail.com" className="group inline-flex items-center justify-center gap-3 bg-[#d6a84f] px-7 py-4 text-sm font-black uppercase tracking-[0.16em] text-[#080807] transition hover:bg-[#f0c96a]">
-                Mulai Konsultasi Strategis <ArrowUpRight size={18} className="transition group-hover:-translate-y-1 group-hover:translate-x-1" />
+
+            <h1 className="max-w-5xl text-[clamp(3.6rem,8.4vw,8.8rem)] font-black uppercase leading-[0.86] tracking-[-0.075em] text-white">
+              Desain Sebagai<br />
+              <span className="block text-[#ffc400] italic tracking-[-0.095em]">Keputusan</span>
+              <span className="block text-[#ffc400] italic tracking-[-0.095em]">Strategis.</span>
+            </h1>
+
+            <p className="mt-7 max-w-2xl text-lg italic leading-8 text-white/72 md:text-2xl">
+              “Mengubah ruang menjadi keputusan yang berdampak jangka panjang.”
+            </p>
+
+            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="mailto:eryawanagungtrimuda@gmail.com"
+                className="inline-flex items-center justify-center rounded-md bg-[#ffc400] px-8 py-5 text-xs font-black uppercase tracking-[0.24em] text-[#080807] transition hover:bg-[#ffd84d] md:px-10"
+              >
+                Mulai Konsultasi Strategis
               </a>
-              <a href="#framework" className="inline-flex items-center justify-center gap-3 border border-[#d6a84f]/40 px-7 py-4 text-sm font-black uppercase tracking-[0.16em] text-[#f5f1e8] transition hover:border-[#d6a84f] hover:text-[#d6a84f]">
-                Eksplorasi Framework <MoveRight size={18} />
+              <a
+                href="#framework"
+                className="inline-flex items-center justify-center rounded-md border border-white/12 bg-[#11151b]/78 px-8 py-5 text-xs font-black uppercase tracking-[0.24em] text-white/88 backdrop-blur transition hover:border-[#ffc400]/60 hover:text-[#ffc400] md:px-10"
+              >
+                Eksplorasi Framework
               </a>
             </div>
           </div>
 
-          <aside className="border-l border-[#d6a84f]/25 pl-6 lg:self-end">
-            <p className="text-sm uppercase tracking-[0.3em] text-[#f5f1e8]/45">Studio Principle</p>
-            <p className="mt-5 max-w-md text-2xl font-semibold leading-snug text-[#f5f1e8]/88">
-              Desain bukan dekorasi. Desain adalah proses menentukan apa yang paling masuk akal untuk ruang, fungsi, dan nilai aset.
+          <aside className="mt-16 hidden max-w-sm self-end justify-self-end border-l border-white/20 pl-7 pb-20 lg:block">
+            <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#ffc400]">Studio Principle</p>
+            <p className="mt-5 text-xl font-medium leading-8 text-white/70">
+              Desain bukan dekorasi. Ia adalah proses menentukan apa yang paling masuk akal untuk ruang, fungsi, dan nilai aset.
             </p>
           </aside>
+        </div>
+
+        <div className="relative z-10 hidden items-center justify-between pb-2 text-white/62 md:flex">
+          <div className="flex items-center gap-5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-sm">N</span>
+            <span className="h-10 w-px bg-white/22" />
+            <span className="text-sm font-medium">Scroll untuk eksplorasi</span>
+          </div>
+          <a
+            href="#contact"
+            className="flex h-14 w-14 items-center justify-center rounded-md bg-[#ffc400] text-[#080807] transition hover:bg-[#ffd84d]"
+            aria-label="Hubungi studio"
+          >
+            <ArrowUpRight size={20} />
+          </a>
         </div>
       </section>
 
