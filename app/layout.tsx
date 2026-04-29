@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Belleza, Great_Vibes, Inter } from 'next/font/google';
+import PortfolioClicks from './portfolio-clicks';
 import './globals.css';
+import './portfolio-teaser.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const belleza = Belleza({
@@ -24,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id">
       <body className={`${inter.variable} ${belleza.variable} ${greatVibes.variable} bg-[#080807] text-[#f5f1e8] antialiased`}>
         {children}
+        <PortfolioClicks />
       </body>
     </html>
   );
