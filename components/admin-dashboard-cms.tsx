@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 
+const projectColumns = 'id,title,slug,category,cover_image,problem,solution,impact,created_at';
+
 function formatDate(value?: string | null) {
   if (!value) return '—';
   try {
@@ -41,17 +43,44 @@ export default function AdminDashboardCMS() {
 
     try {
       const supabase = getSupabaseClient();
-      const { data, error } = await supabase
+      const { data, error, status } = await supabase
         .from('projects')
-        .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
+        .select(projectColumns)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setProjects((data || []) as Project[]);
+      if (error) {
+        console.error('[AdminDashboardCMS] Failed to fetch public.projects', {
+          table: 'public.projects',
+          columns: projectColumns,
+          status,
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+        });
+
+        const emptyLikeError =
+          error.code === 'PGRST116' ||
+          error.message.toLowerCase().includes('no rows') ||
+          error.message.toLowerCase().includes('0 rows');
+
+        if (emptyLikeError) {
+          setProjects([]);
+          setMessage('');
+          return;
+        }
+
+        setProjects([]);
+        setMessage(`Tidak dapat membaca table public.projects: ${error.message}`);
+        return;
+      }
+
+      setProjects(Array.isArray(data) ? (data as Project[]) : []);
+      setMessage('');
     } catch (error) {
-      const description = error instanceof Error ? error.message : '';
-      const isEmptyLikeFailure = description.toLowerCase().includes('no rows') || description.toLowerCase().includes('0 rows');
-      setMessage(isEmptyLikeFailure ? '' : description || 'Tidak dapat terhubung ke Supabase. Periksa koneksi atau environment variables.');
+      console.error('[AdminDashboardCMS] Unexpected projects fetch failure', error);
+      setProjects([]);
+      setMessage(error instanceof Error ? error.message : 'Terjadi kesalahan saat membaca data project.');
     } finally {
       setLoading(false);
     }
@@ -75,8 +104,19 @@ export default function AdminDashboardCMS() {
 
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('projects').delete().eq('id', project.id);
-      if (error) throw error;
+      const { error, status } = await supabase.from('projects').delete().eq('id', project.id);
+      if (error) {
+        console.error('[AdminDashboardCMS] Failed to delete public.projects row', {
+          table: 'public.projects',
+          id: project.id,
+          status,
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+        });
+        throw error;
+      }
       setProjects((current) => current.filter((item) => item.id !== project.id));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Gagal menghapus project.');
