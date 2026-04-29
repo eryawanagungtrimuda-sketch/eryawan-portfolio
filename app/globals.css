@@ -305,6 +305,44 @@ body {
   color: rgba(255, 255, 255, 0.70);
 }
 
+/* Portfolio case study refinement: decision-based professional structure */
+#portfolio article .space-y-8 {
+  display: none !important;
+}
+
+#portfolio article {
+  min-height: 100%;
+}
+
+#portfolio article .relative.z-10::after {
+  display: block;
+  margin-top: 3rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: pre-line;
+  font-size: 1.02rem;
+  line-height: 1.72;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+#portfolio article:nth-child(1) .relative.z-10::after {
+  content: "Context\A Hunian dengan kebutuhan aktivitas harian yang cukup padat, namun alur ruang belum terbaca jelas oleh pengguna ruang.\A\A Problem\A Sirkulasi terasa terputus, area publik belum bekerja sebagai penghubung, dan keputusan layout berisiko membuat ruang terasa kurang efisien.\A\A Strategic Decision\A Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak. Keputusan ini diambil agar fungsi harian lebih terarah dan klien lebih mudah membaca konsekuensi setiap pilihan layout.\A\A Execution\A Area aktivitas utama diperjelas, transisi antar-ruang dibuat lebih logis, dan elemen visual diposisikan sebagai pendukung fungsi, bukan pusat perhatian.\A\A Impact\A Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.";
+}
+
+#portfolio article:nth-child(2) .relative.z-10::after {
+  content: "Context\A Area kerja membutuhkan ruang yang mampu menampung fokus, kolaborasi, dan ritme aktivitas yang berubah sepanjang hari.\A\A Problem\A Fungsi ruang belum terbagi dengan jelas, sehingga aktivitas fokus dan interaksi berpotensi saling mengganggu.\A\A Strategic Decision\A Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang. Keputusan ini menjaga efisiensi tanpa mengorbankan kenyamanan dan fleksibilitas.\A\A Execution\A Zoning kerja disusun lebih tegas, area transisi dibuat lebih terbaca, dan komposisi visual dipakai untuk memperkuat orientasi serta ritme penggunaan ruang.\A\A Impact\A Pengalaman ruang meningkat, ritme kerja lebih terarah, aktivitas lebih lancar, dan keputusan desain lebih mudah dipahami oleh pengambil keputusan.";
+}
+
+#portfolio article .relative.z-10::after::first-line {
+  color: #D4AF37;
+}
+
+@media (min-width: 768px) {
+  #portfolio article .relative.z-10::after {
+    font-size: 1.05rem;
+  }
+}
+
 @media (max-width: 767px) {
   #home h1 {
     font-size: clamp(2.25rem, 11.5vw, 3.75rem) !important;
@@ -327,5 +365,11 @@ body {
 
   #design-decisions > div > div:first-child > p:nth-of-type(2)::after {
     font-size: 2rem;
+  }
+
+  #portfolio article .relative.z-10::after {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    font-size: 0.98rem;
   }
 }
