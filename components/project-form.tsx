@@ -194,7 +194,10 @@ export default function ProjectForm({ project }: Props) {
       const uploadedImages: ProjectImage[] = [];
       const startOrder = galleryImages.length;
 
-      for (const [index, file] of files.entries()) {
+      for (let index = 0; index < files.length; index += 1) {
+        const file = files[index];
+        if (!file) continue;
+
         const filePath = `${currentSlug}/gallery/${safeFileName(file.name)}`;
         const { error: uploadError } = await supabase.storage.from('project-images').upload(filePath, file, {
           cacheControl: '3600',
