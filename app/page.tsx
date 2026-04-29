@@ -1,23 +1,44 @@
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 
+const ownerWorkflow = [
+  {
+    title: 'Tidak hanya menerima brief.',
+    description:
+      'Saya membaca masalah di balik permintaan, lalu membantu memperjelas keputusan desain yang benar-benar dibutuhkan.',
+    number: '01',
+  },
+  {
+    title: 'Tidak hanya menggambar ruang.',
+    description:
+      'Saya menyusun logika sirkulasi, fungsi, material, dan pengalaman ruang agar desain bekerja secara nyata.',
+    number: '02',
+  },
+  {
+    title: 'Tidak hanya mengikuti preferensi.',
+    description:
+      'Saya membantu owner melihat konsekuensi jangka panjang dari setiap keputusan desain.',
+    number: '03',
+  },
+];
+
 const framework = [
   {
     title: 'Context Reading',
-    description: 'Membaca konteks ruang, perilaku, dan nilai investasi secara mendalam sebelum keputusan visual dibuat.',
+    description: 'Membaca konteks ruang, perilaku pengguna, tujuan bisnis, dan batasan proyek.',
     icon: Search,
     number: '01',
     code: 'READ',
   },
   {
     title: 'Spatial Logic',
-    description: 'Mengubah kompleksitas kebutuhan menjadi sistem ruang yang jelas, efisien, dan mudah dijalankan.',
+    description: 'Mengubah kebutuhan dan kompleksitas menjadi sistem ruang yang jelas, efisien, dan mudah dijalankan.',
     icon: Compass,
     number: '02',
     code: 'PLAN',
   },
   {
-    title: 'Strategic Solution',
-    description: 'Merancang keputusan desain dengan alasan logis, prioritas yang tegas, dan dampak yang dapat dibaca.',
+    title: 'Strategic Decision',
+    description: 'Setiap keputusan desain harus punya alasan, prioritas, dan dampak yang dapat dipahami.',
     icon: Zap,
     number: '03',
     code: 'ACT',
@@ -25,18 +46,10 @@ const framework = [
 ];
 
 const decisions = [
-  {
-    title: 'Optimalisasi sirkulasi linear mengurangi gesekan fungsi dan meningkatkan efisiensi waktu.',
-    description: 'Menghilangkan hambatan dalam pergerakan harian untuk menciptakan alur hidup yang lebih tenang.',
-  },
-  {
-    title: 'Integrasi pantry mengurangi friksi sirkulasi dan mempercepat ritme aktivitas.',
-    description: 'Menciptakan keterbukaan visual sekaligus memperluas impresi ruang secara signifikan.',
-  },
-  {
-    title: 'Variabel pencahayaan alami adalah komponen krusial dalam pembentukan atmosfer ruang yang logis.',
-    description: 'Bukan sekadar estetika, tapi keputusan strategis untuk kesehatan mental dan efisiensi energi.',
-  },
+  'Sirkulasi yang jelas mengurangi friksi aktivitas dan meningkatkan efisiensi penggunaan ruang.',
+  'Pencahayaan yang tepat membentuk atmosfer, fokus, dan kenyamanan.',
+  'Material yang dipilih dengan sadar memengaruhi durabilitas, biaya, dan persepsi nilai.',
+  'Layout yang logis membantu owner mengambil keputusan lebih cepat dan terarah.',
 ];
 
 const impacts = [
@@ -63,14 +76,16 @@ const differentiations = [
 
 const portfolioWorks = [
   {
-    title: 'Alana Resident',
-    category: 'Interior — Rumah Tinggal',
-    image: '/portfolio/alana-resident.jpg',
+    title: 'Project 01 — Residential Interior',
+    problem: 'Sirkulasi harian tidak efisien dan area publik terasa terputus.',
+    decision: 'Menyusun ulang flow ruang, memperjelas zoning, dan mengoptimalkan titik aktivitas.',
+    impact: 'Ruang terasa lebih terarah, fungsional, dan mudah digunakan.',
   },
   {
-    title: 'Citraland: JADE Lakefront Hillside Living',
-    category: 'Interior — Rumah Tinggal',
-    image: '/portfolio/jade-lakefront.jpg',
+    title: 'Project 02 — Workspace Interior',
+    problem: 'Area kerja tidak mendukung fokus dan kolaborasi secara seimbang.',
+    decision: 'Membagi ruang berdasarkan intensitas aktivitas dan kebutuhan privasi.',
+    impact: 'Ritme kerja lebih jelas, nyaman, dan produktif.',
   },
 ];
 
@@ -111,33 +126,32 @@ export default function Home() {
         </nav>
 
         <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.5fr] lg:pt-4">
-          <div className="max-w-5xl lg:pl-8 xl:pl-14">
+          <div className="max-w-6xl lg:pl-8 xl:pl-14">
             <p className="mb-7 font-mono text-[10px] font-black uppercase tracking-[0.58em] text-[#ffc400] md:text-[11px]">
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-5xl text-[clamp(3.3rem,6.4vw,7.05rem)] font-normal uppercase leading-[1.01] tracking-[-0.052em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)]">
-              Desain Sebagai<br />
-              <span className="block text-[#ffc400] italic tracking-[-0.065em]">Keputusan</span>
-              <span className="block text-[#ffc400] italic tracking-[-0.065em]">Strategis.</span>
+            <h1 className="font-display max-w-6xl text-[clamp(3rem,5.9vw,6.65rem)] font-normal uppercase leading-[1.02] tracking-[-0.048em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)]">
+              Desain Bukan Sekadar Visual.<br />
+              <span className="block text-[#ffc400] italic tracking-[-0.06em]">Ini Adalah Keputusan Bisnis.</span>
             </h1>
 
-            <p className="mt-7 max-w-[700px] text-lg italic leading-8 text-white/75 drop-shadow-md md:text-[1.32rem]">
-              “Mengubah ruang menjadi keputusan yang berdampak jangka panjang.”
+            <p className="mt-7 max-w-3xl text-lg leading-8 text-white/74 drop-shadow-md md:text-[1.28rem]">
+              Saya membantu owner dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
             </p>
 
             <div className="mt-12 flex flex-col gap-4 sm:flex-row">
               <a
                 href="mailto:eryawanagungtrimuda@gmail.com"
-                className="inline-flex min-w-[292px] items-center justify-center rounded-[4px] bg-[#ffc400] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#ffd84d]"
+                className="inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-8 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#ffd84d]"
               >
-                Mulai Konsultasi Strategis
+                Diskusikan Proyek Secara Strategis
               </a>
               <a
                 href="#framework"
-                className="inline-flex min-w-[250px] items-center justify-center rounded-[4px] border border-white/25 bg-[#11151b]/68 px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-white/82 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#ffc400]/45 hover:text-[#ffc400]"
+                className="inline-flex min-w-[250px] items-center justify-center rounded-[4px] border border-white/25 bg-[#11151b]/68 px-8 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white/82 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#ffc400]/45 hover:text-[#ffc400]"
               >
-                Eksplorasi Framework
+                Lihat Cara Saya Berpikir
               </a>
             </div>
           </div>
@@ -158,6 +172,40 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="owner-workflow" className="relative overflow-hidden bg-[#090909] px-5 py-20 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(255,196,0,0.06),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.016),transparent_42%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Owner Collaboration</p>
+              <h2 className="font-display mt-5 max-w-3xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
+                Cara Saya Bekerja dengan Owner
+              </h2>
+            </div>
+            <p className="max-w-3xl text-lg leading-9 text-white/62 md:text-xl">
+              Saya tidak hanya menerjemahkan brief menjadi gambar. Saya membantu membaca konteks, mempertanyakan keputusan yang kurang efisien, dan menyusun solusi ruang yang masuk akal secara fungsi, estetika, dan dampak bisnis.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-6 lg:grid-cols-3">
+            {ownerWorkflow.map((item) => (
+              <article key={item.title} className="group border border-white/10 bg-white/[0.018] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#ffc400]/30 hover:bg-white/[0.035] md:p-9">
+                <div className="mb-14 flex items-center justify-between">
+                  <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/36">{item.number}</span>
+                  <CheckCircle2 className="text-[#ffc400]/82 transition duration-300 group-hover:text-[#ffc400]" size={22} strokeWidth={2} />
+                </div>
+                <h3 className="font-display text-3xl font-normal leading-[1.02] tracking-[-0.03em] text-[#F4F1EA] md:text-4xl">
+                  {item.title}
+                </h3>
+                <p className="mt-5 text-base leading-8 text-white/60">
+                  {item.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="framework" className="relative overflow-hidden bg-[#2D2D2B] px-5 py-20 md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,196,0,0.09),transparent_27%),linear-gradient(180deg,rgba(255,255,255,0.035),transparent_58%)]" />
         <div className="relative mx-auto max-w-7xl">
@@ -165,15 +213,15 @@ export default function Home() {
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Framework</p>
               <h2 className="font-display mt-5 max-w-2xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
-                Cara Kami Berpikir
+                Cara Saya Berpikir
               </h2>
             </div>
             <blockquote className="font-display max-w-4xl text-3xl italic leading-[1.12] tracking-[-0.015em] text-white/72 md:text-5xl">
-              “Desain bukan gaya. Ia adalah sistem keputusan yang berdampak.”
+              “Desain yang baik tidak berhenti pada bentuk. Ia harus menjawab alasan, fungsi, dan dampak.”
             </blockquote>
           </div>
 
-          <div className="mt-18 grid gap-6 md:mt-20 lg:grid-cols-3">
+          <div className="mt-20 grid gap-6 lg:grid-cols-3">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
@@ -206,28 +254,24 @@ export default function Home() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Design Decisions</p>
             <h2 className="font-display mt-6 text-5xl font-normal leading-[1.02] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
-              Desain = Keputusan
+              Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-8 max-w-xl text-xl italic leading-9 text-white/58 md:text-2xl">
-              “Estetika adalah efek samping dari keputusan-keputusan fungsional yang diambil dengan sadar.”
+            <p className="mt-8 max-w-xl text-lg leading-9 text-white/58 md:text-xl">
+              Saya melihat ruang sebagai rangkaian keputusan. Dari sirkulasi, pencahayaan, material, hingga ritme aktivitas—semuanya harus bekerja sebagai sistem, bukan sekadar komposisi visual.
             </p>
-            <a href="#portfolio" className="group mt-10 inline-flex items-center gap-4 border-b border-[#ffc400]/35 pb-1 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#ffc400] transition duration-300 hover:border-white/40 hover:text-white">
-              Lihat bukti di proyek
-              <MoveRight size={18} className="transition duration-300 group-hover:translate-x-1" />
-            </a>
+            <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.18] tracking-[-0.03em] text-[#ffc400]/82 md:text-5xl">
+              Saya tidak merancang ruang untuk terlihat baik. Saya merancang agar ruang bekerja dengan benar.
+            </p>
           </div>
 
-          <div className="space-y-12 lg:pt-3">
+          <div className="space-y-10 lg:pt-3">
             {decisions.map((decision, index) => (
-              <article key={decision.title} className="group relative border-l border-white/10 pl-8 transition duration-300 hover:border-[#ffc400]/30 md:pl-10">
+              <article key={decision} className="group relative border-l border-white/10 pl-8 transition duration-300 hover:border-[#ffc400]/30 md:pl-10">
                 <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-[#ffc400]/70 opacity-70 transition duration-300 group-hover:opacity-100" />
                 <p className="mb-4 font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/28">0{index + 1}</p>
-                <h3 className="max-w-2xl text-xl font-black leading-7 tracking-[-0.035em] text-[#F4F1EA] md:text-2xl">
-                  {decision.title}
+                <h3 className="max-w-2xl text-xl font-black leading-8 tracking-[-0.03em] text-[#F4F1EA] md:text-2xl">
+                  {decision}
                 </h3>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/48 md:text-lg">
-                  {decision.description}
-                </p>
               </article>
             ))}
           </div>
@@ -244,7 +288,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="mt-18 grid gap-6 md:mt-20 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {impacts.map((impact, index) => (
               <div key={impact.label} className="group border border-white/8 bg-white/[0.015] px-6 py-9 text-center transition duration-300 hover:-translate-y-1 hover:border-[#ffc400]/25 hover:bg-white/[0.035]">
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/28">0{index + 1}</p>
@@ -258,7 +302,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mx-auto mt-18 max-w-3xl text-center md:mt-20">
+          <div className="mx-auto mt-20 max-w-3xl text-center">
             <p className="text-lg italic leading-8 text-white/58 md:text-2xl">
               “Desain yang terukur menghasilkan keputusan yang lebih pasti.”
             </p>
@@ -305,16 +349,13 @@ export default function Home() {
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[1fr_0.42fr] lg:items-center">
             <div>
-              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Portfolio Framework</p>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Decision-Based Portfolio</p>
               <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
-                Hasil Perancangan Terukur
+                Portfolio Berbasis Keputusan
               </h2>
-              <div className="mt-10 flex items-start gap-7">
-                <span className="mt-2 h-10 w-px bg-[#ffc400]/50" />
-                <p className="max-w-3xl text-2xl italic leading-9 text-white/50 md:text-3xl">
-                  “Strategi terlihat jelas dalam hasil yang nyata.”
-                </p>
-              </div>
+              <p className="mt-8 max-w-4xl text-lg leading-8 text-white/58 md:text-xl">
+                Setiap proyek ditampilkan bukan hanya sebagai hasil visual, tetapi sebagai proses membaca masalah, mengambil keputusan, dan membangun dampak ruang.
+              </p>
             </div>
 
             <a href="#contact" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/88 transition duration-300 hover:border-[#ffc400]/50 hover:text-[#ffc400] lg:justify-self-end">
@@ -324,23 +365,30 @@ export default function Home() {
           </div>
 
           <div className="mt-20 grid gap-8 lg:grid-cols-2">
-            {portfolioWorks.map((work) => (
-              <article key={work.title} className="group relative aspect-[1.18/1] min-h-[360px] overflow-hidden rounded-sm border border-white/8 bg-[#0C0D0F] md:min-h-[440px]">
-                <div
-                  className="absolute inset-0 scale-100 bg-cover bg-center opacity-85 transition duration-300 group-hover:scale-[1.02] group-hover:opacity-100"
-                  style={{
-                    backgroundImage: `radial-gradient(circle at 24% 18%, rgba(255,196,0,0.22), transparent 28%), linear-gradient(135deg, rgba(255,255,255,0.08), rgba(0,0,0,0.2)), url('${work.image}')`,
-                  }}
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.16)_0%,rgba(8,8,7,0.46)_40%,rgba(8,8,7,0.94)_100%)] transition duration-300 group-hover:bg-[linear-gradient(180deg,rgba(8,8,7,0.10)_0%,rgba(8,8,7,0.36)_40%,rgba(8,8,7,0.88)_100%)]" />
-                <div className="relative z-10 flex h-full flex-col justify-end p-8 md:p-12">
-                  <div className="transition duration-300 group-hover:-translate-y-1">
-                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.42em] text-[#ffc400] md:text-[11px]">
-                      {work.category}
-                    </p>
-                    <h3 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-[0.96] tracking-[-0.03em] text-[#F4F1EA] md:text-5xl">
-                      {work.title}
-                    </h3>
+            {portfolioWorks.map((work, index) => (
+              <article key={work.title} className="group relative overflow-hidden rounded-sm border border-white/8 bg-[#0C0D0F] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#ffc400]/28 md:p-10">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(255,196,0,0.16),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.035),transparent)] opacity-70" />
+                <div className="relative z-10">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.42em] text-[#ffc400] md:text-[11px]">
+                    Project {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h3 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-[0.96] tracking-[-0.03em] text-[#F4F1EA] md:text-5xl">
+                    {work.title}
+                  </h3>
+
+                  <div className="mt-12 space-y-7">
+                    <div>
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/32">Masalah</p>
+                      <p className="mt-3 text-base leading-7 text-white/66 md:text-lg">{work.problem}</p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/32">Keputusan</p>
+                      <p className="mt-3 text-base leading-7 text-white/66 md:text-lg">{work.decision}</p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/32">Dampak</p>
+                      <p className="mt-3 text-base leading-7 text-white/66 md:text-lg">{work.impact}</p>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -352,22 +400,22 @@ export default function Home() {
       <section id="contact" className="relative overflow-hidden bg-[#050505] px-5 py-20 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,196,0,0.045),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="mx-auto max-w-5xl text-center">
+          <div className="mx-auto max-w-6xl text-center">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">
               Mulai Kolaborasi
             </p>
             <h2 className="font-display mt-8 text-5xl font-normal italic leading-[1.04] tracking-[-0.045em] text-[#F4F1EA] md:text-7xl lg:text-8xl">
-              Bangun Ruang yang Bekerja untuk Anda.
+              Jika Anda mencari designer, banyak pilihan.<br className="hidden lg:block" /> Jika Anda mencari partner berpikir, kita perlu bicara.
             </h2>
-            <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-white/62 md:text-2xl">
-              Saatnya mengubah ruang menjadi aset bernilai.
+            <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-white/62 md:text-2xl">
+              Saya siap membantu tim dan owner membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
             <a
               href="mailto:eryawanagungtrimuda@gmail.com"
               className="mt-14 inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#ffc400] px-10 py-5 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_22px_50px_rgba(255,196,0,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#ffd84d] md:min-w-[420px]"
             >
-              Konsultasi Eksklusif
+              Mulai Diskusi Strategis
             </a>
 
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/22">
