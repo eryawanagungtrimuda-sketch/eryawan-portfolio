@@ -22,3 +22,110 @@ body {
   background: #b86f52;
   color: #fff;
 }
+
+/* Hero refinement: calmer, brighter-controlled gold and cleaner hierarchy */
+#home .text-\[\#C8A951\] {
+  color: #CEB15C !important;
+}
+
+#home .bg-\[\#C8A951\] {
+  background-color: #CEB15C !important;
+}
+
+#home .border-\[\#C8A951\] {
+  border-color: #CEB15C !important;
+}
+
+#home .border-\[\#C8A951\]\/70 {
+  border-color: rgba(206, 177, 92, 0.7) !important;
+}
+
+#home .shadow-\[0_18px_44px_rgba\(200\,169\,81\,0\.14\)\] {
+  box-shadow: 0 18px 44px rgba(206, 177, 92, 0.14) !important;
+}
+
+#home .shadow-\[0_16px_36px_rgba\(200\,169\,81\,0\.14\)\] {
+  box-shadow: 0 16px 36px rgba(206, 177, 92, 0.13) !important;
+}
+
+#home .group:hover .group-hover\:text-\[\#D7BD72\],
+#home .hover\:text-\[\#C8A951\]:hover {
+  color: #DBC478 !important;
+}
+
+#home .hover\:bg-\[\#D7BD72\]:hover {
+  background-color: #DBC478 !important;
+}
+
+#home .hover\:border-\[\#C8A951\]\/35:hover {
+  border-color: rgba(206, 177, 92, 0.35) !important;
+}
+
+#home h1 {
+  max-width: 64rem !important;
+  font-size: clamp(2.65rem, 5vw, 5.65rem) !important;
+  line-height: 1.14 !important;
+  letter-spacing: -0.042em !important;
+  color: #F3F0E8 !important;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.34));
+}
+
+#home h1 span {
+  color: #CEB15C !important;
+  letter-spacing: -0.05em !important;
+  text-shadow: 0 0 18px rgba(206, 177, 92, 0.1);
+}
+
+#home h1 + p {
+  margin-top: 2.25rem !important;
+  max-width: 42rem !important;
+  line-height: 1.7 !important;
+}
+
+#home h1 + p + div {
+  margin-top: 3.5rem !important;
+  align-items: center;
+}
+
+#home h1 + p + div a {
+  padding: 1.15rem 2.25rem !important;
+}
+
+#home h1 + p + div a:first-child {
+  min-width: 300px !important;
+  box-shadow: 0 18px 40px rgba(206, 177, 92, 0.14) !important;
+}
+
+#home h1 + p + div a:last-child {
+  min-width: 250px !important;
+  background-color: rgba(17, 21, 27, 0.52) !important;
+}
+
+#home .lg\:pt-4 {
+  padding-top: 1.5rem !important;
+}
+
+#home .max-w-6xl {
+  max-width: 72rem !important;
+}
+
+#home [aria-label="Hubungi studio"] {
+  background-color: #CEB15C !important;
+  box-shadow: 0 16px 36px rgba(206, 177, 92, 0.13) !important;
+}
+
+@media (max-width: 767px) {
+  #home h1 {
+    font-size: clamp(2.45rem, 13vw, 4.25rem) !important;
+    line-height: 1.08 !important;
+  }
+
+  #home h1 + p {
+    margin-top: 1.75rem !important;
+  }
+
+  #home h1 + p + div {
+    margin-top: 2.75rem !important;
+    align-items: stretch;
+  }
+}
