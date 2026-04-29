@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, ImagePlus, X } from 'lucide-react';
+import { CheckCircle2, ImagePlus, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project, ProjectImage } from '@/lib/types';
 
@@ -43,17 +43,12 @@ function validateImage(file: File) {
 
 export default function ProjectForm({ project }: Props) {
   const router = useRouter();
-  const coverInputRef = useRef<HTMLInputElement | null>(null);
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const isEditing = Boolean(project?.id);
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [message, setMessage] = useState('');
-  const [uploadError, setUploadError] = useState('');
   const [galleryError, setGalleryError] = useState('');
-  const [uploadSuccess, setUploadSuccess] = useState(Boolean(project?.cover_image));
-  const [selectedFileName, setSelectedFileName] = useState('');
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].sort((a, b) => a.sort_order - b.sort_order));
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || '');
@@ -68,86 +63,18 @@ export default function ProjectForm({ project }: Props) {
     if (!isEditing && !slug) setSlug(slugify(nextTitle));
   }
 
-  function openCoverPicker() {
-    if (uploading || loading) return;
-    coverInputRef.current?.click();
-  }
-
   function openGalleryPicker() {
     if (galleryUploading || loading) return;
     galleryInputRef.current?.click();
   }
 
-  function removeCoverImage() {
-    setCoverImage('');
-    setSelectedFileName('');
-    setUploadError('');
-    setUploadSuccess(false);
-    setMessage('Cover image dihapus dari form. Simpan project untuk menyimpan perubahan.');
-    if (coverInputRef.current) coverInputRef.current.value = '';
-  }
-
-  async function handleCoverUpload(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setUploadError('');
-    setMessage('');
-    setUploadSuccess(false);
-    setSelectedFileName(file.name);
-
-    const validationError = validateImage(file);
-    if (validationError) {
-      setUploadError(validationError);
-      setSelectedFileName('');
-      event.target.value = '';
-      return;
-    }
-
-    const currentSlug = slug || slugify(title);
-    if (!currentSlug) {
-      setUploadError('Isi title atau slug terlebih dahulu sebelum upload cover image.');
-      setSelectedFileName('');
-      event.target.value = '';
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      const supabase = getSupabaseClient();
-      const filePath = `${currentSlug}/${safeFileName(file.name)}`;
-      const { error } = await supabase.storage.from('project-images').upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: true,
-        contentType: file.type,
-      });
-
-      if (error) {
-        console.error('[ProjectForm] Cover image upload failed', { bucket: 'project-images', path: filePath, message: error.message });
-        throw error;
-      }
-
-      const { data } = supabase.storage.from('project-images').getPublicUrl(filePath);
-      setCoverImage(data.publicUrl);
-      setUploadSuccess(true);
-      setMessage('Cover image berhasil diupload. Simpan project untuk menyimpan perubahan.');
-    } catch (error) {
-      setUploadSuccess(false);
-      setUploadError(error instanceof Error ? error.message : 'Upload gambar gagal.');
-    } finally {
-      setUploading(false);
-      event.target.value = '';
-    }
-  }
-
-  async function ensureProjectExists() {
+  async function ensureProjectExists(coverOverride?: string | null) {
     const supabase = getSupabaseClient();
     const payload = {
       title,
       slug: slug || slugify(title),
       category: category || null,
-      cover_image: coverImage || null,
+      cover_image: coverOverride !== undefined ? coverOverride : coverImage || null,
       problem,
       solution,
       impact,
@@ -163,6 +90,38 @@ export default function ProjectForm({ project }: Props) {
     if (error) throw error;
     router.replace(`/admin/projects/${data.id}/edit`);
     return data.id as string;
+  }
+
+  async function setAsCover(imageUrl: string) {
+    setCoverImage(imageUrl);
+    setMessage('Cover image dipilih dari gallery. Simpan project untuk menyimpan perubahan.');
+
+    if (!project?.id) return;
+
+    try {
+      const supabase = getSupabaseClient();
+      const { error } = await supabase.from('projects').update({ cover_image: imageUrl }).eq('id', project.id);
+      if (error) throw error;
+      setMessage('Cover image berhasil diperbarui.');
+    } catch (error) {
+      setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan cover image.');
+    }
+  }
+
+  async function clearCover() {
+    setCoverImage('');
+    setMessage('Cover image dihapus. Simpan project untuk menyimpan perubahan.');
+
+    if (!project?.id) return;
+
+    try {
+      const supabase = getSupabaseClient();
+      const { error } = await supabase.from('projects').update({ cover_image: null }).eq('id', project.id);
+      if (error) throw error;
+      setMessage('Cover image berhasil dihapus.');
+    } catch (error) {
+      setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus cover image.');
+    }
   }
 
   async function handleGalleryUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -226,8 +185,17 @@ export default function ProjectForm({ project }: Props) {
         uploadedImages.push(data as ProjectImage);
       }
 
-      setGalleryImages((current) => [...current, ...uploadedImages].sort((a, b) => a.sort_order - b.sort_order));
-      setMessage('Gallery images berhasil diupload.');
+      const nextImages = [...galleryImages, ...uploadedImages].sort((a, b) => a.sort_order - b.sort_order);
+      setGalleryImages(nextImages);
+
+      if (!coverImage && uploadedImages[0]) {
+        setCoverImage(uploadedImages[0].image_url);
+        const { error: coverError } = await supabase.from('projects').update({ cover_image: uploadedImages[0].image_url }).eq('id', projectId);
+        if (coverError) throw coverError;
+        setMessage('Gallery images berhasil diupload. Gambar pertama otomatis dipilih sebagai cover.');
+      } else {
+        setMessage('Gallery images berhasil diupload.');
+      }
     } catch (error) {
       setGalleryError(error instanceof Error ? error.message : 'Upload gallery gagal.');
     } finally {
@@ -248,7 +216,7 @@ export default function ProjectForm({ project }: Props) {
     }
   }
 
-  async function removeGalleryImage(imageId: string) {
+  async function removeGalleryImage(image: ProjectImage) {
     const confirmed = window.confirm('Hapus gambar gallery ini?');
     if (!confirmed) return;
 
@@ -256,9 +224,20 @@ export default function ProjectForm({ project }: Props) {
 
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('project_images').delete().eq('id', imageId);
+      const { error } = await supabase.from('project_images').delete().eq('id', image.id);
       if (error) throw error;
-      setGalleryImages((current) => current.filter((image) => image.id !== imageId));
+
+      const remainingImages = galleryImages.filter((item) => item.id !== image.id);
+      setGalleryImages(remainingImages);
+
+      if (coverImage === image.image_url) {
+        const nextCover = remainingImages[0]?.image_url || null;
+        setCoverImage(nextCover || '');
+        if (project?.id) {
+          const { error: coverError } = await supabase.from('projects').update({ cover_image: nextCover }).eq('id', project.id);
+          if (coverError) throw coverError;
+        }
+      }
     } catch (error) {
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus gambar gallery.');
     }
@@ -332,51 +311,19 @@ export default function ProjectForm({ project }: Props) {
           <label>Slug</label>
           <input value={slug} onChange={(event) => setSlug(slugify(event.target.value))} required />
         </div>
-        <div>
+        <div className="md:col-span-2">
           <label>Category</label>
           <input value={category} onChange={(event) => setCategory(event.target.value)} placeholder="Residential Interior" />
         </div>
-        <div>
-          <label>Cover Image</label>
-          <input ref={coverInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handleCoverUpload} disabled={uploading || loading} className="hidden" />
-          <button type="button" onClick={openCoverPicker} disabled={uploading || loading} className="group w-full rounded-sm border border-dashed border-white/14 bg-white/[0.018] p-5 text-left transition duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] disabled:cursor-not-allowed disabled:opacity-60">
-            <div className="flex items-start gap-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-white/10 bg-black/20 text-white/48 transition duration-300 group-hover:border-[#D4AF37]/35 group-hover:text-[#D4AF37]">
-                {uploadSuccess ? <CheckCircle2 size={20} /> : <ImagePlus size={20} />}
-              </span>
-              <span className="block min-w-0">
-                <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-white/82">{uploading ? 'Uploading Cover Image' : coverImage ? 'Replace Cover Image' : 'Upload Cover Image'}</span>
-                <span className="mt-2 block text-sm leading-6 text-white/45">Drag & drop atau klik untuk memilih file</span>
-                <span className="mt-2 block text-xs leading-5 text-white/34">JPG, PNG, atau WEBP. Maksimal 2MB.</span>
-              </span>
-            </div>
-          </button>
-          {uploading ? <div className="mt-3 flex items-center gap-3 text-sm text-[#D4AF37]"><span className="h-2 w-2 animate-pulse rounded-full bg-[#D4AF37]" /><span>Uploading image...</span></div> : null}
-          {uploadSuccess && !uploading ? <div className="mt-3 flex items-center gap-2 text-sm text-[#D4AF37]"><CheckCircle2 size={16} /><span>Cover image siap digunakan.</span></div> : null}
-          {uploadError ? <p className="mt-3 text-sm leading-6 text-red-300">{uploadError}</p> : null}
-        </div>
       </div>
-
-      {coverImage ? (
-        <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <label>Cover Preview</label>
-              {selectedFileName ? <p className="mt-1 text-xs leading-5 text-white/38">{selectedFileName}</p> : null}
-            </div>
-            <button type="button" onClick={removeCoverImage} disabled={loading || uploading} className="inline-flex items-center gap-2 self-start rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">
-              <X size={14} /> Remove
-            </button>
-          </div>
-          <img src={coverImage} alt={title || 'Cover preview'} className="mt-4 aspect-[16/9] w-full rounded-sm object-cover" />
-        </div>
-      ) : null}
 
       <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <label>Project Gallery</label>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">Upload multiple images untuk halaman detail project. Cover image tetap terpisah sebagai thumbnail utama.</p>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">
+              Upload multiple images untuk halaman detail project. Pilih salah satu gambar dari gallery sebagai cover thumbnail.
+            </p>
           </div>
           <div>
             <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading} className="hidden" />
@@ -385,25 +332,58 @@ export default function ProjectForm({ project }: Props) {
             </button>
           </div>
         </div>
+
+        {coverImage ? (
+          <div className="mt-6 flex flex-col gap-3 rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3 text-sm text-[#D4AF37]">
+              <Star size={16} />
+              <span>Cover image sudah dipilih dari gallery.</span>
+            </div>
+            <button type="button" onClick={clearCover} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 md:self-auto">
+              Clear Cover
+            </button>
+          </div>
+        ) : (
+          <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">
+            Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.
+          </div>
+        )}
+
         {galleryError ? <p className="mt-4 text-sm leading-6 text-red-300">{galleryError}</p> : null}
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
 
         {galleryImages.length > 0 ? (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {galleryImages.map((image) => (
-              <div key={image.id} className="overflow-hidden rounded-sm border border-white/10 bg-black/20">
-                <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="aspect-[4/3] w-full object-cover" />
-                <div className="space-y-3 p-4">
-                  <div>
-                    <label>Alt Text</label>
-                    <input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" />
+            {galleryImages.map((image) => {
+              const isCover = coverImage === image.image_url;
+
+              return (
+                <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
+                  <div className="relative">
+                    <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="aspect-[4/3] w-full object-cover" />
+                    {isCover ? (
+                      <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#080807]">
+                        <Star size={12} /> Cover
+                      </div>
+                    ) : null}
                   </div>
-                  <button type="button" onClick={() => removeGalleryImage(image.id)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200">
-                    <X size={13} /> Remove
-                  </button>
+                  <div className="space-y-3 p-4">
+                    <div>
+                      <label>Alt Text</label>
+                      <input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button type="button" onClick={() => setAsCover(image.image_url)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>
+                        <Star size={13} /> {isCover ? 'Selected Cover' : 'Set as Cover'}
+                      </button>
+                      <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200">
+                        <X size={13} /> Remove
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="mt-8 rounded-sm border border-dashed border-white/10 p-8 text-center text-sm leading-6 text-white/42">Belum ada gallery images.</div>
@@ -428,11 +408,11 @@ export default function ProjectForm({ project }: Props) {
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <button disabled={loading || uploading || galleryUploading} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">
+        <button disabled={loading || galleryUploading} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">
           {loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Project'}
         </button>
         {isEditing ? (
-          <button disabled={loading || uploading || galleryUploading} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button>
+          <button disabled={loading || galleryUploading} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button>
         ) : null}
       </div>
     </form>
