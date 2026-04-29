@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminDashboardCMS from '@/components/admin-dashboard-cms';
 import AdminLogoutButton from '@/components/admin-logout-button';
@@ -16,12 +15,7 @@ export default function AdminDashboardPage() {
                 Pantau status project, kelola konten, dan update portfolio tanpa menyentuh kode.
               </p>
             </div>
-            <div className="flex flex-col gap-4 md:items-end">
-              <Link href="/admin/projects/new" className="inline-flex items-center justify-center rounded-[4px] bg-[#D4AF37] px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
-                Tambah Project
-              </Link>
-              <AdminLogoutButton />
-            </div>
+            <AdminLogoutButton />
           </div>
 
           <AdminDashboardCMS />
