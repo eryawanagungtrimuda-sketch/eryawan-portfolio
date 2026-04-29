@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 
-const ownerWorkflow = [
+const clientWorkflow = [
   {
     title: 'Tidak hanya menerima brief.',
     description:
@@ -10,13 +10,13 @@ const ownerWorkflow = [
   {
     title: 'Tidak hanya menggambar ruang.',
     description:
-      'Saya menyusun logika sirkulasi, fungsi, material, dan pengalaman ruang agar desain bekerja secara nyata.',
+      'Saya menyusun logika sirkulasi, fungsi, material, dan pengalaman ruang agar desain bekerja secara nyata bagi pengguna ruang.',
     number: '02',
   },
   {
     title: 'Tidak hanya mengikuti preferensi.',
     description:
-      'Saya membantu owner melihat konsekuensi jangka panjang dari setiap keputusan desain.',
+      'Saya membantu klien dan pengambil keputusan melihat konsekuensi jangka panjang dari setiap keputusan desain.',
     number: '03',
   },
 ];
@@ -24,7 +24,7 @@ const ownerWorkflow = [
 const framework = [
   {
     title: 'Context Reading',
-    description: 'Membaca konteks ruang, perilaku pengguna, tujuan bisnis, dan batasan proyek.',
+    description: 'Membaca konteks ruang, perilaku pengguna ruang, tujuan bisnis, dan batasan proyek.',
     icon: Search,
     number: '01',
     code: 'READ',
@@ -49,7 +49,7 @@ const decisions = [
   'Sirkulasi yang jelas mengurangi friksi aktivitas dan meningkatkan efisiensi penggunaan ruang.',
   'Pencahayaan yang tepat membentuk atmosfer, fokus, dan kenyamanan.',
   'Material yang dipilih dengan sadar memengaruhi durabilitas, biaya, dan persepsi nilai.',
-  'Layout yang logis membantu owner mengambil keputusan lebih cepat dan terarah.',
+  'Layout yang logis membantu klien mengambil keputusan lebih cepat dan terarah.',
 ];
 
 const impacts = [
@@ -137,7 +137,7 @@ export default function Home() {
             </h1>
 
             <p className="mt-7 max-w-3xl text-lg leading-8 text-white/74 drop-shadow-md md:text-[1.28rem]">
-              Saya membantu owner dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
+              Saya membantu klien dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
             </p>
 
             <div className="mt-12 flex flex-col gap-4 sm:flex-row">
@@ -172,14 +172,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="owner-workflow" className="relative overflow-hidden bg-[#090909] px-5 py-20 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="client-workflow" className="relative overflow-hidden bg-[#090909] px-5 py-20 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(255,196,0,0.06),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.016),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
-              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Owner Collaboration</p>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#ffc400] md:text-[11px]">Client Collaboration</p>
               <h2 className="font-display mt-5 max-w-3xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
-                Cara Saya Bekerja dengan Owner
+                Cara Saya Bekerja dengan Klien
               </h2>
             </div>
             <p className="max-w-3xl text-lg leading-9 text-white/62 md:text-xl">
@@ -188,7 +188,7 @@ export default function Home() {
           </div>
 
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
-            {ownerWorkflow.map((item) => (
+            {clientWorkflow.map((item) => (
               <article key={item.title} className="group border border-white/10 bg-white/[0.018] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#ffc400]/30 hover:bg-white/[0.035] md:p-9">
                 <div className="mb-14 flex items-center justify-between">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/36">{item.number}</span>
@@ -408,7 +408,7 @@ export default function Home() {
               Jika Anda mencari designer, banyak pilihan.<br className="hidden lg:block" /> Jika Anda mencari partner berpikir, kita perlu bicara.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-white/62 md:text-2xl">
-              Saya siap membantu tim dan owner membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
+              Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
             <a
