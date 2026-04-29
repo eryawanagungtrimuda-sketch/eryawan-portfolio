@@ -1,0 +1,44 @@
+/* Homepage portfolio teaser: fast, strategic, clickable cards */
+#portfolio article {
+  cursor: pointer;
+}
+
+#portfolio article .space-y-8 {
+  display: none !important;
+}
+
+#portfolio article .relative.z-10::after {
+  display: block;
+  margin-top: 2.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: pre-line;
+  font-size: 1.04rem;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+#portfolio article:nth-child(1) .relative.z-10::after {
+  content: "Problem\A Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.\A\AImpact\A Ruang menjadi lebih terarah, aktivitas lebih lancar, dan keputusan layout lebih cepat disepakati.\A\A↗ Lihat Studi Kasus";
+}
+
+#portfolio article:nth-child(2) .relative.z-10::after {
+  content: "Problem\A Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.\A\AImpact\A Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.\A\A↗ Lihat Studi Kasus";
+}
+
+#portfolio article:hover .relative.z-10::after {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+#portfolio article:focus-visible {
+  outline: 1px solid rgba(212, 175, 55, 0.75);
+  outline-offset: 6px;
+}
+
+@media (max-width: 767px) {
+  #portfolio article .relative.z-10::after {
+    margin-top: 2.35rem;
+    padding-top: 1.75rem;
+    font-size: 0.98rem;
+  }
+}
