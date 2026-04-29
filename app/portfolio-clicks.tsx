@@ -44,6 +44,19 @@ export default function PortfolioClicks() {
   useEffect(() => {
     let cancelled = false;
 
+    function linkFooterPanel() {
+      const footerItems = Array.from(document.querySelectorAll<HTMLElement>('footer a, footer span, footer p, section#contact span'));
+      const panel = footerItems.find((item) => item.textContent?.trim() === 'Panel');
+      if (!panel || panel.tagName.toLowerCase() === 'a') return;
+
+      const anchor = document.createElement('a');
+      anchor.href = '/admin/login';
+      anchor.textContent = 'Panel';
+      anchor.className = panel.className || 'transition hover:text-[#D4AF37]';
+      anchor.setAttribute('aria-label', 'Buka admin panel');
+      panel.replaceWith(anchor);
+    }
+
     async function hydratePortfolioLinks() {
       const cards = Array.from(document.querySelectorAll<HTMLElement>('#portfolio article'));
       if (cards.length === 0) return;
@@ -96,6 +109,7 @@ export default function PortfolioClicks() {
       });
     }
 
+    linkFooterPanel();
     hydratePortfolioLinks();
 
     return () => {
