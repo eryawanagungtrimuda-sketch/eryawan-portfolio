@@ -15,6 +15,11 @@ create table if not exists public.projects (
   created_at timestamp with time zone not null default now()
 );
 
+-- Required grants for Supabase API roles.
+grant usage on schema public to anon, authenticated;
+grant select on public.projects to anon, authenticated;
+grant insert, update, delete on public.projects to authenticated;
+
 alter table public.projects enable row level security;
 
 drop policy if exists "Public read projects" on public.projects;
