@@ -1,3 +1,12 @@
+export type ProjectImage = {
+  id: string;
+  project_id: string;
+  image_url: string;
+  alt_text: string | null;
+  sort_order: number;
+  created_at: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -8,6 +17,7 @@ export type Project = {
   solution: string | null;
   impact: string | null;
   created_at: string;
+  project_images?: ProjectImage[];
 };
 
 export type ProjectFormState = {
