@@ -27,6 +27,8 @@ export default async function KaryaDetailPage({ params }: Props) {
   const project = await getPublishedProjectBySlug(params.slug);
   if (!project) notFound();
 
+  const galleryImages = [...(project.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
+
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
       <div className="mx-auto max-w-6xl">
@@ -53,7 +55,7 @@ export default async function KaryaDetailPage({ params }: Props) {
               <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" />
             </div>
             <p className="mt-5 max-w-3xl text-sm leading-7 text-white/48">
-              Visual menjadi pendukung pembacaan keputusan desain: fungsi, solusi, dan pengalaman ruang.
+              Cover image menjadi pembuka visual project: memberikan konteks atmosfer, proporsi, dan arah keputusan desain.
             </p>
           </section>
         ) : null}
@@ -63,6 +65,44 @@ export default async function KaryaDetailPage({ params }: Props) {
           <TextBlock label="Solution" body={project.solution} index={2} />
           <TextBlock label="Impact" body={project.impact} index={3} />
         </section>
+
+        {galleryImages.length > 0 ? (
+          <section className="border-t border-white/10 py-20">
+            <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37]">Project Gallery</p>
+                <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">
+                  Visual Documentation
+                </h2>
+              </div>
+              <p className="max-w-md text-sm leading-7 text-white/48 md:text-right">
+                Gallery mendukung narasi project melalui detail material, komposisi ruang, dan pengalaman pengguna.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-2">
+              {galleryImages.map((image, index) => (
+                <figure
+                  key={image.id}
+                  className={index === 0 ? 'md:col-span-2' : ''}
+                >
+                  <div className="overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
+                    <img
+                      src={image.image_url}
+                      alt={image.alt_text || `${project.title} gallery ${index + 1}`}
+                      className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'}
+                    />
+                  </div>
+                  {image.alt_text ? (
+                    <figcaption className="mt-3 text-sm leading-6 text-white/46">
+                      {image.alt_text}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="border-t border-white/10 py-16">
           <p className="font-display max-w-4xl text-3xl italic leading-[1.28] tracking-[-0.03em] text-white/86 md:text-5xl">
