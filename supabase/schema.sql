@@ -51,6 +51,40 @@ for delete
 to authenticated
 using (true);
 
+-- Supabase Storage bucket for cover images.
+insert into storage.buckets (id, name, public)
+values ('project-images', 'project-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public read project images" on storage.objects;
+create policy "Public read project images"
+on storage.objects
+for select
+to anon, authenticated
+using (bucket_id = 'project-images');
+
+drop policy if exists "Authenticated upload project images" on storage.objects;
+create policy "Authenticated upload project images"
+on storage.objects
+for insert
+to authenticated
+with check (bucket_id = 'project-images');
+
+drop policy if exists "Authenticated update project images" on storage.objects;
+create policy "Authenticated update project images"
+on storage.objects
+for update
+to authenticated
+using (bucket_id = 'project-images')
+with check (bucket_id = 'project-images');
+
+drop policy if exists "Authenticated delete project images" on storage.objects;
+create policy "Authenticated delete project images"
+on storage.objects
+for delete
+to authenticated
+using (bucket_id = 'project-images');
+
 -- Optional starter data. Run only if you want demo projects.
 -- insert into public.projects (title, slug, category, problem, solution, impact)
 -- values
