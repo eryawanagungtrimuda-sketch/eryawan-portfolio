@@ -29,9 +29,9 @@ export default async function KaryaPage() {
               href={`/karya/${project.slug}`}
               className="group relative overflow-hidden rounded-sm border border-white/12 bg-gradient-to-br from-white/[0.035] to-white/[0.012] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/35 md:p-10"
             >
-              {project.cover_image_url ? (
+              {project.cover_image ? (
                 <div className="mb-8 aspect-[16/10] overflow-hidden rounded-sm border border-white/10">
-                  <img src={project.cover_image_url} alt={project.title} className="h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100" />
+                  <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100" />
                 </div>
               ) : null}
 
@@ -44,7 +44,7 @@ export default async function KaryaPage() {
               <div className="mt-10 space-y-6 border-t border-white/10 pt-8">
                 <div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Problem</p>
-                  <p className="mt-3 text-base leading-[1.65] text-white/70 md:text-lg">{project.problem || project.short_description}</p>
+                  <p className="mt-3 text-base leading-[1.65] text-white/70 md:text-lg">{project.problem || 'Masalah ruang belum didefinisikan.'}</p>
                 </div>
                 <div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Impact</p>
