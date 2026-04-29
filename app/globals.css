@@ -116,6 +116,195 @@ body {
   box-shadow: 0 16px 36px rgba(212, 175, 55, 0.13) !important;
 }
 
+/* Strategic positioning copy refinement: visible editorial copy without changing major layout */
+#home h1 + p,
+#client-workflow > div > div:first-child > p,
+#client-workflow article p:last-child,
+#framework article p:last-child,
+#design-decisions > div > div:first-child > p:first-of-type,
+#design-decisions > div > div:first-child > p:nth-of-type(2),
+#impact .mt-20 + div p:first-child,
+#portfolio > div > div:first-child p:not(:first-child),
+#portfolio article .space-y-8 > div p:last-child,
+#contact h2 + p {
+  font-size: 0 !important;
+}
+
+#home h1 + p::after,
+#client-workflow > div > div:first-child > p::after,
+#client-workflow article p:last-child::after,
+#framework article p:last-child::after,
+#design-decisions > div > div:first-child > p:first-of-type::after,
+#design-decisions > div > div:first-child > p:nth-of-type(2)::after,
+#impact .mt-20 + div p:first-child::after,
+#portfolio > div > div:first-child p:not(:first-child)::after,
+#portfolio article .space-y-8 > div p:last-child::after,
+#contact h2 + p::after {
+  display: block;
+  white-space: normal;
+}
+
+#home h1 + p::after {
+  content: "Saya membantu klien mengambil keputusan desain yang tidak hanya indah, tetapi efisien, terukur, dan berdampak pada cara ruang digunakan.";
+  font-size: 1.18rem;
+  line-height: 1.72;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+#client-workflow > div > div:first-child > p::after {
+  content: "Saya membantu klien membaca masalah di balik brief, menyusun logika ruang, dan mengubah preferensi menjadi keputusan desain yang bisa dipertanggungjawabkan.";
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+#client-workflow article:nth-child(1) p:last-child::after {
+  content: "Brief sering hanya menunjukkan permukaan. Saya membaca masalah sebenarnya lebih dulu agar solusi tidak berhenti pada permintaan awal.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#client-workflow article:nth-child(2) p:last-child::after {
+  content: "Gambar adalah hasil, bukan titik awal. Saya menyusun logika fungsi, sirkulasi, dan pengalaman agar ruang bekerja bagi pengguna ruang.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#client-workflow article:nth-child(3) p:last-child::after {
+  content: "Preferensi perlu diterjemahkan menjadi prioritas. Saya membantu klien dan pengambil keputusan melihat dampak jangka panjang sebelum desain dikunci.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#framework article:nth-child(1) p:last-child::after {
+  content: "Setiap proyek dimulai dari pembacaan konteks: siapa pengguna ruangnya, apa batasannya, dan keputusan apa yang paling menentukan hasil.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#framework article:nth-child(2) p:last-child::after {
+  content: "Kebutuhan diterjemahkan menjadi sistem ruang yang jelas, agar fungsi, sirkulasi, dan prioritas dapat dibaca dengan mudah.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#framework article:nth-child(3) p:last-child::after {
+  content: "Keputusan desain dipilih berdasarkan alasan, dampak, dan nilai jangka panjang—bukan sekadar preferensi visual.";
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+#design-decisions > div > div:first-child > p:first-of-type::after {
+  content: "Saya mengontrol kualitas keputusan desain sejak awal: mana yang perlu diprioritaskan, mana yang bisa disederhanakan, dan mana yang akan berdampak paling besar pada ruang.";
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+#design-decisions > div > div:first-child > p:nth-of-type(2)::after {
+  content: "Desain yang kuat bukan yang paling ramai. Desain yang kuat adalah keputusan yang tepat, tenang, dan bekerja.";
+  font-size: 2.25rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.90);
+}
+
+#impact .mt-20 + div p:first-child::after {
+  content: "Keputusan desain yang tepat membuat proses lebih jelas, revisi lebih terkendali, dan ruang lebih mudah digunakan.";
+  font-size: 1.3rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+#impact .grid > div:nth-child(1) p:last-child {
+  font-size: 0 !important;
+}
+#impact .grid > div:nth-child(1) p:last-child::after {
+  content: "↑ Efisiensi meningkat";
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+#impact .grid > div:nth-child(2) p:last-child {
+  font-size: 0 !important;
+}
+#impact .grid > div:nth-child(2) p:last-child::after {
+  content: "↓ Keputusan lebih cepat";
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+#impact .grid > div:nth-child(3) p:last-child {
+  font-size: 0 !important;
+}
+#impact .grid > div:nth-child(3) p:last-child::after {
+  content: "↓ Revisi berkurang";
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+#impact .grid > div:nth-child(4) p:last-child {
+  font-size: 0 !important;
+}
+#impact .grid > div:nth-child(4) p:last-child::after {
+  content: "↑ Ruang lebih terarah";
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+#portfolio > div > div:first-child p:not(:first-child)::after {
+  content: "Setiap proyek dibaca sebagai studi kasus singkat: masalah yang ditemukan, keputusan yang diambil, dan dampak yang dirasakan oleh klien maupun pengguna ruang.";
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+#portfolio article:nth-child(1) .space-y-8 > div:nth-child(1) p:last-child::after {
+  content: "Ruang hunian terasa terpecah, alur aktivitas harian tidak efisien, dan area publik belum mendukung ritme keluarga.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+#portfolio article:nth-child(1) .space-y-8 > div:nth-child(2) p:last-child::after {
+  content: "Saya menyusun ulang flow, memperjelas zoning, dan mengurangi titik gesekan agar keputusan layout lebih objektif.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+#portfolio article:nth-child(1) .space-y-8 > div:nth-child(3) p:last-child::after {
+  content: "Ruang terasa lebih terarah, fungsi harian lebih mudah berjalan, dan klien lebih cepat memahami prioritas desain.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+#portfolio article:nth-child(2) .space-y-8 > div:nth-child(1) p:last-child::after {
+  content: "Area kerja membutuhkan keseimbangan antara fokus, kolaborasi, dan kenyamanan tanpa membuat ruang terasa padat.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+#portfolio article:nth-child(2) .space-y-8 > div:nth-child(2) p:last-child::after {
+  content: "Saya membagi ruang berdasarkan intensitas aktivitas, kebutuhan privasi, dan ritme kerja pengguna ruang.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+#portfolio article:nth-child(2) .space-y-8 > div:nth-child(3) p:last-child::after {
+  content: "Ruang kerja menjadi lebih jelas, nyaman, dan mendukung keputusan operasional yang lebih produktif.";
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+#contact h2 + p::after {
+  content: "Untuk klien yang membutuhkan partner berpikir—bukan sekadar eksekutor visual—saya membantu menyusun keputusan ruang dengan tenang, jelas, dan strategis.";
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.70);
+}
+
 @media (max-width: 767px) {
   #home h1 {
     font-size: clamp(2.25rem, 11.5vw, 3.75rem) !important;
@@ -134,5 +323,9 @@ body {
   #home h1 + p + div a:first-child,
   #home h1 + p + div a:last-child {
     min-width: 100% !important;
+  }
+
+  #design-decisions > div > div:first-child > p:nth-of-type(2)::after {
+    font-size: 2rem;
   }
 }
