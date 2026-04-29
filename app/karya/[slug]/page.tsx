@@ -27,8 +27,6 @@ export default async function KaryaDetailPage({ params }: Props) {
   const project = await getPublishedProjectBySlug(params.slug);
   if (!project) notFound();
 
-  const images = project.project_images?.sort((a, b) => a.sort_order - b.sort_order) || [];
-
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
       <div className="mx-auto max-w-6xl">
@@ -39,55 +37,32 @@ export default async function KaryaDetailPage({ params }: Props) {
 
         <section className="py-20 md:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">
-            {project.category || 'Case Study'} {project.year ? `— ${project.year}` : ''}
+            {project.category || 'Case Study'}
           </p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">
             {project.title}
           </h1>
           <p className="mt-8 max-w-4xl text-xl leading-[1.65] text-white/76 md:text-2xl">
-            {project.short_description || project.problem || 'Studi kasus keputusan desain berbasis konteks, masalah, dan dampak ruang.'}
+            {project.problem || 'Studi kasus keputusan desain berbasis masalah, solusi, dan dampak ruang.'}
           </p>
-
-          <div className="mt-10 grid gap-4 border-y border-white/10 py-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/42 md:grid-cols-4">
-            <span>{project.location || 'Location —'}</span>
-            <span>{project.area_size || 'Area —'}</span>
-            <span>{project.design_style || 'Style —'}</span>
-            <span>{project.client_name || 'Client — Private'}</span>
-          </div>
         </section>
 
-        {project.cover_image_url ? (
+        {project.cover_image ? (
           <section className="pb-20">
             <div className="aspect-[16/9] overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
-              <img src={project.cover_image_url} alt={project.title} className="h-full w-full object-cover" />
+              <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" />
             </div>
             <p className="mt-5 max-w-3xl text-sm leading-7 text-white/48">
-              Visual menjadi pendukung pembacaan keputusan desain: layout, sirkulasi, material, dan pengalaman ruang.
+              Visual menjadi pendukung pembacaan keputusan desain: fungsi, solusi, dan pengalaman ruang.
             </p>
           </section>
         ) : null}
 
         <section className="grid gap-8 pb-20 lg:grid-cols-1">
-          <TextBlock label="Context" body={project.context} index={1} />
-          <TextBlock label="Core Problem" body={project.problem} index={2} />
-          <TextBlock label="Strategic Decision" body={project.strategic_decision} index={3} />
-          <TextBlock label="Design Execution" body={project.execution} index={4} />
-          <TextBlock label="Impact" body={project.impact} index={5} />
+          <TextBlock label="Core Problem" body={project.problem} index={1} />
+          <TextBlock label="Solution" body={project.solution} index={2} />
+          <TextBlock label="Impact" body={project.impact} index={3} />
         </section>
-
-        {images.length > 0 ? (
-          <section className="border-t border-white/10 py-20">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37]">Gallery</p>
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
-              {images.map((image) => (
-                <figure key={image.id} className="overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
-                  <img src={image.image_url} alt={image.alt_text || project.title} className="aspect-[4/3] w-full object-cover" />
-                  {image.alt_text ? <figcaption className="p-4 text-sm leading-6 text-white/52">{image.alt_text}</figcaption> : null}
-                </figure>
-              ))}
-            </div>
-          </section>
-        ) : null}
 
         <section className="border-t border-white/10 py-16">
           <p className="font-display max-w-4xl text-3xl italic leading-[1.28] tracking-[-0.03em] text-white/86 md:text-5xl">
