@@ -1,33 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createSupabaseBrowserClient } from '@/lib/supabase';
-import type { Project, ProjectImage } from '@/lib/types';
+import { getSupabaseClient } from '@/lib/supabaseClient';
+import type { Project } from '@/lib/types';
 import ProjectForm from './project-form';
-
-type ProjectWithImages = Project & { project_images?: ProjectImage[] };
 
 type Props = {
   id: string;
 };
 
 export default function AdminProjectEditor({ id }: Props) {
-  const [project, setProject] = useState<ProjectWithImages | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     async function loadProject() {
       try {
-        const supabase = createSupabaseBrowserClient();
+        const supabase = getSupabaseClient();
         const { data, error } = await supabase
           .from('projects')
-          .select('*, project_images(*)')
+          .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
           .eq('id', id)
           .single();
 
         if (error) throw error;
-        setProject(data as ProjectWithImages);
+        setProject(data as Project);
       } catch (error) {
         setMessage(error instanceof Error ? error.message : 'Project tidak ditemukan.');
       } finally {
