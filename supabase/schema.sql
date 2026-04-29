@@ -15,12 +15,24 @@ create table if not exists public.projects (
   created_at timestamp with time zone not null default now()
 );
 
+create table if not exists public.project_images (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.projects(id) on delete cascade,
+  image_url text not null,
+  alt_text text,
+  sort_order integer not null default 0,
+  created_at timestamp with time zone not null default now()
+);
+
 -- Required grants for Supabase API roles.
 grant usage on schema public to anon, authenticated;
 grant select on public.projects to anon, authenticated;
 grant insert, update, delete on public.projects to authenticated;
+grant select on public.project_images to anon, authenticated;
+grant insert, update, delete on public.project_images to authenticated;
 
 alter table public.projects enable row level security;
+alter table public.project_images enable row level security;
 
 drop policy if exists "Public read projects" on public.projects;
 create policy "Public read projects"
@@ -51,7 +63,36 @@ for delete
 to authenticated
 using (true);
 
--- Supabase Storage bucket for cover images.
+drop policy if exists "Public read project images table" on public.project_images;
+create policy "Public read project images table"
+on public.project_images
+for select
+to anon, authenticated
+using (true);
+
+drop policy if exists "Authenticated insert project images table" on public.project_images;
+create policy "Authenticated insert project images table"
+on public.project_images
+for insert
+to authenticated
+with check (true);
+
+drop policy if exists "Authenticated update project images table" on public.project_images;
+create policy "Authenticated update project images table"
+on public.project_images
+for update
+to authenticated
+using (true)
+with check (true);
+
+drop policy if exists "Authenticated delete project images table" on public.project_images;
+create policy "Authenticated delete project images table"
+on public.project_images
+for delete
+to authenticated
+using (true);
+
+-- Supabase Storage bucket for cover and gallery images.
 insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true)
 on conflict (id) do update set public = true;
