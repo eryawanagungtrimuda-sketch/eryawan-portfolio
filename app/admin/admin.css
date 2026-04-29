@@ -1,0 +1,36 @@
+#admin-shell input,
+#admin-shell textarea,
+#admin-shell select {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+  color: #f4f1ea;
+  border-radius: 4px;
+  padding: 0.85rem 0.95rem;
+  outline: none;
+}
+
+#admin-shell input:focus,
+#admin-shell textarea:focus,
+#admin-shell select:focus {
+  border-color: rgba(212, 175, 55, 0.65);
+}
+
+#admin-shell label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+#admin-shell textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#admin-shell select option {
+  background: #080807;
+}
