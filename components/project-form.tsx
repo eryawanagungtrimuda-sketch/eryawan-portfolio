@@ -1,7 +1,8 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CheckCircle2, ImagePlus, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 
@@ -36,11 +37,14 @@ function safeFileName(name: string) {
 
 export default function ProjectForm({ project }: Props) {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isEditing = Boolean(project?.id);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
   const [uploadError, setUploadError] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState(Boolean(project?.cover_image));
+  const [selectedFileName, setSelectedFileName] = useState('');
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || '');
   const [category, setCategory] = useState(project?.category || '');
@@ -54,21 +58,39 @@ export default function ProjectForm({ project }: Props) {
     if (!isEditing && !slug) setSlug(slugify(nextTitle));
   }
 
+  function openFilePicker() {
+    if (uploading || loading) return;
+    fileInputRef.current?.click();
+  }
+
+  function removeCoverImage() {
+    setCoverImage('');
+    setSelectedFileName('');
+    setUploadError('');
+    setUploadSuccess(false);
+    setMessage('Cover image dihapus dari form. Simpan project untuk menyimpan perubahan.');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
   async function handleCoverUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setUploadError('');
     setMessage('');
+    setUploadSuccess(false);
+    setSelectedFileName(file.name);
 
     if (!allowedImageTypes.includes(file.type)) {
       setUploadError('Format gambar harus JPG, PNG, atau WEBP.');
+      setSelectedFileName('');
       event.target.value = '';
       return;
     }
 
     if (file.size > maxImageSize) {
       setUploadError('Ukuran gambar maksimal 2MB.');
+      setSelectedFileName('');
       event.target.value = '';
       return;
     }
@@ -76,6 +98,7 @@ export default function ProjectForm({ project }: Props) {
     const currentSlug = slug || slugify(title);
     if (!currentSlug) {
       setUploadError('Isi title atau slug terlebih dahulu sebelum upload cover image.');
+      setSelectedFileName('');
       event.target.value = '';
       return;
     }
@@ -102,8 +125,10 @@ export default function ProjectForm({ project }: Props) {
 
       const { data } = supabase.storage.from('project-images').getPublicUrl(filePath);
       setCoverImage(data.publicUrl);
+      setUploadSuccess(true);
       setMessage('Cover image berhasil diupload. Simpan project untuk menyimpan perubahan.');
     } catch (error) {
+      setUploadSuccess(false);
       setUploadError(error instanceof Error ? error.message : 'Upload gambar gagal.');
     } finally {
       setUploading(false);
@@ -185,10 +210,51 @@ export default function ProjectForm({ project }: Props) {
         </div>
         <div>
           <label>Cover Image</label>
-          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleCoverUpload} disabled={uploading || loading} />
-          <p className="mt-2 text-xs leading-5 text-white/38">JPG, PNG, atau WEBP. Maksimal 2MB.</p>
-          {uploading ? <p className="mt-2 text-sm text-[#D4AF37]">Uploading image...</p> : null}
-          {uploadError ? <p className="mt-2 text-sm leading-6 text-red-300">{uploadError}</p> : null}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleCoverUpload}
+            disabled={uploading || loading}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={openFilePicker}
+            disabled={uploading || loading}
+            className="group w-full rounded-sm border border-dashed border-white/14 bg-white/[0.018] p-5 text-left transition duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <div className="flex items-start gap-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-white/10 bg-black/20 text-white/48 transition duration-300 group-hover:border-[#D4AF37]/35 group-hover:text-[#D4AF37]">
+                {uploadSuccess ? <CheckCircle2 size={20} /> : <ImagePlus size={20} />}
+              </span>
+              <span className="block min-w-0">
+                <span className="block text-sm font-semibold uppercase tracking-[0.12em] text-white/82">
+                  {uploading ? 'Uploading Cover Image' : coverImage ? 'Replace Cover Image' : 'Upload Cover Image'}
+                </span>
+                <span className="mt-2 block text-sm leading-6 text-white/45">
+                  Drag & drop atau klik untuk memilih file
+                </span>
+                <span className="mt-2 block text-xs leading-5 text-white/34">
+                  JPG, PNG, atau WEBP. Maksimal 2MB.
+                </span>
+              </span>
+            </div>
+          </button>
+
+          {uploading ? (
+            <div className="mt-3 flex items-center gap-3 text-sm text-[#D4AF37]">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#D4AF37]" />
+              <span>Uploading image...</span>
+            </div>
+          ) : null}
+          {uploadSuccess && !uploading ? (
+            <div className="mt-3 flex items-center gap-2 text-sm text-[#D4AF37]">
+              <CheckCircle2 size={16} />
+              <span>Cover image siap digunakan.</span>
+            </div>
+          ) : null}
+          {uploadError ? <p className="mt-3 text-sm leading-6 text-red-300">{uploadError}</p> : null}
         </div>
       </div>
 
@@ -209,9 +275,23 @@ export default function ProjectForm({ project }: Props) {
 
       {coverImage ? (
         <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
-          <label>Cover Preview</label>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <label>Cover Preview</label>
+              {selectedFileName ? <p className="mt-1 text-xs leading-5 text-white/38">{selectedFileName}</p> : null}
+            </div>
+            <button
+              type="button"
+              onClick={removeCoverImage}
+              disabled={loading || uploading}
+              className="inline-flex items-center gap-2 self-start rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto"
+            >
+              <X size={14} />
+              Remove
+            </button>
+          </div>
           <img src={coverImage} alt={title || 'Cover preview'} className="mt-4 aspect-[16/9] w-full rounded-sm object-cover" />
-          <p className="mt-3 break-all text-xs leading-5 text-white/35">{coverImage}</p>
+          <p className="mt-3 break-all text-xs leading-5 text-white/32">{coverImage}</p>
         </div>
       ) : null}
 
