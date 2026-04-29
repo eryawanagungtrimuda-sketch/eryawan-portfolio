@@ -2,39 +2,64 @@
 
 import { useEffect } from 'react';
 
-const caseStudyLinks = ['/case-study/residential-interior', '/case-study/workspace-interior'];
+type ApiProject = {
+  slug: string;
+};
+
+const fallbackLinks = ['/karya/residential-interior', '/karya/workspace-interior'];
 
 export default function PortfolioClicks() {
   useEffect(() => {
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('#portfolio article'));
+    let cancelled = false;
 
-    cards.forEach((card, index) => {
-      const href = caseStudyLinks[index];
-      if (!href) return;
+    async function hydratePortfolioLinks() {
+      const cards = Array.from(document.querySelectorAll<HTMLElement>('#portfolio article'));
+      if (cards.length === 0) return;
 
-      card.setAttribute('role', 'link');
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('aria-label', `Lihat studi kasus ${index + 1}`);
+      let links = fallbackLinks;
 
-      const openCaseStudy = () => {
-        window.location.href = href;
-      };
-
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          openCaseStudy();
+      try {
+        const response = await fetch('/api/projects', { cache: 'no-store' });
+        if (response.ok) {
+          const payload = (await response.json()) as { projects?: ApiProject[] };
+          const dynamicLinks = payload.projects?.map((project) => `/karya/${project.slug}`).filter(Boolean) || [];
+          if (dynamicLinks.length > 0) links = dynamicLinks;
         }
-      };
+      } catch {
+        links = fallbackLinks;
+      }
 
-      card.addEventListener('click', openCaseStudy);
-      card.addEventListener('keydown', handleKeyDown);
+      if (cancelled) return;
 
-      return () => {
-        card.removeEventListener('click', openCaseStudy);
-        card.removeEventListener('keydown', handleKeyDown);
-      };
-    });
+      cards.forEach((card, index) => {
+        const href = links[index];
+        if (!href) return;
+
+        const openCaseStudy = () => {
+          window.location.href = href;
+        };
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openCaseStudy();
+          }
+        };
+
+        card.setAttribute('role', 'link');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', `Lihat studi kasus ${index + 1}`);
+        card.dataset.href = href;
+        card.addEventListener('click', openCaseStudy);
+        card.addEventListener('keydown', handleKeyDown);
+      });
+    }
+
+    hydratePortfolioLinks();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return null;
