@@ -12,6 +12,7 @@ export const fallbackProjects: Project[] = [
     solution: 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.',
     impact: 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.',
     created_at: new Date().toISOString(),
+    project_images: [],
   },
   {
     id: 'fallback-workspace',
@@ -23,6 +24,7 @@ export const fallbackProjects: Project[] = [
     solution: 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.',
     impact: 'Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.',
     created_at: new Date().toISOString(),
+    project_images: [],
   },
 ];
 
@@ -47,8 +49,9 @@ export async function getPublishedProjectBySlug(slug: string) {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
+    .select('id,title,slug,category,cover_image,problem,solution,impact,created_at,project_images(id,project_id,image_url,alt_text,sort_order,created_at)')
     .eq('slug', slug)
+    .order('sort_order', { referencedTable: 'project_images', ascending: true })
     .single();
 
   if (error || !data) return null;
