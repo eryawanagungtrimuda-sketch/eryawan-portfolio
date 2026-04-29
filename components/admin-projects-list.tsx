@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createSupabaseBrowserClient } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 
 export default function AdminProjectsList() {
@@ -13,10 +13,10 @@ export default function AdminProjectsList() {
   useEffect(() => {
     async function loadProjects() {
       try {
-        const supabase = createSupabaseBrowserClient();
+        const supabase = getSupabaseClient();
         const { data, error } = await supabase
           .from('projects')
-          .select('*')
+          .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -51,11 +51,10 @@ export default function AdminProjectsList() {
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-xl font-semibold text-white/90">{project.title}</h2>
-              <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
-                {project.status}
-              </span>
-              {project.featured ? (
-                <span className="rounded-full border border-[#D4AF37]/30 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#D4AF37]">Featured</span>
+              {project.category ? (
+                <span className="rounded-full border border-white/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
+                  {project.category}
+                </span>
               ) : null}
             </div>
             <p className="mt-2 text-sm text-white/45">/{project.slug}</p>
