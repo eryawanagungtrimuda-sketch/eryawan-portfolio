@@ -20,8 +20,9 @@ export default function AdminProjectEditor({ id }: Props) {
         const supabase = getSupabaseClient();
         const { data, error } = await supabase
           .from('projects')
-          .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
+          .select('id,title,slug,category,cover_image,problem,solution,impact,created_at,project_images(id,project_id,image_url,alt_text,sort_order,created_at)')
           .eq('id', id)
+          .order('sort_order', { referencedTable: 'project_images', ascending: true })
           .single();
 
         if (error) throw error;
