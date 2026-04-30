@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { MoveLeft } from 'lucide-react';
+import BackButton from '@/components/back-button';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
 type Props = {
@@ -32,14 +32,16 @@ export default async function KaryaDetailPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
       <div className="mx-auto max-w-6xl">
-        <Link href="/karya" className="inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
-          <MoveLeft size={16} />
-          Kembali ke Karya
-        </Link>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
+            Eryawan Studio
+          </Link>
+          <BackButton label="Kembali ke Semua Karya" fallbackHref="/karya" />
+        </div>
 
         <section className="py-20 md:py-28">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">
-            {project.category || 'Case Study'}
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37] md:text-[11px]">
+            Beranda / Karya / {project.title}
           </p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">
             {project.title}
@@ -82,10 +84,7 @@ export default async function KaryaDetailPage({ params }: Props) {
 
             <div className="mt-10 grid gap-6 md:grid-cols-2">
               {galleryImages.map((image, index) => (
-                <figure
-                  key={image.id}
-                  className={index === 0 ? 'md:col-span-2' : ''}
-                >
+                <figure key={image.id} className={index === 0 ? 'md:col-span-2' : ''}>
                   <div className="overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
                     <img
                       src={image.image_url}
@@ -93,11 +92,7 @@ export default async function KaryaDetailPage({ params }: Props) {
                       className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'}
                     />
                   </div>
-                  {image.alt_text ? (
-                    <figcaption className="mt-3 text-sm leading-6 text-white/46">
-                      {image.alt_text}
-                    </figcaption>
-                  ) : null}
+                  {image.alt_text ? <figcaption className="mt-3 text-sm leading-6 text-white/46">{image.alt_text}</figcaption> : null}
                 </figure>
               ))}
             </div>
