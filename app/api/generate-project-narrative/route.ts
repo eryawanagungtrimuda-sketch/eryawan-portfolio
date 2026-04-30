@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 type GenerateNarrativeBody = {
   imageUrls?: string[];
+  coverImage?: string;
   title?: string;
   category?: string;
   client_problem_raw?: string;
@@ -16,28 +17,55 @@ type NarrativeResponse = {
   impact: string;
 };
 
+const inputLimits = {
+  client_problem_raw: 500,
+  design_reference: 500,
+  area_scope: 300,
+  project_size: 100,
+};
+
+const outputLimits = {
+  problem: 450,
+  solution: 600,
+  impact: 450,
+};
+
+function trimTo(value: unknown, maxLength: number) {
+  if (typeof value !== 'string') return '';
+  return value.trim().slice(0, maxLength);
+}
+
+function trimOutput(value: string, maxLength: number) {
+  const trimmed = value.trim();
+  if (trimmed.length <= maxLength) return trimmed;
+  return `${trimmed.slice(0, maxLength - 1).trim()}…`;
+}
+
 function safeJsonParse(value: string): NarrativeResponse | null {
   try {
     const parsed = JSON.parse(value) as Partial<NarrativeResponse>;
     if (!parsed.problem || !parsed.solution || !parsed.impact) return null;
 
     return {
-      problem: String(parsed.problem),
-      solution: String(parsed.solution),
-      impact: String(parsed.impact),
+      problem: trimOutput(String(parsed.problem), outputLimits.problem),
+      solution: trimOutput(String(parsed.solution), outputLimits.solution),
+      impact: trimOutput(String(parsed.impact), outputLimits.impact),
     };
   } catch {
     return null;
   }
 }
 
-function hasStructuredInput(body: GenerateNarrativeBody) {
-  return Boolean(
-    body.client_problem_raw?.trim() ||
-      body.design_reference?.trim() ||
-      body.area_scope?.trim() ||
-      body.project_size?.trim(),
-  );
+function uniqueHttpUrls(urls: string[]) {
+  return Array.from(new Set(urls.filter((url) => typeof url === 'string' && url.startsWith('http'))));
+}
+
+function getOptimizedImageUrls(body: GenerateNarrativeBody) {
+  const coverImage = typeof body.coverImage === 'string' && body.coverImage.startsWith('http') ? body.coverImage : '';
+  const galleryUrls = Array.isArray(body.imageUrls) ? uniqueHttpUrls(body.imageUrls) : [];
+  const prioritizedUrls = coverImage ? [coverImage, ...galleryUrls.filter((url) => url !== coverImage)] : galleryUrls;
+
+  return prioritizedUrls.slice(0, 4);
 }
 
 export async function POST(request: Request) {
@@ -58,76 +86,46 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Request body tidak valid.' }, { status: 400 });
   }
 
-  const imageUrls = Array.isArray(body.imageUrls)
-    ? body.imageUrls.filter((url) => typeof url === 'string' && url.startsWith('http')).slice(0, 8)
-    : [];
+  const context = {
+    title: trimTo(body.title, 120),
+    category: trimTo(body.category, 120),
+    client_problem_raw: trimTo(body.client_problem_raw, inputLimits.client_problem_raw),
+    design_reference: trimTo(body.design_reference, inputLimits.design_reference),
+    area_scope: trimTo(body.area_scope, inputLimits.area_scope),
+    project_size: trimTo(body.project_size, inputLimits.project_size),
+  };
 
-  const structuredInputAvailable = hasStructuredInput(body);
+  const imageUrls = getOptimizedImageUrls(body);
+  const hasContext = Boolean(
+    context.client_problem_raw || context.design_reference || context.area_scope || context.project_size,
+  );
 
-  if (imageUrls.length === 0 && !structuredInputAvailable) {
-    return NextResponse.json(
-      { error: 'Isi minimal satu structured input atau upload minimal 1 gambar project terlebih dahulu.' },
-      { status: 400 },
-    );
+  if (imageUrls.length === 0 && !hasContext) {
+    return NextResponse.json({ error: 'Tambahkan gambar atau konteks project terlebih dahulu.' }, { status: 400 });
   }
 
   const prompt = `
-Anda adalah strategic interior/architecture design writer untuk portfolio profesional Eryawan Studio.
+Tulis narasi studi kasus interior/arsitektur untuk Eryawan Studio.
 
-Tugas:
-Gabungkan structured input dari form dan observasi visual gambar project (jika ada), lalu hasilkan narasi bahasa Indonesia untuk field CMS berikut:
-- problem
-- solution
-- impact
+Gaya wajib: tenang, matang, strategis, tidak bombastis, langsung ke inti. Jangan terdengar seperti AI generik.
+Alur berpikir: problem → design decision → impact.
+Fokus: fungsi, zoning, sirkulasi, material, lighting, aktivitas pengguna, efisiensi, dan clarity keputusan klien.
+Jangan mengarang jika input/gambar kurang jelas; gunakan observasi aman seperti "terlihat" atau "mendukung".
 
-Konteks project:
-Title: ${body.title || '-'}
-Category: ${body.category || '-'}
+Konteks:
+Title: ${context.title || '-'}
+Category: ${context.category || '-'}
+Client problem: ${context.client_problem_raw || '-'}
+Design reference: ${context.design_reference || '-'}
+Area scope: ${context.area_scope || '-'}
+Project size: ${context.project_size || '-'}
+Images sent: ${imageUrls.length}
 
-Structured input dari admin:
-Client problem raw: ${body.client_problem_raw || '-'}
-Design reference insight: ${body.design_reference || '-'}
-Area scope: ${body.area_scope || '-'}
-Project size: ${body.project_size || '-'}
-Jumlah gambar gallery: ${imageUrls.length}
-
-Gaya narasi Eryawan Studio:
-- Tenang, matang, tidak berlebihan.
-- Tidak banyak kata, langsung ke inti.
-- Sistematis: problem → decision → impact.
-- Berbasis manfaat, fungsi, sirkulasi, zoning, aktivitas pengguna, dan keputusan ruang.
-- Tidak memakai bahasa marketing bombastis.
-- Tidak terdengar seperti AI generik.
-- Narasi harus terasa seperti desainer berpengalaman yang berpikir teratur, disiplin, strategis, dan terarah.
-
-Cara berpikir:
-1. Client problem bukan untuk dicopy mentah. Rumuskan ulang menjadi masalah desain yang jelas, ringkas, dan objektif.
-2. Jika area scope atau project size tersedia, sertakan konteks area dan luas secara natural bila relevan.
-3. Solution harus fokus pada keputusan desain, bukan deskripsi gaya visual semata.
-4. Jelaskan zoning, flow/sirkulasi, material, lighting, fungsi, dan insight reference hanya jika didukung input atau gambar.
-5. Impact harus fokus pada dampak nyata bagi klien dan pengguna ruang: aktivitas lebih mudah, efisiensi meningkat, fungsi lebih jelas, dan keputusan klien lebih terarah.
-6. Jika structured input kosong, fallback ke analisis visual dari gambar saja.
-7. Jika gambar tidak tersedia, gunakan structured input secara hati-hati dan jangan berpura-pura melihat gambar.
-
-Fallback keamanan observasi:
-- Jika gambar atau input kurang jelas, jangan mengarang berlebihan.
-- Gunakan bahasa aman berbasis observasi visual dan konteks yang tersedia.
-- Hindari klaim yang tidak bisa dilihat atau disimpulkan secara wajar.
-- Gunakan frasa hati-hati seperti "terlihat", "mengarah pada", atau "mendukung" jika informasi tidak pasti.
-
-Kontrol output:
-- Problem: ringkas, objektif, fokus pada gangguan fungsi atau kebutuhan ruang.
-- Solution: fokus pada keputusan desain yang terarah dan alasan fungsionalnya.
-- Impact: fokus pada aktivitas, efisiensi, kejelasan ruang, dan kemudahan pengambilan keputusan klien.
-- Kalimat tidak terlalu panjang.
-- Hindari repetisi kata seperti "keputusan", "ruang", dan "aktivitas" terlalu berlebihan.
-- Jangan memakai kata bombastis seperti "luar biasa", "revolusioner", "sempurna", "mewah maksimal", atau klaim marketing sejenis.
-
-Format output WAJIB JSON valid saja tanpa markdown:
+Output JSON valid saja:
 {
-  "problem": "1 paragraf singkat. Bukan copy dari input. Rumuskan masalah desain secara objektif dengan konteks area dan luas bila relevan.",
-  "solution": "1 paragraf singkat. Jelaskan keputusan desain utama: zoning, flow, material, lighting, reference style, dan area yang didesain hanya bila relevan.",
-  "impact": "1 paragraf singkat. Jelaskan dampak nyata bagi pengguna dan klien: aktivitas, efisiensi, kejelasan fungsi, dan clarity keputusan."
+  "problem": "maks 450 karakter; objektif, bukan copy input mentah",
+  "solution": "maks 600 karakter; fokus keputusan desain dan alasan fungsional",
+  "impact": "maks 450 karakter; dampak nyata bagi pengguna/klien"
 }
 `;
 
@@ -136,7 +134,7 @@ Format output WAJIB JSON valid saja tanpa markdown:
     ...imageUrls.map((imageUrl) => ({
       type: 'input_image',
       image_url: imageUrl,
-      detail: 'auto',
+      detail: 'low',
     })),
   ];
 
@@ -148,15 +146,15 @@ Format output WAJIB JSON valid saja tanpa markdown:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-mini',
+        model: 'gpt-4o-mini',
         input: [
           {
             role: 'user',
             content,
           },
         ],
-        temperature: 0.25,
-        max_output_tokens: 700,
+        temperature: 0.2,
+        max_output_tokens: 450,
       }),
     });
 
