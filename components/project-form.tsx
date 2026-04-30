@@ -13,6 +13,8 @@ type CustomSelectState = { choice: string; custom: string };
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const customValue = '__custom__';
+const projectImagesBucket = 'project-images';
+const bucketSetupMessage = 'Bucket project-images belum dibuat di Supabase Storage. Buat bucket public bernama project-images terlebih dahulu.';
 
 const legacyCategoryOptions = [
   'Residential Interior',
@@ -91,6 +93,16 @@ function validateImage(file: File) {
   return '';
 }
 
+function isBucketMissingError(message?: string) {
+  const normalized = (message || '').toLowerCase();
+  return normalized.includes('bucket not found') || normalized.includes('bucket') && normalized.includes('not found');
+}
+
+function getStorageErrorMessage(message?: string) {
+  if (isBucketMissingError(message)) return bucketSetupMessage;
+  return message || 'Upload storage gagal. Periksa Supabase Storage dan coba lagi.';
+}
+
 function TaxonomySelect({
   label,
   state,
@@ -149,6 +161,7 @@ export default function ProjectForm({ project }: Props) {
   const [galleryError, setGalleryError] = useState('');
   const [aiError, setAiError] = useState('');
   const [formError, setFormError] = useState('');
+  const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].sort((a, b) => a.sort_order - b.sort_order));
 
   const [title, setTitle] = useState(project?.title || '');
@@ -223,6 +236,15 @@ export default function ProjectForm({ project }: Props) {
     return data.id as string;
   }
 
+  async function checkProjectImagesBucket() {
+    const supabase = getSupabaseClient();
+    const { error } = await supabase.storage.from(projectImagesBucket).list('', { limit: 1 });
+    if (error) {
+      console.error('[ProjectForm] Storage bucket preflight failed', { bucket: projectImagesBucket, message: error.message });
+      throw new Error(getStorageErrorMessage(error.message));
+    }
+  }
+
   function openGalleryPicker() {
     if (galleryUploading || loading || aiGenerating) return;
     galleryInputRef.current?.click();
@@ -258,8 +280,7 @@ export default function ProjectForm({ project }: Props) {
     }
   }
 
-  async function handleGalleryUpload(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files || []);
+  async function uploadGalleryFiles(files: File[]) {
     if (files.length === 0) return;
 
     setGalleryError('');
@@ -270,69 +291,101 @@ export default function ProjectForm({ project }: Props) {
     const invalidFile = files.find((file) => validateImage(file));
     if (invalidFile) {
       setGalleryError(`${invalidFile.name}: ${validateImage(invalidFile)}`);
-      event.target.value = '';
+      setPendingGalleryFiles(files);
       return;
     }
 
     const currentSlug = slug || slugify(title);
     if (!currentSlug) {
       setGalleryError('Isi title atau slug terlebih dahulu sebelum upload gallery.');
-      event.target.value = '';
+      setPendingGalleryFiles(files);
       return;
     }
 
     setGalleryUploading(true);
     try {
+      await checkProjectImagesBucket();
+
       const supabase = getSupabaseClient();
       const projectId = await ensureProjectExists();
       const uploadedImages: ProjectImage[] = [];
+      const failedFiles: File[] = [];
+      const failureMessages: string[] = [];
       const startOrder = galleryImages.length;
 
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];
         if (!file) continue;
 
-        const filePath = `${currentSlug}/gallery/${safeFileName(file.name)}`;
-        const { error: uploadError } = await supabase.storage.from('project-images').upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-          contentType: file.type,
-        });
-        if (uploadError) {
-          console.error('[ProjectForm] Gallery storage upload failed', { path: filePath, message: uploadError.message });
-          throw new Error(`Upload storage gagal untuk ${file.name}: ${uploadError.message}`);
-        }
+        try {
+          const filePath = `${currentSlug}/gallery/${safeFileName(file.name)}`;
+          const { error: uploadError } = await supabase.storage.from(projectImagesBucket).upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: true,
+            contentType: file.type,
+          });
 
-        const { data: publicUrl } = supabase.storage.from('project-images').getPublicUrl(filePath);
-        const { data, error: insertError } = await supabase
-          .from('project_images')
-          .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + index })
-          .select('id,project_id,image_url,alt_text,sort_order,created_at')
-          .single();
-        if (insertError) {
-          console.error('[ProjectForm] Gallery database insert failed', { projectId, imageUrl: publicUrl.publicUrl, message: insertError.message });
-          throw new Error(`Gambar berhasil diupload, tapi gagal disimpan ke database: ${insertError.message}`);
+          if (uploadError) {
+            console.error('[ProjectForm] Gallery storage upload failed', { path: filePath, message: uploadError.message });
+            throw new Error(getStorageErrorMessage(uploadError.message));
+          }
+
+          const { data: publicUrl } = supabase.storage.from(projectImagesBucket).getPublicUrl(filePath);
+          const { data, error: insertError } = await supabase
+            .from('project_images')
+            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length })
+            .select('id,project_id,image_url,alt_text,sort_order,created_at')
+            .single();
+
+          if (insertError) {
+            console.error('[ProjectForm] Gallery database insert failed', { projectId, imageUrl: publicUrl.publicUrl, message: insertError.message });
+            throw new Error(`Gambar berhasil diupload, tapi gagal disimpan ke database: ${insertError.message}`);
+          }
+
+          uploadedImages.push(data as ProjectImage);
+        } catch (error) {
+          failedFiles.push(file);
+          failureMessages.push(`${file.name}: ${error instanceof Error ? error.message : 'Upload gagal.'}`);
         }
-        uploadedImages.push(data as ProjectImage);
       }
 
-      setGalleryImages((current) => [...current, ...uploadedImages].sort((a, b) => a.sort_order - b.sort_order));
+      if (uploadedImages.length > 0) {
+        setGalleryImages((current) => [...current, ...uploadedImages].sort((a, b) => a.sort_order - b.sort_order));
+      }
+
       if (!coverImage && uploadedImages[0]) {
         setCoverImage(uploadedImages[0].image_url);
         const { error } = await supabase.from('projects').update({ cover_image: uploadedImages[0].image_url }).eq('id', projectId);
         if (error) throw error;
-        setMessage('Gallery images berhasil diupload. Gambar pertama otomatis dipilih sebagai cover.');
+      }
+
+      setPendingGalleryFiles(failedFiles);
+
+      if (failedFiles.length > 0) {
+        setGalleryError(failureMessages.join('\n'));
+        setMessage(`${uploadedImages.length} gambar berhasil diupload. ${failedFiles.length} gambar gagal. Project dan data form tetap aman.`);
       } else {
-        setMessage('Gallery images berhasil diupload.');
+        setGalleryError('');
+        setMessage(uploadedImages.length > 0 ? 'Gallery images berhasil diupload. Gambar pertama otomatis dipilih sebagai cover jika belum ada cover.' : 'Tidak ada gambar baru yang diupload.');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload gallery gagal.';
+      setPendingGalleryFiles(files);
       setGalleryError(errorMessage);
-      setMessage(`Project tetap tersimpan jika proses create sudah berhasil. ${errorMessage}`);
+      setMessage(`Data form tetap aman dan tidak ada redirect. ${errorMessage}`);
     } finally {
       setGalleryUploading(false);
-      event.target.value = '';
     }
+  }
+
+  async function handleGalleryUpload(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files || []);
+    await uploadGalleryFiles(files);
+    event.target.value = '';
+  }
+
+  async function retryGalleryUpload() {
+    await uploadGalleryFiles(pendingGalleryFiles);
   }
 
   async function updateGalleryAltText(imageId: string, altText: string) {
@@ -497,7 +550,21 @@ export default function ProjectForm({ project }: Props) {
             <button type="button" onClick={clearCover} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 md:self-auto">Clear Cover</button>
           </div>
         ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
-        {galleryError ? <p className="mt-4 text-sm leading-6 text-red-300">{galleryError}</p> : null}
+        {galleryError ? (
+          <div className="mt-4 rounded-sm border border-red-400/20 bg-red-500/10 p-4">
+            <p className="whitespace-pre-line text-sm leading-6 text-red-200">{galleryError}</p>
+            {pendingGalleryFiles.length > 0 ? (
+              <button
+                type="button"
+                onClick={retryGalleryUpload}
+                disabled={galleryUploading || loading || aiGenerating}
+                className="mt-4 inline-flex items-center justify-center rounded-sm border border-red-300/25 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-100 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Coba Upload Lagi
+              </button>
+            ) : null}
+          </div>
+        ) : null}
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
         {galleryImages.length > 0 ? (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
