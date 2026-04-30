@@ -140,7 +140,8 @@ function TaxonomySelect({
 export default function ProjectForm({ project }: Props) {
   const router = useRouter();
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
-  const isEditing = Boolean(project?.id);
+  const [savedProjectId, setSavedProjectId] = useState(project?.id || '');
+  const isEditing = Boolean(savedProjectId);
   const [loading, setLoading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -184,6 +185,8 @@ export default function ProjectForm({ project }: Props) {
     const selectedDesignStyle = getSelectedValue(designStyle, designStyleOptions);
     const selectedAreaType = getSelectedValue(areaType, areaTypeOptions);
 
+    if (!normalizeText(title)) throw new Error('Title wajib diisi.');
+    if (!finalSlug) throw new Error('Slug wajib diisi.');
     if (!selectedCategory) throw new Error('Category wajib diisi.');
     if (!selectedDesignCategory) throw new Error('Kategori Desain wajib diisi.');
     if (!selectedDesignStyle) throw new Error('Gaya Desain wajib diisi.');
@@ -207,15 +210,16 @@ export default function ProjectForm({ project }: Props) {
     const supabase = getSupabaseClient();
     const payload = getPayload(coverOverride);
 
-    if (project?.id) {
-      const { error } = await supabase.from('projects').update(payload).eq('id', project.id);
+    if (savedProjectId) {
+      const { error } = await supabase.from('projects').update(payload).eq('id', savedProjectId);
       if (error) throw error;
-      return project.id;
+      return savedProjectId;
     }
 
     const { data, error } = await supabase.from('projects').insert(payload).select('id').single();
     if (error) throw error;
-    router.replace(`/admin/projects/${data.id}/edit`);
+    setSavedProjectId(data.id as string);
+    setMessage('Project tersimpan. Anda tetap di halaman ini; lanjutkan upload gallery atau klik Simpan Perubahan untuk membuka halaman edit.');
     return data.id as string;
   }
 
@@ -227,11 +231,11 @@ export default function ProjectForm({ project }: Props) {
   async function setAsCover(imageUrl: string) {
     setCoverImage(imageUrl);
     setMessage('Cover image dipilih dari gallery. Simpan project untuk menyimpan perubahan.');
-    if (!project?.id) return;
+    if (!savedProjectId) return;
 
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('projects').update({ cover_image: imageUrl }).eq('id', project.id);
+      const { error } = await supabase.from('projects').update({ cover_image: imageUrl }).eq('id', savedProjectId);
       if (error) throw error;
       setMessage('Cover image berhasil diperbarui.');
     } catch (error) {
@@ -242,11 +246,11 @@ export default function ProjectForm({ project }: Props) {
   async function clearCover() {
     setCoverImage('');
     setMessage('Cover image dihapus. Simpan project untuk menyimpan perubahan.');
-    if (!project?.id) return;
+    if (!savedProjectId) return;
 
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('projects').update({ cover_image: null }).eq('id', project.id);
+      const { error } = await supabase.from('projects').update({ cover_image: null }).eq('id', savedProjectId);
       if (error) throw error;
       setMessage('Cover image berhasil dihapus.');
     } catch (error) {
@@ -294,7 +298,10 @@ export default function ProjectForm({ project }: Props) {
           upsert: true,
           contentType: file.type,
         });
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('[ProjectForm] Gallery storage upload failed', { path: filePath, message: uploadError.message });
+          throw new Error(`Upload storage gagal untuk ${file.name}: ${uploadError.message}`);
+        }
 
         const { data: publicUrl } = supabase.storage.from('project-images').getPublicUrl(filePath);
         const { data, error: insertError } = await supabase
@@ -302,7 +309,10 @@ export default function ProjectForm({ project }: Props) {
           .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + index })
           .select('id,project_id,image_url,alt_text,sort_order,created_at')
           .single();
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error('[ProjectForm] Gallery database insert failed', { projectId, imageUrl: publicUrl.publicUrl, message: insertError.message });
+          throw new Error(`Gambar berhasil diupload, tapi gagal disimpan ke database: ${insertError.message}`);
+        }
         uploadedImages.push(data as ProjectImage);
       }
 
@@ -316,7 +326,9 @@ export default function ProjectForm({ project }: Props) {
         setMessage('Gallery images berhasil diupload.');
       }
     } catch (error) {
-      setGalleryError(error instanceof Error ? error.message : 'Upload gallery gagal.');
+      const errorMessage = error instanceof Error ? error.message : 'Upload gallery gagal.';
+      setGalleryError(errorMessage);
+      setMessage(`Project tetap tersimpan jika proses create sudah berhasil. ${errorMessage}`);
     } finally {
       setGalleryUploading(false);
       event.target.value = '';
@@ -349,8 +361,8 @@ export default function ProjectForm({ project }: Props) {
       if (coverImage === image.image_url) {
         const nextCover = remainingImages[0]?.image_url || null;
         setCoverImage(nextCover || '');
-        if (project?.id) {
-          const { error: coverError } = await supabase.from('projects').update({ cover_image: nextCover }).eq('id', project.id);
+        if (savedProjectId) {
+          const { error: coverError } = await supabase.from('projects').update({ cover_image: nextCover }).eq('id', savedProjectId);
           if (coverError) throw coverError;
         }
       }
@@ -411,14 +423,15 @@ export default function ProjectForm({ project }: Props) {
       if (userError || !userData.user) throw userError || new Error('Session admin tidak ditemukan.');
       const payload = getPayload();
 
-      if (isEditing && project?.id) {
-        const { error } = await supabase.from('projects').update(payload).eq('id', project.id);
+      if (savedProjectId) {
+        const { error } = await supabase.from('projects').update(payload).eq('id', savedProjectId);
         if (error) throw error;
         setMessage('Project berhasil diperbarui.');
-        router.refresh();
+        router.push(`/admin/projects/${savedProjectId}/edit`);
       } else {
         const { data, error } = await supabase.from('projects').insert(payload).select('id').single();
         if (error) throw error;
+        setSavedProjectId(data.id as string);
         router.push(`/admin/projects/${data.id}/edit`);
       }
     } catch (error) {
@@ -431,12 +444,12 @@ export default function ProjectForm({ project }: Props) {
   }
 
   async function handleDelete() {
-    if (!project?.id || !window.confirm('Hapus project ini? Tindakan ini tidak bisa dibatalkan.')) return;
+    if (!savedProjectId || !window.confirm('Hapus project ini? Tindakan ini tidak bisa dibatalkan.')) return;
     setLoading(true);
     setMessage('');
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('projects').delete().eq('id', project.id);
+      const { error } = await supabase.from('projects').delete().eq('id', savedProjectId);
       if (error) throw error;
       router.push('/admin/projects');
     } catch (error) {
