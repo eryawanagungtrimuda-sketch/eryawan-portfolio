@@ -1,12 +1,17 @@
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
 
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,cover_image,problem,solution,impact,created_at';
+
 export const fallbackProjects: Project[] = [
   {
     id: 'fallback-residential',
     title: 'Project 01 — Residential Interior',
     slug: 'residential-interior',
     category: 'Residential Interior',
+    design_category: 'Interior',
+    design_style: 'Modern',
+    area_type: 'Full House',
     cover_image: null,
     problem: 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.',
     solution: 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.',
@@ -19,6 +24,9 @@ export const fallbackProjects: Project[] = [
     title: 'Project 02 — Workspace Interior',
     slug: 'workspace-interior',
     category: 'Workspace Interior',
+    design_category: 'Interior',
+    design_style: 'Contemporary',
+    area_type: 'Office',
     cover_image: null,
     problem: 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.',
     solution: 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.',
@@ -34,7 +42,7 @@ export async function getPublishedProjects() {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select('id,title,slug,category,cover_image,problem,solution,impact,created_at')
+    .select(projectColumns)
     .order('created_at', { ascending: false });
 
   if (error || !data) return fallbackProjects;
@@ -49,7 +57,7 @@ export async function getPublishedProjectBySlug(slug: string) {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select('id,title,slug,category,cover_image,problem,solution,impact,created_at,project_images(id,project_id,image_url,alt_text,sort_order,created_at)')
+    .select(`${projectColumns},project_images(id,project_id,image_url,alt_text,sort_order,created_at)`)
     .eq('slug', slug)
     .order('sort_order', { referencedTable: 'project_images', ascending: true })
     .single();
