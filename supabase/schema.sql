@@ -8,12 +8,19 @@ create table if not exists public.projects (
   title text not null,
   slug text not null unique,
   category text,
+  design_category text,
+  design_style text,
+  area_type text,
   cover_image text,
   problem text,
   solution text,
   impact text,
   created_at timestamp with time zone not null default now()
 );
+
+alter table public.projects add column if not exists design_category text;
+alter table public.projects add column if not exists design_style text;
+alter table public.projects add column if not exists area_type text;
 
 create table if not exists public.project_images (
   id uuid primary key default gen_random_uuid(),
@@ -127,8 +134,8 @@ to authenticated
 using (bucket_id = 'project-images');
 
 -- Optional starter data. Run only if you want demo projects.
--- insert into public.projects (title, slug, category, problem, solution, impact)
+-- insert into public.projects (title, slug, category, design_category, design_style, area_type, problem, solution, impact)
 -- values
--- ('Project 01 — Residential Interior', 'residential-interior', 'Residential Interior', 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.', 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.', 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.'),
--- ('Project 02 — Workspace Interior', 'workspace-interior', 'Workspace Interior', 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.', 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.', 'Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.')
+-- ('Project 01 — Residential Interior', 'residential-interior', 'Residential Interior', 'Interior', 'Modern', 'Full House', 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.', 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.', 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.'),
+-- ('Project 02 — Workspace Interior', 'workspace-interior', 'Workspace Interior', 'Interior', 'Contemporary', 'Office', 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.', 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.', 'Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.')
 -- on conflict (slug) do nothing;
