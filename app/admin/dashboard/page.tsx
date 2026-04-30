@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminDashboardCMS from '@/components/admin-dashboard-cms';
 import AdminLogoutButton from '@/components/admin-logout-button';
@@ -14,6 +15,14 @@ export default function AdminDashboardPage() {
               <p className="mt-4 max-w-2xl text-base leading-7 text-white/55">
                 Pantau status project, kelola konten, dan update portfolio tanpa menyentuh kode.
               </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                  Lihat Website
+                </Link>
+                <Link href="/karya" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                  Lihat Semua Karya
+                </Link>
+              </div>
             </div>
             <AdminLogoutButton />
           </div>
