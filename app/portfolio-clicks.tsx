@@ -57,6 +57,15 @@ export default function PortfolioClicks() {
       panel.replaceWith(anchor);
     }
 
+    function linkAllWorksCta() {
+      const anchors = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'));
+      const allWorks = anchors.find((anchor) => anchor.textContent?.trim().toLowerCase().includes('lihat semua karya'));
+      if (!allWorks) return;
+
+      allWorks.href = '/karya';
+      allWorks.setAttribute('aria-label', 'Lihat semua karya');
+    }
+
     async function hydratePortfolioLinks() {
       const cards = Array.from(document.querySelectorAll<HTMLElement>('#portfolio article'));
       if (cards.length === 0) return;
@@ -110,6 +119,7 @@ export default function PortfolioClicks() {
     }
 
     linkFooterPanel();
+    linkAllWorksCta();
     hydratePortfolioLinks();
 
     return () => {
