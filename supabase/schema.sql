@@ -27,9 +27,26 @@ create table if not exists public.project_images (
   project_id uuid not null references public.projects(id) on delete cascade,
   image_url text not null,
   alt_text text,
-  sort_order integer not null default 0,
-  created_at timestamp with time zone not null default now()
+  sort_order integer default 0,
+  created_at timestamp with time zone default now()
 );
+
+-- If project_images already existed without FK, add the relationship Supabase needs for embedded selects.
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'project_images_project_id_fkey'
+      and conrelid = 'public.project_images'::regclass
+  ) then
+    alter table public.project_images
+    add constraint project_images_project_id_fkey
+    foreign key (project_id)
+    references public.projects(id)
+    on delete cascade;
+  end if;
+end $$;
 
 -- Required grants for Supabase API roles.
 grant usage on schema public to anon, authenticated;
@@ -71,21 +88,24 @@ to authenticated
 using (true);
 
 drop policy if exists "Public read project images table" on public.project_images;
-create policy "Public read project images table"
+drop policy if exists "Public read project images" on public.project_images;
+create policy "Public read project images"
 on public.project_images
 for select
 to anon, authenticated
 using (true);
 
 drop policy if exists "Authenticated insert project images table" on public.project_images;
-create policy "Authenticated insert project images table"
+drop policy if exists "Authenticated insert project images" on public.project_images;
+create policy "Authenticated insert project images"
 on public.project_images
 for insert
 to authenticated
 with check (true);
 
 drop policy if exists "Authenticated update project images table" on public.project_images;
-create policy "Authenticated update project images table"
+drop policy if exists "Authenticated update project images" on public.project_images;
+create policy "Authenticated update project images"
 on public.project_images
 for update
 to authenticated
@@ -93,7 +113,8 @@ using (true)
 with check (true);
 
 drop policy if exists "Authenticated delete project images table" on public.project_images;
-create policy "Authenticated delete project images table"
+drop policy if exists "Authenticated delete project images" on public.project_images;
+create policy "Authenticated delete project images"
 on public.project_images
 for delete
 to authenticated
