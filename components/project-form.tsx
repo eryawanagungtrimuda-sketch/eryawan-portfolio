@@ -19,25 +19,58 @@ type AiNarrativeResponse = {
 
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+const customCategoryValue = '__custom_category__';
+
+const defaultCategoryOptions = [
+  'Residential Interior',
+  'Commercial Interior',
+  'Workspace Interior',
+  'Retail Interior',
+  'Hospitality Interior',
+  'Architecture',
+  'Renovation',
+  'Furniture / Built-in',
+];
 
 function slugify(value: string) {
   return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/&/g, ' ')
+    .replace(/[^a-z0-9\s-]/g, ' ')
     .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizeText(value: string) {
+  return value.trim().replace(/\s+/g, ' ');
+}
+
+function normalizeCategory(value: string) {
+  const normalized = normalizeText(value);
+  const matchedDefault = defaultCategoryOptions.find((option) => option.toLowerCase() === normalized.toLowerCase());
+  return matchedDefault || normalized;
+}
+
+function getInitialCategoryState(category?: string | null) {
+  const normalizedCategory = normalizeCategory(category || '');
+  if (!normalizedCategory) {
+    return { categoryChoice: '', customCategory: '' };
+  }
+
+  if (defaultCategoryOptions.includes(normalizedCategory)) {
+    return { categoryChoice: normalizedCategory, customCategory: '' };
+  }
+
+  return { categoryChoice: customCategoryValue, customCategory: normalizedCategory };
 }
 
 function safeFileName(name: string) {
   const extension = name.split('.').pop()?.toLowerCase() || 'jpg';
-  const baseName = name
-    .replace(/\.[^/.]+$/, '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
+  const baseName = slugify(name.replace(/\.[^/.]+$/, ''));
 
   return `${baseName || 'image'}-${Date.now()}.${extension}`;
 }
@@ -52,16 +85,20 @@ export default function ProjectForm({ project }: Props) {
   const router = useRouter();
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const isEditing = Boolean(project?.id);
+  const initialCategoryState = getInitialCategoryState(project?.category);
   const [loading, setLoading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [galleryError, setGalleryError] = useState('');
   const [aiError, setAiError] = useState('');
+  const [formError, setFormError] = useState('');
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].sort((a, b) => a.sort_order - b.sort_order));
   const [title, setTitle] = useState(project?.title || '');
-  const [slug, setSlug] = useState(project?.slug || '');
-  const [category, setCategory] = useState(project?.category || '');
+  const [slug, setSlug] = useState(project?.slug || slugify(project?.title || ''));
+  const [slugEditedManually, setSlugEditedManually] = useState(false);
+  const [categoryChoice, setCategoryChoice] = useState(initialCategoryState.categoryChoice);
+  const [customCategory, setCustomCategory] = useState(initialCategoryState.customCategory);
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [clientProblemRaw, setClientProblemRaw] = useState('');
   const [designReference, setDesignReference] = useState('');
@@ -71,9 +108,38 @@ export default function ProjectForm({ project }: Props) {
   const [solution, setSolution] = useState(project?.solution || '');
   const [impact, setImpact] = useState(project?.impact || '');
 
+  function getSelectedCategory() {
+    const rawCategory = categoryChoice === customCategoryValue ? customCategory : categoryChoice;
+    return normalizeCategory(rawCategory || '');
+  }
+
+  function validateCategory() {
+    const selectedCategory = getSelectedCategory();
+    if (!selectedCategory) {
+      throw new Error('Category wajib diisi. Pilih kategori project atau tambahkan kategori baru.');
+    }
+
+    return selectedCategory;
+  }
+
   function syncSlug(nextTitle: string) {
     setTitle(nextTitle);
-    if (!isEditing && !slug) setSlug(slugify(nextTitle));
+    if (!slugEditedManually) {
+      setSlug(slugify(nextTitle));
+    }
+  }
+
+  function handleSlugChange(value: string) {
+    setSlugEditedManually(true);
+    setSlug(slugify(value));
+  }
+
+  function handleCategoryChoiceChange(value: string) {
+    setCategoryChoice(value);
+    setFormError('');
+    if (value !== customCategoryValue) {
+      setCustomCategory('');
+    }
   }
 
   function openGalleryPicker() {
@@ -83,10 +149,12 @@ export default function ProjectForm({ project }: Props) {
 
   async function ensureProjectExists(coverOverride?: string | null) {
     const supabase = getSupabaseClient();
+    const finalSlug = slug || slugify(title);
+    const selectedCategory = validateCategory();
     const payload = {
       title,
-      slug: slug || slugify(title),
-      category: category || null,
+      slug: finalSlug,
+      category: selectedCategory,
       cover_image: coverOverride !== undefined ? coverOverride : coverImage || null,
       problem,
       solution,
@@ -143,6 +211,7 @@ export default function ProjectForm({ project }: Props) {
 
     setGalleryError('');
     setAiError('');
+    setFormError('');
     setMessage('');
 
     const invalidFile = files.find((file) => validateImage(file));
@@ -284,7 +353,7 @@ export default function ProjectForm({ project }: Props) {
           imageUrls,
           coverImage,
           title,
-          category,
+          category: getSelectedCategory(),
           client_problem_raw: clientProblemRaw,
           design_reference: designReference,
           area_scope: areaScope,
@@ -317,16 +386,19 @@ export default function ProjectForm({ project }: Props) {
     event.preventDefault();
     setLoading(true);
     setMessage('');
+    setFormError('');
 
     try {
       const supabase = getSupabaseClient();
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) throw userError || new Error('Session admin tidak ditemukan.');
 
+      const finalSlug = slug || slugify(title);
+      const selectedCategory = validateCategory();
       const payload = {
         title,
-        slug: slug || slugify(title),
-        category: category || null,
+        slug: finalSlug,
+        category: selectedCategory,
         cover_image: coverImage || null,
         problem,
         solution,
@@ -344,7 +416,9 @@ export default function ProjectForm({ project }: Props) {
         router.push(`/admin/projects/${data.id}/edit`);
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Gagal menyimpan project.');
+      const errorMessage = error instanceof Error ? error.message : 'Gagal menyimpan project.';
+      setFormError(errorMessage);
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -379,11 +453,40 @@ export default function ProjectForm({ project }: Props) {
         </div>
         <div>
           <label>Slug</label>
-          <input value={slug} onChange={(event) => setSlug(slugify(event.target.value))} required />
+          <input value={slug} onChange={(event) => handleSlugChange(event.target.value)} required />
+          <p className="mt-2 text-xs leading-5 text-white/38">Slug otomatis dibuat dari title dan digunakan sebagai URL project.</p>
         </div>
         <div className="md:col-span-2">
           <label>Category</label>
-          <input value={category} onChange={(event) => setCategory(event.target.value)} placeholder="Residential Interior" />
+          <select
+            value={categoryChoice}
+            onChange={(event) => handleCategoryChoiceChange(event.target.value)}
+            required
+            className="mt-2 w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-4 py-3 text-sm text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
+          >
+            <option value="" disabled>
+              Pilih kategori project
+            </option>
+            {defaultCategoryOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+            <option value={customCategoryValue}>+ Tambah kategori baru</option>
+          </select>
+          {categoryChoice === customCategoryValue ? (
+            <div className="mt-4">
+              <label>Nama Kategori Baru</label>
+              <input
+                value={customCategory}
+                onChange={(event) => setCustomCategory(event.target.value)}
+                placeholder="Contoh: Clinic Interior"
+                required
+              />
+              <p className="mt-2 text-xs leading-5 text-white/38">Kategori baru akan disimpan sebagai teks pada project ini.</p>
+            </div>
+          ) : null}
+          {formError ? <p className="mt-3 text-sm leading-6 text-red-300">{formError}</p> : null}
         </div>
       </div>
 
