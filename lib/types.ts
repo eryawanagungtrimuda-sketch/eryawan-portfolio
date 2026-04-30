@@ -12,6 +12,9 @@ export type Project = {
   title: string;
   slug: string;
   category: string | null;
+  design_category: string | null;
+  design_style: string | null;
+  area_type: string | null;
   cover_image: string | null;
   problem: string | null;
   solution: string | null;
