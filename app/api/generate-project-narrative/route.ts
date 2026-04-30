@@ -91,33 +91,43 @@ Area scope: ${body.area_scope || '-'}
 Project size: ${body.project_size || '-'}
 Jumlah gambar gallery: ${imageUrls.length}
 
+Gaya narasi Eryawan Studio:
+- Tenang, matang, tidak berlebihan.
+- Tidak banyak kata, langsung ke inti.
+- Sistematis: problem → decision → impact.
+- Berbasis manfaat, fungsi, sirkulasi, zoning, aktivitas pengguna, dan keputusan ruang.
+- Tidak memakai bahasa marketing bombastis.
+- Tidak terdengar seperti AI generik.
+- Narasi harus terasa seperti desainer berpengalaman yang berpikir teratur, disiplin, strategis, dan terarah.
+
 Cara berpikir:
-1. Client problem bukan untuk dicopy mentah. Rumuskan ulang menjadi masalah desain yang lebih jelas.
-2. Jika area scope atau project size tersedia, sertakan konteks ruang dan luas secara natural bila relevan.
-3. Solution harus menjelaskan keputusan desain: zoning, flow/sirkulasi, material, lighting, atmosfer, dan fungsi.
-4. Gunakan design reference sebagai insight arah gaya/karakter, tetapi jangan membuat klaim yang tidak didukung input atau gambar.
-5. Impact harus menjelaskan dampak ke aktivitas pengguna, efisiensi ruang, dan clarity keputusan klien.
+1. Client problem bukan untuk dicopy mentah. Rumuskan ulang menjadi masalah desain yang jelas, ringkas, dan objektif.
+2. Jika area scope atau project size tersedia, sertakan konteks area dan luas secara natural bila relevan.
+3. Solution harus fokus pada keputusan desain, bukan deskripsi gaya visual semata.
+4. Jelaskan zoning, flow/sirkulasi, material, lighting, fungsi, dan insight reference hanya jika didukung input atau gambar.
+5. Impact harus fokus pada dampak nyata bagi klien dan pengguna ruang: aktivitas lebih mudah, efisiensi meningkat, fungsi lebih jelas, dan keputusan klien lebih terarah.
 6. Jika structured input kosong, fallback ke analisis visual dari gambar saja.
 7. Jika gambar tidak tersedia, gunakan structured input secara hati-hati dan jangan berpura-pura melihat gambar.
 
-Prinsip observasi visual jika gambar tersedia:
-- Baca kualitas ruang berdasarkan observasi visual saja.
-- Perhatikan zoning, sirkulasi, material, pencahayaan, atmosfer, fungsi, keputusan desain, dan dampak terhadap pengguna ruang.
-- Jangan membuat klaim palsu yang tidak terlihat dari gambar.
-- Jika ada hal yang tidak bisa dipastikan, gunakan bahasa hati-hati seperti "terlihat", "mengarah pada", atau "mendukung".
+Fallback keamanan observasi:
+- Jika gambar atau input kurang jelas, jangan mengarang berlebihan.
+- Gunakan bahasa aman berbasis observasi visual dan konteks yang tersedia.
+- Hindari klaim yang tidak bisa dilihat atau disimpulkan secara wajar.
+- Gunakan frasa hati-hati seperti "terlihat", "mengarah pada", atau "mendukung" jika informasi tidak pasti.
 
-Tone:
-- Profesional.
-- Singkat.
-- Tidak bertele-tele.
-- Tidak lebay dan tidak terlalu puitis.
-- Seperti arsitek/interior designer menjelaskan studi kasus kepada HRD, owner studio, atau calon klien.
+Kontrol output:
+- Problem: ringkas, objektif, fokus pada gangguan fungsi atau kebutuhan ruang.
+- Solution: fokus pada keputusan desain yang terarah dan alasan fungsionalnya.
+- Impact: fokus pada aktivitas, efisiensi, kejelasan ruang, dan kemudahan pengambilan keputusan klien.
+- Kalimat tidak terlalu panjang.
+- Hindari repetisi kata seperti "keputusan", "ruang", dan "aktivitas" terlalu berlebihan.
+- Jangan memakai kata bombastis seperti "luar biasa", "revolusioner", "sempurna", "mewah maksimal", atau klaim marketing sejenis.
 
 Format output WAJIB JSON valid saja tanpa markdown:
 {
-  "problem": "1 paragraf singkat. Bukan copy dari input. Rumuskan masalah desain dengan konteks ruang dan luas bila relevan.",
-  "solution": "1 paragraf singkat. Jelaskan keputusan desain: zoning, flow, material, lighting, reference style, dan area yang didesain.",
-  "impact": "1 paragraf singkat. Jelaskan dampak ke aktivitas pengguna, efisiensi ruang, dan clarity keputusan klien."
+  "problem": "1 paragraf singkat. Bukan copy dari input. Rumuskan masalah desain secara objektif dengan konteks area dan luas bila relevan.",
+  "solution": "1 paragraf singkat. Jelaskan keputusan desain utama: zoning, flow, material, lighting, reference style, dan area yang didesain hanya bila relevan.",
+  "impact": "1 paragraf singkat. Jelaskan dampak nyata bagi pengguna dan klien: aktivitas, efisiensi, kejelasan fungsi, dan clarity keputusan."
 }
 `;
 
@@ -145,8 +155,8 @@ Format output WAJIB JSON valid saja tanpa markdown:
             content,
           },
         ],
-        temperature: 0.35,
-        max_output_tokens: 900,
+        temperature: 0.25,
+        max_output_tokens: 700,
       }),
     });
 
