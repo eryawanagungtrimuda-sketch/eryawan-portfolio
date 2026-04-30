@@ -63,6 +63,10 @@ export default function ProjectForm({ project }: Props) {
   const [slug, setSlug] = useState(project?.slug || '');
   const [category, setCategory] = useState(project?.category || '');
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
+  const [clientProblemRaw, setClientProblemRaw] = useState('');
+  const [designReference, setDesignReference] = useState('');
+  const [areaScope, setAreaScope] = useState('');
+  const [projectSize, setProjectSize] = useState('');
   const [problem, setProblem] = useState(project?.problem || '');
   const [solution, setSolution] = useState(project?.solution || '');
   const [impact, setImpact] = useState(project?.impact || '');
@@ -259,8 +263,12 @@ export default function ProjectForm({ project }: Props) {
     setMessage('');
 
     const imageUrls = galleryImages.map((image) => image.image_url).filter(Boolean);
-    if (imageUrls.length === 0) {
-      setAiError('Upload minimal 1 gambar project terlebih dahulu.');
+    const hasStructuredInput = Boolean(
+      clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim(),
+    );
+
+    if (imageUrls.length === 0 && !hasStructuredInput) {
+      setAiError('Isi minimal satu input brief atau upload minimal 1 gambar project terlebih dahulu.');
       return;
     }
 
@@ -276,6 +284,10 @@ export default function ProjectForm({ project }: Props) {
           imageUrls,
           title,
           category,
+          client_problem_raw: clientProblemRaw,
+          design_reference: designReference,
+          area_scope: areaScope,
+          project_size: projectSize,
         }),
       });
 
@@ -447,12 +459,39 @@ export default function ProjectForm({ project }: Props) {
         )}
       </div>
 
+      <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
+        <div className="mb-6">
+          <label>Structured Input for AI</label>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">
+            Input ini tidak disimpan ke database. Dipakai hanya untuk membantu AI menyusun narasi yang lebih akurat.
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="md:col-span-2">
+            <label>Client Problem Raw</label>
+            <textarea value={clientProblemRaw} onChange={(event) => setClientProblemRaw(event.target.value)} placeholder="Tuliskan problem awal dari klien secara mentah, misalnya: ruang terasa sempit, flow tidak nyaman, storage kurang, dsb." />
+          </div>
+          <div>
+            <label>Design Reference</label>
+            <textarea value={designReference} onChange={(event) => setDesignReference(event.target.value)} placeholder="Arah referensi desain, mood, style, material, atau benchmark yang diinginkan." />
+          </div>
+          <div>
+            <label>Area Scope</label>
+            <textarea value={areaScope} onChange={(event) => setAreaScope(event.target.value)} placeholder="Area yang didesain, misalnya living room, pantry, bedroom, workspace, lobby, dsb." />
+          </div>
+          <div className="md:col-span-2">
+            <label>Project Size</label>
+            <input value={projectSize} onChange={(event) => setProjectSize(event.target.value)} placeholder="Contoh: 36 m², 120 m², tipe 45, 2 lantai" />
+          </div>
+        </div>
+      </div>
+
       <div className="rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-6 md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <label>AI Narrative Generator</label>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">
-              AI membaca gallery project lalu menyusun narasi Problem, Solution, dan Impact yang bisa Anda edit sebelum save.
+              AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun narasi Problem, Solution, dan Impact.
             </p>
           </div>
           <button
@@ -466,7 +505,7 @@ export default function ProjectForm({ project }: Props) {
           </button>
         </div>
         {aiGenerating ? (
-          <p className="mt-5 text-sm leading-6 text-[#D4AF37]">AI sedang membaca gambar dan menyusun narasi...</p>
+          <p className="mt-5 text-sm leading-6 text-[#D4AF37]">AI sedang membaca input dan menyusun narasi...</p>
         ) : null}
         {aiError ? <p className="mt-5 text-sm leading-6 text-red-300">{aiError}</p> : null}
       </div>
