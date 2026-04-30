@@ -268,7 +268,7 @@ export default function ProjectForm({ project }: Props) {
     );
 
     if (imageUrls.length === 0 && !hasStructuredInput) {
-      setAiError('Isi minimal satu input brief atau upload minimal 1 gambar project terlebih dahulu.');
+      setAiError('Tambahkan gambar atau konteks project terlebih dahulu.');
       return;
     }
 
@@ -282,6 +282,7 @@ export default function ProjectForm({ project }: Props) {
         },
         body: JSON.stringify({
           imageUrls,
+          coverImage,
           title,
           category,
           client_problem_raw: clientProblemRaw,
