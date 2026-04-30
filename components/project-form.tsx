@@ -2,12 +2,19 @@
 
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, ImagePlus, Star, X } from 'lucide-react';
+import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = {
   project?: Project;
+};
+
+type AiNarrativeResponse = {
+  problem?: string;
+  solution?: string;
+  impact?: string;
+  error?: string;
 };
 
 const maxImageSize = 2 * 1024 * 1024;
@@ -47,8 +54,10 @@ export default function ProjectForm({ project }: Props) {
   const isEditing = Boolean(project?.id);
   const [loading, setLoading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [galleryError, setGalleryError] = useState('');
+  const [aiError, setAiError] = useState('');
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].sort((a, b) => a.sort_order - b.sort_order));
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || '');
@@ -64,7 +73,7 @@ export default function ProjectForm({ project }: Props) {
   }
 
   function openGalleryPicker() {
-    if (galleryUploading || loading) return;
+    if (galleryUploading || loading || aiGenerating) return;
     galleryInputRef.current?.click();
   }
 
@@ -129,6 +138,7 @@ export default function ProjectForm({ project }: Props) {
     if (files.length === 0) return;
 
     setGalleryError('');
+    setAiError('');
     setMessage('');
 
     const invalidFile = files.find((file) => validateImage(file));
@@ -221,6 +231,7 @@ export default function ProjectForm({ project }: Props) {
     if (!confirmed) return;
 
     setGalleryError('');
+    setAiError('');
 
     try {
       const supabase = getSupabaseClient();
@@ -240,6 +251,52 @@ export default function ProjectForm({ project }: Props) {
       }
     } catch (error) {
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus gambar gallery.');
+    }
+  }
+
+  async function handleGenerateNarrative() {
+    setAiError('');
+    setMessage('');
+
+    const imageUrls = galleryImages.map((image) => image.image_url).filter(Boolean);
+    if (imageUrls.length === 0) {
+      setAiError('Upload minimal 1 gambar project terlebih dahulu.');
+      return;
+    }
+
+    setAiGenerating(true);
+
+    try {
+      const response = await fetch('/api/generate-project-narrative', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageUrls,
+          title,
+          category,
+        }),
+      });
+
+      const data = (await response.json()) as AiNarrativeResponse;
+
+      if (!response.ok) {
+        throw new Error(data.error || 'AI gagal membuat narasi.');
+      }
+
+      if (!data.problem || !data.solution || !data.impact) {
+        throw new Error('AI menghasilkan data yang tidak lengkap. Coba lagi.');
+      }
+
+      setProblem(data.problem);
+      setSolution(data.solution);
+      setImpact(data.impact);
+      setMessage('Narasi AI berhasil dibuat. Silakan review dan edit sebelum menyimpan.');
+    } catch (error) {
+      setAiError(error instanceof Error ? error.message : 'AI gagal membuat narasi.');
+    } finally {
+      setAiGenerating(false);
     }
   }
 
@@ -326,8 +383,8 @@ export default function ProjectForm({ project }: Props) {
             </p>
           </div>
           <div>
-            <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading} className="hidden" />
-            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+            <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading || aiGenerating} className="hidden" />
+            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
               <ImagePlus size={16} /> {galleryUploading ? 'Uploading...' : 'Upload Gallery'}
             </button>
           </div>
@@ -390,6 +447,30 @@ export default function ProjectForm({ project }: Props) {
         )}
       </div>
 
+      <div className="rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-6 md:p-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <label>AI Narrative Generator</label>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">
+              AI membaca gallery project lalu menyusun narasi Problem, Solution, dan Impact yang bisa Anda edit sebelum save.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleGenerateNarrative}
+            disabled={aiGenerating || galleryUploading || loading}
+            className="inline-flex items-center justify-center gap-3 rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <Sparkles size={17} />
+            {aiGenerating ? 'Generating...' : 'Generate Narasi dengan AI'}
+          </button>
+        </div>
+        {aiGenerating ? (
+          <p className="mt-5 text-sm leading-6 text-[#D4AF37]">AI sedang membaca gambar dan menyusun narasi...</p>
+        ) : null}
+        {aiError ? <p className="mt-5 text-sm leading-6 text-red-300">{aiError}</p> : null}
+      </div>
+
       <div className="grid gap-6 rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
         <div>
           <label>Problem</label>
@@ -408,11 +489,11 @@ export default function ProjectForm({ project }: Props) {
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <button disabled={loading || galleryUploading} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">
+        <button disabled={loading || galleryUploading || aiGenerating} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">
           {loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Project'}
         </button>
         {isEditing ? (
-          <button disabled={loading || galleryUploading} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button>
+          <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button>
         ) : null}
       </div>
     </form>
