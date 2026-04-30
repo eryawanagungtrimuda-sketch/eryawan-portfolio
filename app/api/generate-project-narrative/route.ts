@@ -4,6 +4,10 @@ type GenerateNarrativeBody = {
   imageUrls?: string[];
   title?: string;
   category?: string;
+  client_problem_raw?: string;
+  design_reference?: string;
+  area_scope?: string;
+  project_size?: string;
 };
 
 type NarrativeResponse = {
@@ -25,6 +29,15 @@ function safeJsonParse(value: string): NarrativeResponse | null {
   } catch {
     return null;
   }
+}
+
+function hasStructuredInput(body: GenerateNarrativeBody) {
+  return Boolean(
+    body.client_problem_raw?.trim() ||
+      body.design_reference?.trim() ||
+      body.area_scope?.trim() ||
+      body.project_size?.trim(),
+  );
 }
 
 export async function POST(request: Request) {
@@ -49,15 +62,20 @@ export async function POST(request: Request) {
     ? body.imageUrls.filter((url) => typeof url === 'string' && url.startsWith('http')).slice(0, 8)
     : [];
 
-  if (imageUrls.length === 0) {
-    return NextResponse.json({ error: 'Upload minimal 1 gambar project terlebih dahulu.' }, { status: 400 });
+  const structuredInputAvailable = hasStructuredInput(body);
+
+  if (imageUrls.length === 0 && !structuredInputAvailable) {
+    return NextResponse.json(
+      { error: 'Isi minimal satu structured input atau upload minimal 1 gambar project terlebih dahulu.' },
+      { status: 400 },
+    );
   }
 
   const prompt = `
 Anda adalah strategic interior/architecture design writer untuk portfolio profesional Eryawan Studio.
 
 Tugas:
-Analisis gambar project secara visual, lalu hasilkan narasi bahasa Indonesia untuk field CMS berikut:
+Gabungkan structured input dari form dan observasi visual gambar project (jika ada), lalu hasilkan narasi bahasa Indonesia untuk field CMS berikut:
 - problem
 - solution
 - impact
@@ -66,19 +84,40 @@ Konteks project:
 Title: ${body.title || '-'}
 Category: ${body.category || '-'}
 
-Prinsip analisis:
+Structured input dari admin:
+Client problem raw: ${body.client_problem_raw || '-'}
+Design reference insight: ${body.design_reference || '-'}
+Area scope: ${body.area_scope || '-'}
+Project size: ${body.project_size || '-'}
+Jumlah gambar gallery: ${imageUrls.length}
+
+Cara berpikir:
+1. Client problem bukan untuk dicopy mentah. Rumuskan ulang menjadi masalah desain yang lebih jelas.
+2. Jika area scope atau project size tersedia, sertakan konteks ruang dan luas secara natural bila relevan.
+3. Solution harus menjelaskan keputusan desain: zoning, flow/sirkulasi, material, lighting, atmosfer, dan fungsi.
+4. Gunakan design reference sebagai insight arah gaya/karakter, tetapi jangan membuat klaim yang tidak didukung input atau gambar.
+5. Impact harus menjelaskan dampak ke aktivitas pengguna, efisiensi ruang, dan clarity keputusan klien.
+6. Jika structured input kosong, fallback ke analisis visual dari gambar saja.
+7. Jika gambar tidak tersedia, gunakan structured input secara hati-hati dan jangan berpura-pura melihat gambar.
+
+Prinsip observasi visual jika gambar tersedia:
 - Baca kualitas ruang berdasarkan observasi visual saja.
 - Perhatikan zoning, sirkulasi, material, pencahayaan, atmosfer, fungsi, keputusan desain, dan dampak terhadap pengguna ruang.
 - Jangan membuat klaim palsu yang tidak terlihat dari gambar.
 - Jika ada hal yang tidak bisa dipastikan, gunakan bahasa hati-hati seperti "terlihat", "mengarah pada", atau "mendukung".
-- Tone harus professional, strategic, tenang, dan cocok untuk HRD, owner studio, serta calon klien.
-- Jangan lebay, jangan terlalu puitis, jangan terlalu panjang.
+
+Tone:
+- Profesional.
+- Singkat.
+- Tidak bertele-tele.
+- Tidak lebay dan tidak terlalu puitis.
+- Seperti arsitek/interior designer menjelaskan studi kasus kepada HRD, owner studio, atau calon klien.
 
 Format output WAJIB JSON valid saja tanpa markdown:
 {
-  "problem": "1 paragraf singkat tentang masalah/kebutuhan ruang yang terlihat atau dapat disimpulkan secara hati-hati.",
-  "solution": "1 paragraf singkat tentang keputusan desain/solusi strategis: zoning, flow, material, cahaya, fungsi.",
-  "impact": "1 paragraf singkat tentang dampak terhadap efisiensi, kejelasan ruang, pengalaman pengguna, atau kualitas aktivitas."
+  "problem": "1 paragraf singkat. Bukan copy dari input. Rumuskan masalah desain dengan konteks ruang dan luas bila relevan.",
+  "solution": "1 paragraf singkat. Jelaskan keputusan desain: zoning, flow, material, lighting, reference style, dan area yang didesain.",
+  "impact": "1 paragraf singkat. Jelaskan dampak ke aktivitas pengguna, efisiensi ruang, dan clarity keputusan klien."
 }
 `;
 
@@ -106,7 +145,7 @@ Format output WAJIB JSON valid saja tanpa markdown:
             content,
           },
         ],
-        temperature: 0.4,
+        temperature: 0.35,
         max_output_tokens: 900,
       }),
     });
@@ -114,7 +153,7 @@ Format output WAJIB JSON valid saja tanpa markdown:
     if (!response.ok) {
       const errorText = await response.text();
       console.error('[generate-project-narrative] OpenAI API error', errorText);
-      return NextResponse.json({ error: 'AI gagal membaca gambar. Periksa OPENAI_API_KEY atau coba lagi.' }, { status: 502 });
+      return NextResponse.json({ error: 'AI gagal membuat narasi. Periksa OPENAI_API_KEY atau coba lagi.' }, { status: 502 });
     }
 
     const result = await response.json();
