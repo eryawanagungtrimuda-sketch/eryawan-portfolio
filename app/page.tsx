@@ -89,19 +89,19 @@ const differentiations = [
 
 const wawasanPreview = [
   {
-    title: 'Membaca Layout Sebelum Memilih Gaya',
-    excerpt: 'Langkah awal saya selalu mengevaluasi alur aktivitas agar keputusan estetika tidak menutupi masalah fungsi.',
-    tag: 'Spatial Strategy',
+    title: 'Membaca Tren Interior dari Pinterest',
+    excerpt: 'Mengamati pola visual dari Pinterest untuk memetakan arah gaya yang relevan tanpa kehilangan logika fungsi ruang.',
+    tag: 'Trend Analysis',
   },
   {
-    title: 'Tren Material yang Tetap Rasional',
-    excerpt: 'Tidak semua tren cocok untuk setiap proyek. Saya memilih material berdasarkan konteks penggunaan dan durabilitas.',
-    tag: 'Material Insight',
+    title: 'Kenapa Desain Unik Tidak Selalu Efektif',
+    excerpt: 'Membahas batas antara keunikan visual dan efektivitas ruang agar keputusan desain tetap masuk akal untuk pengguna.',
+    tag: 'Design Strategy',
   },
   {
-    title: 'Keputusan Desain untuk Tim Non-Desain',
-    excerpt: 'Menyederhanakan bahasa desain membantu stakeholder mengambil keputusan lebih cepat dan minim revisi.',
-    tag: 'Decision Clarity',
+    title: 'Review Ruang Komersial yang Menarik Perhatian',
+    excerpt: 'Menganalisis elemen ruang komersial yang kuat secara first impression sekaligus efisien untuk aktivitas harian.',
+    tag: 'Commercial Review',
   },
 ];
 
@@ -132,7 +132,7 @@ export default function Home() {
         }}
       >
         <nav className="relative z-10 flex items-start justify-between gap-8">
-          <a href="#home" className="group inline-flex flex-col gap-1.5">
+          <a href="/" className="group inline-flex flex-col gap-1.5">
             <span className="font-display text-2xl font-normal uppercase leading-none tracking-[0.06em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72] md:text-[1.8rem]">
               Eryawan Studio
             </span>
@@ -142,9 +142,9 @@ export default function Home() {
           </a>
 
           <div className="hidden items-start gap-8 text-sm font-medium text-white/70 lg:flex">
-            <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="#home">Beranda</a>
+            <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="/">Beranda</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#portfolio">Karya</a>
+            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/karya">Karya</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/wawasan">Wawasan</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#contact">Kontak</a>
           </div>
@@ -156,6 +156,15 @@ export default function Home() {
             Hubungi Studio
           </a>
         </nav>
+
+
+        <div className="relative z-10 mt-6 flex gap-2 overflow-x-auto pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70 lg:hidden">
+          <a href="/" className="whitespace-nowrap rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-2 text-[#C8A951]">Beranda</a>
+          <a href="/tentang" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Tentang</a>
+          <a href="/karya" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Karya</a>
+          <a href="/wawasan" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Wawasan</a>
+          <a href="#contact" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Kontak</a>
+        </div>
 
         <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.5fr] lg:pt-4">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
@@ -468,7 +477,7 @@ export default function Home() {
             href="/wawasan"
             className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
           >
-            Lihat semua wawasan
+            Lihat Semua Wawasan
             <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
           </a>
         </div>
