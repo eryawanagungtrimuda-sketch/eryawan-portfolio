@@ -25,7 +25,7 @@ export default function BackButton({ label, fallbackHref, className = '' }: Back
     <button
       type="button"
       onClick={handleBack}
-      className={`inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/48 transition duration-300 hover:-translate-x-0.5 hover:text-[#D4AF37] ${className}`}
+      className={`inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/48 transition duration-300 hover:-translate-x-0.5 hover:text-[#C8A951] ${className}`}
     >
       <MoveLeft size={15} />
       {label}

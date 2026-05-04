@@ -1,3 +1,5 @@
+import BackButton from '@/components/back-button';
+
 const pengalamanNyata = [
   {
     title: 'Residensial & Hospitality',
@@ -51,6 +53,9 @@ export default function TentangPage() {
       <section className="relative overflow-hidden px-5 py-20 md:px-10 lg:px-16 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl">
+          <div className="mb-10">
+            <BackButton label="Kembali ke Beranda" fallbackHref="/" />
+          </div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Tentang</p>
           <h1 className="font-display mt-5 max-w-5xl text-5xl font-normal leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
             Executive Summary

@@ -1,3 +1,5 @@
+import BackButton from '@/components/back-button';
+
 const wawasanArticles = [
   {
     id: 'tren-interior-pinterest',
@@ -29,6 +31,10 @@ export default function WawasanPage() {
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-16 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-20 xl:px-24">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-16">
+        <div>
+          <BackButton label="Kembali ke Beranda" fallbackHref="/" />
+        </div>
+
         <section className="relative overflow-hidden border border-[#C8A951]/20 bg-[#111110] px-6 py-12 md:px-10 md:py-16">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_16%,rgba(200,169,81,0.12),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0))]" />
           <div className="relative max-w-4xl">
