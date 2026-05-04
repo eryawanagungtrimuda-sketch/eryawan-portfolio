@@ -327,10 +327,10 @@ export default function ProjectForm({ project }: Props) {
         if (!file) continue;
 
         try {
-          const filePath = `${currentSlug}/gallery/${createUniqueStorageFileName(file.name)}`;
+          const filePath = `${currentSlug}/${createUniqueStorageFileName(file.name)}`;
           const { error: uploadError } = await supabase.storage.from(projectImagesBucket).upload(filePath, file, {
             cacheControl: '3600',
-            upsert: true,
+            upsert: false,
             contentType: file.type,
           });
 
@@ -353,6 +353,7 @@ export default function ProjectForm({ project }: Props) {
 
           uploadedImages.push(data as ProjectImage);
         } catch (error) {
+          console.error(error);
           failedFiles.push(file);
           failureMessages.push(`${file.name}: ${error instanceof Error ? error.message : 'Upload gagal.'}`);
         }
@@ -380,6 +381,7 @@ export default function ProjectForm({ project }: Props) {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload gallery gagal.';
       console.error('[ProjectForm] Upload gallery failed', error);
+      console.error(error);
       setPendingGalleryFiles(files);
       setGalleryError(errorMessage);
       setMessage(`Data form tetap aman dan tidak ada redirect. ${errorMessage}`);
