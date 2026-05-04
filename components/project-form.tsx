@@ -7,7 +7,7 @@ import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
-type AiNarrativeResponse = { problem?: string; solution?: string; impact?: string; error?: string };
+type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
 type CustomSelectState = { choice: string; custom: string };
 
 const maxImageSize = 2 * 1024 * 1024;
@@ -103,6 +103,13 @@ function getStorageErrorMessage(message?: string) {
   return message || 'Upload storage gagal. Periksa Supabase Storage dan coba lagi.';
 }
 
+function getStoragePathFromPublicUrl(imageUrl: string) {
+  const marker = '/object/public/project-images/';
+  const markerIndex = imageUrl.indexOf(marker);
+  if (markerIndex === -1) return '';
+  return imageUrl.slice(markerIndex + marker.length);
+}
+
 function TaxonomySelect({
   label,
   state,
@@ -180,6 +187,12 @@ export default function ProjectForm({ project }: Props) {
   const [problem, setProblem] = useState(project?.problem || '');
   const [solution, setSolution] = useState(project?.solution || '');
   const [impact, setImpact] = useState(project?.impact || '');
+  const [konteks, setKonteks] = useState(project?.konteks || '');
+  const [konflik, setKonflik] = useState(project?.konflik || '');
+  const [keputusanDesain, setKeputusanDesain] = useState(project?.keputusan_desain || '');
+  const [pendekatan, setPendekatan] = useState(project?.pendekatan || '');
+  const [dampak, setDampak] = useState(project?.dampak || project?.impact || '');
+  const [insightKunci, setInsightKunci] = useState(project?.insight_kunci || '');
 
   function syncSlug(nextTitle: string) {
     setTitle(nextTitle);
@@ -216,6 +229,12 @@ export default function ProjectForm({ project }: Props) {
       problem,
       solution,
       impact,
+      konteks,
+      konflik,
+      keputusan_desain: keputusanDesain,
+      pendekatan,
+      dampak,
+      insight_kunci: insightKunci,
     };
   }
 
@@ -408,6 +427,11 @@ export default function ProjectForm({ project }: Props) {
       const supabase = getSupabaseClient();
       const { error } = await supabase.from('project_images').delete().eq('id', image.id);
       if (error) throw error;
+      const storagePath = getStoragePathFromPublicUrl(image.image_url);
+      if (storagePath) {
+        const { error: storageError } = await supabase.storage.from(projectImagesBucket).remove([storagePath]);
+        if (storageError) console.warn('[ProjectForm] Gallery storage delete warning', { storagePath, message: storageError.message });
+      }
       const remainingImages = galleryImages.filter((item) => item.id !== image.id);
       setGalleryImages(remainingImages);
 
@@ -427,7 +451,7 @@ export default function ProjectForm({ project }: Props) {
   async function handleGenerateNarrative() {
     setAiError('');
     setMessage('');
-    const imageUrls = galleryImages.map((image) => image.image_url).filter(Boolean);
+    const imageUrls = galleryImages.map((image) => image.image_url).filter(Boolean).slice(0, 4);
     const hasStructuredInput = Boolean(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim());
     if (imageUrls.length === 0 && !hasStructuredInput) {
       setAiError('Tambahkan gambar atau konteks project terlebih dahulu.');
@@ -452,11 +476,17 @@ export default function ProjectForm({ project }: Props) {
       });
       const data = (await response.json()) as AiNarrativeResponse;
       if (!response.ok) throw new Error(data.error || 'AI gagal membuat narasi.');
-      if (!data.problem || !data.solution || !data.impact) throw new Error('AI menghasilkan data yang tidak lengkap. Coba lagi.');
-      setProblem(data.problem);
-      setSolution(data.solution);
-      setImpact(data.impact);
-      setMessage('Narasi AI berhasil dibuat. Silakan review dan edit sebelum menyimpan.');
+      if (!data.konteks || !data.konflik || !data.keputusan_desain || !data.pendekatan || !data.dampak || !data.insight_kunci) throw new Error('AI menghasilkan data yang tidak lengkap. Coba lagi.');
+      const hasManualEdits = Boolean(konteks.trim() || konflik.trim() || keputusanDesain.trim() || pendekatan.trim() || dampak.trim() || insightKunci.trim());
+      if (hasManualEdits && !window.confirm('Field case study sudah berisi konten. Timpa dengan hasil AI?')) return;
+      setKonteks(data.konteks);
+      setKonflik(data.konflik);
+      setKeputusanDesain(data.keputusan_desain);
+      setPendekatan(data.pendekatan);
+      setDampak(data.dampak);
+      setInsightKunci(data.insight_kunci);
+      setImpact((current) => current || data.dampak || '');
+      setMessage('Case study AI berhasil dibuat. Silakan review dan edit sebelum menyimpan.');
     } catch (error) {
       setAiError(error instanceof Error ? error.message : 'AI gagal membuat narasi.');
     } finally {
@@ -602,17 +632,23 @@ export default function ProjectForm({ project }: Props) {
 
       <div className="rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-6 md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div><label>AI Narrative Generator</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun narasi Problem, Solution, dan Impact.</p></div>
-          <button type="button" onClick={handleGenerateNarrative} disabled={aiGenerating || galleryUploading || loading} className="inline-flex items-center justify-center gap-3 rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:cursor-not-allowed disabled:opacity-60"><Sparkles size={17} />{aiGenerating ? 'Generating...' : 'Generate Narasi dengan AI'}</button>
+          <div><label>AI Narrative Generator</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun 6 section case study.</p></div>
+          <button type="button" onClick={handleGenerateNarrative} disabled={aiGenerating || galleryUploading || loading} className="inline-flex items-center justify-center gap-3 rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:cursor-not-allowed disabled:opacity-60"><Sparkles size={17} />{aiGenerating ? 'Generating...' : 'Generate Case Study dengan AI'}</button>
         </div>
         {aiGenerating ? <p className="mt-5 text-sm leading-6 text-[#D4AF37]">AI sedang membaca input dan menyusun narasi...</p> : null}
         {aiError ? <p className="mt-5 text-sm leading-6 text-red-300">{aiError}</p> : null}
       </div>
 
       <div className="grid gap-6 rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
-        <div><label>Problem</label><textarea value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="Masalah utama project secara ringkas dan jelas." /></div>
-        <div><label>Solution</label><textarea value={solution} onChange={(event) => setSolution(event.target.value)} placeholder="Keputusan desain / solusi strategis yang diambil." /></div>
-        <div><label>Impact</label><textarea value={impact} onChange={(event) => setImpact(event.target.value)} placeholder="Dampak nyata yang dirasakan klien atau pengguna ruang." /></div>
+        <div><label>Konteks</label><textarea maxLength={800} value={konteks} onChange={(event) => setKonteks(event.target.value)} placeholder="Latar belakang project, batasan, dan konteks awal." /></div>
+        <div><label>Konflik</label><textarea maxLength={800} value={konflik} onChange={(event) => setKonflik(event.target.value)} placeholder="Konflik utama yang menghambat performa ruang." /></div>
+        <div><label>Keputusan Desain</label><textarea maxLength={1200} value={keputusanDesain} onChange={(event) => setKeputusanDesain(event.target.value)} placeholder="Keputusan desain yang dipilih dan alasan strategisnya." /></div>
+        <div><label>Pendekatan</label><textarea maxLength={1200} value={pendekatan} onChange={(event) => setPendekatan(event.target.value)} placeholder="Pendekatan implementasi dari analisis hingga eksekusi." /></div>
+        <div><label>Dampak</label><textarea maxLength={800} value={dampak} onChange={(event) => setDampak(event.target.value)} placeholder="Dampak nyata untuk pengguna/operasional." /></div>
+        <div><label>Insight Kunci</label><textarea maxLength={500} value={insightKunci} onChange={(event) => setInsightKunci(event.target.value)} placeholder="Pelajaran utama dan prinsip yang bisa direplikasi." /></div>
+        <div><label>Problem (Legacy)</label><textarea value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="Masalah utama project secara ringkas dan jelas." /></div>
+        <div><label>Solution (Legacy)</label><textarea value={solution} onChange={(event) => setSolution(event.target.value)} placeholder="Keputusan desain / solusi strategis yang diambil." /></div>
+        <div><label>Impact (Legacy)</label><textarea value={impact} onChange={(event) => setImpact(event.target.value)} placeholder="Dampak legacy untuk kompatibilitas data lama." /></div>
       </div>
 
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}

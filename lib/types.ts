@@ -19,6 +19,13 @@ export type Project = {
   problem: string | null;
   solution: string | null;
   impact: string | null;
+  konteks: string | null;
+  konflik: string | null;
+  keputusan_desain: string | null;
+  pendekatan: string | null;
+  dampak: string | null;
+  insight_kunci: string | null;
+  is_published: boolean;
   created_at: string;
   project_images?: ProjectImage[];
 };
