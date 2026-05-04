@@ -126,7 +126,7 @@ export default function Home() {
             <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="#home">Beranda</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#portfolio">Karya</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#framework">Wawasan</a>
+            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/wawasan">Wawasan</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#contact">Kontak</a>
           </div>
 
