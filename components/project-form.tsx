@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -13,7 +14,7 @@ type CustomSelectState = { choice: string; custom: string };
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const customValue = '__custom__';
-const projectImagesBucket = 'project-images';
+const projectImagesBucket = getProjectImagesBucketName();
 const bucketSetupMessage = 'Bucket project-images belum dibuat di Supabase Storage. Buat bucket public bernama project-images terlebih dahulu.';
 
 const legacyCategoryOptions = [
@@ -81,12 +82,6 @@ function getSelectedValue(state: CustomSelectState, options: string[]) {
   return normalizeOption(state.choice === customValue ? state.custom : state.choice, options);
 }
 
-function safeFileName(name: string) {
-  const extension = name.split('.').pop()?.toLowerCase() || 'jpg';
-  const baseName = slugify(name.replace(/\.[^/.]+$/, ''));
-  return `${baseName || 'image'}-${Date.now()}.${extension}`;
-}
-
 function validateImage(file: File) {
   if (!allowedImageTypes.includes(file.type)) return 'Format gambar harus JPG, PNG, atau WEBP.';
   if (file.size > maxImageSize) return 'Ukuran gambar maksimal 2MB per file.';
@@ -101,13 +96,6 @@ function isBucketMissingError(message?: string) {
 function getStorageErrorMessage(message?: string) {
   if (isBucketMissingError(message)) return bucketSetupMessage;
   return message || 'Upload storage gagal. Periksa Supabase Storage dan coba lagi.';
-}
-
-function getStoragePathFromPublicUrl(imageUrl: string) {
-  const marker = '/object/public/project-images/';
-  const markerIndex = imageUrl.indexOf(marker);
-  if (markerIndex === -1) return '';
-  return imageUrl.slice(markerIndex + marker.length);
 }
 
 function TaxonomySelect({
@@ -280,6 +268,7 @@ export default function ProjectForm({ project }: Props) {
       if (error) throw error;
       setMessage('Cover image berhasil diperbarui.');
     } catch (error) {
+      console.error('[ProjectForm] Set cover failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan cover image.');
     }
   }
@@ -295,6 +284,7 @@ export default function ProjectForm({ project }: Props) {
       if (error) throw error;
       setMessage('Cover image berhasil dihapus.');
     } catch (error) {
+      console.error('[ProjectForm] Clear cover failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus cover image.');
     }
   }
@@ -337,7 +327,7 @@ export default function ProjectForm({ project }: Props) {
         if (!file) continue;
 
         try {
-          const filePath = `${currentSlug}/gallery/${safeFileName(file.name)}`;
+          const filePath = `${currentSlug}/gallery/${createUniqueStorageFileName(file.name)}`;
           const { error: uploadError } = await supabase.storage.from(projectImagesBucket).upload(filePath, file, {
             cacheControl: '3600',
             upsert: true,
@@ -389,6 +379,7 @@ export default function ProjectForm({ project }: Props) {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload gallery gagal.';
+      console.error('[ProjectForm] Upload gallery failed', error);
       setPendingGalleryFiles(files);
       setGalleryError(errorMessage);
       setMessage(`Data form tetap aman dan tidak ada redirect. ${errorMessage}`);
@@ -414,6 +405,7 @@ export default function ProjectForm({ project }: Props) {
       const { error } = await supabase.from('project_images').update({ alt_text: altText || null }).eq('id', imageId);
       if (error) throw error;
     } catch (error) {
+      console.error('[ProjectForm] Update gallery alt text failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan alt text.');
     }
   }
@@ -427,10 +419,13 @@ export default function ProjectForm({ project }: Props) {
       const supabase = getSupabaseClient();
       const { error } = await supabase.from('project_images').delete().eq('id', image.id);
       if (error) throw error;
-      const storagePath = getStoragePathFromPublicUrl(image.image_url);
+      const storagePath = getStoragePathFromPublicUrl(image.image_url, projectImagesBucket);
       if (storagePath) {
         const { error: storageError } = await supabase.storage.from(projectImagesBucket).remove([storagePath]);
-        if (storageError) console.warn('[ProjectForm] Gallery storage delete warning', { storagePath, message: storageError.message });
+        if (storageError) {
+          console.error('[ProjectForm] Gallery storage delete failed', { storagePath, message: storageError.message });
+          throw new Error(`Database terhapus, tapi gagal hapus file storage: ${storageError.message}`);
+        }
       }
       const remainingImages = galleryImages.filter((item) => item.id !== image.id);
       setGalleryImages(remainingImages);
@@ -444,6 +439,7 @@ export default function ProjectForm({ project }: Props) {
         }
       }
     } catch (error) {
+      console.error('[ProjectForm] Remove gallery image failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus gambar gallery.');
     }
   }
