@@ -19,10 +19,10 @@ export default async function KaryaPage() {
         <section className="py-20 md:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Beranda / Karya</p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">
-            Semua Karya
+            Karya Berbasis Keputusan
           </h1>
           <p className="mt-8 max-w-3xl text-lg leading-[1.7] text-white/70 md:text-xl">
-            Kumpulan studi kasus desain berbasis keputusan, dari masalah ruang hingga dampak yang terukur.
+            Setiap project dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga impact yang dihasilkan.
           </p>
         </section>
 

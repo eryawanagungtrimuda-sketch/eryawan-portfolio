@@ -8,8 +8,6 @@ import type { Project } from '@/lib/types';
 type Props = { projects: Project[] };
 type SortOption = 'newest' | 'oldest' | 'az';
 
-type FilterKey = 'designCategory' | 'designStyle' | 'areaType';
-
 function getProjectDate(project: Project) {
   const time = new Date(project.created_at).getTime();
   return Number.isFinite(time) ? time : 0;
@@ -154,11 +152,7 @@ export default function KaryaArchive({ projects }: Props) {
       ) : (
         <div className="mt-10 grid gap-8 lg:grid-cols-2">
           {filteredProjects.map((project, index) => (
-            <Link
-              key={project.id}
-              href={`/karya/${project.slug}`}
-              className="group relative overflow-hidden rounded-sm border border-white/12 bg-gradient-to-br from-white/[0.035] to-white/[0.012] p-6 transition duration-300 hover:-translate-y-1 hover:border-[#D4AF37]/35 md:p-8"
-            >
+            <article key={project.id} className="group relative overflow-hidden rounded-sm border border-white/12 bg-gradient-to-br from-white/[0.035] to-white/[0.012] p-6 md:p-8">
               {project.cover_image ? (
                 <div className="mb-8 aspect-[16/10] overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
                   <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100" />
@@ -172,20 +166,26 @@ export default function KaryaArchive({ projects }: Props) {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge>{project.design_category}</Badge>
+                  <Badge>{project.design_category || project.category}</Badge>
                   <Badge>{project.design_style}</Badge>
                   <Badge>{project.area_type}</Badge>
                 </div>
               </div>
 
-              <h2 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">
-                {project.title}
-              </h2>
+              <h2 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{project.title}</h2>
 
-              <div className="mt-10 space-y-6 border-t border-white/10 pt-8">
+              <div className="mt-8 space-y-6 border-t border-white/10 pt-8">
+                <div>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Kategori</p>
+                  <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{project.category || project.design_category || 'Kategori project belum ditentukan.'}</p>
+                </div>
                 <div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Problem</p>
                   <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{truncateText(project.problem || 'Masalah ruang belum didefinisikan.')}</p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Decision / Solusi</p>
+                  <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{truncateText(project.solution || 'Keputusan desain difokuskan pada prioritas fungsi, alur ruang, dan efisiensi implementasi.')}</p>
                 </div>
                 <div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Impact</p>
@@ -193,10 +193,13 @@ export default function KaryaArchive({ projects }: Props) {
                 </div>
               </div>
 
-              <span className="mt-10 inline-flex items-center gap-3 font-mono text-xs font-black uppercase tracking-[0.18em] text-[#D4AF37]">
+              <Link
+                href={`/karya/${project.slug}`}
+                className="mt-10 inline-flex items-center gap-3 rounded-sm border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 font-mono text-xs font-black uppercase tracking-[0.18em] text-black transition hover:bg-[#E2C866]"
+              >
                 Lihat Studi Kasus <MoveRight size={18} className="transition group-hover:translate-x-1" />
-              </span>
-            </Link>
+              </Link>
+            </article>
           ))}
         </div>
       )}
