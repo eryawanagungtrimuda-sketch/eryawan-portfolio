@@ -1,4 +1,5 @@
 import BackButton from '@/components/back-button';
+import Button from '@/components/ui/button';
 
 const pengalamanNyata = [
   {
@@ -63,12 +64,9 @@ export default function TentangPage() {
           <p className="mt-8 max-w-4xl text-lg leading-[1.75] text-white/72 md:text-xl">
             Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
           </p>
-          <a
-            href="/kontak"
-            className="mt-10 inline-flex items-center justify-center rounded-[4px] bg-[#C8A951] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
-          >
+          <Button href="/kontak" className="mt-10 px-8">
             Diskusikan Project Anda
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -141,12 +139,9 @@ export default function TentangPage() {
           <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/70 md:text-lg">
             Jika Anda membutuhkan partner desain untuk menyusun keputusan ruang yang jelas, efisien, dan selaras dengan tujuan proyek, mari mulai diskusinya.
           </p>
-          <a
-            href="/kontak"
-            className="mt-10 inline-flex items-center justify-center rounded-[4px] bg-[#C8A951] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
-          >
+          <Button href="/kontak" className="mt-10 px-8">
             Hubungi Saya
-          </a>
+          </Button>
         </div>
       </section>
     </main>
