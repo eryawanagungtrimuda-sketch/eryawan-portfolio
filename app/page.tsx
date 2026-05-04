@@ -86,6 +86,25 @@ const differentiations = [
   },
 ];
 
+
+const wawasanPreview = [
+  {
+    title: 'Membaca Layout Sebelum Memilih Gaya',
+    excerpt: 'Langkah awal saya selalu mengevaluasi alur aktivitas agar keputusan estetika tidak menutupi masalah fungsi.',
+    tag: 'Spatial Strategy',
+  },
+  {
+    title: 'Tren Material yang Tetap Rasional',
+    excerpt: 'Tidak semua tren cocok untuk setiap proyek. Saya memilih material berdasarkan konteks penggunaan dan durabilitas.',
+    tag: 'Material Insight',
+  },
+  {
+    title: 'Keputusan Desain untuk Tim Non-Desain',
+    excerpt: 'Menyederhanakan bahasa desain membantu stakeholder mengambil keputusan lebih cepat dan minim revisi.',
+    tag: 'Decision Clarity',
+  },
+];
+
 const portfolioWorks = [
   {
     title: 'Project 01 — Residential Interior',
@@ -416,6 +435,42 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+
+      <section id="wawasan-design" className="relative overflow-hidden bg-[#0B0B0A] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col gap-5 md:max-w-3xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Wawasan</p>
+            <h2 className="font-display text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+              Wawasan Desain
+            </h2>
+            <p className="text-lg leading-[1.65] text-white/68 md:text-xl">
+              Cara saya membaca ruang, tren, dan keputusan desain secara strategis.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {wawasanPreview.map((article) => (
+              <article key={article.title} className="group rounded-sm border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#C8A951]/80">{article.tag}</p>
+                <h3 className="mt-4 text-lg font-semibold leading-snug tracking-[-0.02em] text-white/90">
+                  {article.title}
+                </h3>
+                <p className="mt-3 text-sm leading-[1.7] text-white/62">{article.excerpt}</p>
+              </article>
+            ))}
+          </div>
+
+          <a
+            href="/wawasan"
+            className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
+          >
+            Lihat semua wawasan
+            <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
+          </a>
         </div>
       </section>
 
