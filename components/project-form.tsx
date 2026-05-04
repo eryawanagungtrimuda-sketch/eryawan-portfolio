@@ -246,10 +246,17 @@ export default function ProjectForm({ project }: Props) {
   async function checkProjectImagesBucket() {
     const supabase = getSupabaseClient();
     const { error } = await supabase.storage.from(projectImagesBucket).list('', { limit: 1 });
-    if (error) {
+    if (!error) return;
+
+    if (isBucketMissingError(error.message)) {
       console.error('[ProjectForm] Storage bucket preflight failed', { bucket: projectImagesBucket, message: error.message });
       throw new Error(getStorageErrorMessage(error.message));
     }
+
+    console.warn('[ProjectForm] Storage bucket preflight skipped due to policy/permission', {
+      bucket: projectImagesBucket,
+      message: error.message,
+    });
   }
 
   function openGalleryPicker() {
