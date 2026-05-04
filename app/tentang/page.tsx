@@ -58,6 +58,12 @@ export default function TentangPage() {
           <p className="mt-8 max-w-4xl text-lg leading-[1.75] text-white/72 md:text-xl">
             Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
           </p>
+          <a
+            href="/kontak"
+            className="mt-10 inline-flex items-center justify-center rounded-[4px] bg-[#C8A951] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
+          >
+            Diskusikan Project Anda
+          </a>
         </div>
       </section>
 
@@ -117,6 +123,25 @@ export default function TentangPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(200,169,81,0.06),transparent_34%)]" />
+        <div className="relative mx-auto max-w-5xl text-center">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Kolaborasi</p>
+          <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
+            Siap membangun ruang yang lebih terarah dan berdampak?
+          </h2>
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/70 md:text-lg">
+            Jika Anda membutuhkan partner desain untuk menyusun keputusan ruang yang jelas, efisien, dan selaras dengan tujuan proyek, mari mulai diskusinya.
+          </p>
+          <a
+            href="/kontak"
+            className="mt-10 inline-flex items-center justify-center rounded-[4px] bg-[#C8A951] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
+          >
+            Hubungi Saya
+          </a>
         </div>
       </section>
     </main>
