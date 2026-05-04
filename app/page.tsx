@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
+import Button from '@/components/ui/button';
 
 const clientWorkflow = [
   {
@@ -149,12 +150,9 @@ export default function Home() {
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#contact">Kontak</a>
           </div>
 
-          <a
-            href="mailto:eryawanagungtrimuda@gmail.com"
-            className="hidden rounded-[4px] bg-[#C8A951] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.08em] text-[#080807] shadow-[0_18px_44px_rgba(200,169,81,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72] md:inline-flex"
-          >
+          <Button href="mailto:eryawanagungtrimuda@gmail.com" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
             Hubungi Studio
-          </a>
+          </Button>
         </nav>
 
 
@@ -182,24 +180,15 @@ export default function Home() {
             </p>
 
             <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-              <a
-                href="mailto:eryawanagungtrimuda@gmail.com"
-                className="inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#C8A951] px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.1em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
-              >
+              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="min-w-[300px] px-8 py-4.5">
                 Diskusikan Proyek Secara Strategis
-              </a>
-              <a
-                href="#framework"
-                className="inline-flex min-w-[250px] items-center justify-center rounded-[4px] border border-white/20 bg-[#11151b]/58 px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.1em] text-white/70 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:text-[#C8A951]"
-              >
+              </Button>
+              <Button href="#framework" variant="secondary" className="min-w-[250px] px-8 py-4.5">
                 Lihat Cara Saya Berpikir
-              </a>
-              <a
-                href="/tentang"
-                className="inline-flex min-w-[220px] items-center justify-center rounded-[4px] border border-white/20 bg-[#11151b]/58 px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.1em] text-white/70 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:text-[#C8A951]"
-              >
+              </Button>
+              <Button href="/tentang" variant="secondary" className="min-w-[220px] px-8 py-4.5">
                 Tentang Saya
-              </a>
+              </Button>
             </div>
           </div>
         </div>
@@ -209,13 +198,9 @@ export default function Home() {
             <span className="h-10 w-px bg-white/25" />
             <span className="text-sm font-medium">Scroll untuk eksplorasi</span>
           </div>
-          <a
-            href="#contact"
-            className="flex h-14 w-14 items-center justify-center rounded-[4px] bg-[#C8A951] text-[#080807] shadow-[0_16px_36px_rgba(200,169,81,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72]"
-            aria-label="Hubungi studio"
-          >
+          <Button href="#contact" className="h-14 w-14 px-0 py-0 shadow-[0_16px_36px_rgba(200,169,81,0.14)]" ariaLabel="Hubungi studio">
             <MessageSquare size={20} strokeWidth={2} />
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -497,12 +482,9 @@ export default function Home() {
               Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
-            <a
-              href="mailto:eryawanagungtrimuda@gmail.com"
-              className="mt-14 inline-flex min-w-[300px] items-center justify-center rounded-[4px] bg-[#C8A951] px-10 py-5 text-sm font-semibold uppercase tracking-[0.14em] text-[#080807] shadow-[0_22px_50px_rgba(200,169,81,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#D7BD72] md:min-w-[420px]"
-            >
+            <Button href="mailto:eryawanagungtrimuda@gmail.com" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">
               Mulai Diskusi Strategis
-            </a>
+            </Button>
 
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/32">
               Respon langsung oleh desainer, bukan bot.
