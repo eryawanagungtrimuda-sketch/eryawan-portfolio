@@ -124,6 +124,7 @@ export default function Home() {
 
           <div className="hidden items-start gap-8 text-sm font-medium text-white/70 lg:flex">
             <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="#home">Beranda</a>
+            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#portfolio">Karya</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#framework">Wawasan</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#contact">Kontak</a>
@@ -164,6 +165,12 @@ export default function Home() {
                 className="inline-flex min-w-[250px] items-center justify-center rounded-[4px] border border-white/20 bg-[#11151b]/58 px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.1em] text-white/70 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:text-[#C8A951]"
               >
                 Lihat Cara Saya Berpikir
+              </a>
+              <a
+                href="/tentang"
+                className="inline-flex min-w-[220px] items-center justify-center rounded-[4px] border border-white/20 bg-[#11151b]/58 px-8 py-4.5 text-sm font-semibold uppercase tracking-[0.1em] text-white/70 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:text-[#C8A951]"
+              >
+                Tentang Saya
               </a>
             </div>
           </div>
