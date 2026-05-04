@@ -24,6 +24,23 @@ export default async function KaryaDetailPage({ params }: Props) {
   if (!project) notFound();
 
   const galleryImages = [...(project.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
+  const projectContext =
+    project.problem ||
+    `Project ini berangkat dari kebutuhan menata ulang ${project.title} agar fungsi ruang selaras dengan ritme aktivitas harian, keterbatasan tapak, dan target operasional yang disepakati di awal.`;
+  const spatialConflict =
+    project.problem ||
+    'Masalah utama bukan pada tampilan, tetapi pada sistem ruang yang memicu alur sirkulasi saling bertabrakan, zona kerja tidak terdefinisi tegas, dan keputusan lapangan sering reaktif karena baseline fungsi tidak jelas.';
+  const designDecision =
+    project.solution ||
+    'Keputusan kunci diambil dengan membandingkan dua opsi: mempertahankan layout eksisting dengan intervensi ringan versus menyusun ulang zonasi inti. Opsi pertama cepat dieksekusi namun tidak menyelesaikan bottleneck. Opsi kedua dipilih karena memberi kontrol sirkulasi, urutan aktivitas, dan kapasitas ruang secara lebih presisi.';
+  const designApproach =
+    project.solution ||
+    'Pendekatan dimulai dari pemetaan pola pakai aktual, lalu pengujian prioritas fungsi per zona. Dari sana, setiap elemen ruang ditentukan berdasarkan konsekuensi operasional: apa yang harus dipercepat, dipisahkan, atau dibuat lebih adaptif agar keputusan desain dapat diuji sebelum implementasi final.';
+  const projectImpact =
+    project.impact ||
+    'Setelah implementasi, pergerakan pengguna menjadi lebih terbaca, titik friksi antar aktivitas berkurang, dan tim operasional memiliki sistem ruang yang lebih konsisten untuk dijalankan harian tanpa ketergantungan pada improvisasi.';
+  const keyInsight =
+    'Desain yang matang bukan hasil menambah elemen, tetapi hasil memilih prioritas yang tepat dan berani menolak keputusan yang tidak mendukung performa ruang. Kejelasan sistem selalu lebih bernilai daripada kompleksitas visual.';
 
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
@@ -37,8 +54,9 @@ export default async function KaryaDetailPage({ params }: Props) {
 
         <section className="py-20 md:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
+          <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-white/50 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">{project.title}</h1>
-          <p className="mt-8 max-w-4xl text-xl leading-[1.65] text-white/76 md:text-2xl">{project.problem || 'Studi kasus keputusan desain berbasis masalah, solusi, dan dampak ruang.'}</p>
+          <p className="mt-8 max-w-4xl text-xl leading-[1.65] text-white/76 md:text-2xl">{projectContext}</p>
         </section>
 
         {project.cover_image ? (
@@ -51,10 +69,12 @@ export default async function KaryaDetailPage({ params }: Props) {
         ) : null}
 
         <section className="grid gap-8 pb-20 lg:grid-cols-1">
-          <TextBlock label="Problem" body={project.problem} index={1} fallback="Problem inti project didokumentasikan melalui temuan ruang dan kebutuhan pengguna." />
-          <TextBlock label="Keputusan Desain" body={project.solution} index={2} fallback="Keputusan desain dipilih untuk menyelaraskan fungsi, flow, dan ekspresi ruang secara terukur." />
-          <TextBlock label="Proses / Pendekatan" body={project.solution} index={3} fallback="Pendekatan dimulai dari diagnosis masalah, eksplorasi opsi, lalu validasi keputusan bersama klien." />
-          <TextBlock label="Impact" body={project.impact} index={4} fallback="Dampak project mencakup efisiensi aktivitas, kualitas pengalaman ruang, dan kemudahan implementasi." />
+          <TextBlock label="Konteks" body={projectContext} index={1} fallback={projectContext} />
+          <TextBlock label="Konflik" body={spatialConflict} index={2} fallback={spatialConflict} />
+          <TextBlock label="Keputusan Desain" body={designDecision} index={3} fallback={designDecision} />
+          <TextBlock label="Pendekatan" body={designApproach} index={4} fallback={designApproach} />
+          <TextBlock label="Dampak" body={projectImpact} index={5} fallback={projectImpact} />
+          <TextBlock label="Insight Kunci" body={keyInsight} index={6} fallback={keyInsight} />
         </section>
 
         <section className="border-t border-white/10 py-20">
