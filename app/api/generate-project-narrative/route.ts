@@ -12,9 +12,12 @@ type GenerateNarrativeBody = {
 };
 
 type NarrativeResponse = {
-  problem: string;
-  solution: string;
-  impact: string;
+  konteks: string;
+  konflik: string;
+  keputusan_desain: string;
+  pendekatan: string;
+  dampak: string;
+  insight_kunci: string;
 };
 
 const inputLimits = {
@@ -25,9 +28,12 @@ const inputLimits = {
 };
 
 const outputLimits = {
-  problem: 450,
-  solution: 600,
-  impact: 450,
+  konteks: 350,
+  konflik: 350,
+  keputusan_desain: 450,
+  pendekatan: 450,
+  dampak: 350,
+  insight_kunci: 260,
 };
 
 function trimTo(value: unknown, maxLength: number) {
@@ -44,12 +50,15 @@ function trimOutput(value: string, maxLength: number) {
 function safeJsonParse(value: string): NarrativeResponse | null {
   try {
     const parsed = JSON.parse(value) as Partial<NarrativeResponse>;
-    if (!parsed.problem || !parsed.solution || !parsed.impact) return null;
+    if (!parsed.konteks || !parsed.konflik || !parsed.keputusan_desain || !parsed.pendekatan || !parsed.dampak || !parsed.insight_kunci) return null;
 
     return {
-      problem: trimOutput(String(parsed.problem), outputLimits.problem),
-      solution: trimOutput(String(parsed.solution), outputLimits.solution),
-      impact: trimOutput(String(parsed.impact), outputLimits.impact),
+      konteks: trimOutput(String(parsed.konteks), outputLimits.konteks),
+      konflik: trimOutput(String(parsed.konflik), outputLimits.konflik),
+      keputusan_desain: trimOutput(String(parsed.keputusan_desain), outputLimits.keputusan_desain),
+      pendekatan: trimOutput(String(parsed.pendekatan), outputLimits.pendekatan),
+      dampak: trimOutput(String(parsed.dampak), outputLimits.dampak),
+      insight_kunci: trimOutput(String(parsed.insight_kunci), outputLimits.insight_kunci),
     };
   } catch {
     return null;
@@ -105,10 +114,10 @@ export async function POST(request: Request) {
   }
 
   const prompt = `
-Tulis narasi studi kasus interior/arsitektur untuk Eryawan Studio.
+Susun case study interior/arsitektur untuk Eryawan Studio.
 
 Gaya wajib: tenang, matang, strategis, tidak bombastis, langsung ke inti. Jangan terdengar seperti AI generik.
-Alur berpikir: problem → design decision → impact.
+Alur berpikir: konteks → konflik → keputusan desain → pendekatan → dampak → insight.
 Fokus: fungsi, zoning, sirkulasi, material, lighting, aktivitas pengguna, efisiensi, dan clarity keputusan klien.
 Jangan mengarang jika input/gambar kurang jelas; gunakan observasi aman seperti "terlihat" atau "mendukung".
 
@@ -123,9 +132,12 @@ Images sent: ${imageUrls.length}
 
 Output JSON valid saja:
 {
-  "problem": "maks 450 karakter; objektif, bukan copy input mentah",
-  "solution": "maks 600 karakter; fokus keputusan desain dan alasan fungsional",
-  "impact": "maks 450 karakter; dampak nyata bagi pengguna/klien"
+  "konteks": "maks 350 karakter",
+  "konflik": "maks 350 karakter",
+  "keputusan_desain": "maks 450 karakter",
+  "pendekatan": "maks 450 karakter",
+  "dampak": "maks 350 karakter",
+  "insight_kunci": "maks 260 karakter"
 }
 `;
 
@@ -154,7 +166,7 @@ Output JSON valid saja:
           },
         ],
         temperature: 0.2,
-        max_output_tokens: 450,
+        max_output_tokens: 600,
       }),
     });
 
@@ -170,7 +182,14 @@ Output JSON valid saja:
 
     if (!parsed) {
       console.error('[generate-project-narrative] Invalid AI JSON output', outputText);
-      return NextResponse.json({ error: 'AI menghasilkan format yang tidak valid. Coba lagi.' }, { status: 502 });
+      return NextResponse.json({
+        konteks: 'Konteks project belum cukup jelas dari input yang ada.',
+        konflik: 'Konflik utama belum bisa diidentifikasi secara presisi.',
+        keputusan_desain: 'Keputusan desain perlu disusun ulang dari brief dan observasi visual.',
+        pendekatan: 'Pendekatan implementasi belum dapat disimpulkan secara aman.',
+        dampak: 'Dampak implementasi belum dapat diproyeksikan secara meyakinkan.',
+        insight_kunci: 'Lengkapi brief untuk menghasilkan insight yang lebih tajam.',
+      });
     }
 
     return NextResponse.json(parsed);

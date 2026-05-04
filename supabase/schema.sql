@@ -15,12 +15,26 @@ create table if not exists public.projects (
   problem text,
   solution text,
   impact text,
+  konteks text,
+  konflik text,
+  keputusan_desain text,
+  pendekatan text,
+  dampak text,
+  insight_kunci text,
+  is_published boolean not null default true,
   created_at timestamp with time zone not null default now()
 );
 
 alter table public.projects add column if not exists design_category text;
 alter table public.projects add column if not exists design_style text;
 alter table public.projects add column if not exists area_type text;
+alter table public.projects add column if not exists konteks text;
+alter table public.projects add column if not exists konflik text;
+alter table public.projects add column if not exists keputusan_desain text;
+alter table public.projects add column if not exists pendekatan text;
+alter table public.projects add column if not exists dampak text;
+alter table public.projects add column if not exists insight_kunci text;
+alter table public.projects add column if not exists is_published boolean not null default true;
 
 create table if not exists public.project_images (
   id uuid primary key default gen_random_uuid(),
