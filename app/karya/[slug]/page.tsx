@@ -27,22 +27,22 @@ export default async function KaryaDetailPage({ params }: Props) {
   const isTrunojoyoProject = project.title.trim().toUpperCase() === 'KLINIK KECANTIKAN & CAFE TRUNOJOYO';
   const openingDescription =
     isTrunojoyoProject
-      ? 'Ruang pada proyek ini tidak gagal secara visual, tetapi gagal mengarahkan aktivitas. Alur pengguna tidak terbaca, zona fungsi saling bertabrakan, dan keputusan desain di lapangan cenderung reaktif karena tidak adanya baseline sistem yang jelas.'
+      ? 'Ruang ini tidak gagal karena desainnya buruk, tetapi karena tidak memiliki arah. Aktivitas tetap berjalan, namun tanpa struktur yang jelas—dan di situlah masalah sebenarnya muncul. Ketika ruang tidak mampu mengarahkan perilaku, setiap keputusan di lapangan menjadi reaktif, bukan strategis.'
       : project.problem ||
         `Project ini berangkat dari kebutuhan menata ulang ${project.title} agar fungsi ruang selaras dengan ritme aktivitas harian, keterbatasan tapak, dan target operasional yang disepakati di awal.`;
   const projectContext =
     isTrunojoyoProject
-      ? 'Project ini berangkat dari kebutuhan menata ulang KLINIK KECANTIKAN & CAFE TRUNOJOYO agar fungsi ruang selaras dengan ritme aktivitas harian, keterbatasan tapak, dan target operasional yang telah ditetapkan sejak awal.'
+      ? 'Project ini berangkat dari kebutuhan menata ulang KLINIK KECANTIKAN & CAFE TRUNOJOYO agar fungsi ruang selaras dengan ritme aktivitas harian, keterbatasan tapak, dan target operasional yang telah disepakati sejak awal.'
       : project.problem ||
         `Project ini berangkat dari kebutuhan menata ulang ${project.title} agar fungsi ruang selaras dengan ritme aktivitas harian, keterbatasan tapak, dan target operasional yang disepakati di awal.`;
   const spatialConflict =
     isTrunojoyoProject
-      ? 'Masalah utama bukan pada tampilan visual, tetapi pada sistem ruang yang tidak mampu mengarahkan alur aktivitas secara jelas. Sirkulasi pengguna saling bertabrakan, zona kerja tidak terdefinisi tegas, dan keputusan desain di lapangan menjadi reaktif karena tidak memiliki struktur acuan yang kuat.'
+      ? 'Masalah utama bukan terletak pada tampilan visual, tetapi pada sistem ruang yang tidak mampu mengarahkan alur aktivitas secara jelas. Sirkulasi pengguna saling bertabrakan, zona kerja tidak terdefinisi tegas, dan keputusan desain di lapangan menjadi reaktif karena tidak adanya baseline sistem yang bisa dijadikan acuan.'
       : project.problem ||
         'Masalah utama bukan pada tampilan, tetapi pada sistem ruang yang memicu alur sirkulasi saling bertabrakan, zona kerja tidak terdefinisi tegas, dan keputusan lapangan sering reaktif karena baseline fungsi tidak jelas.';
   const designDecision =
     isTrunojoyoProject
-      ? 'Keputusan kunci diambil melalui perbandingan dua pendekatan: (1) mempertahankan layout eksisting dengan intervensi minimal, atau (2) menyusun ulang zonasi inti secara menyeluruh. Pendekatan pertama menawarkan efisiensi waktu, namun tidak menyelesaikan akar masalah. Pendekatan kedua dipilih karena memberikan kontrol yang lebih presisi terhadap sirkulasi, urutan aktivitas, dan kapasitas ruang dalam jangka panjang.'
+      ? 'Keputusan kunci diambil melalui perbandingan dua pendekatan: (1) mempertahankan layout eksisting dengan intervensi minimal, atau (2) menyusun ulang zonasi inti secara menyeluruh. Pendekatan pertama menawarkan efisiensi waktu, namun tidak menyelesaikan akar masalah. Pendekatan kedua dipilih karena memberikan kontrol yang lebih presisi terhadap sirkulasi, urutan aktivitas, dan kapasitas ruang dalam jangka panjang. Keputusan ini bukan tentang mengubah layout, tetapi mengubah cara ruang bekerja.'
       : project.solution ||
         'Keputusan kunci diambil dengan membandingkan dua opsi: mempertahankan layout eksisting dengan intervensi ringan versus menyusun ulang zonasi inti. Opsi pertama cepat dieksekusi namun tidak menyelesaikan bottleneck. Opsi kedua dipilih karena memberi kontrol sirkulasi, urutan aktivitas, dan kapasitas ruang secara lebih presisi.';
   const designApproach =
@@ -50,6 +50,10 @@ export default async function KaryaDetailPage({ params }: Props) {
       ? 'Pendekatan dimulai dari membaca pola aktivitas aktual pengguna, bukan dari eksplorasi bentuk visual. Setiap keputusan ruang ditentukan berdasarkan konsekuensi operasional: aktivitas apa yang harus dipercepat, dipisahkan, atau diprioritaskan. Dari sana, sistem zonasi disusun untuk memastikan bahwa alur pengguna, kebutuhan privasi, dan efisiensi kerja dapat berjalan tanpa konflik dalam satu kesatuan ruang.'
       : project.solution ||
         'Pendekatan dimulai dari pemetaan pola pakai aktual, lalu pengujian prioritas fungsi per zona. Dari sana, setiap elemen ruang ditentukan berdasarkan konsekuensi operasional: apa yang harus dipercepat, dipisahkan, atau dibuat lebih adaptif agar keputusan desain dapat diuji sebelum implementasi final.';
+  const strategicLayer =
+    isTrunojoyoProject
+      ? 'Pendekatan ini tidak dimulai dari bentuk, tetapi dari membaca konsekuensi aktivitas. Desain bukan ditentukan oleh preferensi visual, tetapi oleh bagaimana ruang harus bekerja dalam kondisi nyata.'
+      : 'Pendekatan strategis menempatkan performa aktivitas sebagai dasar utama, sehingga keputusan visual mengikuti kebutuhan operasional ruang secara nyata.';
   const projectImpact =
     isTrunojoyoProject
       ? 'Setelah implementasi, pergerakan pengguna menjadi lebih terbaca dan terarah. Titik friksi antar aktivitas berkurang, dan tim operasional memiliki sistem ruang yang lebih konsisten untuk dijalankan tanpa ketergantungan pada improvisasi. Ruang tidak hanya terasa lebih rapi secara visual, tetapi juga bekerja lebih efisien sebagai sistem yang mendukung aktivitas sehari-hari.'
@@ -57,7 +61,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         'Setelah implementasi, pergerakan pengguna menjadi lebih terbaca, titik friksi antar aktivitas berkurang, dan tim operasional memiliki sistem ruang yang lebih konsisten untuk dijalankan harian tanpa ketergantungan pada improvisasi.';
   const keyInsight =
     isTrunojoyoProject
-      ? 'Desain yang matang bukan hasil dari menambahkan elemen, tetapi dari memilih prioritas dengan tepat. Ruang yang baik tidak terasa “dirancang”, tetapi secara diam-diam mengarahkan perilaku pengguna. Ketika sistem ruang jelas, keputusan desain menjadi lebih sedikit—namun lebih tepat dan berdampak.'
+      ? 'Desain yang matang bukan hasil dari menambah elemen, tetapi dari berani menentukan apa yang tidak perlu. Ruang yang baik tidak terasa dirancang, tetapi secara diam-diam mengarahkan perilaku pengguna. Ketika sistem ruang jelas, kompleksitas berkurang—dan keputusan menjadi lebih sedikit, namun jauh lebih tepat dan berdampak.'
       : 'Desain yang matang bukan hasil menambah elemen, tetapi hasil memilih prioritas yang tepat dan berani menolak keputusan yang tidak mendukung performa ruang. Kejelasan sistem selalu lebih bernilai daripada kompleksitas visual.';
 
   return (
@@ -91,11 +95,12 @@ export default async function KaryaDetailPage({ params }: Props) {
           <TextBlock label="Konflik" body={spatialConflict} index={2} fallback={spatialConflict} />
           <TextBlock label="Keputusan Desain" body={designDecision} index={3} fallback={designDecision} />
           <TextBlock label="Pendekatan" body={designApproach} index={4} fallback={designApproach} />
-          <TextBlock label="Dampak" body={projectImpact} index={5} fallback={projectImpact} />
+          <TextBlock label="Strategic Layer" body={strategicLayer} index={5} fallback={strategicLayer} />
+          <TextBlock label="Dampak" body={projectImpact} index={6} fallback={projectImpact} />
           <div className="space-y-6">
-            <TextBlock label="Insight Kunci" body={keyInsight} index={6} fallback={keyInsight} />
+            <TextBlock label="Insight Kunci" body={keyInsight} index={7} fallback={keyInsight} />
             {isTrunojoyoProject ? (
-              <blockquote className="border-l-2 border-[#D4AF37] pl-6 text-lg italic leading-[1.7] text-white/80">
+              <blockquote className="max-w-3xl border-l-2 border-[#D4AF37] pl-6 text-xl italic leading-[1.7] text-white/90">
                 Ruang yang baik tidak terasa dirancang, tetapi mengarahkan perilaku tanpa disadari.
               </blockquote>
             ) : null}
