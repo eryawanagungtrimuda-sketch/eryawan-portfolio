@@ -203,6 +203,7 @@ export default function ProjectForm({ project }: Props) {
   const [customAreaTag, setCustomAreaTag] = useState('');
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
+  const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
 
   const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
   const [designReference, setDesignReference] = useState(project?.design_reference || '');
@@ -778,49 +779,68 @@ export default function ProjectForm({ project }: Props) {
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
                     <div>
                       <label>Image Area Tags</label>
-                      <div className="mt-2 space-y-2">
-                        <div className="flex flex-wrap gap-2">
-                          {areaTagOptions.map((option) => {
-                            const isSelected = (image.area_tags || []).includes(option);
-                            return (
-                              <button
-                                key={`${image.id}-${option}`}
-                                type="button"
-                                onClick={() => (isSelected ? removeImageAreaTag(image.id, option) : addImageAreaTag(image.id, option))}
-                                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
-                                  isSelected
-                                    ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
-                                    : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
-                                }`}
-                              >
-                                {getAreaTagLabel(option)}
-                                {isSelected ? <X size={12} /> : null}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <div className="flex gap-2">
-                          <input
-                            value={customImageAreaTags[image.id] || ''}
-                            onChange={(event) => setCustomImageAreaTags((current) => ({ ...current, [image.id]: event.target.value }))}
-                            onKeyDown={(event) => {
-                              if (event.key !== 'Enter') return;
-                              event.preventDefault();
-                              addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || '');
-                              setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' }));
-                            }}
-                            placeholder="Tambah area custom"
-                            className="flex-1"
-                          />
-                          <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
-                        </div>
+                      <div className="mt-2 space-y-3">
                         {(image.area_tags || []).length > 0 ? (
                           <div className="flex flex-wrap gap-2">
                             {(image.area_tags || []).map((tag) => (
                               <button key={`${image.id}-${tag}`} type="button" onClick={() => removeImageAreaTag(image.id, tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)} <X size={12} /></button>
                             ))}
                           </div>
-                        ) : <p className="text-xs text-white/40">Belum ada image area tags.</p>}
+                        ) : <p className="text-xs text-white/40">Belum ada tag area gambar.</p>}
+                        {!expandedImageTagPanels[image.id] ? (
+                          <button
+                            type="button"
+                            onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: true }))}
+                            className="rounded-sm border border-white/12 px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+                          >
+                            Kelola Tag
+                          </button>
+                        ) : (
+                          <div className="space-y-3 rounded-sm border border-white/10 bg-white/[0.02] p-3">
+                            <div className="flex flex-wrap gap-2">
+                              {areaTagOptions.map((option) => {
+                                const isSelected = (image.area_tags || []).includes(option);
+                                return (
+                                  <button
+                                    key={`${image.id}-${option}`}
+                                    type="button"
+                                    onClick={() => (isSelected ? removeImageAreaTag(image.id, option) : addImageAreaTag(image.id, option))}
+                                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                                      isSelected
+                                        ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
+                                        : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
+                                    }`}
+                                  >
+                                    {getAreaTagLabel(option)}
+                                    {isSelected ? <X size={12} /> : null}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                              <input
+                                value={customImageAreaTags[image.id] || ''}
+                                onChange={(event) => setCustomImageAreaTags((current) => ({ ...current, [image.id]: event.target.value }))}
+                                onKeyDown={(event) => {
+                                  if (event.key !== 'Enter') return;
+                                  event.preventDefault();
+                                  addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || '');
+                                  setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' }));
+                                }}
+                                placeholder="Tambah area custom"
+                                className="min-w-[180px] flex-1"
+                              />
+                              <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: false }))}
+                              className="rounded-sm border border-white/12 px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+                            >
+                              Selesai
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
