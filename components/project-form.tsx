@@ -16,6 +16,7 @@ const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const customValue = '__custom__';
 const projectImagesBucket = getProjectImagesBucketName();
 const bucketSetupMessage = 'Bucket project-images belum dibuat di Supabase Storage. Buat bucket public bernama project-images terlebih dahulu.';
+const storagePolicyMessage = 'Tidak punya izin upload ke Supabase Storage. Kemungkinan storage policy belum dijalankan di schema.sql atau session admin tidak valid.';
 
 const legacyCategoryOptions = [
   'Residential Interior',
@@ -94,8 +95,20 @@ function isBucketMissingError(message?: string) {
 }
 
 function getStorageErrorMessage(message?: string) {
+  const normalized = (message || '').toLowerCase();
   if (isBucketMissingError(message)) return bucketSetupMessage;
+  if (normalized.includes('permission denied') || normalized.includes('not allowed') || normalized.includes('row-level security') || normalized.includes('rls')) {
+    return storagePolicyMessage;
+  }
   return message || 'Upload storage gagal. Periksa Supabase Storage dan coba lagi.';
+}
+
+function getProjectImageInsertErrorMessage(message?: string) {
+  const normalized = (message || '').toLowerCase();
+  if (normalized.includes('row-level security') || normalized.includes('rls') || normalized.includes('permission denied')) {
+    return 'File sudah masuk ke Storage, tetapi insert ke tabel project_images ditolak (RLS/policy). Jalankan ulang schema.sql agar policy project_images aktif.';
+  }
+  return `File sudah masuk ke Storage, tetapi gagal membuat record project_images: ${message || 'unknown database error'}`;
 }
 
 function TaxonomySelect({
@@ -355,7 +368,7 @@ export default function ProjectForm({ project }: Props) {
 
           if (insertError) {
             console.error('[ProjectForm] Gallery database insert failed', { projectId, imageUrl: publicUrl.publicUrl, message: insertError.message });
-            throw new Error(`Gambar berhasil diupload, tapi gagal disimpan ke database: ${insertError.message}`);
+            throw new Error(getProjectImageInsertErrorMessage(insertError.message));
           }
 
           uploadedImages.push(data as ProjectImage);
