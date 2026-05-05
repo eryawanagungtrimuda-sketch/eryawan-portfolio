@@ -17,6 +17,8 @@ const customValue = '__custom__';
 const projectImagesBucket = getProjectImagesBucketName();
 const bucketSetupMessage = 'Bucket project-images belum dibuat di Supabase Storage. Buat bucket public bernama project-images terlebih dahulu.';
 const storagePolicyMessage = 'Tidak punya izin upload ke Supabase Storage. Kemungkinan storage policy belum dijalankan di schema.sql atau session admin tidak valid.';
+const authSessionMessage = 'Session admin tidak aktif atau sudah expired. Login ulang ke /admin/login lalu coba upload lagi.';
+const adminEmailMismatchMessage = 'Akun yang login bukan email admin yang diizinkan. Logout lalu login dengan email admin yang terdaftar di NEXT_PUBLIC_ADMIN_EMAIL.';
 
 const legacyCategoryOptions = [
   'Residential Interior',
@@ -309,6 +311,16 @@ export default function ProjectForm({ project }: Props) {
     }
   }
 
+  async function validateAdminSessionForUpload() {
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw new Error(authSessionMessage);
+
+    const activeEmail = data.user.email?.toLowerCase();
+    const allowedAdminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com').toLowerCase();
+    if (!activeEmail || activeEmail !== allowedAdminEmail) throw new Error(adminEmailMismatchMessage);
+  }
+
   async function uploadGalleryFiles(files: File[]) {
     if (files.length === 0) return;
 
@@ -333,6 +345,7 @@ export default function ProjectForm({ project }: Props) {
 
     setGalleryUploading(true);
     try {
+      await validateAdminSessionForUpload();
       await checkProjectImagesBucket();
 
       const supabase = getSupabaseClient();
