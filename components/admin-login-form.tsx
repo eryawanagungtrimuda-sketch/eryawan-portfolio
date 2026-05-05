@@ -22,9 +22,9 @@ export default function AdminLoginForm() {
       try {
         const supabase = createSupabaseBrowserClient();
         const { data } = await supabase.auth.getUser();
-        const userEmail = data.user?.email?.toLowerCase();
+        const userEmail = data.user?.email?.trim().toLowerCase();
 
-        if (mounted && userEmail === adminEmail.toLowerCase()) {
+        if (mounted && userEmail === adminEmail.trim().toLowerCase()) {
           router.replace('/admin/dashboard');
         }
       } catch {
@@ -51,7 +51,7 @@ export default function AdminLoginForm() {
     setMessage('');
 
     try {
-      if (email.toLowerCase() !== adminEmail.toLowerCase()) {
+      if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase()) {
         setMessage('Email ini tidak terdaftar sebagai admin.');
         return;
       }
