@@ -694,7 +694,7 @@ export default function ProjectForm({ project }: Props) {
                     key={option}
                     type="button"
                     onClick={() => (isSelected ? removeAreaTag(option) : addAreaTag(option))}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-4 transition ${
                       isSelected
                         ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
                         : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
@@ -775,11 +775,11 @@ export default function ProjectForm({ project }: Props) {
                     <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="aspect-[4/3] w-full object-cover" />
                     {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#080807]"><Star size={12} /> Cover</div> : null}
                   </div>
-                  <div className="space-y-3 p-4">
+                  <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
                     <div>
                       <label>Image Area Tags</label>
-                      <div className="mt-2 space-y-3">
+                      <div className="mt-2 space-y-2.5">
                         {(image.area_tags || []).length > 0 ? (
                           <div className="flex flex-wrap gap-2">
                             {(image.area_tags || []).map((tag) => (
@@ -796,8 +796,9 @@ export default function ProjectForm({ project }: Props) {
                             Kelola Tag
                           </button>
                         ) : (
-                          <div className="space-y-3 rounded-sm border border-white/10 bg-white/[0.02] p-3">
-                            <div className="flex flex-wrap gap-2">
+                          <div className="space-y-2.5 rounded-sm border border-white/12 bg-black/20 p-2.5">
+                            <div className="max-h-56 overflow-y-auto pr-1">
+                              <div className="flex flex-wrap gap-1.5">
                               {areaTagOptions.map((option) => {
                                 const isSelected = (image.area_tags || []).includes(option);
                                 return (
@@ -805,7 +806,7 @@ export default function ProjectForm({ project }: Props) {
                                     key={`${image.id}-${option}`}
                                     type="button"
                                     onClick={() => (isSelected ? removeImageAreaTag(image.id, option) : addImageAreaTag(image.id, option))}
-                                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-4 transition ${
                                       isSelected
                                         ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
                                         : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
@@ -816,8 +817,9 @@ export default function ProjectForm({ project }: Props) {
                                   </button>
                                 );
                               })}
+                              </div>
                             </div>
-                            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                            <div className="flex flex-wrap gap-1.5 sm:flex-nowrap">
                               <input
                                 value={customImageAreaTags[image.id] || ''}
                                 onChange={(event) => setCustomImageAreaTags((current) => ({ ...current, [image.id]: event.target.value }))}
@@ -830,7 +832,7 @@ export default function ProjectForm({ project }: Props) {
                                 placeholder="Tambah area custom"
                                 className="min-w-[180px] flex-1"
                               />
-                              <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
+                              <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-2.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
                             </div>
                             <button
                               type="button"
@@ -843,7 +845,7 @@ export default function ProjectForm({ project }: Props) {
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mt-auto flex flex-wrap gap-2 pt-1">
                       <button type="button" onClick={() => setAsCover(image.image_url)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}><Star size={13} /> {isCover ? 'Selected Cover' : 'Set as Cover'}</button>
                       <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button>
                     </div>
