@@ -3,6 +3,13 @@ import type { Project } from './types';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at';
 
+const internalBriefFallbackFields = {
+  client_problem_raw: null,
+  design_reference: null,
+  area_scope: null,
+  project_size: null,
+} as const;
+
 export const fallbackProjects: Project[] = [
   {
     id: 'fallback-residential',
@@ -22,10 +29,7 @@ export const fallbackProjects: Project[] = [
     pendekatan: 'Pendekatan proyek fallback belum tersedia.',
     dampak: 'Dampak proyek fallback belum tersedia.',
     insight_kunci: 'Insight kunci proyek fallback belum tersedia.',
-    client_problem_raw: null,
-    design_reference: null,
-    area_scope: null,
-    project_size: null,
+    ...internalBriefFallbackFields,
     is_published: true,
     created_at: new Date().toISOString(),
     project_images: [],
@@ -48,10 +52,7 @@ export const fallbackProjects: Project[] = [
     pendekatan: 'Pendekatan proyek fallback belum tersedia.',
     dampak: 'Dampak proyek fallback belum tersedia.',
     insight_kunci: 'Insight kunci proyek fallback belum tersedia.',
-    client_problem_raw: null,
-    design_reference: null,
-    area_scope: null,
-    project_size: null,
+    ...internalBriefFallbackFields,
     is_published: true,
     created_at: new Date().toISOString(),
     project_images: [],
