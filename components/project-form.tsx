@@ -482,7 +482,10 @@ export default function ProjectForm({ project }: Props) {
   async function handleGenerateNarrative() {
     setAiError('');
     setMessage('');
-    const imageUrls = galleryImages.map((image) => image.image_url).filter(Boolean).slice(0, 4);
+    const uniqueGalleryImages = Array.from(new Set(galleryImages.map((image) => image.image_url).filter(Boolean)));
+    const imageUrls = coverImage && coverImage.startsWith('http')
+      ? [coverImage, ...uniqueGalleryImages.filter((url) => url !== coverImage)].slice(0, 3)
+      : uniqueGalleryImages.slice(0, 3);
     const hasStructuredInput = Boolean(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim());
     if (imageUrls.length === 0 && !hasStructuredInput) {
       setAiError('Tambahkan gambar atau konteks project terlebih dahulu.');
@@ -508,8 +511,18 @@ export default function ProjectForm({ project }: Props) {
       const data = (await response.json()) as AiNarrativeResponse;
       if (!response.ok) throw new Error(data.error || 'AI gagal membuat narasi.');
       if (!data.konteks || !data.konflik || !data.keputusan_desain || !data.pendekatan || !data.dampak || !data.insight_kunci) throw new Error('AI menghasilkan data yang tidak lengkap. Coba lagi.');
+      const allNarrativeFieldsFilled = Boolean(
+        konteks.trim() &&
+        konflik.trim() &&
+        keputusanDesain.trim() &&
+        pendekatan.trim() &&
+        dampak.trim() &&
+        insightKunci.trim(),
+      );
+      if (allNarrativeFieldsFilled && !window.confirm('Enam field case study sudah terisi. Timpa dengan hasil AI baru?')) return;
+
       const hasManualEdits = Boolean(konteks.trim() || konflik.trim() || keputusanDesain.trim() || pendekatan.trim() || dampak.trim() || insightKunci.trim());
-      if (hasManualEdits && !window.confirm('Field case study sudah berisi konten. Timpa dengan hasil AI?')) return;
+      if (!allNarrativeFieldsFilled && hasManualEdits && !window.confirm('Sebagian field case study sudah berisi konten. Timpa dengan hasil AI?')) return;
       setKonteks(data.konteks);
       setKonflik(data.konflik);
       setKeputusanDesain(data.keputusan_desain);
@@ -517,7 +530,7 @@ export default function ProjectForm({ project }: Props) {
       setDampak(data.dampak);
       setInsightKunci(data.insight_kunci);
       setImpact((current) => current || data.dampak || '');
-      setMessage('Case study AI berhasil dibuat. Silakan review dan edit sebelum menyimpan.');
+      setMessage('Draft case study berhasil dibuat. Review dan edit sebelum menyimpan.');
     } catch (error) {
       setAiError(error instanceof Error ? error.message : 'AI gagal membuat narasi.');
     } finally {
@@ -572,6 +585,8 @@ export default function ProjectForm({ project }: Props) {
       setLoading(false);
     }
   }
+
+  const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -654,17 +669,22 @@ export default function ProjectForm({ project }: Props) {
       <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
         <div className="mb-6"><label>Structured Input for AI</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">Input ini tidak disimpan ke database. Dipakai hanya untuk membantu AI menyusun narasi yang lebih akurat.</p></div>
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="md:col-span-2"><label>Client Problem Raw</label><textarea value={clientProblemRaw} onChange={(event) => setClientProblemRaw(event.target.value)} placeholder="Tuliskan problem awal dari klien secara mentah, misalnya: ruang terasa sempit, flow tidak nyaman, storage kurang, dsb." /></div>
-          <div><label>Design Reference</label><textarea value={designReference} onChange={(event) => setDesignReference(event.target.value)} placeholder="Arah referensi desain, mood, style, material, atau benchmark yang diinginkan." /></div>
-          <div><label>Area Scope</label><textarea value={areaScope} onChange={(event) => setAreaScope(event.target.value)} placeholder="Area yang didesain, misalnya living room, pantry, bedroom, workspace, lobby, dsb." /></div>
-          <div className="md:col-span-2"><label>Project Size</label><input value={projectSize} onChange={(event) => setProjectSize(event.target.value)} placeholder="Contoh: 36 m², 120 m², tipe 45, 2 lantai" /></div>
+          <div className="md:col-span-2"><label>Client Problem Raw</label><textarea maxLength={500} value={clientProblemRaw} onChange={(event) => setClientProblemRaw(event.target.value)} placeholder="Tuliskan problem awal dari klien secara mentah, misalnya: ruang terasa sempit, flow tidak nyaman, storage kurang, dsb." /></div>
+          <div><label>Design Reference</label><textarea maxLength={500} value={designReference} onChange={(event) => setDesignReference(event.target.value)} placeholder="Arah referensi desain, mood, style, material, atau benchmark yang diinginkan." /></div>
+          <div><label>Area Scope</label><textarea maxLength={300} value={areaScope} onChange={(event) => setAreaScope(event.target.value)} placeholder="Area yang didesain, misalnya living room, pantry, bedroom, workspace, lobby, dsb." /></div>
+          <div className="md:col-span-2"><label>Project Size</label><input maxLength={100} value={projectSize} onChange={(event) => setProjectSize(event.target.value)} placeholder="Contoh: 36 m², 120 m², tipe 45, 2 lantai" /></div>
         </div>
       </div>
 
       <div className="rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-6 md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div><label>AI Narrative Generator</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun 6 section case study.</p></div>
-          <button type="button" onClick={handleGenerateNarrative} disabled={aiGenerating || galleryUploading || loading} className="inline-flex items-center justify-center gap-3 rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:cursor-not-allowed disabled:opacity-60"><Sparkles size={17} />{aiGenerating ? 'Generating...' : 'Generate Case Study dengan AI'}</button>
+          <div>
+            <label>AI Narrative Generator</label>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun 6 section case study.</p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/65">Gunakan AI hanya setelah foto utama dan konteks project siap. Hasil AI bisa diedit manual sebelum disimpan.</p>
+            <p className="mt-1 text-xs leading-5 text-[#D4AF37]">Setiap klik Generate memakai quota API.</p>
+          </div>
+          <button type="button" onClick={handleGenerateNarrative} disabled={isAiButtonDisabled} className="inline-flex items-center justify-center gap-3 rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:cursor-not-allowed disabled:opacity-60"><Sparkles size={17} />{aiGenerating ? 'Generating...' : 'Generate Case Study dengan AI'}</button>
         </div>
         {aiGenerating ? <p className="mt-5 text-sm leading-6 text-[#D4AF37]">AI sedang membaca input dan menyusun narasi...</p> : null}
         {aiError ? <p className="mt-5 text-sm leading-6 text-red-300">{aiError}</p> : null}

@@ -74,7 +74,7 @@ function getOptimizedImageUrls(body: GenerateNarrativeBody) {
   const galleryUrls = Array.isArray(body.imageUrls) ? uniqueHttpUrls(body.imageUrls) : [];
   const prioritizedUrls = coverImage ? [coverImage, ...galleryUrls.filter((url) => url !== coverImage)] : galleryUrls;
 
-  return prioritizedUrls.slice(0, 4);
+  return prioritizedUrls.slice(0, 3);
 }
 
 export async function POST(request: Request) {
@@ -166,7 +166,7 @@ Output JSON valid saja:
           },
         ],
         temperature: 0.2,
-        max_output_tokens: 600,
+        max_output_tokens: 520,
       }),
     });
 
