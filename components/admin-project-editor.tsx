@@ -31,7 +31,9 @@ export default function AdminProjectEditor({ id }: Props) {
         const supabase = getSupabaseClient();
         const { data, error, status } = await supabase
           .from('projects')
-          .select('id,title,slug,category,design_category,design_style,area_type,cover_image,problem,solution,impact,created_at,project_images(id,project_id,image_url,alt_text,sort_order,created_at)')
+          .select(
+            'id,title,slug,category,design_category,design_style,area_type,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at,project_images(id,project_id,image_url,alt_text,sort_order,created_at)'
+          )
           .eq('id', id)
           .maybeSingle();
 
