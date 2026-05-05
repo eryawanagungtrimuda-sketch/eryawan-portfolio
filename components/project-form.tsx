@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
@@ -55,6 +55,11 @@ const areaTypeOptions = [
   'Facade',
   'Landscape',
   'Building Renovation',
+];
+const areaTagOptions = [
+  'Lobby', 'Reception', 'Waiting Area', 'Living Room', 'Dining Area', 'Kitchen', 'Bedroom', 'Bathroom', 'Workspace',
+  'Meeting Room', 'Consultation Room', 'Treatment Room', 'Retail Area', 'Display Area', 'Cafe Area', 'Pantry', 'Corridor',
+  'Facade', 'Outdoor Area', 'Public Service Area', 'Furniture / Built-in', 'Other',
 ];
 
 function slugify(value: string) {
@@ -187,6 +192,14 @@ export default function ProjectForm({ project }: Props) {
   const [designCategory, setDesignCategory] = useState<CustomSelectState>(getInitialSelectState(project?.design_category, designCategoryOptions));
   const [designStyle, setDesignStyle] = useState<CustomSelectState>(getInitialSelectState(project?.design_style, designStyleOptions));
   const [areaType, setAreaType] = useState<CustomSelectState>(getInitialSelectState(project?.area_type, areaTypeOptions));
+  const [areaTags, setAreaTags] = useState<string[]>(
+    project?.area_tags && project.area_tags.length > 0
+      ? project.area_tags
+      : project?.area_type
+        ? [project.area_type]
+        : [],
+  );
+  const [customAreaTag, setCustomAreaTag] = useState('');
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
 
   const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
@@ -219,13 +232,15 @@ export default function ProjectForm({ project }: Props) {
     const selectedDesignCategory = getSelectedValue(designCategory, designCategoryOptions);
     const selectedDesignStyle = getSelectedValue(designStyle, designStyleOptions);
     const selectedAreaType = getSelectedValue(areaType, areaTypeOptions);
+    const normalizedAreaTags = Array.from(new Set(areaTags.map((tag) => normalizeText(tag)).filter(Boolean)));
+    const nextAreaType = normalizedAreaTags[0] || selectedAreaType || project?.area_type || '';
 
     if (!normalizeText(title)) throw new Error('Title wajib diisi.');
     if (!finalSlug) throw new Error('Slug wajib diisi.');
     if (!selectedCategory) throw new Error('Category wajib diisi.');
     if (!selectedDesignCategory) throw new Error('Kategori Desain wajib diisi.');
     if (!selectedDesignStyle) throw new Error('Gaya Desain wajib diisi.');
-    if (!selectedAreaType) throw new Error('Area/Ruang wajib diisi.');
+    if (!selectedAreaType && normalizedAreaTags.length === 0) throw new Error('Area/Ruang Tags wajib diisi.');
 
     return {
       title: normalizeText(title),
@@ -233,7 +248,8 @@ export default function ProjectForm({ project }: Props) {
       category: selectedCategory,
       design_category: selectedDesignCategory,
       design_style: selectedDesignStyle,
-      area_type: selectedAreaType,
+      area_type: nextAreaType,
+      area_tags: normalizedAreaTags,
       cover_image: coverOverride !== undefined ? coverOverride : coverImage || null,
       problem,
       solution,
@@ -597,6 +613,28 @@ export default function ProjectForm({ project }: Props) {
   }
 
   const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
+  const availableAreaTags = areaTagOptions.filter((option) => !areaTags.includes(option));
+
+  function addAreaTag(tag: string) {
+    const normalized = normalizeText(tag);
+    if (!normalized || areaTags.includes(normalized)) return;
+    setAreaTags((current) => [...current, normalized]);
+  }
+
+  function removeAreaTag(tag: string) {
+    setAreaTags((current) => current.filter((item) => item !== tag));
+  }
+
+  function addCustomAreaTag() {
+    addAreaTag(customAreaTag);
+    setCustomAreaTag('');
+  }
+
+  function handleCustomAreaTagEnter(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    addCustomAreaTag();
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -613,7 +651,42 @@ export default function ProjectForm({ project }: Props) {
         <TaxonomySelect label="Category" state={legacyCategory} setState={setLegacyCategory} options={legacyCategoryOptions} placeholder="Pilih kategori project" customPlaceholder="Contoh: Clinic Interior" required />
         <TaxonomySelect label="Kategori Desain" state={designCategory} setState={setDesignCategory} options={designCategoryOptions} placeholder="Pilih kategori desain" customPlaceholder="Contoh: Interior Branding" required />
         <TaxonomySelect label="Gaya Desain" state={designStyle} setState={setDesignStyle} options={designStyleOptions} placeholder="Pilih gaya desain" customPlaceholder="Contoh: Scandinavian" required />
-        <TaxonomySelect label="Area/Ruang" state={areaType} setState={setAreaType} options={areaTypeOptions} placeholder="Pilih area/ruang" customPlaceholder="Contoh: Beauty Treatment Room" required />
+        <div className="md:col-span-2">
+          <label>Area/Ruang Tags</label>
+          <p className="mt-2 text-xs leading-5 text-white/42">Pilih satu atau lebih area/ruang yang termasuk dalam project ini. Tags ini akan dipakai untuk filter referensi visual pada tahap berikutnya.</p>
+          <div className="mt-3 flex flex-col gap-3 rounded-sm border border-white/10 bg-[#0b0b0a] p-4">
+            <select
+              value=""
+              onChange={(event) => addAreaTag(event.target.value)}
+              className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-4 py-3 text-sm text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
+            >
+              <option value="" disabled>Pilih area/ruang tags</option>
+              {availableAreaTags.map((option) => <option key={option} value={option}>{option}</option>)}
+            </select>
+            <div className="flex gap-2">
+              <input
+                value={customAreaTag}
+                onChange={(event) => setCustomAreaTag(event.target.value)}
+                onKeyDown={handleCustomAreaTagEnter}
+                placeholder="Custom area tag (Other)"
+                className="flex-1"
+              />
+              <button type="button" onClick={addCustomAreaTag} className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
+            </div>
+            {areaTags.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {areaTags.map((tag) => (
+                  <button key={tag} type="button" onClick={() => removeAreaTag(tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">
+                    {tag} <X size={12} />
+                  </button>
+                ))}
+              </div>
+            ) : <p className="text-xs text-white/40">Belum ada tags dipilih.</p>}
+          </div>
+          <div className="mt-3">
+            <TaxonomySelect label="Area/Ruang Legacy (Backward Compatibility)" state={areaType} setState={setAreaType} options={areaTypeOptions} placeholder="Pilih area/ruang legacy" customPlaceholder="Contoh: Beauty Treatment Room" />
+          </div>
+        </div>
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
       </div>
 

@@ -31,6 +31,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     alt: image.alt_text || `${project.title} gallery ${index + 1}`,
   }));
   const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
+  const areaTags = (project.area_tags || []).filter(Boolean);
 
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
@@ -75,7 +76,16 @@ export default async function KaryaDetailPage({ params }: Props) {
                   <p className="mt-2 text-base text-white/84">{project.design_style}</p>
                 </article>
               ) : null}
-              {project.area_type ? (
+              {areaTags.length > 0 ? (
+                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Tags</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {areaTags.map((tag) => (
+                      <span key={tag} className="rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{tag}</span>
+                    ))}
+                  </div>
+                </article>
+              ) : project.area_type ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Type</p>
                   <p className="mt-2 text-base text-white/84">{project.area_type}</p>

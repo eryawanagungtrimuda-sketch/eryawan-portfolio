@@ -1,7 +1,7 @@
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -19,6 +19,7 @@ export const fallbackProjects: Project[] = [
     design_category: 'Interior',
     design_style: 'Modern',
     area_type: 'Full House',
+    area_tags: [],
     cover_image: null,
     problem: 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.',
     solution: 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.',
@@ -42,6 +43,7 @@ export const fallbackProjects: Project[] = [
     design_category: 'Interior',
     design_style: 'Contemporary',
     area_type: 'Office',
+    area_tags: [],
     cover_image: null,
     problem: 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.',
     solution: 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.',
