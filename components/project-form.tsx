@@ -625,7 +625,6 @@ export default function ProjectForm({ project }: Props) {
   }
 
   const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
-  const availableAreaTags = areaTagOptions.filter((option) => !areaTags.includes(option));
 
   function addAreaTag(tag: string) {
     const normalized = normalizeText(tag);
@@ -686,20 +685,32 @@ export default function ProjectForm({ project }: Props) {
           <label>Area/Ruang Tags</label>
           <p className="mt-2 text-xs leading-5 text-white/42">Pilih satu atau lebih area/ruang yang termasuk dalam project ini. Tags ini akan dipakai untuk filter referensi visual pada tahap berikutnya.</p>
           <div className="mt-3 flex flex-col gap-3 rounded-sm border border-white/10 bg-[#0b0b0a] p-4">
-            <select
-              value=""
-              onChange={(event) => addAreaTag(event.target.value)}
-              className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-4 py-3 text-sm text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
-            >
-              <option value="" disabled>Pilih area/ruang tags</option>
-              {availableAreaTags.map((option) => <option key={option} value={option}>{getAreaTagLabel(option)}</option>)}
-            </select>
+            <div className="flex flex-wrap gap-2">
+              {areaTagOptions.map((option) => {
+                const isSelected = areaTags.includes(option);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => (isSelected ? removeAreaTag(option) : addAreaTag(option))}
+                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                      isSelected
+                        ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
+                        : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
+                    }`}
+                  >
+                    {getAreaTagLabel(option)}
+                    {isSelected ? <X size={12} /> : null}
+                  </button>
+                );
+              })}
+            </div>
             <div className="flex gap-2">
               <input
                 value={customAreaTag}
                 onChange={(event) => setCustomAreaTag(event.target.value)}
                 onKeyDown={handleCustomAreaTagEnter}
-                placeholder="Custom area tag (Other)"
+                placeholder="Tambah area custom"
                 className="flex-1"
               />
               <button type="button" onClick={addCustomAreaTag} className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
@@ -768,14 +779,26 @@ export default function ProjectForm({ project }: Props) {
                     <div>
                       <label>Image Area Tags</label>
                       <div className="mt-2 space-y-2">
-                        <select
-                          value=""
-                          onChange={(event) => addImageAreaTag(image.id, event.target.value)}
-                          className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-3 py-2 text-xs text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
-                        >
-                          <option value="" disabled>Pilih area gambar</option>
-                          {areaTagOptions.filter((option) => !(image.area_tags || []).includes(option)).map((option) => <option key={`${image.id}-${option}`} value={option}>{getAreaTagLabel(option)}</option>)}
-                        </select>
+                        <div className="flex flex-wrap gap-2">
+                          {areaTagOptions.map((option) => {
+                            const isSelected = (image.area_tags || []).includes(option);
+                            return (
+                              <button
+                                key={`${image.id}-${option}`}
+                                type="button"
+                                onClick={() => (isSelected ? removeImageAreaTag(image.id, option) : addImageAreaTag(image.id, option))}
+                                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+                                  isSelected
+                                    ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
+                                    : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
+                                }`}
+                              >
+                                {getAreaTagLabel(option)}
+                                {isSelected ? <X size={12} /> : null}
+                              </button>
+                            );
+                          })}
+                        </div>
                         <div className="flex gap-2">
                           <input
                             value={customImageAreaTags[image.id] || ''}
@@ -786,7 +809,7 @@ export default function ProjectForm({ project }: Props) {
                               addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || '');
                               setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' }));
                             }}
-                            placeholder="Custom image tag"
+                            placeholder="Tambah area custom"
                             className="flex-1"
                           />
                           <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
