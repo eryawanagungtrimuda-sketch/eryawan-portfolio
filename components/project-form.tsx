@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
+import { getAreaTagLabel } from '@/lib/area-tags';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -691,7 +692,7 @@ export default function ProjectForm({ project }: Props) {
               className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-4 py-3 text-sm text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
             >
               <option value="" disabled>Pilih area/ruang tags</option>
-              {availableAreaTags.map((option) => <option key={option} value={option}>{option}</option>)}
+              {availableAreaTags.map((option) => <option key={option} value={option}>{getAreaTagLabel(option)}</option>)}
             </select>
             <div className="flex gap-2">
               <input
@@ -707,7 +708,7 @@ export default function ProjectForm({ project }: Props) {
               <div className="flex flex-wrap gap-2">
                 {areaTags.map((tag) => (
                   <button key={tag} type="button" onClick={() => removeAreaTag(tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">
-                    {tag} <X size={12} />
+                    {getAreaTagLabel(tag)} <X size={12} />
                   </button>
                 ))}
               </div>
@@ -773,7 +774,7 @@ export default function ProjectForm({ project }: Props) {
                           className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-3 py-2 text-xs text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
                         >
                           <option value="" disabled>Pilih area gambar</option>
-                          {areaTagOptions.filter((option) => !(image.area_tags || []).includes(option)).map((option) => <option key={`${image.id}-${option}`} value={option}>{option}</option>)}
+                          {areaTagOptions.filter((option) => !(image.area_tags || []).includes(option)).map((option) => <option key={`${image.id}-${option}`} value={option}>{getAreaTagLabel(option)}</option>)}
                         </select>
                         <div className="flex gap-2">
                           <input
@@ -793,7 +794,7 @@ export default function ProjectForm({ project }: Props) {
                         {(image.area_tags || []).length > 0 ? (
                           <div className="flex flex-wrap gap-2">
                             {(image.area_tags || []).map((tag) => (
-                              <button key={`${image.id}-${tag}`} type="button" onClick={() => removeImageAreaTag(image.id, tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{tag} <X size={12} /></button>
+                              <button key={`${image.id}-${tag}`} type="button" onClick={() => removeImageAreaTag(image.id, tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)} <X size={12} /></button>
                             ))}
                           </div>
                         ) : <p className="text-xs text-white/40">Belum ada image area tags.</p>}
