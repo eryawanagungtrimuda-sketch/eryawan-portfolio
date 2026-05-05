@@ -22,6 +22,9 @@ export default function AdminDashboardPage() {
                 <Link href="/karya" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Lihat Semua Karya
                 </Link>
+                <Link href="/admin/case-history" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                  Case History
+                </Link>
               </div>
             </div>
             <AdminLogoutButton />
