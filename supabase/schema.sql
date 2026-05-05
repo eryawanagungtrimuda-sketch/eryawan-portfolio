@@ -21,6 +21,10 @@ create table if not exists public.projects (
   pendekatan text,
   dampak text,
   insight_kunci text,
+  client_problem_raw text,
+  design_reference text,
+  area_scope text,
+  project_size text,
   is_published boolean not null default true,
   created_at timestamp with time zone not null default now()
 );
@@ -35,6 +39,10 @@ alter table public.projects add column if not exists pendekatan text;
 alter table public.projects add column if not exists dampak text;
 alter table public.projects add column if not exists insight_kunci text;
 alter table public.projects add column if not exists is_published boolean not null default true;
+alter table public.projects add column if not exists client_problem_raw text;
+alter table public.projects add column if not exists design_reference text;
+alter table public.projects add column if not exists area_scope text;
+alter table public.projects add column if not exists project_size text;
 
 create table if not exists public.project_images (
   id uuid primary key default gen_random_uuid(),
@@ -174,3 +182,4 @@ using (bucket_id = 'project-images');
 -- ('Project 01 — Residential Interior', 'residential-interior', 'Residential Interior', 'Interior', 'Modern', 'Full House', 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.', 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.', 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.'),
 -- ('Project 02 — Workspace Interior', 'workspace-interior', 'Workspace Interior', 'Interior', 'Contemporary', 'Office', 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.', 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.', 'Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.')
 -- on conflict (slug) do nothing;
+

@@ -25,6 +25,10 @@ export type Project = {
   pendekatan: string | null;
   dampak: string | null;
   insight_kunci: string | null;
+  client_problem_raw: string | null;
+  design_reference: string | null;
+  area_scope: string | null;
+  project_size: string | null;
   is_published: boolean;
   created_at: string;
   project_images?: ProjectImage[];
