@@ -16,4 +16,4 @@ export function getSupabaseClient() {
   return supabaseClient;
 }
 
-export const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com';
+export const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com').trim();

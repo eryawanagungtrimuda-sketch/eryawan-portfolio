@@ -316,8 +316,8 @@ export default function ProjectForm({ project }: Props) {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw new Error(authSessionMessage);
 
-    const activeEmail = data.user.email?.toLowerCase();
-    const allowedAdminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com').toLowerCase();
+    const activeEmail = data.user.email?.trim().toLowerCase();
+    const allowedAdminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com').trim().toLowerCase();
     if (!activeEmail || activeEmail !== allowedAdminEmail) throw new Error(adminEmailMismatchMessage);
   }
 
