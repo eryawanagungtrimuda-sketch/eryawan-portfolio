@@ -183,10 +183,10 @@ export default function ProjectForm({ project }: Props) {
   const [areaType, setAreaType] = useState<CustomSelectState>(getInitialSelectState(project?.area_type, areaTypeOptions));
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
 
-  const [clientProblemRaw, setClientProblemRaw] = useState('');
-  const [designReference, setDesignReference] = useState('');
-  const [areaScope, setAreaScope] = useState('');
-  const [projectSize, setProjectSize] = useState('');
+  const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
+  const [designReference, setDesignReference] = useState(project?.design_reference || '');
+  const [areaScope, setAreaScope] = useState(project?.area_scope || '');
+  const [projectSize, setProjectSize] = useState(project?.project_size || '');
   const [problem, setProblem] = useState(project?.problem || '');
   const [solution, setSolution] = useState(project?.solution || '');
   const [impact, setImpact] = useState(project?.impact || '');
@@ -238,6 +238,10 @@ export default function ProjectForm({ project }: Props) {
       pendekatan,
       dampak,
       insight_kunci: insightKunci,
+      client_problem_raw: clientProblemRaw || null,
+      design_reference: designReference || null,
+      area_scope: areaScope || null,
+      project_size: projectSize || null,
     };
   }
 
@@ -667,7 +671,7 @@ export default function ProjectForm({ project }: Props) {
       </div>
 
       <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
-        <div className="mb-6"><label>Structured Input for AI</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">Input ini tidak disimpan ke database. Dipakai hanya untuk membantu AI menyusun narasi yang lebih akurat.</p></div>
+        <div className="mb-6"><label>Structured Input for AI</label><p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">Input ini disimpan sebagai riwayat brief internal dan membantu AI menyusun narasi yang lebih akurat. Tidak ditampilkan di halaman publik.</p></div>
         <div className="grid gap-6 md:grid-cols-2">
           <div className="md:col-span-2"><label>Client Problem Raw</label><textarea maxLength={500} value={clientProblemRaw} onChange={(event) => setClientProblemRaw(event.target.value)} placeholder="Tuliskan problem awal dari klien secara mentah, misalnya: ruang terasa sempit, flow tidak nyaman, storage kurang, dsb." /></div>
           <div><label>Design Reference</label><textarea maxLength={500} value={designReference} onChange={(event) => setDesignReference(event.target.value)} placeholder="Arah referensi desain, mood, style, material, atau benchmark yang diinginkan." /></div>
