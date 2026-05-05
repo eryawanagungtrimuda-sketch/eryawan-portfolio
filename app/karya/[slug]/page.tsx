@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
+import ProjectImageLightbox from '@/components/project-image-lightbox';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
 type Props = {
@@ -24,6 +25,11 @@ export default async function KaryaDetailPage({ params }: Props) {
   if (!project) notFound();
 
   const galleryImages = [...(project.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
+  const heroLightboxImages = project.cover_image ? [{ src: project.cover_image, alt: project.title }] : [];
+  const galleryLightboxImages = galleryImages.map((image, index) => ({
+    src: image.image_url,
+    alt: image.alt_text || `${project.title} gallery ${index + 1}`,
+  }));
   const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
 
   return (
@@ -82,9 +88,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         {project.cover_image ? (
           <section className="pb-20">
             <p className="mb-5 font-mono text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Hero Project</p>
-            <div className="aspect-[16/9] overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
-              <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" />
-            </div>
+            <ProjectImageLightbox images={heroLightboxImages} projectTitle={project.title} />
           </section>
         ) : null}
 
@@ -106,15 +110,8 @@ export default async function KaryaDetailPage({ params }: Props) {
           </div>
 
           {galleryImages.length > 0 ? (
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
-              {galleryImages.map((image, index) => (
-                <figure key={image.id} className={index === 0 ? 'md:col-span-2' : ''}>
-                  <div className="overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
-                    <img src={image.image_url} alt={image.alt_text || `${project.title} gallery ${index + 1}`} className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'} />
-                  </div>
-                  {image.alt_text && image.alt_text !== project.title ? <figcaption className="mt-3 text-sm leading-6 text-white/46">{image.alt_text}</figcaption> : null}
-                </figure>
-              ))}
+            <div className="mt-10">
+              <ProjectImageLightbox images={galleryLightboxImages} projectTitle={project.title} />
             </div>
           ) : (
             <p className="mt-8 text-base leading-7 text-white/56">Galeri belum tersedia. Dokumentasi visual akan ditambahkan tanpa mengubah narasi studi kasus.</p>
