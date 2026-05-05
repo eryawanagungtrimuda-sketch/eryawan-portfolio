@@ -47,9 +47,36 @@ function trimOutput(value: string, maxLength: number) {
   return `${trimmed.slice(0, maxLength - 1).trim()}…`;
 }
 
+
+function normalizeJsonOutput(value: string) {
+  let normalized = value.trim();
+
+  if (normalized.startsWith('```json')) {
+    normalized = normalized.slice(7).trim();
+  }
+
+  if (normalized.startsWith('```')) {
+    normalized = normalized.slice(3).trim();
+  }
+
+  if (normalized.endsWith('```')) {
+    normalized = normalized.slice(0, -3).trim();
+  }
+
+  const firstBrace = normalized.indexOf('{');
+  const lastBrace = normalized.lastIndexOf('}');
+
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    normalized = normalized.slice(firstBrace, lastBrace + 1);
+  }
+
+  return normalized;
+}
+
 function safeJsonParse(value: string): NarrativeResponse | null {
   try {
-    const parsed = JSON.parse(value) as Partial<NarrativeResponse>;
+    const normalizedValue = normalizeJsonOutput(value);
+    const parsed = JSON.parse(normalizedValue) as Partial<NarrativeResponse>;
     if (!parsed.konteks || !parsed.konflik || !parsed.keputusan_desain || !parsed.pendekatan || !parsed.dampak || !parsed.insight_kunci) return null;
 
     return {
