@@ -23,12 +23,18 @@ const adminEmailMismatchMessage = 'Akun yang login bukan email admin yang diizin
 const legacyCategoryOptions = [
   'Residential Interior',
   'Commercial Interior',
-  'Workspace Interior',
-  'Retail Interior',
+  'Office / Workspace Interior',
   'Hospitality Interior',
-  'Architecture',
-  'Renovation',
+  'Retail Interior',
+  'Healthcare / Clinic Interior',
+  'Public / Government Interior',
+  'Education Interior',
+  'Mixed-Use Interior',
   'Furniture / Built-in',
+  'Renovation',
+  'Architecture',
+  'Concept Design',
+  'Custom',
 ];
 
 const designCategoryOptions = ['Interior', 'Architecture', 'Interior & Architecture', 'Furniture / Built-in'];
@@ -144,7 +150,7 @@ function TaxonomySelect({
       >
         <option value="" disabled>{placeholder}</option>
         {options.map((option) => <option key={option} value={option}>{option}</option>)}
-        <option value={customValue}>+ Tambah baru</option>
+        <option value={customValue}>Custom</option>
       </select>
       {state.choice === customValue ? (
         <input
