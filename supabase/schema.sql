@@ -11,6 +11,7 @@ create table if not exists public.projects (
   design_category text,
   design_style text,
   area_type text,
+  area_tags text[] not null default '{}',
   cover_image text,
   problem text,
   solution text,
@@ -32,6 +33,7 @@ create table if not exists public.projects (
 alter table public.projects add column if not exists design_category text;
 alter table public.projects add column if not exists design_style text;
 alter table public.projects add column if not exists area_type text;
+alter table public.projects add column if not exists area_tags text[] not null default '{}';
 alter table public.projects add column if not exists konteks text;
 alter table public.projects add column if not exists konflik text;
 alter table public.projects add column if not exists keputusan_desain text;
@@ -182,4 +184,3 @@ using (bucket_id = 'project-images');
 -- ('Project 01 — Residential Interior', 'residential-interior', 'Residential Interior', 'Interior', 'Modern', 'Full House', 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.', 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.', 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.'),
 -- ('Project 02 — Workspace Interior', 'workspace-interior', 'Workspace Interior', 'Interior', 'Contemporary', 'Office', 'Area kerja belum membagi fokus, kolaborasi, dan privasi secara jelas.', 'Ruang dibagi berdasarkan intensitas aktivitas, kebutuhan privasi, dan alur kerja pengguna ruang.', 'Ritme kerja lebih terarah, pengalaman ruang meningkat, dan keputusan desain lebih mudah dipahami.')
 -- on conflict (slug) do nothing;
-
