@@ -201,6 +201,7 @@ export default function ProjectForm({ project }: Props) {
   );
   const [customAreaTag, setCustomAreaTag] = useState('');
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
+  const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
 
   const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
   const [designReference, setDesignReference] = useState(project?.design_reference || '');
@@ -401,8 +402,8 @@ export default function ProjectForm({ project }: Props) {
           const { data: publicUrl } = supabase.storage.from(projectImagesBucket).getPublicUrl(filePath);
           const { data, error: insertError } = await supabase
             .from('project_images')
-            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length })
-            .select('id,project_id,image_url,alt_text,sort_order,created_at')
+            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length, area_tags: [] })
+            .select('id,project_id,image_url,alt_text,sort_order,area_tags,created_at')
             .single();
 
           if (insertError) {
@@ -459,16 +460,26 @@ export default function ProjectForm({ project }: Props) {
     await uploadGalleryFiles(pendingGalleryFiles);
   }
 
-  async function updateGalleryAltText(imageId: string, altText: string) {
-    setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, alt_text: altText } : image)));
+  async function updateGalleryImageMeta(imageId: string, updates: { alt_text?: string | null; area_tags?: string[] }) {
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('project_images').update({ alt_text: altText || null }).eq('id', imageId);
+      const { error } = await supabase.from('project_images').update(updates).eq('id', imageId);
       if (error) throw error;
     } catch (error) {
-      console.error('[ProjectForm] Update gallery alt text failed', error);
-      setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan alt text.');
+      console.error('[ProjectForm] Update gallery image meta failed', error);
+      setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan metadata gambar.');
     }
+  }
+
+  async function updateGalleryAltText(imageId: string, altText: string) {
+    setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, alt_text: altText } : image)));
+    await updateGalleryImageMeta(imageId, { alt_text: altText || null });
+  }
+
+  async function updateGalleryImageAreaTags(imageId: string, tags: string[]) {
+    const normalizedTags = Array.from(new Set(tags.map((tag) => normalizeText(tag)).filter(Boolean)));
+    setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, area_tags: normalizedTags } : image)));
+    await updateGalleryImageMeta(imageId, { area_tags: normalizedTags });
   }
 
   async function removeGalleryImage(image: ProjectImage) {
@@ -636,6 +647,25 @@ export default function ProjectForm({ project }: Props) {
     addCustomAreaTag();
   }
 
+  function addImageAreaTag(imageId: string, tag: string) {
+    const normalized = normalizeText(tag);
+    if (!normalized) return;
+    const image = galleryImages.find((item) => item.id === imageId);
+    const nextTags = Array.from(new Set([...(image?.area_tags || []), normalized]));
+    void updateGalleryImageAreaTags(imageId, nextTags);
+  }
+
+  function removeImageAreaTag(imageId: string, tag: string) {
+    const image = galleryImages.find((item) => item.id === imageId);
+    const nextTags = (image?.area_tags || []).filter((item) => item !== tag);
+    void updateGalleryImageAreaTags(imageId, nextTags);
+  }
+
+  function addCustomImageAreaTag(imageId: string, value: string) {
+    addImageAreaTag(imageId, value);
+  }
+
+
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid gap-6 rounded-sm border border-white/10 bg-white/[0.025] p-6 md:grid-cols-2 md:p-8">
@@ -734,6 +764,41 @@ export default function ProjectForm({ project }: Props) {
                   </div>
                   <div className="space-y-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
+                    <div>
+                      <label>Image Area Tags</label>
+                      <div className="mt-2 space-y-2">
+                        <select
+                          value=""
+                          onChange={(event) => addImageAreaTag(image.id, event.target.value)}
+                          className="w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-3 py-2 text-xs text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45"
+                        >
+                          <option value="" disabled>Pilih area gambar</option>
+                          {areaTagOptions.filter((option) => !(image.area_tags || []).includes(option)).map((option) => <option key={`${image.id}-${option}`} value={option}>{option}</option>)}
+                        </select>
+                        <div className="flex gap-2">
+                          <input
+                            value={customImageAreaTags[image.id] || ''}
+                            onChange={(event) => setCustomImageAreaTags((current) => ({ ...current, [image.id]: event.target.value }))}
+                            onKeyDown={(event) => {
+                              if (event.key !== 'Enter') return;
+                              event.preventDefault();
+                              addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || '');
+                              setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' }));
+                            }}
+                            placeholder="Custom image tag"
+                            className="flex-1"
+                          />
+                          <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
+                        </div>
+                        {(image.area_tags || []).length > 0 ? (
+                          <div className="flex flex-wrap gap-2">
+                            {(image.area_tags || []).map((tag) => (
+                              <button key={`${image.id}-${tag}`} type="button" onClick={() => removeImageAreaTag(image.id, tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{tag} <X size={12} /></button>
+                            ))}
+                          </div>
+                        ) : <p className="text-xs text-white/40">Belum ada image area tags.</p>}
+                      </div>
+                    </div>
                     <div className="flex flex-wrap gap-2">
                       <button type="button" onClick={() => setAsCover(image.image_url)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}><Star size={13} /> {isCover ? 'Selected Cover' : 'Set as Cover'}</button>
                       <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button>

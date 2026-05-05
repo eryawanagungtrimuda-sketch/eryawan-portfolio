@@ -4,6 +4,7 @@ export type ProjectImage = {
   image_url: string;
   alt_text: string | null;
   sort_order: number;
+  area_tags: string[] | null;
   created_at: string;
 };
 
