@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
+import ProjectImageGallery from '@/components/project-image-gallery';
 import ProjectImageLightbox from '@/components/project-image-lightbox';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
@@ -29,6 +30,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   const galleryLightboxImages = galleryImages.map((image, index) => ({
     src: image.image_url,
     alt: image.alt_text || `${project.title} gallery ${index + 1}`,
+    area_tags: image.area_tags || [],
   }));
   const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
   const areaTags = (project.area_tags || []).filter(Boolean);
@@ -121,7 +123,7 @@ export default async function KaryaDetailPage({ params }: Props) {
 
           {galleryImages.length > 0 ? (
             <div className="mt-10">
-              <ProjectImageLightbox images={galleryLightboxImages} projectTitle={project.title} />
+              <ProjectImageGallery images={galleryLightboxImages} projectTitle={project.title} />
             </div>
           ) : (
             <p className="mt-8 text-base leading-7 text-white/56">Galeri belum tersedia. Dokumentasi visual akan ditambahkan tanpa mengubah narasi studi kasus.</p>
