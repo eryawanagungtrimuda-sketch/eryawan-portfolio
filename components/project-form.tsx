@@ -683,9 +683,6 @@ export default function ProjectForm({ project }: Props) {
               </div>
             ) : <p className="text-xs text-white/40">Belum ada tags dipilih.</p>}
           </div>
-          <div className="mt-3">
-            <TaxonomySelect label="Area/Ruang Legacy (Backward Compatibility)" state={areaType} setState={setAreaType} options={areaTypeOptions} placeholder="Pilih area/ruang legacy" customPlaceholder="Contoh: Beauty Treatment Room" />
-          </div>
         </div>
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
       </div>
@@ -780,9 +777,7 @@ export default function ProjectForm({ project }: Props) {
         <div><label>Pendekatan</label><textarea maxLength={1200} value={pendekatan} onChange={(event) => setPendekatan(event.target.value)} placeholder="Pendekatan implementasi dari analisis hingga eksekusi." /></div>
         <div><label>Dampak</label><textarea maxLength={800} value={dampak} onChange={(event) => setDampak(event.target.value)} placeholder="Dampak nyata untuk pengguna/operasional." /></div>
         <div><label>Insight Kunci</label><textarea maxLength={500} value={insightKunci} onChange={(event) => setInsightKunci(event.target.value)} placeholder="Pelajaran utama dan prinsip yang bisa direplikasi." /></div>
-        <div><label>Problem (Legacy)</label><textarea value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="Masalah utama project secara ringkas dan jelas." /></div>
-        <div><label>Solution (Legacy)</label><textarea value={solution} onChange={(event) => setSolution(event.target.value)} placeholder="Keputusan desain / solusi strategis yang diambil." /></div>
-        <div><label>Impact (Legacy)</label><textarea value={impact} onChange={(event) => setImpact(event.target.value)} placeholder="Dampak legacy untuk kompatibilitas data lama." /></div>
+        <div><label>Ringkasan Pembuka Publik</label><textarea value={problem} onChange={(event) => setProblem(event.target.value)} placeholder="Ringkasan singkat yang tampil di bagian atas halaman detail project. Gunakan 1–2 kalimat yang menjelaskan nilai utama project." /></div>
       </div>
 
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}
