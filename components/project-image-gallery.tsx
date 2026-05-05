@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import ProjectImageLightbox from './project-image-lightbox';
+import { getAreaTagLabel } from '@/lib/area-tags';
 
 type GalleryImage = { src: string; alt: string; area_tags?: string[] | null };
 
@@ -35,7 +36,7 @@ export default function ProjectImageGallery({ images, projectTitle }: { images: 
               onClick={() => setActiveTag(tag)}
               className={`rounded-full border px-3 py-1 text-xs transition ${activeTag === tag ? 'border-[#D4AF37]/60 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/20 text-white/70 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}
             >
-              {tag}
+              {tag === 'All' ? 'Semua' : getAreaTagLabel(tag)}
             </button>
           ))}
         </div>

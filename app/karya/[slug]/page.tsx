@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
 import ProjectImageGallery from '@/components/project-image-gallery';
 import ProjectImageLightbox from '@/components/project-image-lightbox';
+import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
 type Props = {
@@ -83,7 +84,7 @@ export default async function KaryaDetailPage({ params }: Props) {
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Tags</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {areaTags.map((tag) => (
-                      <span key={tag} className="rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{tag}</span>
+                      <span key={tag} className="rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)}</span>
                     ))}
                   </div>
                 </article>
