@@ -24,7 +24,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   if (!project) notFound();
 
   const galleryImages = [...(project.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
-  const openingDescription = project.konteks || project.problem || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
+  const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
 
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
@@ -41,6 +41,42 @@ export default async function KaryaDetailPage({ params }: Props) {
           <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-white/50 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">{project.title}</h1>
           <p className="mt-8 max-w-4xl text-xl leading-[1.65] text-white/76 md:text-2xl">{openingDescription}</p>
+        </section>
+
+
+        <section className="border-y border-white/10 py-8 md:py-10">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Project Snapshot</p>
+              <h2 className="font-display mt-4 text-3xl font-normal leading-[1.1] tracking-[-0.03em] md:text-4xl">Ringkasan Kategori Project</h2>
+            </div>
+            <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-3xl">
+              {project.category ? (
+                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Category</p>
+                  <p className="mt-2 text-base text-white/84">{project.category}</p>
+                </article>
+              ) : null}
+              {project.design_category ? (
+                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Design Category</p>
+                  <p className="mt-2 text-base text-white/84">{project.design_category}</p>
+                </article>
+              ) : null}
+              {project.design_style ? (
+                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Design Style</p>
+                  <p className="mt-2 text-base text-white/84">{project.design_style}</p>
+                </article>
+              ) : null}
+              {project.area_type ? (
+                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Type</p>
+                  <p className="mt-2 text-base text-white/84">{project.area_type}</p>
+                </article>
+              ) : null}
+            </div>
+          </div>
         </section>
 
         {project.cover_image ? (
@@ -65,7 +101,7 @@ export default async function KaryaDetailPage({ params }: Props) {
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37]">Galeri Gambar</p>
-              <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Visual Documentation</h2>
+              <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Dokumentasi Visual</h2>
             </div>
           </div>
 
@@ -76,7 +112,7 @@ export default async function KaryaDetailPage({ params }: Props) {
                   <div className="overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
                     <img src={image.image_url} alt={image.alt_text || `${project.title} gallery ${index + 1}`} className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'} />
                   </div>
-                  {image.alt_text ? <figcaption className="mt-3 text-sm leading-6 text-white/46">{image.alt_text}</figcaption> : null}
+                  {image.alt_text && image.alt_text !== project.title ? <figcaption className="mt-3 text-sm leading-6 text-white/46">{image.alt_text}</figcaption> : null}
                 </figure>
               ))}
             </div>
