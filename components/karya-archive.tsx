@@ -116,11 +116,11 @@ export default function KaryaArchive({ projects }: Props) {
   }, [category, designCategory, designStyle, projects, search, selectedAreaTags, sort]);
 
   const activeFilters = [
-    category !== 'Semua' ? `Category: ${category}` : null,
+    category !== 'Semua' ? `Kategori Project: ${category}` : null,
     designCategory !== 'Semua' ? `Kategori Desain: ${designCategory}` : null,
     designStyle !== 'Semua' ? `Gaya: ${designStyle}` : null,
-    ...selectedAreaTags.map((tag) => `Area: ${tag}`),
-    search.trim() ? `Search: ${search.trim()}` : null,
+    ...selectedAreaTags,
+    search.trim() ? `Cari: ${search.trim()}` : null,
   ].filter(Boolean) as string[];
 
   const resetFilters = () => {
@@ -141,7 +141,7 @@ export default function KaryaArchive({ projects }: Props) {
       <div className="rounded-sm border border-white/10 bg-white/[0.018] p-5 md:p-7 lg:p-8">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
-            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Search</label>
+            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Cari Karya</label>
             <div className="flex items-center gap-3 rounded-sm border border-white/10 bg-black/20 px-4 py-3 transition duration-300 focus-within:border-[#D4AF37]/45">
               <Search size={17} className="text-white/36" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari karya, kategori, style, area, atau narasi..." className="w-full bg-transparent text-sm text-white/80 outline-none placeholder:text-white/30" />
@@ -149,7 +149,7 @@ export default function KaryaArchive({ projects }: Props) {
           </div>
 
           <div>
-            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Sort</label>
+            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Urutkan</label>
             <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-sm border border-white/10 bg-[#090909] px-4 py-3 text-sm text-white/72 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="az">A-Z</option>
             </select>
@@ -157,13 +157,13 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
 
         <div className="mt-8 grid gap-6 border-t border-white/10 pt-7 md:mt-9 md:grid-cols-2 lg:grid-cols-3 lg:pt-8">
-          <FilterChips label="Category" options={filterOptions.category} value={category} onChange={setCategory} />
+          <FilterChips label="Kategori Project" options={filterOptions.category} value={category} onChange={setCategory} />
           <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
           <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
         </div>
 
         <div className="mt-7 border-t border-white/10 pt-7">
-          <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Area Tags (Multi-Select · OR)</p>
+          <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Area / Ruang</p>
           <div className="flex flex-wrap gap-2.5">
             {areaTagOptions.map((tag) => {
               const active = selectedAreaTags.includes(tag);
