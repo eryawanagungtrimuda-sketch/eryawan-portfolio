@@ -149,13 +149,13 @@ export default function AdminDashboardCMS() {
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
-            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.is_published !== false).length}</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
           </div>
 
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Published Projects</p>
-            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">Semua project saat ini bersifat public.</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.is_published !== false).length}</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Project yang terhitung hanya yang berstatus published.</p>
           </div>
 
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
@@ -196,7 +196,7 @@ export default function AdminDashboardCMS() {
           </div>
         ) : (
           <div className="mt-10 overflow-hidden rounded-sm border border-white/8 bg-white/[0.016]">
-            <div className="hidden grid-cols-[1.25fr_0.75fr_0.65fr_0.6fr] border-b border-white/[0.07] px-6 py-4 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-white/34 md:grid">
+            <div className="hidden grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] border-b border-white/[0.07] px-6 py-4 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-white/34 md:grid">
               <span>Title</span>
               <span>Taxonomy</span>
               <span>Status</span>
