@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import BackButton from '@/components/back-button';
 import KaryaArchive from '@/components/karya-archive';

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
@@ -134,7 +136,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         <section className="border-t border-white/10 py-16">
           <div className="flex flex-wrap items-center gap-4">
             <Link
-              href="/#kontak"
+              href="/kontak"
               className="inline-flex items-center rounded-sm border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E2C866]"
             >
               Diskusikan Project Serupa
