@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 
-const projectColumns = 'id,title,slug,category,cover_image,problem,solution,impact,created_at';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at';
 
 function formatDate(value?: string | null) {
   if (!value) return '—';
@@ -149,7 +149,7 @@ export default function AdminDashboardCMS() {
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
-            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.is_published !== false).length}</p>
           </div>
 
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
@@ -198,19 +198,25 @@ export default function AdminDashboardCMS() {
           <div className="mt-10 overflow-hidden rounded-sm border border-white/8 bg-white/[0.016]">
             <div className="hidden grid-cols-[1.25fr_0.75fr_0.65fr_0.6fr] border-b border-white/[0.07] px-6 py-4 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-white/34 md:grid">
               <span>Title</span>
-              <span>Category</span>
+              <span>Taxonomy</span>
+              <span>Status</span>
               <span>Created At</span>
               <span className="text-right">Actions</span>
             </div>
 
             <div className="divide-y divide-white/[0.07]">
               {projects.map((project) => (
-                <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.25fr_0.75fr_0.65fr_0.6fr] md:items-center">
+                <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] md:items-center">
                   <div>
                     <p className="text-base font-semibold leading-6 text-white/90">{project.title}</p>
                     <p className="mt-1 text-sm text-white/36">/{project.slug}</p>
                   </div>
-                  <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-white/48">{project.category || 'Uncategorized'}</p>
+                  <div className="space-y-1">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/55">{project.category || 'Uncategorized'}</p>
+                    <p className="text-xs text-white/46">{project.design_category || '—'} · {project.design_style || '—'}</p>
+                    <p className="text-xs text-white/38">{project.area_type || ((project.area_tags || []).slice(0, 2).join(', ') || '—')}</p>
+                  </div>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em]">{project.category?.trim() && project.design_category?.trim() && project.design_style?.trim() && (project.area_type?.trim() || (project.area_tags || []).length > 0) ? <span className="text-emerald-300">Siap Filter</span> : <span className="text-amber-300">Lengkapi Taxonomy</span>}</p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
                   <div className="flex items-center gap-3 md:justify-end">
                     <Link href={`/admin/projects/${project.id}/edit`} className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
