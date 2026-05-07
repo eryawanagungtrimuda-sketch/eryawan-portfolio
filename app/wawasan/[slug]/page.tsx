@@ -63,7 +63,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
       <div className="mx-auto max-w-4xl">
         <SmartBackLink
           fallbackHref="/wawasan"
-          className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-white/15 px-3 py-2 font-sans text-sm text-white/64 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
+          className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-white/15 px-3 py-2 font-sans text-sm text-white/64 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
         >
           ← Kembali
         </SmartBackLink>
@@ -86,7 +86,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         )}
 
         {sourceProject && sourceProjectHref ? (
-          <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 sm:p-5">
+          <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/45 hover:bg-white/[0.04] sm:p-5">
             <p className="font-sans text-[11px] uppercase tracking-wide text-[#D4AF37]">Berdasarkan Project</p>
             <div className="mt-3 flex items-center gap-3 sm:gap-4">
               {sourceProject.cover_image ? (
@@ -101,7 +101,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/62">{sourceProject.category}</p> : null}
               </div>
             </div>
-            <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+            <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Project
             </Link>
           </section>

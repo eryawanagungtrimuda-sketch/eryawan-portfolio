@@ -18,7 +18,7 @@ export default async function KaryaPage() {
           <BackButton label="Kembali ke Beranda" fallbackHref="/" />
         </div>
 
-        <section className="py-20 md:py-28 lg:py-32">
+        <section className="py-20 motion-safe:animate-[fade-in-up_800ms_ease-out_forwards] md:py-28 lg:py-32">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Beranda / Karya</p>
           <h1 className="font-display mt-7 max-w-4xl text-[2.05rem] font-normal leading-[1.04] tracking-[-0.035em] sm:text-[2.4rem] md:text-7xl">
             Karya Berbasis Keputusan

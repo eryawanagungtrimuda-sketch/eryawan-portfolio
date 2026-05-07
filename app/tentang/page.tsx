@@ -64,7 +64,7 @@ export default function TentangPage() {
           <p className="mt-8 max-w-4xl text-base leading-[1.75] text-white/64 sm:text-lg md:text-xl">
             Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
           </p>
-          <Button href="/kontak" className="mt-10 px-8">
+            <Button href="/kontak" className="mt-10 px-8 motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
             Diskusikan Project Anda
           </Button>
         </div>
@@ -76,7 +76,7 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Pengalaman Nyata</h2>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {pengalamanNyata.map((item, index) => (
-              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/30 md:p-10">
+              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_20px_42px_rgba(0,0,0,0.26)] md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
                 <h3 className="font-display mt-6 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-5 text-base leading-[1.75] text-white/62">{item.description}</p>
@@ -106,7 +106,7 @@ export default function TentangPage() {
           </h2>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {kontribusiPerusahaan.map((item) => (
-              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 md:p-10">
+              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] md:p-10">
                 <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-5 text-base leading-[1.75] text-white/62">{item.detail}</p>
               </article>
