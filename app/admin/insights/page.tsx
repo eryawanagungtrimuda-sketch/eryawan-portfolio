@@ -1,56 +1,129 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Insight } from '@/lib/types';
 
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
 export default function AdminInsightsPage() {
   const [items, setItems] = useState<Insight[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getSupabaseClient()
-      .from('insights')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data }) => setItems((data || []) as Insight[]));
+    let isMounted = true;
+
+    async function loadInsights() {
+      setLoading(true);
+      try {
+        const { data, error } = await getSupabaseClient()
+          .from('insights')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('[AdminInsightsPage] Failed to load insights', error.message);
+          return;
+        }
+
+        if (isMounted) setItems((data || []) as Insight[]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    void loadInsights();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const published = items.filter((item) => item.is_published).length;
+  const published = useMemo(() => items.filter((item) => item.is_published).length, [items]);
 
   return (
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-5 py-10 text-[#F4F1EA]">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex items-center justify-between">
-            <h1 className="text-5xl">Insights</h1>
-            <Link href="/admin/insights/new">Tambah Wawasan</Link>
-          </div>
+        <div className="mx-auto max-w-6xl space-y-8">
+          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <h1 className="text-4xl font-semibold md:text-5xl">Kelola Wawasan</h1>
+                <p className="mt-2 max-w-2xl text-sm text-white/70 md:text-base">Kelola artikel wawasan desain untuk publikasi halaman /wawasan.</p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/admin/insights/new" className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#f8bb15]">Tambah Wawasan</Link>
+                <Link href="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5">Kembali ke Dashboard</Link>
+              </div>
+            </div>
+          </section>
 
-          <p className="mt-3">Total {items.length} • Published {published} • Draft {items.length - published}</p>
-
-          <div className="mt-6 space-y-3">
-            {items.map((item) => (
-              <div key={item.id} className="flex justify-between border border-white/10 p-4">
-                <div>
-                  <p>{item.title}</p>
-                  <p>{item.category} · {item.source_type} · {item.is_published ? 'published' : 'draft'}</p>
-                </div>
-                <div className="flex gap-3">
-                  <Link href={`/admin/insights/${item.id}/edit`}>Edit</Link>
-                  <button
-                    onClick={async () => {
-                      await getSupabaseClient().from('insights').delete().eq('id', item.id);
-                      setItems((current) => current.filter((row) => row.id !== item.id));
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
+          <section className="grid gap-4 md:grid-cols-3">
+            {[
+              { label: 'Total Wawasan', value: items.length },
+              { label: 'Published', value: published },
+              { label: 'Draft', value: items.length - published },
+            ].map((card) => (
+              <div key={card.label} className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+                <p className="text-xs uppercase tracking-wide text-white/60">{card.label}</p>
+                <p className="mt-2 text-3xl font-semibold">{card.value}</p>
               </div>
             ))}
-          </div>
+          </section>
+
+          <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+            {loading ? (
+              <p className="p-6 text-sm text-white/70">Memuat data wawasan...</p>
+            ) : items.length === 0 ? (
+              <div className="p-8 text-center">
+                <p className="text-lg font-medium">Belum ada wawasan.</p>
+                <p className="mt-1 text-sm text-white/70">Mulai dengan menambahkan wawasan baru untuk ditinjau dan dipublikasikan.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-white/10 text-sm">
+                  <thead className="bg-white/[0.03] text-left text-xs uppercase tracking-wide text-white/60">
+                    <tr>
+                      <th className="px-4 py-3">Title</th><th className="px-4 py-3">Category</th><th className="px-4 py-3">Source Type</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Created At</th><th className="px-4 py-3">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {items.map((item) => (
+                      <tr key={item.id}>
+                        <td className="px-4 py-3">{item.title}</td>
+                        <td className="px-4 py-3 text-white/80">{item.category || '-'}</td>
+                        <td className="px-4 py-3 text-white/80">{item.source_type}</td>
+                        <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${item.is_published ? 'bg-emerald-400/15 text-emerald-300' : 'bg-amber-400/15 text-amber-300'}`}>{item.is_published ? 'Published' : 'Draft'}</span></td>
+                        <td className="px-4 py-3 text-white/80">{formatDate(item.created_at)}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-3">
+                            <Link href={`/admin/insights/${item.id}/edit`} className="text-[#F6C453] hover:underline">Edit</Link>
+                            <button
+                              className="text-red-300 hover:underline"
+                              onClick={async () => {
+                                await getSupabaseClient().from('insights').delete().eq('id', item.id);
+                                setItems((current) => current.filter((row) => row.id !== item.id));
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
         </div>
       </main>
     </AdminAuthGuard>
