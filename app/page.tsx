@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
+import RevealOnScroll from '@/components/reveal-on-scroll';
 import { getPublishedInsights } from '@/lib/insights';
 import { getPublishedProjects } from '@/lib/projects';
 
@@ -350,7 +351,7 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_10%,rgba(200,169,81,0.1),transparent_34%),radial-gradient(circle_at_82%_82%,rgba(200,169,81,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14">
-            <div className="max-w-3xl motion-safe:animate-[fade-up_700ms_ease-out]">
+            <RevealOnScroll className="max-w-3xl">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Impact</p>
               <h2 className="font-display mt-5 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
                 Dampak yang Terukur
@@ -358,14 +359,12 @@ export default async function Home() {
               <p className="mt-6 max-w-xl font-sans text-base leading-[1.7] text-white/62 md:text-lg">
                 Outcome desain dirangkum sebagai metrik ruang yang lebih efisien, mudah dipahami, dan konsisten saat dieksekusi lintas keputusan.
               </p>
-            </div>
+            </RevealOnScroll>
 
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:gap-4">
               {impacts.map((impact, index) => (
-                <article
-                  key={impact.title}
-                  className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] px-5 py-5 transition duration-300 ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/30 hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(200,169,81,0.09)] sm:px-6"
-                >
+                <RevealOnScroll key={impact.title} delay={index * 80}>
+                <article className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] px-5 py-5 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/45 hover:bg-white/[0.05] hover:shadow-[0_24px_48px_rgba(200,169,81,0.16)] sm:px-6">
                   <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#C8A951]/65 to-transparent" />
                   <div className="flex items-start justify-between gap-4">
                     <span className="inline-flex rounded-full border border-[#C8A951]/35 bg-[#C8A951]/10 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]">
@@ -383,6 +382,7 @@ export default async function Home() {
                   </p>
                   <span className="mt-5 block h-1.5 w-16 rounded-full bg-gradient-to-r from-[#C8A951]/70 to-[#C8A951]/15 transition duration-300 group-hover:w-24" />
                 </article>
+                </RevealOnScroll>
               ))}
             </div>
           </div>
@@ -424,6 +424,7 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center">
+            <RevealOnScroll>
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Decision-Based Portfolio</p>
               <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
@@ -433,6 +434,7 @@ export default async function Home() {
                 Setiap proyek ditampilkan bukan hanya sebagai hasil visual, tetapi sebagai proses membaca masalah, mengambil keputusan, dan membangun dampak ruang.
               </p>
             </div>
+            </RevealOnScroll>
 
             <a href="/karya" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
               Lihat Semua Karya
@@ -447,7 +449,8 @@ export default async function Home() {
               const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
 
               return (
-                <article key={project.id} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                <RevealOnScroll key={project.id} delay={index * 80}>
+                <article className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:shadow-[0_30px_64px_rgba(0,0,0,0.4)]">
                   <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
@@ -469,9 +472,10 @@ export default async function Home() {
                   <div className="p-7 md:p-8">
                     <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{project.title}</h3>
                     {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
-                    <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
+                    <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 motion-safe:group-hover:translate-x-1" size={16} /></a>
                   </div>
                 </article>
+                </RevealOnScroll>
               );
             })}
           </div>
@@ -482,6 +486,7 @@ export default async function Home() {
       <section id="wawasan-design" className="relative overflow-hidden bg-[#0B0B0A] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
+          <RevealOnScroll>
           <div className="flex flex-col gap-5 md:max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Wawasan</p>
             <h2 className="font-display text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
@@ -491,10 +496,12 @@ export default async function Home() {
               Cara saya membaca ruang, tren, dan keputusan desain secara strategis.
             </p>
           </div>
+          </RevealOnScroll>
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {wawasanCards.map((article) => (
-              <article key={article.title} className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
+            {wawasanCards.map((article, index) => (
+              <RevealOnScroll key={article.title} delay={index * 80}>
+              <article className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:bg-white/[0.05] hover:shadow-[0_20px_42px_rgba(0,0,0,0.32)]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
                   {article.title}
@@ -505,9 +512,10 @@ export default async function Home() {
                   className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
                 >
                   Baca Wawasan
-                  <MoveRight className="transition duration-300 group-hover:translate-x-1" size={14} />
+                  <MoveRight className="transition duration-300 motion-safe:group-hover:translate-x-1" size={14} />
                 </a>
               </article>
+              </RevealOnScroll>
             ))}
           </div>
 
