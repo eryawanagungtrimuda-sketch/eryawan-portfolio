@@ -52,20 +52,20 @@ const framework = [
 
 const decisions = [
   {
-    title: 'Sirkulasi yang jelas mengurangi friksi aktivitas dan meningkatkan efisiensi penggunaan ruang.',
-    description: 'Alur ruang yang terstruktur membuat pengguna ruang bergerak lebih natural, cepat, dan tidak saling mengganggu.',
+    title: 'Sirkulasi yang jelas mengurangi friksi aktivitas.',
+    description: 'Alur yang rapi membuat pergerakan lebih natural dan efisien.',
   },
   {
-    title: 'Pencahayaan yang tepat membentuk atmosfer, fokus, dan kenyamanan.',
-    description: 'Cahaya bukan hanya elemen visual, tetapi alat untuk mengatur mood, ritme aktivitas, dan kualitas pengalaman ruang.',
+    title: 'Pencahayaan yang tepat membentuk atmosfer dan fokus.',
+    description: 'Cahaya mengarahkan mood, ritme aktivitas, dan kenyamanan.',
   },
   {
-    title: 'Material yang dipilih dengan sadar memengaruhi durabilitas, biaya, dan persepsi nilai.',
-    description: 'Setiap material perlu dipilih berdasarkan fungsi, karakter penggunaan, perawatan, dan dampak jangka panjang.',
+    title: 'Material yang dipilih sadar menjaga nilai ruang.',
+    description: 'Pilihan material menentukan daya tahan, biaya, dan perawatan.',
   },
   {
-    title: 'Layout yang logis membantu klien mengambil keputusan lebih cepat dan terarah.',
-    description: 'Ketika prioritas ruang jelas, proses evaluasi menjadi lebih objektif dan keputusan desain lebih mudah disepakati.',
+    title: 'Layout yang logis mempercepat pengambilan keputusan.',
+    description: 'Prioritas ruang yang jelas membuat evaluasi lebih objektif.',
   },
 ];
 
@@ -296,23 +296,23 @@ export default async function Home() {
             <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F5F2EC] md:text-7xl">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-8 max-w-xl font-sans text-lg leading-[1.7] text-white/66 md:text-xl">
-              Saya melihat ruang sebagai rangkaian keputusan. Dari sirkulasi, pencahayaan, material, hingga ritme aktivitas—semuanya harus bekerja sebagai sistem, bukan sekadar komposisi visual.
+            <p className="mt-6 max-w-xl font-sans text-base leading-[1.75] text-white/70 md:mt-8 md:text-xl md:leading-[1.7]">
+              Ruang yang baik lahir dari keputusan yang jelas: alur, cahaya, material, dan prioritas fungsi.
             </p>
             <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/86 md:text-4xl">
               Saya tidak merancang ruang untuk terlihat baik.<br /><span className="text-[#D4AF37]/88">Saya merancang agar ruang bekerja dengan benar.</span>
             </p>
           </div>
 
-          <div className="space-y-12 lg:pt-3">
+          <div className="space-y-14 md:space-y-12 lg:pt-3">
             {decisions.map((decision, index) => (
-              <article key={decision.title} className="group relative border-l border-white/10 pl-8 transition duration-300 hover:border-[#C8A951]/35 md:pl-10">
+              <article key={decision.title} className="group relative border-l border-white/10 pl-7 pr-1 transition duration-300 hover:border-[#C8A951]/35 md:pl-10">
                 <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-[#C8A951]/45 opacity-80 transition duration-300 group-hover:bg-[#D4AF37]/70 group-hover:opacity-100" />
                 <p className="mb-4 font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]/70">0{index + 1}</p>
-                <h3 className="max-w-2xl font-sans text-xl font-semibold leading-8 tracking-[-0.025em] text-white/88 md:text-2xl">
+                <h3 className="max-w-2xl font-sans text-[1.05rem] font-semibold leading-7 tracking-[-0.02em] text-white/90 md:text-2xl md:leading-8">
                   {decision.title}
                 </h3>
-                <p className="mt-4 max-w-2xl font-sans text-base leading-[1.72] text-white/62 md:text-lg">
+                <p className="mt-3 max-w-xl font-sans text-sm leading-6 text-white/64 md:mt-4 md:max-w-2xl md:text-lg md:leading-[1.72]">
                   {decision.description}
                 </p>
               </article>
