@@ -40,3 +40,30 @@ export type ProjectFormState = {
   error?: string;
   success?: string;
 };
+
+export type InsightSourceType = 'project' | 'image_review' | 'manual';
+
+export type Insight = {
+  id: string;
+  title: string;
+  slug: string;
+  category: string | null;
+  source_type: InsightSourceType;
+  source_project_id: string | null;
+  cover_image: string | null;
+  excerpt: string | null;
+  content: string | null;
+  ai_prompt_source: string | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type InsightImage = {
+  id: string;
+  insight_id: string;
+  image_url: string;
+  alt_text: string | null;
+  sort_order: number;
+  created_at: string;
+};
