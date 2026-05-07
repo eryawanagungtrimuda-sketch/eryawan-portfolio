@@ -1,5 +1,5 @@
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
-import type { Insight, InsightSourceType } from './types';
+import type { Insight, InsightSourceProject, InsightSourceType } from './types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 const insightColumns = 'id,title,slug,category,source_type,source_project_id,cover_image,excerpt,content,ai_prompt_source,is_published,created_at,updated_at';
@@ -20,6 +20,25 @@ export async function getPublishedInsightBySlug(slug: string) {
   const supabase = createSupabaseServerClient();
   const { data } = await supabase.from('insights').select(insightColumns).eq('slug', slug).eq('is_published', true).maybeSingle();
   return (data as Insight) || null;
+}
+
+export async function getPublishedInsightDetailBySlug(slug: string) {
+  const insight = await getPublishedInsightBySlug(slug);
+  if (!insight) return null;
+
+  if (insight.source_type !== 'project' || !insight.source_project_id) {
+    return { insight, sourceProject: null as InsightSourceProject | null };
+  }
+
+  const supabase = createSupabaseServerClient();
+  const { data: sourceProject } = await supabase
+    .from('projects')
+    .select('id,title,slug,category,cover_image')
+    .eq('id', insight.source_project_id)
+    .eq('is_published', true)
+    .maybeSingle();
+
+  return { insight, sourceProject: (sourceProject as InsightSourceProject | null) || null };
 }
 
 export async function getInsightById(id: string) {
