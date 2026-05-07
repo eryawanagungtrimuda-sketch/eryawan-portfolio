@@ -38,6 +38,29 @@ function projectAreaTags(project: Project) {
   return Array.from(set);
 }
 
+function buildProjectBadges(project: Project, max = 4) {
+  const deduped: string[] = [];
+  const seen = new Set<string>();
+
+  const addBadge = (value?: string | null) => {
+    const trimmed = value?.trim();
+    if (!trimmed) return;
+
+    const normalized = normalize(trimmed);
+    if (!normalized || seen.has(normalized)) return;
+
+    seen.add(normalized);
+    deduped.push(trimmed);
+  };
+
+  addBadge(project.category || project.design_category);
+  addBadge(project.design_style);
+  addBadge(project.area_type);
+  (project.area_tags || []).forEach(addBadge);
+
+  return deduped.slice(0, max);
+}
+
 function FilterChips({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (value: string) => void }) {
   return (
     <div>
@@ -185,9 +208,9 @@ export default function KaryaArchive({ projects }: Props) {
           {filteredProjects.map((project, index) => (
             <article key={project.id} className="group relative flex h-full flex-col overflow-hidden rounded-sm border border-white/12 bg-gradient-to-br from-white/[0.035] to-white/[0.012] p-5 md:p-6">
               {project.cover_image ? <div className="mb-6 aspect-[16/10] overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]"><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100" /></div> : <div className="mb-6 flex aspect-[16/10] items-center justify-center rounded-sm border border-white/10 bg-white/[0.025] text-center text-sm text-white/32">Cover image belum tersedia</div>}
-              <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2"><Badge>{project.category || project.design_category}</Badge><Badge>{project.design_style}</Badge><Badge>{project.area_type}</Badge>{(project.area_tags || []).slice(0, 2).map((tag) => <Badge key={`${project.id}-${tag}`}>{tag}</Badge>)}</div></div>
+              <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
               <h2 className="font-display mt-5 line-clamp-2 max-w-2xl text-3xl font-normal leading-[1.08] tracking-[-0.03em] text-white/92 md:text-4xl">{project.title}</h2>
-              <div className="mt-6 space-y-5 border-t border-white/10 pt-6"><div><p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Kategori</p><p className="mt-2.5 text-sm leading-[1.7] text-white/68 md:text-base">{project.category || project.design_category || 'Kategori project belum ditentukan.'}</p></div><div><p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Problem</p><p className="mt-2.5 text-sm leading-[1.7] text-white/68 md:text-base">{truncateText(project.problem || 'Masalah ruang belum didefinisikan.', 110)}</p></div></div>
+              <div className="mt-6 space-y-5 border-t border-white/10 pt-6"><div><p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Kategori</p><p className="mt-2.5 text-sm leading-[1.7] text-white/68 md:text-base">{project.category || project.design_category || 'Kategori project belum ditentukan.'}</p></div>{project.problem?.trim() ? <div><p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/45">Problem</p><p className="mt-2.5 text-sm leading-[1.7] text-white/68 md:text-base">{truncateText(project.problem, 110)}</p></div> : null}</div>
               <Link href={`/karya/${project.slug}`} className="mt-8 inline-flex items-center gap-3 rounded-sm border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 font-mono text-xs font-black uppercase tracking-[0.18em] text-black transition hover:bg-[#E2C866]">Lihat Studi Kasus <MoveRight size={18} className="transition group-hover:translate-x-1" /></Link>
             </article>
           ))}
