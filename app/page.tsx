@@ -181,11 +181,11 @@ export default async function Home() {
 
 
         <div className="relative z-10 mt-6 flex gap-2 overflow-x-auto pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/62 lg:hidden">
-          <a href="/" className="whitespace-nowrap rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-2 text-[#C8A951]">Beranda</a>
-          <a href="/tentang" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Tentang</a>
-          <a href="/karya" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Karya</a>
-          <a href="/wawasan" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Wawasan</a>
-          <a href="#contact" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Kontak</a>
+          <a href="/" className="whitespace-nowrap rounded-2xl border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-2 text-[#C8A951]">Beranda</a>
+          <a href="/tentang" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Tentang</a>
+          <a href="/karya" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Karya</a>
+          <a href="/wawasan" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Wawasan</a>
+          <a href="#contact" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Kontak</a>
         </div>
 
         <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.5fr] lg:pt-4">
@@ -447,7 +447,7 @@ export default async function Home() {
               const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
 
               return (
-                <article key={project.id} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                <article key={project.id} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
                   <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
@@ -456,7 +456,7 @@ export default async function Home() {
                       </>
                     ) : (
                       <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
-                        <div className="rounded-sm border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
+                        <div className="rounded-2xl border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
                           Visual proyek belum tersedia
                         </div>
                       </div>
@@ -494,7 +494,7 @@ export default async function Home() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wawasanCards.map((article) => (
-              <article key={article.title} className="group rounded-sm border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
+              <article key={article.title} className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
                   {article.title}

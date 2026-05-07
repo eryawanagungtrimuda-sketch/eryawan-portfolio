@@ -64,25 +64,25 @@ export default async function KaryaDetailPage({ params }: Props) {
             </div>
             <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-3xl">
               {project.category ? (
-                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Category</p>
                   <p className="mt-2 font-sans text-base text-white/86">{project.category}</p>
                 </article>
               ) : null}
               {project.design_category ? (
-                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Design Category</p>
                   <p className="mt-2 font-sans text-base text-white/86">{project.design_category}</p>
                 </article>
               ) : null}
               {project.design_style ? (
-                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Design Style</p>
                   <p className="mt-2 font-sans text-base text-white/86">{project.design_style}</p>
                 </article>
               ) : null}
               {areaTags.length > 0 ? (
-                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Area Tags</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {areaTags.map((tag) => (
@@ -91,7 +91,7 @@ export default async function KaryaDetailPage({ params }: Props) {
                   </div>
                 </article>
               ) : project.area_type ? (
-                <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Area Type</p>
                   <p className="mt-2 font-sans text-base text-white/86">{project.area_type}</p>
                 </article>
@@ -137,13 +137,13 @@ export default async function KaryaDetailPage({ params }: Props) {
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/kontak"
-              className="inline-flex items-center rounded-sm border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E2C866]"
+              className="inline-flex items-center rounded-2xl border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E2C866]"
             >
               Diskusikan Project Serupa
             </Link>
             <Link
               href="/karya"
-              className="inline-flex items-center rounded-sm border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10"
+              className="inline-flex items-center rounded-2xl border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10"
             >
               Kembali ke Semua Karya
             </Link>

@@ -16,19 +16,19 @@ export default function AdminDashboardPage() {
                 Pantau status project, kelola konten, dan update portfolio tanpa menyentuh kode.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                <Link href="/" className="rounded-2xl border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Lihat Website
                 </Link>
-                <Link href="/karya" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                <Link href="/karya" className="rounded-2xl border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Lihat Semua Karya
                 </Link>
-                <Link href="/admin/case-history" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                <Link href="/admin/case-history" className="rounded-2xl border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Case History
                 </Link>
-                <Link href="/admin/insights" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                <Link href="/admin/insights" className="rounded-2xl border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Kelola Wawasan
                 </Link>
-                <Link href="/admin/insights/new" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                <Link href="/admin/insights/new" className="rounded-2xl border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Tambah Wawasan
                 </Link>
               </div>

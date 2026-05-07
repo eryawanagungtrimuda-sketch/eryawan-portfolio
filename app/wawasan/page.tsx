@@ -21,10 +21,10 @@ export default async function WawasanPage() {
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 md:mt-8">
-          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
             Lihat Karya
           </Link>
-          <Link href="/" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-5 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">
+          <Link href="/" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">
             Kembali ke Beranda
           </Link>
         </div>
@@ -35,8 +35,8 @@ export default async function WawasanPage() {
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-8 text-center">
             <p className="font-sans text-lg text-white/66">Belum ada wawasan dipublikasikan.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link className="rounded-sm border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/kontak">Diskusikan Project</Link>
-              <Link className="rounded-sm border border-white/15 px-4 py-2 font-sans text-sm text-white/66 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>
+              <Link className="rounded-2xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/kontak">Diskusikan Project</Link>
+              <Link className="rounded-2xl border border-white/15 px-4 py-2 font-sans text-sm text-white/66 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>
             </div>
           </div>
         </section>
@@ -52,11 +52,11 @@ export default async function WawasanPage() {
 
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-2.5 py-1 text-[11px] uppercase tracking-wide text-[#D4AF37]">
+                  <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 text-[11px] uppercase tracking-wide text-[#D4AF37]">
                     {item.category || 'Uncategorized'}
                   </span>
                   {formatSourceType(item.source_type) ? (
-                    <span className="rounded-sm border border-white/20 px-2.5 py-1 text-[11px] uppercase tracking-wide text-white/62">
+                    <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-wide text-white/62">
                       {formatSourceType(item.source_type)}
                     </span>
                   ) : null}
