@@ -25,6 +25,12 @@ export default function AdminDashboardPage() {
                 <Link href="/admin/case-history" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
                   Case History
                 </Link>
+                <Link href="/admin/insights" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                  Kelola Wawasan
+                </Link>
+                <Link href="/admin/insights/new" className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+                  Tambah Wawasan
+                </Link>
               </div>
             </div>
             <AdminLogoutButton />
