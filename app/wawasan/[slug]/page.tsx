@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPublishedInsightBySlug } from '@/lib/insights';
 
+export const dynamic = 'force-dynamic';
+
 export default async function WawasanDetailPage({ params }: { params: { slug: string } }) {
   const insight = await getPublishedInsightBySlug(params.slug);
   if (!insight) return notFound();
