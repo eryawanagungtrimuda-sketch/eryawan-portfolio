@@ -15,8 +15,8 @@ export default async function WawasanPage() {
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-16 text-[#F4F1EA] md:px-8 lg:px-12">
       <section className="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-12">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#C8A951]">Insight Hub</p>
-        <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">Wawasan Desain</h1>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Insight Hub</p>
+        <h1 className="font-display mt-4 text-4xl font-normal leading-[0.98] tracking-[-0.02em] md:text-6xl">Wawasan Desain</h1>
         <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/70 md:text-lg">
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
         </p>
@@ -62,7 +62,7 @@ export default async function WawasanPage() {
                   ) : null}
                 </div>
 
-                <h2 className="mt-4 text-2xl font-medium leading-snug">{item.title}</h2>
+                <h2 className="font-display mt-4 text-2xl font-normal leading-[1.08] tracking-[-0.01em]">{item.title}</h2>
                 <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
 
                 <Link className="mt-6 inline-flex w-fit items-center gap-2 text-sm text-[#D4AF37] transition group-hover:text-[#e6c461]" href={`/wawasan/${item.slug}`}>

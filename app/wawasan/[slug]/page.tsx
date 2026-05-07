@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 function renderMarkdown(content?: string | null) {
   if (!content) {
-    return <p className="text-white/70">Konten wawasan belum tersedia.</p>;
+    return <p className="text-base leading-8 text-white/75">Konten wawasan belum tersedia.</p>;
   }
 
   const lines = content.split('\n');
@@ -19,18 +19,18 @@ function renderMarkdown(content?: string | null) {
         if (!text) return <div key={index} className="h-2" />;
 
         if (text.startsWith('### ')) {
-          return <h3 key={index} className="pt-2 text-xl font-semibold text-[#F4F1EA]">{text.replace(/^###\s*/, '')}</h3>;
+          return <h3 key={index} className="font-display pt-3 text-xl font-normal leading-tight tracking-[-0.01em] text-[#F4F1EA] md:text-2xl">{text.replace(/^###\s*/, '')}</h3>;
         }
 
         if (text.startsWith('## ')) {
-          return <h2 key={index} className="pt-4 text-2xl font-semibold text-[#F4F1EA]">{text.replace(/^##\s*/, '')}</h2>;
+          return <h2 key={index} className="font-display pt-5 text-2xl font-normal leading-tight tracking-[-0.015em] text-[#F4F1EA] md:text-3xl">{text.replace(/^##\s*/, '')}</h2>;
         }
 
         if (text.startsWith('# ')) {
-          return <h1 key={index} className="pt-5 text-3xl font-semibold text-[#F4F1EA]">{text.replace(/^#\s*/, '')}</h1>;
+          return <h1 key={index} className="font-display pt-6 text-3xl font-normal leading-[1.02] tracking-[-0.02em] text-[#F4F1EA] md:text-4xl">{text.replace(/^#\s*/, '')}</h1>;
         }
 
-        return <p key={index} className="whitespace-pre-wrap leading-8 text-white/80">{line}</p>;
+        return <p key={index} className="whitespace-pre-wrap text-base leading-8 text-white/80">{line}</p>;
       })}
     </div>
   );
@@ -66,7 +66,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           {insight.category || 'Uncategorized'}
         </span>
 
-        <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">{insight.title}</h1>
+        <h1 className="font-display mt-4 text-4xl font-normal leading-[0.98] tracking-[-0.02em] md:text-6xl">{insight.title}</h1>
         {insight.excerpt ? <p className="mt-5 max-w-3xl text-lg leading-relaxed text-white/70">{insight.excerpt}</p> : null}
 
         {insight.cover_image ? (
