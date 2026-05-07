@@ -289,30 +289,39 @@ export default async function Home() {
       </section>
 
       <section id="design-decisions" className="relative overflow-hidden bg-[#070707] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:gap-24">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
+        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Design Decisions</p>
-            <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F5F2EC] md:text-7xl">
+            <h2 className="font-display mt-5 max-w-xl text-[2.05rem] font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:mt-6 md:text-[3.5rem] lg:text-[4.1rem]">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-6 max-w-xl font-sans text-base leading-[1.75] text-white/62 md:mt-8 md:text-xl md:leading-[1.7]">
-              Ruang yang baik lahir dari keputusan yang jelas: alur, cahaya, material, dan prioritas fungsi.
+            <p className="mt-5 max-w-xl font-sans text-sm leading-[1.8] text-white/64 md:mt-6 md:text-[1.04rem]">
+              Saya membaca kualitas desain sejak awal: apa yang harus diprioritaskan, apa yang bisa disederhanakan, dan keputusan mana yang paling berdampak pada ruang.
             </p>
-            <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/86 md:text-4xl">
-              Saya tidak merancang ruang untuk terlihat baik.<br /><span className="text-[#D4AF37]/88">Saya merancang agar ruang bekerja dengan benar.</span>
+            <div className="mt-7 h-px w-24 bg-gradient-to-r from-[#C8A951]/70 to-transparent md:mt-8" />
+            <p className="font-display mt-6 max-w-xl text-[1.45rem] italic leading-[1.34] tracking-[-0.016em] text-white/86 md:mt-8 md:text-[2rem]">
+              “Ruang yang baik bukan yang paling ramai. Ruang yang baik adalah yang bekerja dengan tenang.”
             </p>
           </div>
 
-          <div className="space-y-14 md:space-y-12 lg:pt-3">
+          <div className="relative space-y-5 lg:pt-3">
+            <span className="pointer-events-none absolute bottom-4 left-[18px] top-4 hidden w-px bg-gradient-to-b from-[#C8A951]/20 via-white/10 to-transparent md:block" />
             {decisions.map((decision, index) => (
-              <article key={decision.title} className="group relative border-l border-white/10 pl-7 pr-1 transition duration-300 hover:border-[#C8A951]/35 md:pl-10">
-                <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-[#C8A951]/45 opacity-80 transition duration-300 group-hover:bg-[#D4AF37]/70 group-hover:opacity-100" />
-                <p className="mb-4 font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]/70">0{index + 1}</p>
-                <h3 className="max-w-2xl font-sans text-[1.05rem] font-semibold leading-7 tracking-[-0.02em] text-white/90 md:text-2xl md:leading-8">
+              <article
+                key={decision.title}
+                className="group relative overflow-hidden border border-white/10 bg-white/[0.018] p-5 pl-12 transition duration-300 hover:border-[#C8A951]/35 hover:bg-white/[0.03] md:p-7 md:pl-14"
+              >
+                <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 md:block" />
+                <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 md:block" />
+                <div className="flex items-center justify-between gap-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]">0{index + 1}</p>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-white/42">Decision Point</p>
+                </div>
+                <h3 className="mt-4 max-w-2xl font-sans text-[1rem] font-semibold leading-7 tracking-[-0.018em] text-white/88 md:text-[1.35rem] md:leading-[1.45]">
                   {decision.title}
                 </h3>
-                <p className="mt-3 max-w-xl font-sans text-sm leading-6 text-white/64 md:mt-4 md:max-w-2xl md:text-lg md:leading-[1.72]">
+                <p className="mt-3 max-w-2xl font-sans text-sm leading-6 text-white/60 md:text-base md:leading-[1.72]">
                   {decision.description}
                 </p>
               </article>
