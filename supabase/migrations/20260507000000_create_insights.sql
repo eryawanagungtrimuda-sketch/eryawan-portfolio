@@ -39,10 +39,24 @@ for each row execute function public.update_updated_at_column();
 alter table public.insights enable row level security;
 alter table public.insight_images enable row level security;
 
--- TODO(security-phase): harden RLS policy for production with proper role/auth checks.
-create policy insights_public_read on public.insights for select using (is_published = true);
-create policy insights_admin_all on public.insights for all using (true) with check (true);
-create policy insight_images_public_read on public.insight_images for select using (
+-- Development-phase policy only.
+-- TODO(security-phase): harden with stricter role-based auth and ownership checks before production.
+create policy insights_public_read on public.insights
+for select
+using (is_published = true);
+
+create policy insights_authenticated_crud on public.insights
+for all to authenticated
+using (true)
+with check (true);
+
+create policy insight_images_public_read on public.insight_images
+for select
+using (
   exists(select 1 from public.insights i where i.id = insight_images.insight_id and i.is_published = true)
 );
-create policy insight_images_admin_all on public.insight_images for all using (true) with check (true);
+
+create policy insight_images_authenticated_crud on public.insight_images
+for all to authenticated
+using (true)
+with check (true);
