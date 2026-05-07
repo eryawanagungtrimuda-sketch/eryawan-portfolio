@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
+import { getPublishedInsights } from '@/lib/insights';
 import { getPublishedProjects } from '@/lib/projects';
 
 const clientWorkflow = [
@@ -112,6 +113,23 @@ const wawasanPreview = [
 
 export default async function Home() {
   const portfolioWorks = (await getPublishedProjects()).slice(0, 2);
+  const publishedInsights = await getPublishedInsights();
+  const wawasanCards =
+    publishedInsights.length > 0
+      ? publishedInsights.slice(0, 3).map((insight) => ({
+          title: insight.title,
+          excerpt:
+            insight.excerpt ||
+            'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.',
+          tag: insight.category || 'Wawasan',
+          href: `/wawasan/${insight.slug}`,
+        }))
+      : wawasanPreview.map((article) => ({
+          title: article.title,
+          excerpt: article.excerpt,
+          tag: article.tag,
+          href: '/wawasan',
+        }));
   return (
     <main className="min-h-screen overflow-hidden bg-[#080807] font-sans text-[#F4F1EA]">
       <section
@@ -442,7 +460,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {wawasanPreview.map((article) => (
+            {wawasanCards.map((article) => (
               <article key={article.title} className="group rounded-sm border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
@@ -450,7 +468,7 @@ export default async function Home() {
                 </h3>
                 <p className="mt-3 font-sans text-sm leading-[1.75] text-white/66">{article.excerpt}</p>
                 <a
-                  href="/wawasan"
+                  href={article.href}
                   className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
                 >
                   Baca Wawasan
