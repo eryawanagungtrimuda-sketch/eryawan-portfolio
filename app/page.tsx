@@ -436,19 +436,26 @@ export default async function Home() {
             <h2 className="font-display text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
               Wawasan Desain
             </h2>
-            <p className="text-lg leading-[1.65] text-white/68 md:text-xl">
+            <p className="font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
               Cara saya membaca ruang, tren, dan keputusan desain secara strategis.
             </p>
           </div>
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wawasanPreview.map((article) => (
-              <article key={article.title} className="group rounded-sm border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#C8A951]/80">{article.tag}</p>
-                <h3 className="mt-4 text-lg font-semibold leading-snug tracking-[-0.02em] text-white/90">
+              <article key={article.title} className="group rounded-sm border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
+                <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
+                <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
                   {article.title}
                 </h3>
-                <p className="mt-3 text-sm leading-[1.7] text-white/62">{article.excerpt}</p>
+                <p className="mt-3 font-sans text-sm leading-[1.75] text-white/66">{article.excerpt}</p>
+                <a
+                  href="/wawasan"
+                  className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
+                >
+                  Baca Wawasan
+                  <MoveRight className="transition duration-300 group-hover:translate-x-1" size={14} />
+                </a>
               </article>
             ))}
           </div>
