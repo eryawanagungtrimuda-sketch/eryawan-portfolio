@@ -112,12 +112,18 @@ const portfolioWorks = [
     problem: 'Sirkulasi harian tidak efisien dan area publik terasa terputus.',
     decision: 'Menyusun ulang flow ruang, memperjelas zoning, dan mengoptimalkan titik aktivitas.',
     impact: 'Ruang terasa lebih terarah, fungsional, dan mudah digunakan.',
+    type: 'Residential',
+    year: '2025',
+    cover: '/hero.jpg',
   },
   {
     title: 'Project 02 — Workspace Interior',
     problem: 'Area kerja tidak mendukung fokus dan kolaborasi secara seimbang.',
     decision: 'Membagi ruang berdasarkan intensitas aktivitas dan kebutuhan privasi.',
     impact: 'Ritme kerja lebih jelas, nyaman, dan produktif.',
+    type: 'Workspace',
+    year: '2024',
+    cover: '/hero.jpg',
   },
 ];
 
@@ -393,7 +399,7 @@ export default function Home() {
               </p>
             </div>
 
-            <a href="#contact" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
+            <a href="/karya" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
               Lihat Semua Karya
               <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={20} />
             </a>
@@ -401,30 +407,23 @@ export default function Home() {
 
           <div className="mt-20 grid gap-8 lg:grid-cols-2">
             {portfolioWorks.map((work, index) => (
-              <article key={work.title} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 md:p-10">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(200,169,81,0.13),transparent_30%)] opacity-80" />
-                <div className="relative z-10">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.42em] text-[#C8A951] md:text-[11px]">
-                    Project {String(index + 1).padStart(2, '0')}
-                  </p>
-                  <h3 className="font-display mt-5 max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/90 md:text-5xl">
-                    {work.title}
-                  </h3>
-
-                  <div className="mt-12 space-y-8">
-                    <div>
-                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/48">Masalah</p>
-                      <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{work.problem}</p>
-                    </div>
-                    <div>
-                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/48">Keputusan</p>
-                      <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{work.decision}</p>
-                    </div>
-                    <div>
-                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-white/48">Dampak</p>
-                      <p className="mt-3 text-base leading-[1.65] text-white/68 md:text-lg">{work.impact}</p>
+              <article key={work.title} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10">
+                  <img src={work.cover} alt={work.title} className="h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-95" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#142030] via-[#142030]/20 to-transparent" />
+                  <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
+                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
+                    <div className="flex gap-2">
+                      <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{work.type}</span>
+                      <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{work.year}</span>
                     </div>
                   </div>
+                </div>
+                <div className="p-7 md:p-8">
+                  <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{work.title}</h3>
+                  <p className="mt-5 text-base leading-[1.75] text-white/68 md:text-lg">{work.problem}</p>
+                  <p className="mt-4 text-sm leading-[1.75] text-white/56 md:text-base">Keputusan: {work.decision}</p>
+                  <a href="/karya" className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
                 </div>
               </article>
             ))}
