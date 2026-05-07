@@ -16,10 +16,10 @@ function TextBlock({ label, body, index, fallback }: { label: string; body?: str
   return (
     <article className="border-l border-white/10 pl-6 lg:grid lg:grid-cols-[0.8fr_2fr] lg:gap-12 lg:border-l-0 lg:border-t lg:pl-0 lg:pt-8">
       <div>
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35">0{index}</p>
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#C8A951]">0{index}</p>
         <h2 className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-[#D4AF37]">{label}</h2>
       </div>
-      <p className="mt-4 max-w-3xl whitespace-pre-line text-lg leading-[1.75] text-white/72 lg:mt-0">{body || fallback}</p>
+      <p className="mt-4 max-w-3xl whitespace-pre-line font-sans text-lg leading-[1.75] text-white/70 lg:mt-0">{body || fallback}</p>
     </article>
   );
 }
@@ -50,9 +50,9 @@ export default async function KaryaDetailPage({ params }: Props) {
 
         <section className="py-20 md:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
-          <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-white/50 md:text-[11px]">Decision-Based Case Study</p>
+          <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">{project.title}</h1>
-          <p className="mt-8 max-w-4xl text-xl leading-[1.65] text-white/76 md:text-2xl">{openingDescription}</p>
+          <p className="mt-8 max-w-4xl font-sans text-xl leading-[1.65] text-white/74 md:text-2xl">{openingDescription}</p>
         </section>
 
 
@@ -65,25 +65,25 @@ export default async function KaryaDetailPage({ params }: Props) {
             <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-3xl">
               {project.category ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Category</p>
-                  <p className="mt-2 text-base text-white/84">{project.category}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Category</p>
+                  <p className="mt-2 font-sans text-base text-white/86">{project.category}</p>
                 </article>
               ) : null}
               {project.design_category ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Design Category</p>
-                  <p className="mt-2 text-base text-white/84">{project.design_category}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Design Category</p>
+                  <p className="mt-2 font-sans text-base text-white/86">{project.design_category}</p>
                 </article>
               ) : null}
               {project.design_style ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Design Style</p>
-                  <p className="mt-2 text-base text-white/84">{project.design_style}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Design Style</p>
+                  <p className="mt-2 font-sans text-base text-white/86">{project.design_style}</p>
                 </article>
               ) : null}
               {areaTags.length > 0 ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Tags</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Area Tags</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {areaTags.map((tag) => (
                       <span key={tag} className="rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)}</span>
@@ -92,8 +92,8 @@ export default async function KaryaDetailPage({ params }: Props) {
                 </article>
               ) : project.area_type ? (
                 <article className="rounded-sm border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/46">Area Type</p>
-                  <p className="mt-2 text-base text-white/84">{project.area_type}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Area Type</p>
+                  <p className="mt-2 font-sans text-base text-white/86">{project.area_type}</p>
                 </article>
               ) : null}
             </div>

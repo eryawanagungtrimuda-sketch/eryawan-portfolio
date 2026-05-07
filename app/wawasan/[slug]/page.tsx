@@ -98,7 +98,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
               ) : null}
               <div className="min-w-0">
                 <h2 className="font-display text-xl leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl">{sourceProject.title}</h2>
-                {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/65">{sourceProject.category}</p> : null}
+                {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/68">{sourceProject.category}</p> : null}
               </div>
             </div>
             <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">

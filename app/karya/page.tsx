@@ -23,7 +23,7 @@ export default async function KaryaPage() {
           <h1 className="font-display mt-7 max-w-4xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] md:text-7xl">
             Karya Berbasis Keputusan
           </h1>
-          <p className="mt-9 max-w-2xl text-base leading-[1.8] text-white/68 md:text-xl md:leading-[1.75]">
+          <p className="mt-9 max-w-2xl font-sans text-base leading-[1.8] text-white/70 md:text-xl md:leading-[1.75]">
             Setiap project dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga impact yang dihasilkan.
           </p>
         </section>

@@ -150,7 +150,7 @@ export default async function Home() {
             </span>
           </a>
 
-          <div className="hidden items-start gap-8 text-sm font-medium text-white/70 lg:flex">
+          <div className="hidden items-start gap-8 font-sans text-sm font-medium text-white/68 lg:flex">
             <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="/">Beranda</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/karya">Karya</a>
@@ -183,7 +183,7 @@ export default async function Home() {
               <span className="block text-[#C8A951] italic tracking-[-0.055em]">Ini Adalah Keputusan Bisnis.</span>
             </h1>
 
-            <p className="mt-8 max-w-3xl text-lg leading-[1.65] text-white/72 drop-shadow-md md:text-[1.25rem]">
+            <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/70 drop-shadow-md md:text-[1.25rem]">
               Saya membantu klien dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
             </p>
 
@@ -222,7 +222,7 @@ export default async function Home() {
                 Cara Saya Bekerja dengan Klien
               </h2>
             </div>
-            <p className="max-w-3xl text-lg leading-[1.7] text-white/70 md:text-xl">
+            <p className="max-w-3xl font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
               Saya tidak hanya menerjemahkan brief menjadi gambar. Saya membantu membaca konteks, mempertanyakan keputusan yang kurang efisien, dan menyusun solusi ruang yang masuk akal secara fungsi, estetika, dan dampak bisnis.
             </p>
           </div>
@@ -237,7 +237,7 @@ export default async function Home() {
                 <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.028em] text-white/90 md:text-4xl">
                   {item.title}
                 </h3>
-                <p className="mt-6 text-base leading-[1.7] text-white/62">
+                <p className="mt-6 font-sans text-base leading-[1.7] text-white/66">
                   {item.description}
                 </p>
               </article>
@@ -268,7 +268,7 @@ export default async function Home() {
                 <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:bg-white/[0.035] md:p-10">
                   <div className="mb-16 flex items-center justify-between">
                     <div className="flex items-baseline gap-3">
-                      <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">{item.number}</span>
+                      <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.code}</span>
                     </div>
                     <span className="grid h-12 w-12 place-items-center border border-[#C8A951]/30 text-[#C8A951]/80 transition duration-300 group-hover:border-[#C8A951]/55 group-hover:bg-[#C8A951]/10 group-hover:text-[#C8A951]">
@@ -278,7 +278,7 @@ export default async function Home() {
                   <h3 className="font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
                     {item.title}
                   </h3>
-                  <p className="mt-6 max-w-sm text-base leading-[1.7] text-white/63">
+                  <p className="mt-6 max-w-sm font-sans text-base leading-[1.7] text-white/66">
                     {item.description}
                   </p>
                 </article>
@@ -296,7 +296,7 @@ export default async function Home() {
             <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-8 max-w-xl text-lg leading-[1.7] text-white/70 md:text-xl">
+            <p className="mt-8 max-w-xl font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
               Saya melihat ruang sebagai rangkaian keputusan. Dari sirkulasi, pencahayaan, material, hingga ritme aktivitas—semuanya harus bekerja sebagai sistem, bukan sekadar komposisi visual.
             </p>
             <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/90 md:text-4xl">
@@ -312,7 +312,7 @@ export default async function Home() {
                 <h3 className="max-w-2xl text-xl font-semibold leading-8 tracking-[-0.025em] text-white/90 md:text-2xl">
                   {decision.title}
                 </h3>
-                <p className="mt-4 max-w-2xl text-base leading-[1.7] text-white/62 md:text-lg">
+                <p className="mt-4 max-w-2xl font-sans text-base leading-[1.7] text-white/66 md:text-lg">
                   {decision.description}
                 </p>
               </article>
@@ -334,7 +334,7 @@ export default async function Home() {
           <div className="mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {impacts.map((impact, index) => (
               <div key={impact.label} className="group border border-white/10 bg-white/[0.025] px-6 py-10 text-center transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:bg-white/[0.045]">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">0{index + 1}</p>
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/50">0{index + 1}</p>
                 <div className="mt-8 flex justify-center text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]">
                   {impact.direction === 'up' ? <ArrowUp size={64} strokeWidth={1.45} /> : <ArrowDown size={64} strokeWidth={1.45} />}
                 </div>
@@ -346,7 +346,7 @@ export default async function Home() {
           </div>
 
           <div className="mx-auto mt-20 max-w-3xl text-center">
-            <p className="text-lg italic leading-8 text-white/78 md:text-2xl">
+            <p className="font-display text-lg italic leading-8 text-white/86 md:text-2xl">
               “Desain yang terukur menghasilkan keputusan yang lebih pasti.”
             </p>
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/32">
@@ -376,7 +376,7 @@ export default async function Home() {
                     <h3 className="text-lg font-semibold uppercase leading-snug tracking-[-0.018em] text-white/90 md:text-xl">
                       {item.title}
                     </h3>
-                    <p className="mt-5 max-w-sm text-base leading-[1.7] text-white/63">
+                    <p className="mt-5 max-w-sm font-sans text-base leading-[1.7] text-white/66">
                       {item.description}
                     </p>
                   </div>
@@ -396,7 +396,7 @@ export default async function Home() {
               <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
                 Portfolio Berbasis Keputusan
               </h2>
-              <p className="mt-8 max-w-4xl text-lg leading-[1.65] text-white/65 md:text-xl">
+              <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/68 md:text-xl">
                 Setiap proyek ditampilkan bukan hanya sebagai hasil visual, tetapi sebagai proses membaca masalah, mengambil keputusan, dan membangun dampak ruang.
               </p>
             </div>
@@ -498,7 +498,7 @@ export default async function Home() {
             <h2 className="font-display mt-8 text-4xl font-normal italic leading-[1.35] tracking-[-0.04em] text-[#F4F1EA] md:text-6xl lg:text-7xl">
               Jika Anda mencari designer, banyak pilihan.<br className="hidden lg:block" /> Jika Anda mencari partner berpikir, kita perlu bicara.
             </h2>
-            <p className="mx-auto mt-8 max-w-3xl text-lg leading-[1.65] text-white/70 md:text-2xl">
+            <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/68 md:text-2xl">
               Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
@@ -510,7 +510,7 @@ export default async function Home() {
               Respon langsung oleh desainer, bukan bot.
             </p>
 
-            <div className="mt-8 flex items-center justify-center gap-8 text-white/45">
+            <div className="mt-8 flex items-center justify-center gap-8 text-white/50">
               <a
                 href="https://instagram.com/"
                 target="_blank"
