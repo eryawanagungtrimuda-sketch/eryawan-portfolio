@@ -11,6 +11,7 @@ import type { Project, ProjectImage } from '@/lib/types';
 type Props = { project?: Project };
 type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
 type CustomSelectState = { choice: string; custom: string };
+type ApiJsonResult = { id?: string; error?: string };
 
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -123,6 +124,20 @@ function getProjectImageInsertErrorMessage(message?: string) {
     return 'File sudah masuk ke Storage, tetapi insert ke tabel project_images ditolak (RLS/policy). Jalankan ulang schema.sql agar policy project_images aktif.';
   }
   return `File sudah masuk ke Storage, tetapi gagal membuat record project_images: ${message || 'unknown database error'}`;
+}
+
+async function readJsonSafely(response: Response): Promise<{ isJson: boolean; data: ApiJsonResult | null }> {
+  const contentType = (response.headers.get('content-type') || '').toLowerCase();
+  if (!contentType.includes('application/json')) return { isJson: false, data: null };
+
+  const bodyText = await response.text();
+  if (!bodyText.trim()) return { isJson: true, data: null };
+
+  try {
+    return { isJson: true, data: JSON.parse(bodyText) as ApiJsonResult };
+  } catch {
+    return { isJson: true, data: null };
+  }
 }
 
 function TaxonomySelect({
@@ -614,16 +629,31 @@ export default function ProjectForm({ project }: Props) {
     if (!savedProjectId) return;
     setLoading(true);
     try {
+      const supabase = getSupabaseClient();
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session?.access_token) {
+        throw sessionError || new Error('Session admin tidak aktif atau sudah expired. Login ulang lalu coba lagi.');
+      }
+
       const response = await fetch('/api/insights/from-project', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
         body: JSON.stringify({ projectId: savedProjectId }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Gagal membuat draft wawasan.');
+      const { isJson, data } = await readJsonSafely(response);
+      if (!response.ok) {
+        if (isJson && data?.error) throw new Error(data.error);
+        throw new Error('Gagal membuat draft wawasan. Periksa session admin atau policy Supabase insights.');
+      }
+      if (!isJson || !data?.id) {
+        throw new Error('Server mengembalikan respons tidak valid saat membuat draft wawasan.');
+      }
       router.push(`/admin/insights/${data.id}/edit`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Gagal membuat draft wawasan.');
+      setMessage(error instanceof Error ? error.message : 'Gagal membuat draft wawasan. Periksa session admin atau policy Supabase insights.');
     } finally {
       setLoading(false);
     }
