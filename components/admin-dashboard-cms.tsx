@@ -128,7 +128,7 @@ export default function AdminDashboardCMS() {
   if (loading) {
     return (
       <section className="py-16">
-        <div className="rounded-sm border border-white/8 bg-white/[0.02] p-10">
+        <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-10">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-white/42">Memuat data project...</p>
         </div>
       </section>
@@ -147,18 +147,18 @@ export default function AdminDashboardCMS() {
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
+          <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
           </div>
 
-          <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
+          <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Published Projects</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.is_published !== false).length}</p>
             <p className="mt-4 text-sm leading-6 text-white/38">Project yang terhitung hanya yang berstatus published.</p>
           </div>
 
-          <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
+          <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Last Updated Project</p>
             {lastUpdatedProject ? (
               <>
@@ -183,10 +183,10 @@ export default function AdminDashboardCMS() {
           </Link>
         </div>
 
-        {message ? <p className="mt-8 rounded-sm border border-red-400/20 bg-red-500/10 p-4 text-sm leading-6 text-red-200">{message}</p> : null}
+        {message ? <p className="mt-8 rounded-2xl border border-red-400/20 bg-red-500/10 p-4 text-sm leading-6 text-red-200">{message}</p> : null}
 
         {projects.length === 0 ? (
-          <div className="mt-10 flex min-h-[280px] items-center justify-center rounded-sm border border-white/8 bg-white/[0.018] p-8 text-center md:p-12">
+          <div className="mt-10 flex min-h-[280px] items-center justify-center rounded-2xl border border-white/8 bg-white/[0.018] p-8 text-center md:p-12">
             <div className="max-w-xl">
               <p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada project</p>
               <p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/52 md:text-lg">
@@ -195,7 +195,7 @@ export default function AdminDashboardCMS() {
             </div>
           </div>
         ) : (
-          <div className="mt-10 overflow-hidden rounded-sm border border-white/8 bg-white/[0.016]">
+          <div className="mt-10 overflow-hidden rounded-2xl border border-white/8 bg-white/[0.016]">
             <div className="hidden grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] border-b border-white/[0.07] px-6 py-4 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-white/34 md:grid">
               <span>Title</span>
               <span>Taxonomy</span>
@@ -219,10 +219,10 @@ export default function AdminDashboardCMS() {
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em]">{project.category?.trim() && project.design_category?.trim() && project.design_style?.trim() && (project.area_type?.trim() || (project.area_tags || []).length > 0) ? <span className="text-emerald-300">Siap Filter</span> : <span className="text-amber-300">Lengkapi Taxonomy</span>}</p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
                   <div className="flex flex-wrap items-center gap-3 md:justify-end">
-                    <Link href={`/admin/projects/${project.id}/edit`} className="min-h-11 rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
+                    <Link href={`/admin/projects/${project.id}/edit`} className="min-h-11 rounded-full border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
                       Edit
                     </Link>
-                    <button type="button" disabled={deletingId === project.id} onClick={() => deleteProject(project)} className="min-h-11 rounded-sm border border-red-400/20 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200/80 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50">
+                    <button type="button" disabled={deletingId === project.id} onClick={() => deleteProject(project)} className="min-h-11 rounded-full border border-red-400/20 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200/80 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50">
                       {deletingId === project.id ? 'Deleting' : 'Delete'}
                     </button>
                   </div>

@@ -161,16 +161,16 @@ export default function KaryaArchive({ projects }: Props) {
   };
 
   if (projects.length === 0) {
-    return <section className="pb-24"><div className="flex min-h-[320px] items-center justify-center rounded-sm border border-white/10 bg-white/[0.018] p-8 text-center md:p-12"><div className="max-w-xl"><p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada karya</p><p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/60 md:text-lg">Portfolio sedang disiapkan. Project yang dipublikasikan dari CMS akan tampil di halaman ini.</p></div></div></section>;
+    return <section className="pb-24"><div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center md:p-12"><div className="max-w-xl"><p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada karya</p><p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/60 md:text-lg">Portfolio sedang disiapkan. Project yang dipublikasikan dari CMS akan tampil di halaman ini.</p></div></div></section>;
   }
 
   return (
     <section className="pb-24">
-      <div className="rounded-sm border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] md:p-7 lg:p-8">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] md:p-7 lg:p-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Cari Karya</label>
-            <div className="flex items-center gap-3 rounded-sm border border-white/12 bg-black/25 px-4 py-3.5 transition duration-300 focus-within:border-[#D4AF37]/45 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.2)]">
+            <div className="flex items-center gap-3 rounded-2xl border border-white/12 bg-black/25 px-4 py-3.5 transition duration-300 focus-within:border-[#D4AF37]/45 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.2)]">
               <Search size={17} className="text-white/44" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari karya, kategori, style, area, atau narasi..." className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45" />
             </div>
@@ -178,7 +178,7 @@ export default function KaryaArchive({ projects }: Props) {
 
           <div>
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Urutkan</label>
-            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-sm border border-white/10 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45">
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="az">A-Z</option>
             </select>
           </div>
@@ -202,16 +202,16 @@ export default function KaryaArchive({ projects }: Props) {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
           <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya</p>
-          <button type="button" onClick={resetFilters} className="min-h-11 rounded-sm border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Reset Filter</button>
+          <button type="button" onClick={resetFilters} className="min-h-11 rounded-full border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Reset Filter</button>
         </div>
 
         {activeFilters.length > 0 ? <div className="mt-4 flex flex-wrap gap-2">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
       </div>
 
-      {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-sm border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
+      {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
         <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
           {filteredProjects.map((project, index) => (
-            <article key={project.id} className="group relative flex h-full flex-col overflow-hidden rounded-sm border border-white/12 bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition duration-300 hover:-translate-y-0.5 hover:border-[#D4AF37]/30 hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)]">
+            <article key={project.id} className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition duration-300 hover:-translate-y-0.5 hover:border-[#D4AF37]/30 hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)]">
               {project.cover_image ? <div className="aspect-[16/10] overflow-hidden border-b border-white/10 bg-white/[0.02]"><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" /></div> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
