@@ -114,7 +114,6 @@ const portfolioWorks = [
     impact: 'Ruang terasa lebih terarah, fungsional, dan mudah digunakan.',
     type: 'Residential',
     year: '2025',
-    cover: '/hero.jpg',
   },
   {
     title: 'Project 02 — Workspace Interior',
@@ -123,7 +122,6 @@ const portfolioWorks = [
     impact: 'Ritme kerja lebih jelas, nyaman, dan produktif.',
     type: 'Workspace',
     year: '2024',
-    cover: '/hero.jpg',
   },
 ];
 
@@ -408,9 +406,8 @@ export default function Home() {
           <div className="mt-20 grid gap-8 lg:grid-cols-2">
             {portfolioWorks.map((work, index) => (
               <article key={work.title} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
-                <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10">
-                  <img src={work.cover} alt={work.title} className="h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-95" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#142030] via-[#142030]/20 to-transparent" />
+                <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_18%_16%,rgba(200,169,81,0.2),transparent_36%),linear-gradient(140deg,#1b2b3d_0%,#121e2b_42%,#0d151f_100%)]">
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_42%)]" />
                   <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
                     <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
                     <div className="flex gap-2">

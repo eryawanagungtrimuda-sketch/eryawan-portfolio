@@ -38,6 +38,11 @@ function projectAreaTags(project: Project) {
   return Array.from(set);
 }
 
+function getProjectTeaser(project: Project) {
+  const projectTeaser = project.problem || project.solution || project.impact;
+  return projectTeaser?.trim() ? projectTeaser : null;
+}
+
 function buildProjectBadges(project: Project, max = 4) {
   const deduped: string[] = [];
   const seen = new Set<string>();
@@ -211,7 +216,7 @@ export default function KaryaArchive({ projects }: Props) {
               <div className="flex h-full flex-col p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
-                <p className="mt-5 text-sm leading-[1.75] text-white/66 md:text-[15px]">{truncateText(project.problem || project.solution || project.impact || 'Narasi project akan segera tersedia.', 130)}</p>
+                {getProjectTeaser(project) ? <p className="mt-5 text-sm leading-[1.75] text-white/66 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
                 <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge>{project.area_type ? <Badge>{project.area_type}</Badge> : null}</div>
                 <Link href={`/karya/${project.slug}`} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition duration-300 hover:text-[#E2C866]">Lihat Studi Kasus <ArrowUpRight size={16} className="transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></Link>
               </div>
