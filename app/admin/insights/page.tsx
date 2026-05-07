@@ -19,12 +19,32 @@ export default function AdminInsightsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getSupabaseClient()
-      .from('insights')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data }) => setItems((data || []) as Insight[]))
-      .finally(() => setLoading(false));
+    let isMounted = true;
+
+    async function loadInsights() {
+      setLoading(true);
+      try {
+        const { data, error } = await getSupabaseClient()
+          .from('insights')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('[AdminInsightsPage] Failed to load insights', error.message);
+          return;
+        }
+
+        if (isMounted) setItems((data || []) as Insight[]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    void loadInsights();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const published = useMemo(() => items.filter((item) => item.is_published).length, [items]);
