@@ -50,12 +50,18 @@ export default function RevealOnScroll({ children, className = '', delay = 0, as
   }, [reducedMotion]);
 
   const Component = as as keyof JSX.IntrinsicElements;
+  const classes = [
+    'reveal',
+    isVisible ? 'is-visible' : '',
+    className || '',
+  ].filter(Boolean).join(' ');
+  const style = delay ? { transitionDelay: `${delay}ms` } : undefined;
 
   return (
     <Component
       ref={ref as never}
-      className={`reveal ${isVisible ? 'is-visible' : ''} ${className}`.trim()}
-      style={{ transitionDelay: reducedMotion ? '0ms' : `${delay}ms` }}
+      className={classes}
+      style={reducedMotion ? undefined : style}
     >
       {children}
     </Component>
