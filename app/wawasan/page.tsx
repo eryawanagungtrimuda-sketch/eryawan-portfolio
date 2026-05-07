@@ -13,18 +13,18 @@ export default async function WawasanPage() {
   const insights = await getPublishedInsights();
 
   return (
-    <main className="min-h-screen bg-[#080807] px-5 py-16 text-[#F4F1EA] md:px-8 lg:px-12">
-      <section className="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-8 md:p-12">
+    <main className="min-h-screen bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+      <section className="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-6 sm:p-8 md:p-12">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Insight Hub</p>
-        <h1 className="font-display mt-4 text-4xl font-normal leading-[0.98] tracking-[-0.02em] md:text-6xl">Wawasan Desain</h1>
-        <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/70 md:text-lg">
+        <h1 className="font-display mt-3 text-[2rem] font-normal leading-[1.02] tracking-[-0.02em] sm:mt-4 sm:text-[2.35rem] md:text-6xl">Wawasan Desain</h1>
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-white/75 sm:text-base sm:leading-relaxed md:mt-5 md:text-lg">
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/karya" className="rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+        <div className="mt-6 flex flex-wrap gap-3 md:mt-8">
+          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
             Lihat Karya
           </Link>
-          <Link href="/" className="rounded-sm border border-white/15 px-5 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
+          <Link href="/" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-5 py-2.5 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
             Kembali ke Beranda
           </Link>
         </div>
@@ -41,16 +41,16 @@ export default async function WawasanPage() {
           </div>
         </section>
       ) : (
-        <section className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <section className="mx-auto mt-8 grid max-w-6xl grid-cols-1 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
           {insights.map((item) => (
             <article key={item.id} className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] transition hover:border-white/20 hover:bg-white/[0.04]">
               {item.cover_image ? (
-                <div className="aspect-[16/10] overflow-hidden border-b border-white/10">
+                <div className="aspect-[16/9] max-h-48 overflow-hidden border-b border-white/10 sm:aspect-[16/10] sm:max-h-none">
                   <img src={item.cover_image} alt={item.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
                 </div>
               ) : null}
 
-              <div className="flex flex-1 flex-col p-6">
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex flex-wrap gap-2">
                   <span className="rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-2.5 py-1 text-[11px] uppercase tracking-wide text-[#D4AF37]">
                     {item.category || 'Uncategorized'}
@@ -62,10 +62,10 @@ export default async function WawasanPage() {
                   ) : null}
                 </div>
 
-                <h2 className="font-display mt-4 text-2xl font-normal leading-[1.08] tracking-[-0.01em]">{item.title}</h2>
-                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
+                <h2 className="font-display mt-3 text-[1.65rem] font-normal leading-[1.14] tracking-[-0.01em] sm:mt-4 sm:text-2xl">{item.title}</h2>
+                <p className="mt-3 line-clamp-4 text-sm leading-7 text-white/70 sm:line-clamp-3 sm:leading-relaxed">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
 
-                <Link className="mt-6 inline-flex w-fit items-center gap-2 text-sm text-[#D4AF37] transition group-hover:text-[#e6c461]" href={`/wawasan/${item.slug}`}>
+                <Link className="mt-5 inline-flex min-h-11 w-fit items-center gap-2 text-sm text-[#D4AF37] transition group-hover:text-[#e6c461] sm:mt-6" href={`/wawasan/${item.slug}`}>
                   Baca Wawasan <span aria-hidden>→</span>
                 </Link>
               </div>
