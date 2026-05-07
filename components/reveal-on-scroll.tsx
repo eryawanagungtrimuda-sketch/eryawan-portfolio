@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
 type RevealOnScrollProps = {
@@ -55,13 +56,18 @@ export default function RevealOnScroll({ children, className = '', delay = 0, as
     isVisible ? 'is-visible' : '',
     className || '',
   ].filter(Boolean).join(' ');
-  const style = delay ? { transitionDelay: `${delay}ms` } : undefined;
+  const revealStyle: CSSProperties | undefined =
+    reducedMotion
+      ? undefined
+      : delay > 0
+        ? { transitionDelay: `${delay}ms` }
+        : undefined;
 
   return (
     <Component
       ref={ref as never}
       className={classes}
-      style={reducedMotion ? undefined : style}
+      style={revealStyle}
     >
       {children}
     </Component>
