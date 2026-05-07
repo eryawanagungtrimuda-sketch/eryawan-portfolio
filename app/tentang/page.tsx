@@ -79,7 +79,7 @@ export default function TentangPage() {
               <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/30 md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
                 <h3 className="font-display mt-6 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-5 text-base leading-[1.75] text-white/65">{item.description}</p>
+                <p className="mt-5 text-base leading-[1.75] text-white/68">{item.description}</p>
               </article>
             ))}
           </div>
@@ -108,7 +108,7 @@ export default function TentangPage() {
             {kontribusiPerusahaan.map((item) => (
               <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 md:p-10">
                 <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-5 text-base leading-[1.75] text-white/66">{item.detail}</p>
+                <p className="mt-5 text-base leading-[1.75] text-white/68">{item.detail}</p>
               </article>
             ))}
           </div>
@@ -136,7 +136,7 @@ export default function TentangPage() {
           <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
             Siap membangun ruang yang lebih terarah dan berdampak?
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/70 md:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/68 md:text-lg">
             Jika Anda membutuhkan partner desain untuk menyusun keputusan ruang yang jelas, efisien, dan selaras dengan tujuan proyek, mari mulai diskusinya.
           </p>
           <Button href="/kontak" className="mt-10 px-8">

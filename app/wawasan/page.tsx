@@ -21,10 +21,10 @@ export default async function WawasanPage() {
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 md:mt-8">
-          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
             Lihat Karya
           </Link>
-          <Link href="/" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-5 py-2.5 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
+          <Link href="/" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-5 py-2.5 font-sans text-sm text-white/80 transition hover:border-white/30 hover:text-white">
             Kembali ke Beranda
           </Link>
         </div>
@@ -36,7 +36,7 @@ export default async function WawasanPage() {
             <p className="font-sans text-lg text-white/80">Belum ada wawasan dipublikasikan.</p>
             <div className="mt-6 flex justify-center gap-3">
               <Link className="rounded-sm border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/kontak">Diskusikan Project</Link>
-              <Link className="rounded-sm border border-white/15 px-4 py-2 text-sm text-white/80 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>
+              <Link className="rounded-sm border border-white/15 px-4 py-2 font-sans text-sm text-white/80 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>
             </div>
           </div>
         </section>
@@ -65,7 +65,7 @@ export default async function WawasanPage() {
                 <h2 className="font-display mt-3 text-[1.65rem] font-normal leading-[1.14] tracking-[-0.01em] sm:mt-4 sm:text-2xl">{item.title}</h2>
                 <p className="mt-3 line-clamp-4 font-sans text-sm leading-7 text-white/70 sm:line-clamp-3 sm:leading-relaxed">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
 
-                <Link className="mt-5 inline-flex min-h-11 w-fit items-center gap-2 text-sm text-[#D4AF37] transition group-hover:text-[#e6c461] sm:mt-6" href={`/wawasan/${item.slug}`}>
+                <Link className="mt-5 inline-flex min-h-11 w-fit items-center gap-2 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition group-hover:text-[#e6c461] sm:mt-6" href={`/wawasan/${item.slug}`}>
                   Baca Wawasan <span aria-hidden>→</span>
                 </Link>
               </div>
