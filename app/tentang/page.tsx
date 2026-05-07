@@ -61,7 +61,7 @@ export default function TentangPage() {
           <h1 className="font-display mt-5 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
             Executive Summary
           </h1>
-          <p className="mt-8 max-w-4xl text-base leading-[1.75] text-white/72 sm:text-lg md:text-xl">
+          <p className="mt-8 max-w-4xl text-base leading-[1.75] text-white/64 sm:text-lg md:text-xl">
             Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
           </p>
           <Button href="/kontak" className="mt-10 px-8">
@@ -79,7 +79,7 @@ export default function TentangPage() {
               <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/30 md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
                 <h3 className="font-display mt-6 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-5 text-base leading-[1.75] text-white/68">{item.description}</p>
+                <p className="mt-5 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
           </div>
@@ -91,7 +91,7 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Nilai yang Dibawa</h2>
           <div className="mt-10 grid gap-4">
             {nilaiDibawa.map((item) => (
-              <div key={item} className="border border-white/12 bg-white/[0.02] p-6 text-base leading-[1.75] text-white/75 md:text-lg">
+              <div key={item} className="border border-white/12 bg-white/[0.02] p-6 text-base leading-[1.75] text-white/64 md:text-lg">
                 {item}
               </div>
             ))}
@@ -108,7 +108,7 @@ export default function TentangPage() {
             {kontribusiPerusahaan.map((item) => (
               <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 md:p-10">
                 <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-5 text-base leading-[1.75] text-white/68">{item.detail}</p>
+                <p className="mt-5 text-base leading-[1.75] text-white/62">{item.detail}</p>
               </article>
             ))}
           </div>
@@ -121,7 +121,7 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Diferensiasi senior</h2>
           <ul className="mt-10 grid gap-4">
             {diferensiasiSenior.map((item) => (
-              <li key={item} className="border border-[#C8A951]/25 bg-[#C8A951]/[0.06] p-6 text-base leading-[1.75] text-white/80 md:text-lg">
+              <li key={item} className="border border-[#C8A951]/25 bg-[#C8A951]/[0.06] p-6 text-base leading-[1.75] text-white/66 md:text-lg">
                 {item}
               </li>
             ))}
@@ -136,7 +136,7 @@ export default function TentangPage() {
           <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
             Siap membangun ruang yang lebih terarah dan berdampak?
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/68 md:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/62 md:text-lg">
             Jika Anda membutuhkan partner desain untuk menyusun keputusan ruang yang jelas, efisien, dan selaras dengan tujuan proyek, mari mulai diskusinya.
           </p>
           <Button href="/kontak" className="mt-10 px-8">

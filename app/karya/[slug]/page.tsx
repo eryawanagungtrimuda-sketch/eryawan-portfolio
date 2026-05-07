@@ -19,7 +19,7 @@ function TextBlock({ label, body, index, fallback }: { label: string; body?: str
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#C8A951]">0{index}</p>
         <h2 className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-[#D4AF37]">{label}</h2>
       </div>
-      <p className="mt-4 max-w-3xl whitespace-pre-line font-sans text-lg leading-[1.75] text-white/70 lg:mt-0">{body || fallback}</p>
+      <p className="mt-4 max-w-3xl whitespace-pre-line font-sans text-lg leading-[1.75] text-white/62 lg:mt-0">{body || fallback}</p>
     </article>
   );
 }
@@ -52,7 +52,7 @@ export default async function KaryaDetailPage({ params }: Props) {
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] sm:text-[2.35rem] md:text-7xl">{project.title}</h1>
-          <p className="mt-8 max-w-4xl text-base leading-[1.7] text-white/74 sm:text-lg md:text-2xl">{openingDescription}</p>
+          <p className="mt-8 max-w-4xl text-base leading-[1.7] text-white/64 sm:text-lg md:text-2xl">{openingDescription}</p>
         </section>
 
 
