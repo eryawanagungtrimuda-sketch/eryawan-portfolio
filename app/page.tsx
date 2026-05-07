@@ -70,10 +70,26 @@ const decisions = [
 ];
 
 const impacts = [
-  { label: 'Efisiensi Sirkulasi', direction: 'up' },
-  { label: 'Waktu Ambil Keputusan', direction: 'down' },
-  { label: 'Revisi Desain', direction: 'down' },
-  { label: 'Clarity Brief', direction: 'up' },
+  {
+    title: 'Efisiensi Meningkat',
+    description: 'Alur ruang lebih jelas, aktivitas bergerak lebih natural.',
+    direction: 'up',
+  },
+  {
+    title: 'Keputusan Lebih Cepat',
+    description: 'Prioritas desain lebih mudah dibaca dan disepakati.',
+    direction: 'up',
+  },
+  {
+    title: 'Revisi Berkurang',
+    description: 'Masalah utama dibaca sejak awal, bukan setelah visual selesai.',
+    direction: 'down',
+  },
+  {
+    title: 'Ruang Lebih Terarah',
+    description: 'Fungsi, mood, dan pengalaman ruang bekerja sebagai satu sistem.',
+    direction: 'up',
+  },
 ];
 
 const differentiations = [
@@ -331,36 +347,40 @@ export default async function Home() {
       </section>
 
       <section id="impact" className="relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(200,169,81,0.055),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.018),transparent_44%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_8%,rgba(200,169,81,0.08),transparent_28%),radial-gradient(circle_at_82%_85%,rgba(200,169,81,0.06),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="text-center">
+          <div className="max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Impact</p>
             <h2 className="font-display mt-5 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
               Dampak yang Terukur
             </h2>
+            <p className="mt-6 max-w-2xl font-sans text-base leading-[1.7] text-white/58 md:text-lg">
+              Hasil desain dibaca sebagai outcome yang nyata: lebih cepat dipahami, lebih minim friksi, dan lebih terarah dalam eksekusi.
+            </p>
           </div>
 
-          <div className="mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-4 sm:gap-5 md:grid-cols-2 lg:gap-6">
             {impacts.map((impact, index) => (
-              <div key={impact.label} className="group border border-white/10 bg-white/[0.025] px-6 py-10 text-center transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:bg-white/[0.045]">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/50">0{index + 1}</p>
-                <div className="mt-8 flex justify-center text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]">
-                  {impact.direction === 'up' ? <ArrowUp size={64} strokeWidth={1.45} /> : <ArrowDown size={64} strokeWidth={1.45} />}
+              <article
+                key={impact.title}
+                className="group relative overflow-hidden rounded-sm border border-white/10 bg-white/[0.025] px-5 py-5 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/35 hover:bg-white/[0.04] sm:px-6"
+              >
+                <span className="pointer-events-none absolute left-0 top-0 h-px w-20 bg-gradient-to-r from-[#C8A951]/65 to-transparent" />
+                <span className="pointer-events-none absolute right-0 top-0 h-12 w-12 border-r border-t border-[#C8A951]/15 transition duration-300 group-hover:border-[#C8A951]/35" />
+                <div className="flex items-start justify-between gap-4">
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">0{index + 1}</p>
+                  <span className="mt-0.5 text-[#C8A951]/75 transition duration-300 group-hover:text-[#C8A951]">
+                    {impact.direction === 'up' ? <ArrowUp size={16} strokeWidth={2.2} /> : <ArrowDown size={16} strokeWidth={2.2} />}
+                  </span>
                 </div>
-                <p className="mt-8 font-mono text-xs font-black uppercase tracking-[0.2em] text-white/62">
-                  {impact.direction === 'up' ? '↑ ' : '↓ '}{impact.label}
+                <h3 className="mt-4 font-sans text-lg font-semibold leading-tight tracking-[-0.01em] text-white/92 sm:text-[1.2rem]">
+                  {impact.title}
+                </h3>
+                <p className="mt-3 max-w-md font-sans text-sm leading-6 text-white/60 sm:text-[0.95rem]">
+                  {impact.description}
                 </p>
-              </div>
+              </article>
             ))}
-          </div>
-
-          <div className="mx-auto mt-20 max-w-3xl text-center">
-            <p className="font-display text-lg italic leading-8 text-white/86 md:text-2xl">
-              “Desain yang terukur menghasilkan keputusan yang lebih pasti.”
-            </p>
-            <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/32">
-              * Parameter optimasi pada setiap fase kolaborasi.
-            </p>
           </div>
         </div>
       </section>
