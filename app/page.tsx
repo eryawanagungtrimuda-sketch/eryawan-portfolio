@@ -292,27 +292,27 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.78fr_1.22fr] lg:gap-24">
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Design Decisions</p>
-            <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Design Decisions</p>
+            <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F5F2EC] md:text-7xl">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-8 max-w-xl font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
+            <p className="mt-8 max-w-xl font-sans text-lg leading-[1.7] text-white/66 md:text-xl">
               Saya melihat ruang sebagai rangkaian keputusan. Dari sirkulasi, pencahayaan, material, hingga ritme aktivitas—semuanya harus bekerja sebagai sistem, bukan sekadar komposisi visual.
             </p>
-            <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/90 md:text-4xl">
-              Saya tidak merancang ruang untuk terlihat baik.<br />Saya merancang agar ruang bekerja dengan benar.
+            <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/86 md:text-4xl">
+              Saya tidak merancang ruang untuk terlihat baik.<br /><span className="text-[#D4AF37]/88">Saya merancang agar ruang bekerja dengan benar.</span>
             </p>
           </div>
 
           <div className="space-y-12 lg:pt-3">
             {decisions.map((decision, index) => (
-              <article key={decision.title} className="group relative border-l border-white/10 pl-8 transition duration-300 hover:border-[#C8A951]/25 md:pl-10">
-                <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-[#C8A951]/55 opacity-70 transition duration-300 group-hover:opacity-100" />
+              <article key={decision.title} className="group relative border-l border-white/10 pl-8 transition duration-300 hover:border-[#C8A951]/35 md:pl-10">
+                <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-[#C8A951]/45 opacity-80 transition duration-300 group-hover:bg-[#D4AF37]/70 group-hover:opacity-100" />
                 <p className="mb-4 font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]/70">0{index + 1}</p>
-                <h3 className="max-w-2xl text-xl font-semibold leading-8 tracking-[-0.025em] text-white/90 md:text-2xl">
+                <h3 className="max-w-2xl font-sans text-xl font-semibold leading-8 tracking-[-0.025em] text-white/88 md:text-2xl">
                   {decision.title}
                 </h3>
-                <p className="mt-4 max-w-2xl font-sans text-base leading-[1.7] text-white/66 md:text-lg">
+                <p className="mt-4 max-w-2xl font-sans text-base leading-[1.72] text-white/62 md:text-lg">
                   {decision.description}
                 </p>
               </article>
