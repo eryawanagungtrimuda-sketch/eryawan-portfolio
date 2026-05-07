@@ -9,7 +9,7 @@ export default async function KaryaPage() {
   const projects = await getPublishedProjects();
 
   return (
-    <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
+    <main className="min-h-screen bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
@@ -20,7 +20,7 @@ export default async function KaryaPage() {
 
         <section className="py-20 md:py-28 lg:py-32">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Beranda / Karya</p>
-          <h1 className="font-display mt-7 max-w-4xl text-5xl font-normal leading-[1.02] tracking-[-0.04em] md:text-7xl">
+          <h1 className="font-display mt-7 max-w-4xl text-[2.05rem] font-normal leading-[1.04] tracking-[-0.035em] sm:text-[2.4rem] md:text-7xl">
             Karya Berbasis Keputusan
           </h1>
           <p className="mt-9 max-w-2xl font-sans text-base leading-[1.8] text-white/70 md:text-xl md:leading-[1.75]">

@@ -138,7 +138,7 @@ export default function AdminDashboardCMS() {
   return (
     <div className="py-14">
       <section>
-        <div className="flex items-end justify-between gap-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Overview</p>
             <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Project Overview</h2>
@@ -146,7 +146,7 @@ export default function AdminDashboardCMS() {
           <div className="hidden h-px flex-1 bg-white/[0.07] md:block" />
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-sm border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
@@ -178,7 +178,7 @@ export default function AdminDashboardCMS() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Projects</p>
             <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Daftar Project</h2>
           </div>
-          <Link href="/admin/projects/new" className="inline-flex items-center justify-center rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
+          <Link href="/admin/projects/new" className="inline-flex min-h-11 items-center justify-center rounded-[4px] bg-[#D4AF37] px-6 py-3.5 text-center text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
             Tambah Project
           </Link>
         </div>
@@ -218,11 +218,11 @@ export default function AdminDashboardCMS() {
                   </div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em]">{project.category?.trim() && project.design_category?.trim() && project.design_style?.trim() && (project.area_type?.trim() || (project.area_tags || []).length > 0) ? <span className="text-emerald-300">Siap Filter</span> : <span className="text-amber-300">Lengkapi Taxonomy</span>}</p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
-                  <div className="flex items-center gap-3 md:justify-end">
-                    <Link href={`/admin/projects/${project.id}/edit`} className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
+                  <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                    <Link href={`/admin/projects/${project.id}/edit`} className="min-h-11 rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
                       Edit
                     </Link>
-                    <button type="button" disabled={deletingId === project.id} onClick={() => deleteProject(project)} className="rounded-sm border border-red-400/20 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200/80 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50">
+                    <button type="button" disabled={deletingId === project.id} onClick={() => deleteProject(project)} className="min-h-11 rounded-sm border border-red-400/20 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200/80 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50">
                       {deletingId === project.id ? 'Deleting' : 'Delete'}
                     </button>
                   </div>

@@ -51,17 +51,17 @@ const diferensiasiSenior = [
 export default function TentangPage() {
   return (
     <main className="min-h-screen bg-[#080807] font-sans text-[#F4F1EA]">
-      <section className="relative overflow-hidden px-5 py-20 md:px-10 lg:px-16 lg:py-28">
+      <section className="relative overflow-hidden px-4 py-16 sm:px-5 md:px-8 lg:px-12 lg:py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-10">
             <BackButton label="Kembali ke Beranda" fallbackHref="/" />
           </div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Tentang</p>
-          <h1 className="font-display mt-5 max-w-5xl text-5xl font-normal leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] md:text-7xl">
+          <h1 className="font-display mt-5 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
             Executive Summary
           </h1>
-          <p className="mt-8 max-w-4xl text-lg leading-[1.75] text-white/72 md:text-xl">
+          <p className="mt-8 max-w-4xl text-base leading-[1.75] text-white/72 sm:text-lg md:text-xl">
             Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
           </p>
           <Button href="/kontak" className="mt-10 px-8">
