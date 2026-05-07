@@ -11,7 +11,7 @@ type ButtonProps = {
   ariaLabel?: string;
 };
 
-const baseStyles = 'inline-flex items-center justify-center rounded-[4px] px-7 py-4 font-mono text-sm font-semibold uppercase tracking-[0.1em] transition duration-300 hover:-translate-y-0.5';
+const baseStyles = 'inline-flex min-h-11 max-w-full items-center justify-center rounded-[4px] px-6 py-3.5 text-center font-mono text-sm font-semibold uppercase tracking-[0.1em] transition duration-300 hover:-translate-y-0.5';
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-[#C8A951] text-[#080807] hover:bg-[#D7BD72]',

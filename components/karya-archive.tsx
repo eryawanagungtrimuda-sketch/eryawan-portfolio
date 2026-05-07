@@ -74,7 +74,7 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
         {options.map((item) => {
           const active = item === value;
           return (
-            <button key={item} type="button" onClick={() => onChange(item)} className={`rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition duration-300 ${
+            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition duration-300 ${
               active ? 'border-[#D4AF37]/55 bg-[#D4AF37]/12 text-[#D4AF37]' : 'border-white/10 text-white/45 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'
             }`}>
               {item}
@@ -195,14 +195,14 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="flex flex-wrap gap-2.5">
             {areaTagOptions.map((tag) => {
               const active = selectedAreaTags.includes(tag);
-              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition duration-300 ${active ? 'border-[#D4AF37]/55 bg-[#D4AF37]/12 text-[#D4AF37]' : 'border-white/10 text-white/45 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{tag}</button>;
+              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition duration-300 ${active ? 'border-[#D4AF37]/55 bg-[#D4AF37]/12 text-[#D4AF37]' : 'border-white/10 text-white/45 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{tag}</button>;
             })}
           </div>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
           <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya</p>
-          <button type="button" onClick={resetFilters} className="rounded-sm border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Reset Filter</button>
+          <button type="button" onClick={resetFilters} className="min-h-11 rounded-sm border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Reset Filter</button>
         </div>
 
         {activeFilters.length > 0 ? <div className="mt-4 flex flex-wrap gap-2">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}

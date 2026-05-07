@@ -134,7 +134,7 @@ export default async function Home() {
     <main className="min-h-screen overflow-hidden bg-[#080807] font-sans text-[#F4F1EA]">
       <section
         id="home"
-        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-5 py-6 md:px-10 lg:px-20 xl:px-32"
+        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-4 py-6 sm:px-5 md:px-8 lg:px-12 xl:px-24"
         style={{
           backgroundImage:
             "linear-gradient(90deg, rgba(8,8,7,0.92) 0%, rgba(8,8,7,0.78) 34%, rgba(8,8,7,0.46) 66%, rgba(8,8,7,0.18) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 45%, rgba(8,8,7,0.78) 100%), url('/hero.jpg')",
@@ -178,7 +178,7 @@ export default async function Home() {
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-6xl text-[clamp(3rem,5.7vw,6.45rem)] font-normal uppercase leading-[1.08] tracking-[-0.045em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)]">
+            <h1 className="font-display max-w-6xl text-[2rem] font-normal uppercase leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.4rem] md:text-[clamp(3rem,5.7vw,6.45rem)]">
               Desain Bukan Sekadar Visual.<br />
               <span className="block text-[#C8A951] italic tracking-[-0.055em]">Ini Adalah Keputusan Bisnis.</span>
             </h1>
@@ -187,14 +187,14 @@ export default async function Home() {
               Saya membantu klien dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
             </p>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="min-w-[300px] px-8 py-4.5">
+            <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="w-full sm:w-auto">
                 Diskusikan Proyek Secara Strategis
               </Button>
-              <Button href="#framework" variant="secondary" className="min-w-[250px] px-8 py-4.5">
+              <Button href="#framework" variant="secondary" className="w-full sm:w-auto">
                 Lihat Cara Saya Berpikir
               </Button>
-              <Button href="/tentang" variant="secondary" className="min-w-[220px] px-8 py-4.5">
+              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto">
                 Tentang Saya
               </Button>
             </div>

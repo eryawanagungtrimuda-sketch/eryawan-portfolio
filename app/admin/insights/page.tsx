@@ -51,12 +51,12 @@ export default function AdminInsightsPage() {
 
   return (
     <AdminAuthGuard>
-      <main id="admin-shell" className="min-h-screen bg-[#080807] px-5 py-10 text-[#F4F1EA]">
+      <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl space-y-8">
           <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
-                <h1 className="text-4xl font-semibold md:text-5xl">Kelola Wawasan</h1>
+                <h1 className="font-display text-[2rem] font-normal tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Kelola Wawasan</h1>
                 <p className="mt-2 max-w-2xl text-sm text-white/70 md:text-base">Kelola artikel wawasan desain untuk publikasi halaman /wawasan.</p>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -104,7 +104,7 @@ export default function AdminInsightsPage() {
                         <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${item.is_published ? 'bg-emerald-400/15 text-emerald-300' : 'bg-amber-400/15 text-amber-300'}`}>{item.is_published ? 'Published' : 'Draft'}</span></td>
                         <td className="px-4 py-3 text-white/80">{formatDate(item.created_at)}</td>
                         <td className="px-4 py-3">
-                          <div className="flex gap-3">
+                          <div className="flex flex-wrap gap-3">
                             <Link href={`/admin/insights/${item.id}/edit`} className="text-[#F6C453] hover:underline">Edit</Link>
                             <button
                               className="text-red-300 hover:underline"

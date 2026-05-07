@@ -39,7 +39,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   const areaTags = (project.area_tags || []).filter(Boolean);
 
   return (
-    <main className="min-h-screen bg-[#080807] px-5 py-8 font-sans text-[#F4F1EA] md:px-10 lg:px-16 lg:py-12">
+    <main className="min-h-screen bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
@@ -49,10 +49,10 @@ export default async function KaryaDetailPage({ params }: Props) {
         </div>
 
         <section className="py-20 md:py-28">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
+          <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Decision-Based Case Study</p>
-          <h1 className="font-display mt-6 max-w-5xl text-5xl font-normal leading-[1.05] tracking-[-0.04em] md:text-7xl">{project.title}</h1>
-          <p className="mt-8 max-w-4xl font-sans text-xl leading-[1.65] text-white/74 md:text-2xl">{openingDescription}</p>
+          <h1 className="font-display mt-6 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] sm:text-[2.35rem] md:text-7xl">{project.title}</h1>
+          <p className="mt-8 max-w-4xl text-base leading-[1.7] text-white/74 sm:text-lg md:text-2xl">{openingDescription}</p>
         </section>
 
 
@@ -134,7 +134,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         </section>
 
         <section className="border-t border-white/10 py-16">
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/kontak"
               className="inline-flex items-center rounded-sm border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E2C866]"
