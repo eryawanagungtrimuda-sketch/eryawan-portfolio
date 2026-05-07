@@ -14,7 +14,7 @@ type Props = {
 
 function TextBlock({ label, body, index, fallback }: { label: string; body?: string | null; index: number; fallback: string }) {
   return (
-    <article className="border-l border-white/10 pl-6 lg:grid lg:grid-cols-[0.8fr_2fr] lg:gap-12 lg:border-l-0 lg:border-t lg:pl-0 lg:pt-8">
+    <article className="border-l border-white/10 pl-6 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:border-[#C8A951]/35 lg:grid lg:grid-cols-[0.8fr_2fr] lg:gap-12 lg:border-l-0 lg:border-t lg:pl-0 lg:pt-8">
       <div>
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#C8A951]">0{index}</p>
         <h2 className="mt-3 text-sm font-bold uppercase tracking-[0.16em] text-[#D4AF37]">{label}</h2>
@@ -64,7 +64,7 @@ export default async function KaryaDetailPage({ params }: Props) {
             </div>
             <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-3xl">
               {project.category ? (
-                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
+                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04]">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Category</p>
                   <p className="mt-2 font-sans text-base text-white/86">{project.category}</p>
                 </article>
@@ -137,13 +137,13 @@ export default async function KaryaDetailPage({ params }: Props) {
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/kontak"
-              className="inline-flex items-center rounded-2xl border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-[#E2C866]"
+              className="inline-flex items-center rounded-2xl border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
               Diskusikan Project Serupa
             </Link>
             <Link
               href="/karya"
-              className="inline-flex items-center rounded-2xl border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10"
+              className="inline-flex items-center rounded-2xl border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/10"
             >
               Kembali ke Semua Karya
             </Link>

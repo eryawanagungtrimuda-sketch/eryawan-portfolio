@@ -168,10 +168,10 @@ export default async function Home() {
 
           <div className="hidden items-start gap-8 font-sans text-sm font-medium text-white/62 lg:flex">
             <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="/">Beranda</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/karya">Karya</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/wawasan">Wawasan</a>
-            <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="#contact">Kontak</a>
+            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/tentang">Tentang</a>
+            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/karya">Karya</a>
+            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/wawasan">Wawasan</a>
+            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="#contact">Kontak</a>
           </div>
 
           <Button href="mailto:eryawanagungtrimuda@gmail.com" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
@@ -204,13 +204,13 @@ export default async function Home() {
             </p>
 
             <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="w-full sm:w-auto">
+              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Diskusikan Proyek Secara Strategis
               </Button>
-              <Button href="#framework" variant="secondary" className="w-full sm:w-auto">
+              <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Lihat Cara Saya Berpikir
               </Button>
-              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto">
+              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Tentang Saya
               </Button>
             </div>
@@ -245,7 +245,7 @@ export default async function Home() {
 
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:bg-white/[0.035] md:p-10">
+              <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                 <div className="mb-14 flex items-center justify-between">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
@@ -281,7 +281,7 @@ export default async function Home() {
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:bg-white/[0.035] md:p-10">
+                <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                   <div className="mb-16 flex items-center justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
