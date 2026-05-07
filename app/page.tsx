@@ -325,10 +325,8 @@ export default async function Home() {
           <div className="relative space-y-5 lg:pt-3">
             <span className="pointer-events-none absolute bottom-4 left-[18px] top-4 hidden w-px bg-gradient-to-b from-[#C8A951]/20 via-white/10 to-transparent md:block" />
             {decisions.map((decision, index) => (
-              <article
-                key={decision.title}
-                className="group relative overflow-hidden border border-white/10 bg-white/[0.018] p-5 pl-12 transition duration-300 hover:border-[#C8A951]/35 hover:bg-white/[0.03] md:p-7 md:pl-14"
-              >
+              <RevealOnScroll key={decision.title} delay={Math.min(index * 120, 360)}>
+              <article className="group relative overflow-hidden border border-white/10 bg-white/[0.018] p-5 pl-12 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:bg-white/[0.04] hover:shadow-[0_18px_40px_rgba(200,169,81,0.12)] md:p-7 md:pl-14">
                 <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 md:block" />
                 <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 md:block" />
                 <div className="flex items-center justify-between gap-4">
@@ -342,6 +340,7 @@ export default async function Home() {
                   {decision.description}
                 </p>
               </article>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
@@ -363,7 +362,7 @@ export default async function Home() {
 
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:gap-4">
               {impacts.map((impact, index) => (
-                <RevealOnScroll key={impact.title} delay={index * 80}>
+                <RevealOnScroll key={impact.title} delay={Math.min(index * 120, 360)}>
                 <article className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] px-5 py-5 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/45 hover:bg-white/[0.05] hover:shadow-[0_24px_48px_rgba(200,169,81,0.16)] sm:px-6">
                   <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#C8A951]/65 to-transparent" />
                   <div className="flex items-start justify-between gap-4">
@@ -438,7 +437,7 @@ export default async function Home() {
 
             <a href="/karya" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
               Lihat Semua Karya
-              <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={20} />
+              <MoveRight className="text-[#C8A951] transition duration-300 motion-safe:group-hover:translate-x-1" size={20} />
             </a>
           </div>
 
@@ -449,7 +448,7 @@ export default async function Home() {
               const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
 
               return (
-                <RevealOnScroll key={project.id} delay={index * 80}>
+                <RevealOnScroll key={project.id} delay={Math.min(index * 120, 360)}>
                 <article className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:shadow-[0_30px_64px_rgba(0,0,0,0.4)]">
                   <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0f1925]">
                     {project.cover_image ? (
@@ -500,7 +499,7 @@ export default async function Home() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wawasanCards.map((article, index) => (
-              <RevealOnScroll key={article.title} delay={index * 80}>
+              <RevealOnScroll key={article.title} delay={Math.min(index * 120, 360)}>
               <article className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:bg-white/[0.05] hover:shadow-[0_20px_42px_rgba(0,0,0,0.32)]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
@@ -524,7 +523,7 @@ export default async function Home() {
             className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
           >
             Lihat Semua Wawasan
-            <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
+            <MoveRight className="text-[#C8A951] transition duration-300 motion-safe:group-hover:translate-x-1" size={18} />
           </a>
         </div>
       </section>

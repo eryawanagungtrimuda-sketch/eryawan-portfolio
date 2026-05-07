@@ -44,7 +44,7 @@ export default async function WawasanPage() {
       ) : (
         <section className="mx-auto mt-8 grid max-w-6xl grid-cols-1 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
           {insights.map((item, index) => (
-            <RevealOnScroll key={item.id} delay={index * 80}>
+            <RevealOnScroll key={item.id} delay={Math.min(index * 120, 360)}>
             <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/45 hover:bg-white/[0.05] hover:shadow-[0_24px_52px_rgba(0,0,0,0.36)]">
               {item.cover_image ? (
                 <div className="aspect-[16/9] max-h-48 overflow-hidden border-b border-white/10 sm:aspect-[16/10] sm:max-h-none">

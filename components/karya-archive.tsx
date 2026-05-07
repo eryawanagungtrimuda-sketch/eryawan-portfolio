@@ -212,7 +212,7 @@ export default function KaryaArchive({ projects }: Props) {
       {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
         <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
           {filteredProjects.map((project, index) => (
-            <RevealOnScroll key={project.id} delay={(index % 4) * 80}>
+            <RevealOnScroll key={project.id} delay={Math.min(index * 120, 360)}>
             <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/50 hover:bg-white/[0.05] hover:shadow-[0_30px_64px_rgba(0,0,0,0.4)]">
               {project.cover_image ? <div className="aspect-[16/10] overflow-hidden border-b border-white/10 bg-white/[0.02]"><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" /></div> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
