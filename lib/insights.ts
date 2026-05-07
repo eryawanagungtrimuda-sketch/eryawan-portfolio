@@ -1,0 +1,76 @@
+import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
+import type { Insight, InsightSourceType } from './types';
+
+const insightColumns = 'id,title,slug,category,source_type,source_project_id,cover_image,excerpt,content,ai_prompt_source,is_published,created_at,updated_at';
+
+function slugify(value: string) {
+  return value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+}
+
+export async function getPublishedInsights() {
+  if (!isSupabaseConfigured) return [] as Insight[];
+  const supabase = createSupabaseServerClient();
+  const { data } = await supabase.from('insights').select(insightColumns).eq('is_published', true).order('created_at', { ascending: false });
+  return (data || []) as Insight[];
+}
+
+export async function getPublishedInsightBySlug(slug: string) {
+  if (!isSupabaseConfigured) return null;
+  const supabase = createSupabaseServerClient();
+  const { data } = await supabase.from('insights').select(insightColumns).eq('slug', slug).eq('is_published', true).maybeSingle();
+  return (data as Insight) || null;
+}
+
+export async function getInsightById(id: string) {
+  if (!isSupabaseConfigured) return null;
+  const supabase = createSupabaseServerClient();
+  const { data } = await supabase.from('insights').select(insightColumns).eq('id', id).maybeSingle();
+  return (data as Insight) || null;
+}
+
+export async function createInsight(payload: Partial<Insight>) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase.from('insights').insert(payload).select(insightColumns).single();
+  if (error) throw error;
+  return data as Insight;
+}
+
+export async function updateInsight(id: string, payload: Partial<Insight>) {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase.from('insights').update(payload).eq('id', id).select(insightColumns).single();
+  if (error) throw error;
+  return data as Insight;
+}
+
+export async function createInsightDraftFromProject(projectId: string) {
+  const supabase = createSupabaseServerClient();
+  const { data: project, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
+  if (error || !project) throw error || new Error('Project tidak ditemukan.');
+  const title = `Pelajaran Desain dari ${project.title}`;
+  const excerpt = `Wawasan ini membaca keputusan ruang, masalah utama, dan dampak desain dari project ${project.title}.`;
+  const content = [
+    `# ${title}`,
+    '',
+    `## Konteks\n${project.konteks || '-'}`,
+    `\n## Masalah Utama\n${project.problem || '-'}`,
+    `\n## Konflik\n${project.konflik || '-'}`,
+    `\n## Solusi\n${project.solution || '-'}`,
+    `\n## Keputusan Desain\n${project.keputusan_desain || '-'}`,
+    `\n## Pendekatan\n${project.pendekatan || '-'}`,
+    `\n## Dampak\n${project.dampak || project.impact || '-'}`,
+    `\n## Insight Kunci\n${project.insight_kunci || '-'}`,
+  ].join('\n');
+
+  return createInsight({
+    title,
+    slug: `${slugify(title)}-${Date.now()}`,
+    category: project.category,
+    source_type: 'project' as InsightSourceType,
+    source_project_id: project.id,
+    cover_image: project.cover_image,
+    excerpt,
+    content,
+    ai_prompt_source: `project:${project.id}`,
+    is_published: false,
+  });
+}

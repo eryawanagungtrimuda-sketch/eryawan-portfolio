@@ -609,6 +609,26 @@ export default function ProjectForm({ project }: Props) {
     }
   }
 
+
+  async function handleBuildInsightFromProject() {
+    if (!savedProjectId) return;
+    setLoading(true);
+    try {
+      const response = await fetch('/api/insights/from-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: savedProjectId }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Gagal membuat draft wawasan.');
+      router.push(`/admin/insights/${data.id}/edit`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Gagal membuat draft wawasan.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleDelete() {
     if (!savedProjectId || !window.confirm('Hapus project ini? Tindakan ini tidak bisa dibatalkan.')) return;
     setLoading(true);
@@ -894,6 +914,7 @@ export default function ProjectForm({ project }: Props) {
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <button disabled={loading || galleryUploading || aiGenerating} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">{loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Project'}</button>
+        {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleBuildInsightFromProject} className="rounded-[4px] border border-[#D4AF37]/40 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10 disabled:opacity-60">Bangun Wawasan dari Project Ini</button> : null}
         {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button> : null}
       </div>
     </form>
