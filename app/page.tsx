@@ -150,7 +150,7 @@ export default async function Home() {
             </span>
           </a>
 
-          <div className="hidden items-start gap-8 font-sans text-sm font-medium text-white/68 lg:flex">
+          <div className="hidden items-start gap-8 font-sans text-sm font-medium text-white/62 lg:flex">
             <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="/">Beranda</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/tentang">Tentang</a>
             <a className="pb-3 transition duration-300 hover:text-[#C8A951]" href="/karya">Karya</a>
@@ -164,7 +164,7 @@ export default async function Home() {
         </nav>
 
 
-        <div className="relative z-10 mt-6 flex gap-2 overflow-x-auto pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70 lg:hidden">
+        <div className="relative z-10 mt-6 flex gap-2 overflow-x-auto pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/62 lg:hidden">
           <a href="/" className="whitespace-nowrap rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-2 text-[#C8A951]">Beranda</a>
           <a href="/tentang" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Tentang</a>
           <a href="/karya" className="whitespace-nowrap rounded-sm border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Karya</a>
@@ -183,7 +183,7 @@ export default async function Home() {
               <span className="block text-[#C8A951] italic tracking-[-0.055em]">Ini Adalah Keputusan Bisnis.</span>
             </h1>
 
-            <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/70 drop-shadow-md md:text-[1.25rem]">
+            <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 drop-shadow-md md:text-[1.25rem]">
               Saya membantu klien dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
             </p>
 
@@ -222,7 +222,7 @@ export default async function Home() {
                 Cara Saya Bekerja dengan Klien
               </h2>
             </div>
-            <p className="max-w-3xl font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
+            <p className="max-w-3xl font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
               Saya tidak hanya menerjemahkan brief menjadi gambar. Saya membantu membaca konteks, mempertanyakan keputusan yang kurang efisien, dan menyusun solusi ruang yang masuk akal secara fungsi, estetika, dan dampak bisnis.
             </p>
           </div>
@@ -256,7 +256,7 @@ export default async function Home() {
                 Cara Saya Berpikir
               </h2>
             </div>
-            <blockquote className="font-display max-w-4xl text-3xl italic leading-[1.16] tracking-[-0.012em] text-white/80 md:text-5xl">
+            <blockquote className="font-display max-w-4xl text-3xl italic leading-[1.16] tracking-[-0.012em] text-white/66 md:text-5xl">
               “Desain yang baik tidak berhenti pada bentuk. Ia harus menjawab alasan, fungsi, dan dampak.”
             </blockquote>
           </div>
@@ -296,7 +296,7 @@ export default async function Home() {
             <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F5F2EC] md:text-7xl">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-6 max-w-xl font-sans text-base leading-[1.75] text-white/70 md:mt-8 md:text-xl md:leading-[1.7]">
+            <p className="mt-6 max-w-xl font-sans text-base leading-[1.75] text-white/62 md:mt-8 md:text-xl md:leading-[1.7]">
               Ruang yang baik lahir dari keputusan yang jelas: alur, cahaya, material, dan prioritas fungsi.
             </p>
             <p className="font-display mt-10 max-w-xl text-3xl italic leading-[1.4] tracking-[-0.025em] text-white/86 md:text-4xl">
@@ -396,12 +396,12 @@ export default async function Home() {
               <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
                 Portfolio Berbasis Keputusan
               </h2>
-              <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/68 md:text-xl">
+              <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/62 md:text-xl">
                 Setiap proyek ditampilkan bukan hanya sebagai hasil visual, tetapi sebagai proses membaca masalah, mengambil keputusan, dan membangun dampak ruang.
               </p>
             </div>
 
-            <a href="/karya" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
+            <a href="/karya" className="group inline-flex items-center gap-4 justify-self-start border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/50 hover:text-[#C8A951] lg:justify-self-end">
               Lihat Semua Karya
               <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={20} />
             </a>
@@ -423,19 +423,19 @@ export default async function Home() {
                       </>
                     ) : (
                       <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
-                        <div className="rounded-sm border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/75">
+                        <div className="rounded-sm border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
                           Visual proyek belum tersedia
                         </div>
                       </div>
                     )}
                     <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
                       <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
-                      {meta ? <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{meta}</span> : null}
+                      {meta ? <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64">{meta}</span> : null}
                     </div>
                   </div>
                   <div className="p-7 md:p-8">
                     <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{project.title}</h3>
-                    {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/68 md:text-lg">{teaser}</p> : null}
+                    {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
                     <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
                   </div>
                 </article>
@@ -454,7 +454,7 @@ export default async function Home() {
             <h2 className="font-display text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
               Wawasan Desain
             </h2>
-            <p className="font-sans text-lg leading-[1.7] text-white/68 md:text-xl">
+            <p className="font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
               Cara saya membaca ruang, tren, dan keputusan desain secara strategis.
             </p>
           </div>
@@ -480,7 +480,7 @@ export default async function Home() {
 
           <a
             href="/wawasan"
-            className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/78 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
+            className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
           >
             Lihat Semua Wawasan
             <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
@@ -498,7 +498,7 @@ export default async function Home() {
             <h2 className="font-display mt-8 text-4xl font-normal italic leading-[1.35] tracking-[-0.04em] text-[#F4F1EA] md:text-6xl lg:text-7xl">
               Jika Anda mencari designer, banyak pilihan.<br className="hidden lg:block" /> Jika Anda mencari partner berpikir, kita perlu bicara.
             </h2>
-            <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/68 md:text-2xl">
+            <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
               Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
