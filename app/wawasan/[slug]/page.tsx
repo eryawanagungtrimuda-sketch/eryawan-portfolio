@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import SmartBackLink from '@/components/smart-back-link';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -60,11 +61,14 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   return (
     <main className="min-h-screen bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
       <div className="mx-auto max-w-4xl">
-        <Link href="/wawasan" className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-white/15 px-3 py-2 text-sm text-white/75 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]">
-          <span aria-hidden>←</span> Kembali ke Wawasan
-        </Link>
+        <SmartBackLink
+          fallbackHref="/wawasan"
+          className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-white/15 px-3 py-2 font-sans text-sm text-white/75 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
+        >
+          ← Kembali
+        </SmartBackLink>
 
-        <span className="mt-6 inline-block rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 text-xs uppercase tracking-wide text-[#D4AF37] sm:mt-8">
+        <span className="mt-6 inline-block rounded-sm border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-[#D4AF37] sm:mt-8">
           {insight.category || 'Uncategorized'}
         </span>
 
@@ -83,7 +87,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
 
         {sourceProject && sourceProjectHref ? (
           <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 sm:p-5">
-            <p className="text-[11px] uppercase tracking-wide text-[#D4AF37]">Berdasarkan Project</p>
+            <p className="font-sans text-[11px] uppercase tracking-wide text-[#D4AF37]">Berdasarkan Project</p>
             <div className="mt-3 flex items-center gap-3 sm:gap-4">
               {sourceProject.cover_image ? (
                 <img
@@ -97,7 +101,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/65">{sourceProject.category}</p> : null}
               </div>
             </div>
-            <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+            <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Project
             </Link>
           </section>
@@ -108,9 +112,9 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         </article>
 
         <div className="mt-8 flex flex-wrap gap-3 sm:mt-10">
-          <Link href="/wawasan" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-4 py-2.5 text-sm text-white/80 transition hover:border-white/30 hover:text-white">Kembali ke Wawasan</Link>
-          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2.5 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Lihat Karya</Link>
-          <Link href="/kontak" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-4 py-2.5 text-sm text-white/80 transition hover:border-white/30 hover:text-white">Diskusikan Project</Link>
+          <Link href="/wawasan" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-4 py-2.5 font-sans text-sm text-white/80 transition hover:border-white/30 hover:text-white">Kembali ke Wawasan</Link>
+          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-sm border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Lihat Karya</Link>
+          <Link href="/kontak" className="inline-flex min-h-11 items-center rounded-sm border border-white/15 px-4 py-2.5 font-sans text-sm text-white/80 transition hover:border-white/30 hover:text-white">Diskusikan Project</Link>
         </div>
       </div>
     </main>
