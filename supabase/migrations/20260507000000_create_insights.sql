@@ -36,6 +36,15 @@ create trigger update_insights_updated_at
 before update on public.insights
 for each row execute function public.update_updated_at_column();
 
+
+grant usage on schema public to anon, authenticated;
+
+grant select on public.insights to anon, authenticated;
+grant insert, update, delete on public.insights to authenticated;
+
+grant select on public.insight_images to anon, authenticated;
+grant insert, update, delete on public.insight_images to authenticated;
+
 alter table public.insights enable row level security;
 alter table public.insight_images enable row level security;
 
