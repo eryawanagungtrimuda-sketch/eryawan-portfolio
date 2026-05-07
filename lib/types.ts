@@ -59,6 +59,8 @@ export type Insight = {
   updated_at: string;
 };
 
+export type InsightSourceProject = Pick<Project, 'id' | 'title' | 'slug' | 'category' | 'cover_image'>;
+
 export type InsightImage = {
   id: string;
   insight_id: string;

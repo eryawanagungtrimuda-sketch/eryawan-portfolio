@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPublishedInsightBySlug } from '@/lib/insights';
+import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,8 +52,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function WawasanDetailPage({ params }: { params: { slug: string } }) {
-  const insight = await getPublishedInsightBySlug(params.slug);
-  if (!insight) return notFound();
+  const detail = await getPublishedInsightDetailBySlug(params.slug);
+  if (!detail) return notFound();
+  const { insight, sourceProject } = detail;
+  const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
 
   return (
     <main className="min-h-screen bg-[#080807] px-5 py-16 text-[#F4F1EA] md:px-8 lg:px-12">
@@ -78,6 +80,28 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
             <div className="h-40 rounded-lg border border-[#D4AF37]/20 bg-[radial-gradient(circle_at_20%_20%,rgba(212,175,55,0.2),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(200,169,81,0.15),transparent_35%)]" />
           </div>
         )}
+
+        {sourceProject && sourceProjectHref ? (
+          <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 md:p-5">
+            <p className="text-[11px] uppercase tracking-wide text-[#D4AF37]">Berdasarkan Project</p>
+            <div className="mt-3 flex items-center gap-4">
+              {sourceProject.cover_image ? (
+                <img
+                  src={sourceProject.cover_image}
+                  alt={sourceProject.title}
+                  className="h-20 w-20 rounded-md border border-white/10 object-cover"
+                />
+              ) : null}
+              <div className="min-w-0">
+                <h2 className="font-display text-2xl leading-tight tracking-[-0.015em] text-[#F4F1EA]">{sourceProject.title}</h2>
+                {sourceProject.category ? <p className="mt-1 text-sm text-white/65">{sourceProject.category}</p> : null}
+              </div>
+            </div>
+            <Link href={sourceProjectHref} className="mt-4 inline-flex rounded-sm border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">
+              Lihat Studi Kasus Project
+            </Link>
+          </section>
+        ) : null}
 
         <article className="mt-10 rounded-xl border border-white/10 bg-white/[0.02] p-6 text-base md:p-8">
           {renderMarkdown(insight.content)}
