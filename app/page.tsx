@@ -1,5 +1,8 @@
+export const dynamic = 'force-dynamic';
+
 import { ArrowDown, ArrowUp, CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
+import { getPublishedProjects } from '@/lib/projects';
 
 const clientWorkflow = [
   {
@@ -106,26 +109,9 @@ const wawasanPreview = [
   },
 ];
 
-const portfolioWorks = [
-  {
-    title: 'Project 01 — Residential Interior',
-    problem: 'Sirkulasi harian tidak efisien dan area publik terasa terputus.',
-    decision: 'Menyusun ulang flow ruang, memperjelas zoning, dan mengoptimalkan titik aktivitas.',
-    impact: 'Ruang terasa lebih terarah, fungsional, dan mudah digunakan.',
-    type: 'Residential',
-    year: '2025',
-  },
-  {
-    title: 'Project 02 — Workspace Interior',
-    problem: 'Area kerja tidak mendukung fokus dan kolaborasi secara seimbang.',
-    decision: 'Membagi ruang berdasarkan intensitas aktivitas dan kebutuhan privasi.',
-    impact: 'Ritme kerja lebih jelas, nyaman, dan produktif.',
-    type: 'Workspace',
-    year: '2024',
-  },
-];
 
-export default function Home() {
+export default async function Home() {
+  const portfolioWorks = (await getPublishedProjects()).slice(0, 2);
   return (
     <main className="min-h-screen overflow-hidden bg-[#080807] font-sans text-[#F4F1EA]">
       <section
@@ -404,26 +390,39 @@ export default function Home() {
           </div>
 
           <div className="mt-20 grid gap-8 lg:grid-cols-2">
-            {portfolioWorks.map((work, index) => (
-              <article key={work.title} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
-                <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_18%_16%,rgba(200,169,81,0.2),transparent_36%),linear-gradient(140deg,#1b2b3d_0%,#121e2b_42%,#0d151f_100%)]">
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_42%)]" />
-                  <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
-                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
-                    <div className="flex gap-2">
-                      <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{work.type}</span>
-                      <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{work.year}</span>
+            {portfolioWorks.map((project, index) => {
+              const meta = project.category || project.design_category;
+              const teaser = project.problem || project.solution || project.impact;
+              const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
+
+              return (
+                <article key={project.id} className="group relative overflow-hidden rounded-sm border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                  <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0f1925]">
+                    {project.cover_image ? (
+                      <>
+                        <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
+                        <div className="rounded-sm border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/75">
+                          Visual proyek belum tersedia
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
+                      {meta ? <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/75">{meta}</span> : null}
                     </div>
                   </div>
-                </div>
-                <div className="p-7 md:p-8">
-                  <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{work.title}</h3>
-                  <p className="mt-5 text-base leading-[1.75] text-white/68 md:text-lg">{work.problem}</p>
-                  <p className="mt-4 text-sm leading-[1.75] text-white/56 md:text-base">Keputusan: {work.decision}</p>
-                  <a href="/karya" className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
-                </div>
-              </article>
-            ))}
+                  <div className="p-7 md:p-8">
+                    <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{project.title}</h3>
+                    {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/68 md:text-lg">{teaser}</p> : null}
+                    <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
