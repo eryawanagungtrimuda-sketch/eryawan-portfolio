@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getPublishedInsights } from '@/lib/insights';
 
+export const dynamic = 'force-dynamic';
+
 export default async function WawasanPage() {
   const insights = await getPublishedInsights();
 
