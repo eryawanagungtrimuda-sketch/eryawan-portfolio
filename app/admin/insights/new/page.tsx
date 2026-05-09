@@ -1,28 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import InsightForm from '@/components/insight-form';
-import { getSupabaseClient } from '@/lib/supabaseClient';
 
 export default function NewInsightPage() {
-  const [projects, setProjects] = useState<{ id: string; title: string }[]>([]);
-
-  useEffect(() => {
-    getSupabaseClient().from('projects').select('id,title').order('title').then(({ data }) => setProjects((data || []) as { id: string; title: string }[]));
-  }, []);
-
   return (
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl space-y-6">
           <Link href="/admin/insights" className="inline-flex rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 hover:bg-white/5">← Kembali ke Kelola Wawasan</Link>
           <div>
-            <h1 className="font-sans text-[2rem] font-semibold tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Tambah Wawasan</h1>
-            <p className="mt-2 text-sm text-white/70 md:text-base">Buat draft wawasan baru lalu tinjau hasil AI sebelum dipublikasikan.</p>
+            <h1 className="font-sans text-[2rem] font-semibold tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Tambah Review Karya</h1>
+            <p className="mt-2 text-sm text-white/70 md:text-base">Unggah gambar karya, buat narasi review dengan AI, lalu tinjau sebelum dipublikasikan.</p>
           </div>
-          <InsightForm projects={projects} />
+          <InsightForm />
         </div>
       </main>
     </AdminAuthGuard>
