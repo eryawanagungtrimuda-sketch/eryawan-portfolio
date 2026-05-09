@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SmartBackLink from '@/components/smart-back-link';
+import InsightImageLightbox from '@/components/insight-image-lightbox';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -76,7 +77,13 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         <h1 className="font-display mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
         {insight.excerpt ? <p className="mt-4 max-w-3xl font-sans text-base leading-7 text-white/64 sm:mt-5 sm:text-lg sm:leading-relaxed">{insight.excerpt}</p> : null}
 
-        {insight.cover_image ? (
+        {insight.content_type === 'review_karya' ? (
+          <InsightImageLightbox
+            title={insight.title}
+            coverImage={insight.cover_image ? { src: insight.cover_image, alt: insight.title } : null}
+            galleryImages={images.map((img, idx) => ({ src: img.image_url, alt: `${insight.title} ${idx + 1}` }))}
+          />
+        ) : insight.cover_image ? (
           <div className="mt-8 overflow-hidden rounded-xl border border-white/10 sm:mt-10">
             <img src={insight.cover_image} alt={insight.title} className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" />
           </div>
@@ -108,7 +115,6 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           </section>
         ) : null}
 
-        {insight.content_type === 'review_karya' && images.length > 0 ? <section className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-4">{images.slice(0, 4).map((img, idx) => <div key={`${img.image_url}-${idx}`} className="overflow-hidden rounded-lg border border-white/10"><img src={img.image_url} alt={`${insight.title} ${idx + 1}`} className="h-32 w-full object-cover sm:h-40" /></div>)}</section> : null}
 
         <article className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
           {renderMarkdown(insight.content)}
