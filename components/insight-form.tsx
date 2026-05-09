@@ -69,7 +69,6 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     const { data, error: insertError } = await supabase.from('insights').insert(payload).select('id').single();
     if (insertError) throw insertError;
     setDraftId(data.id);
-    router.replace(`/admin/insights/${data.id}/edit`);
     return data.id as string;
   }
 
@@ -115,8 +114,10 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     e.preventDefault();
     setLoading(true); setError(''); setMessage('');
     try {
+      const wasNew = !draftId;
       const id = await ensureDraftId();
       await saveInsight(id);
+      if (wasNew) router.replace(`/admin/insights/${id}/edit`);
       setMessage('Wawasan berhasil disimpan.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Gagal menyimpan wawasan.');
@@ -135,7 +136,16 @@ export default function InsightForm({ insight, projects = [], initialImages = []
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Gagal generate draft AI.');
-      setForm((prev) => ({ ...prev, title: data.title || prev.title, slug: prev.slug || slugify(data.title || prev.title), category: data.category || prev.category, excerpt: data.excerpt || prev.excerpt, content: data.content || prev.content }));
+      const generatedPayload = {
+        title: data.title || form.title,
+        slug: form.slug || slugify(data.title || form.title),
+        category: data.category || form.category || null,
+        excerpt: data.excerpt || form.excerpt || null,
+        content: data.content || form.content || null,
+        updated_at: new Date().toISOString(),
+      };
+      setForm((prev) => ({ ...prev, title: generatedPayload.title, slug: generatedPayload.slug, category: generatedPayload.category || '', excerpt: generatedPayload.excerpt || '', content: generatedPayload.content || '' }));
+      await getSupabaseClient().from('insights').update(generatedPayload).eq('id', id);
       setMessage('Draft AI berhasil dimuat. Review sebelum menyimpan/publish.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Gagal generate draft AI.');
