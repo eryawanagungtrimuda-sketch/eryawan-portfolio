@@ -82,11 +82,37 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     return null;
   }
 
+
+
+  async function getUniqueInsightSlug(baseSlug: string, currentInsightId?: string) {
+    const supabase = getSupabaseClient();
+    const normalizedBase = slugify(baseSlug || 'draft-wawasan-baru') || 'draft-wawasan-baru';
+    for (let attempt = 1; attempt <= 50; attempt += 1) {
+      const candidate = attempt === 1 ? normalizedBase : `${normalizedBase}-${attempt}`;
+      const { data, error: slugError } = await supabase.from('insights').select('id,slug').eq('slug', candidate).maybeSingle();
+      if (slugError) throw slugError;
+      if (!data || data.id === currentInsightId) return candidate;
+    }
+    throw new Error('Gagal menghasilkan slug unik. Silakan ubah judul atau slug.');
+  }
+
+  async function ensureManualSlugAvailable(candidateSlug: string, currentInsightId?: string) {
+    const supabase = getSupabaseClient();
+    const { data, error: slugError } = await supabase.from('insights').select('id,slug').eq('slug', candidateSlug).maybeSingle();
+    if (slugError) throw slugError;
+    if (data && data.id !== currentInsightId) throw new Error('Slug sudah digunakan. Silakan gunakan slug lain.');
+  }
   async function ensureDraftId() {
     if (draftId) return draftId;
     const supabase = getSupabaseClient();
+    const baseSlug = form.slug || slugify(form.title || `draft-${Date.now()}`);
+    const manualSlug = slugify(form.slug);
+    const draftSlug = isSlugEditable
+      ? (manualSlug || await getUniqueInsightSlug(baseSlug, insight?.id))
+      : await getUniqueInsightSlug(baseSlug, insight?.id);
+    if (isSlugEditable && manualSlug) await ensureManualSlugAvailable(manualSlug, insight?.id);
     const payload = {
-      title: form.title || 'Draft Wawasan Baru', slug: form.slug || slugify(form.title || `draft-${Date.now()}`), category: form.category || null, content_type: form.content_type,
+      title: form.title || 'Draft Wawasan Baru', slug: draftSlug, category: form.category || null, content_type: form.content_type,
       source_type: form.content_type === 'review_karya' ? 'image_review' : form.source_type,
       source_project_id: isProjectFlow ? form.source_project_id || null : null,
       cover_image: form.cover_image || null, excerpt: form.excerpt || null, content: form.content || null, is_published: false,
@@ -144,14 +170,21 @@ export default function InsightForm({ insight, projects = [], initialImages = []
 
   async function saveInsight(insightId: string) {
     const supabase = getSupabaseClient();
+    const baseSlug = form.slug || slugify(form.title);
+    const manualSlug = slugify(form.slug);
+    const nextSlug = isSlugEditable
+      ? (manualSlug || await getUniqueInsightSlug(baseSlug, insightId))
+      : await getUniqueInsightSlug(baseSlug, insightId);
+    if (isSlugEditable && manualSlug) await ensureManualSlugAvailable(manualSlug, insightId);
     const payload = {
-      title: form.title, slug: form.slug || slugify(form.title), category: form.category || null, content_type: form.content_type,
+      title: form.title, slug: nextSlug, category: form.category || null, content_type: form.content_type,
       source_type: form.content_type === 'review_karya' ? 'image_review' : form.source_type,
       source_project_id: isProjectFlow ? form.source_project_id || null : null,
       cover_image: form.cover_image || null, excerpt: form.excerpt || null, content: form.content || null, is_published: form.is_published, updated_at: new Date().toISOString(),
     };
     const { error } = await supabase.from('insights').update(payload).eq('id', insightId);
     if (error) throw error;
+    setForm((prev) => ({ ...prev, slug: nextSlug }));
     const finalImages = await uploadAndPersistImages(insightId, images);
     if (!form.cover_image && finalImages[0]?.image_url) await supabase.from('insights').update({ cover_image: finalImages[0].image_url }).eq('id', insightId);
     setImages(finalImages);
@@ -190,9 +223,16 @@ export default function InsightForm({ insight, projects = [], initialImages = []
         if (data.code) setErrorCode(data.code);
         throw new Error(data.error || 'Gagal generate draft AI.');
       }
+      const generatedTitle = data.title || form.title;
+      const baseGeneratedSlug = form.slug || slugify(generatedTitle || form.title);
+      const manualSlug = slugify(form.slug);
+      const generatedSlug = isSlugEditable
+        ? (manualSlug || await getUniqueInsightSlug(baseGeneratedSlug, id))
+        : await getUniqueInsightSlug(baseGeneratedSlug, id);
+      if (isSlugEditable && manualSlug) await ensureManualSlugAvailable(manualSlug, id);
       const generatedPayload = {
-        title: data.title || form.title,
-        slug: form.slug || slugify(data.title || form.title),
+        title: generatedTitle,
+        slug: generatedSlug,
         category: data.category || form.category || null,
         excerpt: data.excerpt || form.excerpt || null,
         content: data.content || form.content || null,
