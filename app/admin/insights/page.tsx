@@ -51,16 +51,16 @@ export default function AdminInsightsPage() {
 
   return (
     <AdminAuthGuard>
-      <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
+      <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl space-y-8">
           <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
-                <h1 className="font-display text-[2rem] font-normal tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Kelola Wawasan</h1>
+                <h1 className="font-sans text-[2rem] font-semibold tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Kelola Wawasan</h1>
                 <p className="mt-2 max-w-2xl text-sm text-white/70 md:text-base">Kelola artikel wawasan desain untuk publikasi halaman /wawasan.</p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link href="/admin/insights/new" className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#f8bb15]">Tambah Wawasan</Link>
+                <Link href="/admin/insights/new" className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#f8bb15]">Tambah Review Karya</Link>
                 <Link href="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5">Kembali ke Dashboard</Link>
               </div>
             </div>
@@ -89,7 +89,7 @@ export default function AdminInsightsPage() {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-white/10 text-sm">
+                <table className="min-w-full divide-y divide-white/10 font-sans text-sm">
                   <thead className="bg-white/[0.03] text-left text-xs uppercase tracking-wide text-white/60">
                     <tr>
                       <th className="px-4 py-3">Title</th><th className="px-4 py-3">Category</th><th className="px-4 py-3">Source Type</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Created At</th><th className="px-4 py-3">Actions</th>
@@ -105,9 +105,9 @@ export default function AdminInsightsPage() {
                         <td className="px-4 py-3 text-white/80">{formatDate(item.created_at)}</td>
                         <td className="px-4 py-3">
                           <div className="flex flex-wrap gap-3">
-                            <Link href={`/admin/insights/${item.id}/edit`} className="text-[#F6C453] hover:underline">Edit</Link>
+                            <Link href={`/admin/insights/${item.id}/edit`} className="font-sans text-[#F6C453] hover:underline">Edit</Link>
                             <button
-                              className="text-red-300 hover:underline"
+                              className="font-sans text-red-300 hover:underline"
                               onClick={async () => {
                                 await getSupabaseClient().from('insights').delete().eq('id', item.id);
                                 setItems((current) => current.filter((row) => row.id !== item.id));
