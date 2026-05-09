@@ -44,6 +44,7 @@ export type ProjectFormState = {
 export type InsightSourceType = 'project' | 'image_review' | 'manual';
 
 export type Insight = {
+  insight_images?: Pick<InsightImage, 'image_url' | 'sort_order'>[];
   content_type: 'artikel' | 'review_karya';
   id: string;
   title: string;
