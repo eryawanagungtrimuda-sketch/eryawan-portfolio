@@ -11,8 +11,19 @@ function slugify(value: string) {
 export async function getPublishedInsights() {
   if (!isSupabaseConfigured) return [] as Insight[];
   const supabase = createSupabaseServerClient();
-  const { data } = await supabase.from('insights').select(insightColumns).eq('is_published', true).order('created_at', { ascending: false });
-  return (data || []) as Insight[];
+  const { data } = await supabase
+    .from('insights')
+    .select(`${insightColumns},insight_images(image_url,sort_order)`)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false });
+
+  const insights = ((data || []) as Insight[]).map((insight) => {
+    if (insight.cover_image || insight.content_type !== 'review_karya') return insight;
+    const fallbackImage = insight.insight_images?.slice().sort((a, b) => a.sort_order - b.sort_order)[0]?.image_url || null;
+    return { ...insight, cover_image: fallbackImage };
+  });
+
+  return insights;
 }
 
 export async function getPublishedInsightBySlug(slug: string) {
