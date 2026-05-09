@@ -20,6 +20,7 @@ type InsightFormValues = {
   is_published: boolean;
 };
 type LocalImage = { id: string; image_url: string; sort_order: number; file?: File; isLocal?: boolean };
+type GenerateErrorResponse = { error?: string; code?: string };
 
 const ACCEPTED = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_IMAGE = 4;
@@ -35,6 +36,7 @@ export default function InsightForm({ insight, projects = [], initialImages = []
   const [generating, setGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [errorCode, setErrorCode] = useState('');
   const [draftId, setDraftId] = useState<string | null>(insight?.id || null);
   const isDirectReviewFlow = !insight;
   const [form, setForm] = useState<InsightFormValues>({
@@ -118,6 +120,28 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     return ordered;
   }
 
+  async function resolveAiImageUrls(targetImages: LocalImage[]) {
+    const supabase = getSupabaseClient();
+    const urls: string[] = [];
+    for (const item of targetImages.slice(0, MAX_IMAGE)) {
+      if (!item.image_url.startsWith('http')) continue;
+      urls.push(item.image_url);
+    }
+    if (!urls.length) return [];
+    const { data: bucketData } = await supabase.storage.getBucket(BUCKET);
+    if (bucketData?.public) return urls;
+    const signedUrls = await Promise.all(urls.map(async (url) => {
+      const marker = `/storage/v1/object/public/${BUCKET}/`;
+      const index = url.indexOf(marker);
+      if (index === -1) return null;
+      const path = decodeURIComponent(url.slice(index + marker.length));
+      const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, 60 * 30);
+      if (error || !data?.signedUrl) return null;
+      return data.signedUrl;
+    }));
+    return signedUrls.filter((url): url is string => Boolean(url));
+  }
+
   async function saveInsight(insightId: string) {
     const supabase = getSupabaseClient();
     const payload = {
@@ -148,17 +172,24 @@ export default function InsightForm({ insight, projects = [], initialImages = []
   }
 
   async function generateDraft() {
-    setGenerating(true); setError(''); setMessage('');
+    setGenerating(true); setError(''); setErrorCode(''); setMessage('');
     try {
       const id = await ensureDraftId();
       const currentImages = isReviewFlow ? await uploadAndPersistImages(id, images) : images;
       if (isReviewFlow) setImages(currentImages);
+      const aiImageUrls = isReviewFlow ? await resolveAiImageUrls(currentImages) : [];
+      if (isReviewFlow && aiImageUrls.length === 0) {
+        throw new Error('Gambar belum memiliki URL publik untuk dianalisis AI.');
+      }
       const response = await fetch('/api/generate-insight-draft', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ source_type: form.content_type === 'review_karya' ? 'image_review' : form.source_type, source_project_id: form.source_project_id || undefined, title: form.title, category: form.category, excerpt: form.excerpt, context: form.content, imageUrls: currentImages.map((img) => img.image_url).filter((url) => url.startsWith('http')) }),
+        body: JSON.stringify({ source_type: form.content_type === 'review_karya' ? 'image_review' : form.source_type, source_project_id: form.source_project_id || undefined, title: form.title, category: form.category, excerpt: form.excerpt, context: form.content, imageUrls: aiImageUrls }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Gagal generate draft AI.');
+      const data = (await response.json()) as GenerateErrorResponse & Record<string, string>;
+      if (!response.ok) {
+        if (data.code) setErrorCode(data.code);
+        throw new Error(data.error || 'Gagal generate draft AI.');
+      }
       const generatedPayload = {
         title: data.title || form.title,
         slug: form.slug || slugify(data.title || form.title),
@@ -171,6 +202,7 @@ export default function InsightForm({ insight, projects = [], initialImages = []
       await getSupabaseClient().from('insights').update(generatedPayload).eq('id', id);
       setMessage('Draft AI berhasil dimuat. Review sebelum menyimpan/publish.');
     } catch (err) {
+      if (err && typeof err === 'object' && 'code' in err && typeof err.code === 'string') setErrorCode(err.code);
       setError(err instanceof Error ? err.message : 'Gagal generate draft AI.');
     } finally { setGenerating(false); }
   }
@@ -191,6 +223,7 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     <div className="rounded-lg border border-white/10 bg-black/20 p-4"><h3 className="text-sm">Preview Ringkas</h3><p className="mt-2 text-lg">{form.title || 'Judul wawasan belum diisi'}</p><p className="text-xs text-white/60">Kategori: {form.category || '-'}</p><p className="mt-2 text-sm text-white/80">{form.excerpt || 'Ringkasan pembuka akan tampil di sini.'}</p></div>
     {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
     {error ? <p className="text-sm text-red-300">{error}</p> : null}
+    {errorCode ? <p className="text-xs text-red-200/80">Kode teknis: {errorCode}</p> : null}
     <div className="flex gap-3"><button type="submit" disabled={loading || generating} className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm text-black disabled:opacity-60">{loading ? 'Menyimpan...' : 'Simpan Perubahan'}</button><button type="button" onClick={generateDraft} disabled={!canGenerate || loading || generating} className="rounded-lg border border-white/20 px-4 py-2 text-sm disabled:opacity-60">{generating ? 'Memproses AI...' : isReviewFlow ? 'Buat Narasi Review dari Gambar' : 'Bangun / Perbaiki dengan AI'}</button></div>
   </form>);
 }
