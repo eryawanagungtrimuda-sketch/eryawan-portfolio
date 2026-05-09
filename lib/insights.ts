@@ -2,7 +2,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Insight, InsightSourceProject, InsightSourceType } from './types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const insightColumns = 'id,title,slug,category,source_type,source_project_id,cover_image,excerpt,content,ai_prompt_source,is_published,created_at,updated_at';
+const insightColumns = 'id,title,slug,category,content_type,source_type,source_project_id,cover_image,excerpt,content,ai_prompt_source,is_published,created_at,updated_at';
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');

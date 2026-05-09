@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import InsightForm from '@/components/insight-form';
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import type { Insight } from '@/lib/types';
+import type { Insight, InsightImage } from '@/lib/types';
 
 export default function EditInsightPage({ params }: { params: { id: string } }) {
   const [insight, setInsight] = useState<Insight | null>(null);
   const [projects, setProjects] = useState<{ id: string; title: string }[]>([]);
+  const [images, setImages] = useState<InsightImage[]>([]);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -20,6 +21,13 @@ export default function EditInsightPage({ params }: { params: { id: string } }) 
       .eq('id', params.id)
       .single()
       .then(({ data }) => setInsight((data || null) as Insight | null));
+
+    supabase
+      .from('insight_images')
+      .select('*')
+      .eq('insight_id', params.id)
+      .order('sort_order')
+      .then(({ data }) => setImages((data || []) as InsightImage[]));
 
     supabase
       .from('projects')
@@ -37,7 +45,7 @@ export default function EditInsightPage({ params }: { params: { id: string } }) 
             <h1 className="font-display text-[2rem] font-normal tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Edit Wawasan</h1>
             <p className="mt-2 text-sm text-white/70 md:text-base">Perbarui konten, review hasil AI, lalu simpan perubahan wawasan.</p>
           </div>
-          {insight ? <InsightForm insight={insight} projects={projects} /> : <p>Memuat...</p>}
+          {insight ? <InsightForm insight={insight} projects={projects} initialImages={images} /> : <p>Memuat...</p>}
         </div>
       </main>
     </AdminAuthGuard>

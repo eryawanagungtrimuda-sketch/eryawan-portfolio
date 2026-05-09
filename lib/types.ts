@@ -44,6 +44,7 @@ export type ProjectFormState = {
 export type InsightSourceType = 'project' | 'image_review' | 'manual';
 
 export type Insight = {
+  content_type: 'artikel' | 'review_karya';
   id: string;
   title: string;
   slug: string;
