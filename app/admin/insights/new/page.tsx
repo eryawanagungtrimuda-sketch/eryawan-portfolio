@@ -1,8 +1,18 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import InsightForm from '@/components/insight-form';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 
 export default function NewInsightPage() {
+  const [projects, setProjects] = useState<{ id: string; title: string }[]>([]);
+
+  useEffect(() => {
+    getSupabaseClient().from('projects').select('id,title').order('title').then(({ data }) => setProjects((data || []) as { id: string; title: string }[]));
+  }, []);
+
   return (
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
@@ -12,7 +22,7 @@ export default function NewInsightPage() {
             <h1 className="font-display text-[2rem] font-normal tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Tambah Wawasan</h1>
             <p className="mt-2 text-sm text-white/70 md:text-base">Buat draft wawasan baru lalu tinjau hasil AI sebelum dipublikasikan.</p>
           </div>
-          <InsightForm />
+          <InsightForm projects={projects} />
         </div>
       </main>
     </AdminAuthGuard>

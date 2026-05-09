@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function WawasanDetailPage({ params }: { params: { slug: string } }) {
   const detail = await getPublishedInsightDetailBySlug(params.slug);
   if (!detail) return notFound();
-  const { insight, sourceProject } = detail;
+  const { insight, sourceProject, images } = detail;
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
 
   return (
@@ -68,9 +68,10 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           ← Kembali
         </SmartBackLink>
 
-        <span className="mt-6 inline-block rounded-2xl border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-[#D4AF37] sm:mt-8">
-          {insight.category || 'Uncategorized'}
-        </span>
+        <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
+          <span className="inline-block rounded-2xl border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
+          {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/20 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-white/70">Review Karya</span> : null}
+        </div>
 
         <h1 className="font-display mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
         {insight.excerpt ? <p className="mt-4 max-w-3xl font-sans text-base leading-7 text-white/64 sm:mt-5 sm:text-lg sm:leading-relaxed">{insight.excerpt}</p> : null}
@@ -106,6 +107,8 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
             </Link>
           </section>
         ) : null}
+
+        {insight.content_type === 'review_karya' && images.length > 0 ? <section className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-4">{images.slice(0, 4).map((img, idx) => <div key={`${img.image_url}-${idx}`} className="overflow-hidden rounded-lg border border-white/10"><img src={img.image_url} alt={`${insight.title} ${idx + 1}`} className="h-32 w-full object-cover sm:h-40" /></div>)}</section> : null}
 
         <article className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
           {renderMarkdown(insight.content)}

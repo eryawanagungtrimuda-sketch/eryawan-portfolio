@@ -55,6 +55,7 @@ export default async function WawasanPage() {
                   <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 text-[11px] uppercase tracking-wide text-[#D4AF37]">
                     {item.category || 'Uncategorized'}
                   </span>
+                  {item.content_type === 'review_karya' ? <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-wide text-white/70">Review Karya</span> : null}
                   {formatSourceType(item.source_type) ? (
                     <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-wide text-white/62">
                       {formatSourceType(item.source_type)}
