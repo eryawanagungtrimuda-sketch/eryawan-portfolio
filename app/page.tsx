@@ -157,12 +157,12 @@ export default async function Home() {
         }}
       >
         <nav className="relative z-10 flex items-start justify-between gap-8">
-          <a href="/" className="group inline-flex flex-col gap-1.5">
-            <span className="font-display text-2xl font-normal uppercase leading-none tracking-[0.06em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72] md:text-[1.8rem]">
-              Eryawan Studio
+          <a href="/" className="group inline-flex flex-col gap-2 md:gap-2.5">
+            <span className="font-display text-[1.35rem] font-normal uppercase leading-none tracking-[0.08em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72] sm:text-[1.45rem] md:text-[1.55rem] lg:text-[1.68rem]">
+              Eryawan Agung
             </span>
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.34em] text-white/50">
-              Ruang yang masuk akal
+            <span className="font-display text-[0.62rem] font-normal uppercase leading-none tracking-[0.2em] text-white/62 sm:text-[0.68rem] md:text-[0.72rem] lg:text-[0.78rem]">
+              Portfolio · Design Strategy
             </span>
           </a>
 
@@ -175,7 +175,7 @@ export default async function Home() {
           </div>
 
           <Button href="mailto:eryawanagungtrimuda@gmail.com" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
-            Hubungi Studio
+            Ajak Kolaborasi
           </Button>
         </nav>
 
@@ -566,7 +566,7 @@ export default async function Home() {
           <div className="mt-20 h-px w-full bg-white/8" />
 
           <div className="mt-14 flex flex-col gap-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/42 md:flex-row md:items-center md:justify-between md:text-[11px]">
-            <p>© 2026 Eryawan Studio — Strategic Design & Spatial Logic</p>
+            <p>© 2026 Eryawan Agung — Strategic Design & Spatial Logic</p>
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
               <span>Panel</span>
               <span>Surabaya • Melayani Indonesia</span>
