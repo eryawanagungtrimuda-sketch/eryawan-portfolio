@@ -26,11 +26,13 @@ export async function getPublishedInsightDetailBySlug(slug: string) {
   const insight = await getPublishedInsightBySlug(slug);
   if (!insight) return null;
 
+  const supabase = createSupabaseServerClient();
+  const { data: images } = await supabase.from('insight_images').select('image_url,sort_order').eq('insight_id', insight.id).order('sort_order');
+
   if (insight.source_type !== 'project' || !insight.source_project_id) {
-    return { insight, sourceProject: null as InsightSourceProject | null };
+    return { insight, sourceProject: null as InsightSourceProject | null, images: (images || []) as { image_url: string; sort_order: number }[] };
   }
 
-  const supabase = createSupabaseServerClient();
   const { data: sourceProject } = await supabase
     .from('projects')
     .select('id,title,slug,category,cover_image')
@@ -38,7 +40,7 @@ export async function getPublishedInsightDetailBySlug(slug: string) {
     .eq('is_published', true)
     .maybeSingle();
 
-  return { insight, sourceProject: (sourceProject as InsightSourceProject | null) || null };
+  return { insight, sourceProject: (sourceProject as InsightSourceProject | null) || null, images: (images || []) as { image_url: string; sort_order: number }[] };
 }
 
 export async function getInsightById(id: string) {
