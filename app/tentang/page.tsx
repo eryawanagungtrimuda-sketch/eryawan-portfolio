@@ -1,51 +1,79 @@
 import BackButton from '@/components/back-button';
 import Button from '@/components/ui/button';
 
-const pengalamanNyata = [
+const coreExpertise = [
   {
-    title: 'Residensial & Hospitality',
+    title: 'Residential & Hospitality',
     description:
-      'Menata ruang tinggal dan komersial dengan fokus pada alur aktivitas, kenyamanan harian, dan kualitas pengalaman ruang.',
+      'Merancang ruang tinggal dan hospitality dengan fokus pada kenyamanan, kualitas pengalaman, dan karakter ruang.',
   },
   {
     title: 'Workspace & Corporate',
     description:
-      'Membantu organisasi merancang ruang kerja yang mendukung kolaborasi, fokus individu, dan efisiensi operasional tim.',
+      'Membantu organisasi menyusun ruang kerja yang mendukung kolaborasi, fokus individu, dan efisiensi operasional.',
   },
   {
     title: 'Design Development',
     description:
-      'Mengawal proses dari konsep sampai keputusan teknis agar desain tidak berhenti di visual, tetapi siap dieksekusi dengan terukur.',
+      'Mengawal ide dari konsep sampai keputusan teknis agar desain tidak berhenti di visual, tetapi siap dieksekusi.',
   },
 ];
 
-const nilaiDibawa = [
-  'Membaca konteks proyek sebelum menawarkan bentuk.',
-  'Menyusun keputusan desain berdasarkan prioritas fungsi dan dampak jangka panjang.',
-  'Menjembatani bahasa desain dengan bahasa bisnis agar arah proyek lebih jelas.',
-  'Mengarahkan proses kolaborasi lintas pihak dengan struktur diskusi yang terukur.',
+const professionalValue = [
+  {
+    title: 'Strategic Design Thinking',
+    description: 'Membaca konteks proyek sebelum menentukan bentuk, material, dan arah visual.',
+  },
+  {
+    title: 'Decision Clarity',
+    description: 'Menyusun prioritas desain agar keputusan tidak berjalan parsial atau reaktif.',
+  },
+  {
+    title: 'Execution Awareness',
+    description: 'Memahami batasan waktu, biaya, koordinasi, dan kompleksitas stakeholder.',
+  },
+  {
+    title: 'Business Relevance',
+    description:
+      'Menghubungkan keputusan desain dengan kenyamanan pengguna, citra brand, dan keberlanjutan operasional.',
+  },
 ];
 
-const kontribusiPerusahaan = [
+const howIWork = [
   {
-    title: 'Kejelasan Arah Proyek',
-    detail: 'Membantu tim menyamakan prioritas sehingga keputusan desain tidak berjalan parsial atau reaktif.',
+    title: 'Understand the Context',
+    description: 'Memetakan kebutuhan pengguna, tujuan ruang, karakter brand, serta batasan proyek sejak awal.',
   },
   {
-    title: 'Efisiensi Proses Keputusan',
-    detail: 'Mengurangi revisi berulang melalui argumen desain yang terstruktur dan mudah divalidasi.',
+    title: 'Define the Direction',
+    description: 'Menyusun prioritas dan arah desain agar semua pihak bergerak pada keputusan yang sama.',
   },
   {
-    title: 'Dampak Bisnis yang Terukur',
-    detail: 'Merancang ruang yang mendukung performa pengguna, citra brand, dan keberlanjutan operasional.',
+    title: 'Develop the Design',
+    description: 'Mengembangkan konsep menjadi keputusan ruang, material, dan detail yang relevan.',
   },
+  {
+    title: 'Align with Execution',
+    description: 'Menjaga agar desain tetap realistis terhadap waktu, anggaran, dan koordinasi lintas stakeholder.',
+  },
+];
+
+const capabilitySnapshot = [
+  'Design Strategy',
+  'Interior Concept',
+  'Space Planning',
+  'Material & Lighting Direction',
+  'Design Development',
+  'Client / Stakeholder Communication',
+  'Project Documentation',
+  'AI-assisted Design Review',
 ];
 
 const diferensiasiSenior = [
-  'Tidak berhenti pada estetika: setiap keputusan punya alasan strategis.',
+  'Tidak berhenti pada estetika; setiap keputusan desain harus punya alasan.',
   'Mampu melihat proyek sebagai sistem, bukan kumpulan elemen visual.',
-  'Terbiasa mengambil keputusan di bawah batasan waktu, biaya, dan kompleksitas stakeholder.',
-  'Mengubah brief yang samar menjadi arah desain yang jelas, logis, dan dapat dieksekusi.',
+  'Terbiasa mengambil keputusan di bawah batasan waktu, biaya, dan stakeholder.',
+  'Mengubah brief yang samar menjadi arah desain yang jelas dan bisa dieksekusi.',
 ];
 
 export default function TentangPage() {
@@ -59,12 +87,20 @@ export default function TentangPage() {
           </div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Tentang</p>
           <h1 className="font-display mt-5 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
-            Executive Summary
+            Executive Profile
           </h1>
-          <p className="mt-8 max-w-4xl text-base leading-[1.75] text-white/64 sm:text-lg md:text-xl">
-            Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menciptakan visual yang baik, tetapi menyusun keputusan desain yang masuk akal, terukur, dan relevan dengan tujuan pengguna maupun bisnis.
-          </p>
-            <Button href="/kontak" className="mt-10 px-8 motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+          <div className="mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/64 sm:text-lg md:text-xl">
+            <p>
+              Saya adalah desainer interior dengan <span className="text-[#C8A951]">15+ tahun pengalaman</span> dalam merancang
+              ruang residensial, hospitality, dan workspace. Fokus saya bukan hanya menghasilkan visual yang menarik, tetapi
+              membantu klien dan perusahaan mengambil keputusan desain yang jelas, efisien, dan siap dieksekusi.
+            </p>
+            <p>
+              Saya terbiasa membaca kebutuhan ruang, menyusun arah desain, mengembangkan konsep menjadi keputusan teknis,
+              serta menjembatani bahasa desain dengan tujuan bisnis dan operasional.
+            </p>
+          </div>
+          <Button href="/kontak" className="mt-10 px-8">
             Diskusikan Project Anda
           </Button>
         </div>
@@ -73,10 +109,10 @@ export default function TentangPage() {
       <section className="relative overflow-hidden bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(200,169,81,0.06),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Pengalaman Nyata</h2>
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Core Expertise</h2>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {pengalamanNyata.map((item, index) => (
-              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_20px_42px_rgba(0,0,0,0.26)] md:p-10">
+            {coreExpertise.map((item, index) => (
+              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
                 <h3 className="font-display mt-6 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-5 text-base leading-[1.75] text-white/62">{item.description}</p>
@@ -88,12 +124,15 @@ export default function TentangPage() {
 
       <section className="relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="relative mx-auto max-w-7xl">
-          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Nilai yang Dibawa</h2>
-          <div className="mt-10 grid gap-4">
-            {nilaiDibawa.map((item) => (
-              <div key={item} className="border border-white/12 bg-white/[0.02] p-6 text-base leading-[1.75] text-white/64 md:text-lg">
-                {item}
-              </div>
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
+            Nilai Profesional yang Saya Bawa
+          </h2>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {professionalValue.map((item) => (
+              <article key={item.title} className="border border-white/12 bg-white/[0.02] p-6 md:p-7">
+                <h3 className="font-display text-2xl font-normal leading-[1.15] tracking-[-0.02em] text-white/90">{item.title}</h3>
+                <p className="mt-4 text-base leading-[1.75] text-white/64">{item.description}</p>
+              </article>
             ))}
           </div>
         </div>
@@ -101,14 +140,15 @@ export default function TentangPage() {
 
       <section className="relative overflow-hidden bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="relative mx-auto max-w-7xl">
-          <h2 className="font-display max-w-4xl text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
-            Apa yang saya bawa ke perusahaan
-          </h2>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {kontribusiPerusahaan.map((item) => (
-              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] md:p-10">
-                <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-5 text-base leading-[1.75] text-white/62">{item.detail}</p>
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Bekerja</h2>
+          <div className="mt-10 space-y-4">
+            {howIWork.map((item, index) => (
+              <article key={item.title} className="grid gap-4 border border-white/10 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
+                <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-[#C8A951]">0{index + 1}</p>
+                <div>
+                  <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-white/90">{item.title}</h3>
+                  <p className="mt-3 text-base leading-[1.75] text-white/62">{item.description}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -118,7 +158,20 @@ export default function TentangPage() {
       <section className="relative overflow-hidden px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_86%_16%,rgba(200,169,81,0.06),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Diferensiasi senior</h2>
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Capability Snapshot</h2>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {capabilitySnapshot.map((item) => (
+              <div key={item} className="border border-white/10 bg-white/[0.02] px-5 py-6 text-base leading-[1.6] text-white/80">
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+        <div className="relative mx-auto max-w-7xl">
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Diferensiasi Senior</h2>
           <ul className="mt-10 grid gap-4">
             {diferensiasiSenior.map((item) => (
               <li key={item} className="border border-[#C8A951]/25 bg-[#C8A951]/[0.06] p-6 text-base leading-[1.75] text-white/66 md:text-lg">
@@ -137,7 +190,8 @@ export default function TentangPage() {
             Siap membangun ruang yang lebih terarah dan berdampak?
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/62 md:text-lg">
-            Jika Anda membutuhkan partner desain untuk menyusun keputusan ruang yang jelas, efisien, dan selaras dengan tujuan proyek, mari mulai diskusinya.
+            Jika perusahaan atau project Anda membutuhkan partner desain yang mampu membaca konteks, menyusun arah, dan
+            menjaga keputusan tetap terukur, mari mulai diskusinya.
           </p>
           <Button href="/kontak" className="mt-10 px-8">
             Hubungi Saya
