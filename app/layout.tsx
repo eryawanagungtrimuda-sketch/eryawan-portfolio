@@ -17,8 +17,8 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: 'Eryawan Studio | Ruang yang masuk akal',
-  description: 'Studio desain strategis yang memposisikan ruang sebagai keputusan bernilai jangka panjang.',
+  title: 'Eryawan Agung | Portfolio Design Strategy',
+  description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
