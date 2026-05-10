@@ -53,7 +53,7 @@ export default async function WawasanPage() {
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-8 text-center">
             <p className="font-sans text-lg text-white/66">Belum ada wawasan dipublikasikan.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link className="rounded-2xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/kontak">Diskusikan Project</Link>
+              <Link className="rounded-2xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/mulai-project">Diskusikan Project</Link>
               <Link className="rounded-2xl border border-white/15 px-4 py-2 font-sans text-sm text-white/66 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>
             </div>
           </div>

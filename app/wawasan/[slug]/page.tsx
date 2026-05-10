@@ -158,7 +158,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         <div className="mt-8 flex flex-wrap gap-3 sm:mt-10">
           <Link href="/wawasan" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">Kembali ke Wawasan</Link>
           <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Lihat Karya</Link>
-          <Link href="/kontak" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">Diskusikan Project</Link>
+          <Link href="/mulai-project" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">Diskusikan Project</Link>
         </div>
       </div>
     </main>
