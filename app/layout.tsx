@@ -17,6 +17,7 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://eryawanagung.com'),
   title: 'Eryawan Agung | Portfolio Design Strategy',
   description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
 };

@@ -1,9 +1,29 @@
 export const dynamic = 'force-dynamic';
+import type { Metadata } from 'next';
 
 import Link from 'next/link';
 import BackButton from '@/components/back-button';
 import KaryaArchive from '@/components/karya-archive';
 import { getPublishedProjects } from '@/lib/projects';
+
+export const metadata: Metadata = {
+  title: 'Karya | Eryawan Agung Design Portfolio',
+  description:
+    'Explore the detailed design analysis and strategy behind Karya. Read how design decisions were made and their impact on functionality and aesthetics.',
+  openGraph: {
+    title: 'Karya | Eryawan Agung Design Portfolio',
+    description:
+      'Explore the detailed design analysis and strategy behind Karya. Read how design decisions were made and their impact on functionality and aesthetics.',
+    url: '/karya',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Karya | Eryawan Agung Design Portfolio',
+    description:
+      'Explore the detailed design analysis and strategy behind Karya. Read how design decisions were made and their impact on functionality and aesthetics.',
+  },
+};
 
 export default async function KaryaPage() {
   const projects = await getPublishedProjects();

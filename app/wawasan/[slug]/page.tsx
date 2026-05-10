@@ -29,7 +29,7 @@ function renderMarkdown(content?: string | null) {
         }
 
         if (text.startsWith('# ')) {
-          return <h1 key={index} className="font-display pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h1>;
+          return <h2 key={index} className="font-display pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h2>;
         }
 
         return <p key={index} className="font-sans whitespace-pre-wrap text-[15px] leading-8 text-white/66 sm:text-base">{line}</p>;
@@ -47,9 +47,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
+  const title = `${insight.title} | Eryawan Agung Design Portfolio`;
+  const description = `Explore the detailed design analysis and strategy behind ${insight.title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
+
   return {
-    title: `${insight.title} | Wawasan Desain`,
-    description: insight.excerpt || 'Wawasan desain dari Eryawan Studio.',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `/wawasan/${insight.slug}`,
+      type: 'article',
+      images: insight.cover_image ? [{ url: insight.cover_image, alt: insight.title }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: insight.cover_image ? [insight.cover_image] : undefined,
+    },
   };
 }
 
@@ -58,9 +74,27 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   if (!detail) return notFound();
   const { insight, sourceProject, images } = detail;
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
+  const schema = {
+    '@context': 'http://schema.org',
+    '@type': insight.content_type === 'review_karya' ? 'CreativeWork' : 'Article',
+    headline: insight.title,
+    name: insight.title,
+    description: insight.excerpt || 'Wawasan desain dari Eryawan Studio.',
+    image: insight.cover_image || images[0]?.image_url,
+    author: {
+      '@type': 'Person',
+      name: 'Eryawan Agung',
+    },
+    datePublished: insight.published_at || insight.created_at,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Eryawan Studio',
+    },
+  };
 
   return (
     <main className="min-h-screen bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <div className="mx-auto max-w-4xl">
         <SmartBackLink
           fallbackHref="/wawasan"

@@ -1,7 +1,27 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getPublishedInsights } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Wawasan | Eryawan Agung Design Portfolio',
+  description:
+    'Explore the detailed design analysis and strategy behind Wawasan. Read how design decisions were made and their impact on functionality and aesthetics.',
+  openGraph: {
+    title: 'Wawasan | Eryawan Agung Design Portfolio',
+    description:
+      'Explore the detailed design analysis and strategy behind Wawasan. Read how design decisions were made and their impact on functionality and aesthetics.',
+    url: '/wawasan',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wawasan | Eryawan Agung Design Portfolio',
+    description:
+      'Explore the detailed design analysis and strategy behind Wawasan. Read how design decisions were made and their impact on functionality and aesthetics.',
+  },
+};
 
 function formatSourceType(sourceType?: string | null) {
   if (!sourceType) return null;
