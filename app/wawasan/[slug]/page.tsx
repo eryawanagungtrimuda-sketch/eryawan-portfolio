@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SmartBackLink from '@/components/smart-back-link';
-import InsightImageLightbox from '@/components/insight-image-lightbox';
+import InsightImageGallery from '@/components/insight-image-gallery';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -78,10 +78,10 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         {insight.excerpt ? <p className="mt-4 max-w-3xl font-sans text-base leading-7 text-white/64 sm:mt-5 sm:text-lg sm:leading-relaxed">{insight.excerpt}</p> : null}
 
         {insight.content_type === 'review_karya' ? (
-          <InsightImageLightbox
+          <InsightImageGallery
             title={insight.title}
-            coverImage={insight.cover_image ? { src: insight.cover_image, alt: insight.title } : null}
-            galleryImages={images.map((img, idx) => ({ src: img.image_url, alt: `${insight.title} ${idx + 1}` }))}
+            coverImage={insight.cover_image}
+            images={images.map((img, idx) => ({ image_url: img.image_url, alt_text: `${insight.title} ${idx + 1}` }))}
           />
         ) : insight.cover_image ? (
           <div className="mt-8 overflow-hidden rounded-xl border border-white/10 sm:mt-10">
