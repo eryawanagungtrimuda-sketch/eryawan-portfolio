@@ -71,3 +71,27 @@ export type InsightImage = {
   sort_order: number;
   created_at: string;
 };
+
+
+export type ProjectInquiryStatus = 'baru' | 'ditinjau' | 'dihubungi' | 'selesai' | 'arsip';
+
+export type ProjectInquiry = {
+  id: string;
+  nama: string;
+  perusahaan: string | null;
+  email: string | null;
+  whatsapp: string | null;
+  jenis_kebutuhan: string;
+  lokasi_project: string | null;
+  estimasi_luas: string | null;
+  tahap_project: string | null;
+  timeline: string | null;
+  budget_range: string | null;
+  kebutuhan_utama: string;
+  status_file: string | null;
+  message_preview: string;
+  status: ProjectInquiryStatus;
+  source: string;
+  created_at: string;
+  updated_at: string;
+};
