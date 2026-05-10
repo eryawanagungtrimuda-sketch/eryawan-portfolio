@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminEmail, createSupabaseBrowserClient } from '@/lib/supabase';
+import { createSupabaseBrowserClient } from '@/lib/supabase';
+import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 export default function AdminAuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -17,8 +18,7 @@ export default function AdminAuthGuard({ children }: { children: React.ReactNode
       try {
         const supabase = createSupabaseBrowserClient();
         const { data } = await supabase.auth.getUser();
-        const email = data.user?.email?.toLowerCase();
-        const isAllowed = Boolean(email && email === adminEmail.toLowerCase());
+        const isAllowed = isAllowedAdminEmail(data.user?.email);
 
         if (!mounted) return;
         setAllowed(isAllowed);
