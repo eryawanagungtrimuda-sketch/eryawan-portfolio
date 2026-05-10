@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import ContextualBackButton from '@/components/contextual-back-button';
 import { getPublishedInsights } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -42,9 +43,7 @@ export default async function WawasanPage() {
           <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
             Lihat Karya
           </Link>
-          <Link href="/" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">
-            Kembali ke Beranda
-          </Link>
+          <ContextualBackButton fallbackHref="/" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-5 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white" />
         </div>
       </section>
 

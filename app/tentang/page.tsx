@@ -112,7 +112,7 @@ export default function TentangPage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-10">
-            <BackButton label="Kembali ke Beranda" fallbackHref="/" />
+            <BackButton fallbackHref="/" />
           </div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Tentang</p>
           <h1 className="font-display mt-5 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">

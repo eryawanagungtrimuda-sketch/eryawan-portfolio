@@ -30,7 +30,7 @@ export default async function KaryaPage() {
           <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
             Eryawan Studio
           </Link>
-          <BackButton label="Kembali ke Beranda" fallbackHref="/" />
+          <BackButton fallbackHref="/" />
         </div>
 
         <section className="py-20 motion-safe:animate-[fade-in-up_800ms_ease-out_forwards] md:py-28 lg:py-32">

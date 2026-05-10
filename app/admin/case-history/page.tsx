@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
+import ContextualBackButton from '@/components/contextual-back-button';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 
 type CaseHistoryProject = {
@@ -67,9 +68,7 @@ export default function AdminCaseHistoryPage() {
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-5 py-10 font-sans text-[#F4F1EA] md:px-10 lg:px-16">
         <div className="mx-auto max-w-6xl">
           <div className="border-b border-white/10 pb-8">
-            <Link href="/admin/dashboard" className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35 transition hover:text-[#D4AF37]">
-              Kembali ke Dashboard
-            </Link>
+            <ContextualBackButton fallbackHref="/admin" className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35 transition hover:text-[#D4AF37]" />
             <h1 className="font-display mt-4 text-5xl font-normal leading-[1.05] tracking-[-0.04em]">Case History</h1>
             <p className="mt-4 max-w-4xl text-base leading-7 text-white/55">
               Arsip brief internal, riwayat masalah klien, keputusan desain, dan insight project. Data ini hanya untuk admin dan tidak tampil di halaman publik.
