@@ -24,20 +24,28 @@ create trigger update_project_inquiries_updated_at
 before update on public.project_inquiries
 for each row execute function public.update_updated_at_column();
 
-grant select, insert, update on public.project_inquiries to authenticated;
+revoke all on public.project_inquiries from anon, authenticated;
+
 grant insert on public.project_inquiries to anon;
+grant select, update on public.project_inquiries to authenticated;
 
 alter table public.project_inquiries enable row level security;
 
+drop policy if exists project_inquiries_anon_insert on public.project_inquiries;
 create policy project_inquiries_anon_insert on public.project_inquiries
 for insert to anon
 with check (true);
 
-create policy project_inquiries_authenticated_select on public.project_inquiries
+drop policy if exists project_inquiries_authenticated_select on public.project_inquiries;
+create policy project_inquiries_admin_select on public.project_inquiries
 for select to authenticated
-using (true);
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
 
-create policy project_inquiries_authenticated_update on public.project_inquiries
+drop policy if exists project_inquiries_authenticated_update on public.project_inquiries;
+create policy project_inquiries_admin_update on public.project_inquiries
 for update to authenticated
-using (true)
-with check (status in ('baru', 'ditinjau', 'dihubungi', 'selesai', 'arsip'));
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com')
+with check (
+  lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com'
+  and status in ('baru', 'ditinjau', 'dihubungi', 'selesai', 'arsip')
+);
