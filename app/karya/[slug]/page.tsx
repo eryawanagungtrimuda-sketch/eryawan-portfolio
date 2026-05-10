@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
@@ -10,6 +11,45 @@ import { getPublishedProjectBySlug } from '@/lib/projects';
 type Props = {
   params: { slug: string };
 };
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+
+function buildProjectDescription(projectName: string) {
+  return `Explore the detailed design analysis and strategy behind ${projectName}. Read how design decisions were made and their impact on functionality and aesthetics.`;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const project = await getPublishedProjectBySlug(params.slug);
+  if (!project) {
+    return {
+      title: 'Project Not Found | Eryawan Agung Design Portfolio',
+      description: 'Project yang Anda cari belum tersedia.',
+    };
+  }
+
+  const title = `${project.title} | Eryawan Agung Design Portfolio`;
+  const description = buildProjectDescription(project.title);
+  const url = `${SITE_URL}/karya/${project.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      images: project.cover_image ? [{ url: project.cover_image, alt: `${project.title} cover image` }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: project.cover_image ? [project.cover_image] : undefined,
+    },
+  };
+}
 
 function TextBlock({ label, body, index, fallback }: { label: string; body?: string | null; index: number; fallback: string }) {
   return (
@@ -35,9 +75,20 @@ export default async function KaryaDetailPage({ params }: Props) {
   }));
   const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
   const areaTags = (project.area_tags || []).filter(Boolean);
+  const schemaData = {
+    '@context': 'http://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: buildProjectDescription(project.title),
+    image: project.cover_image || galleryImages[0]?.image_url || `${SITE_URL}/hero.jpg`,
+    author: { '@type': 'Person', name: 'Eryawan Agung' },
+    datePublished: project.created_at,
+    publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
+  };
 
   return (
     <main className="min-h-screen bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
