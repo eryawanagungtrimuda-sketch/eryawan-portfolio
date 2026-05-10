@@ -1,15 +1,32 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import ProjectImageLightbox from './project-image-lightbox';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAreaTagLabel } from '@/lib/area-tags';
 
 type GalleryImage = { src: string; alt: string; area_tags?: string[] | null };
 
-export default function ProjectImageGallery({ images, projectTitle }: { images: GalleryImage[]; projectTitle: string }) {
+export default function ProjectImageGallery({ images, projectTitle, coverImage }: { images: GalleryImage[]; projectTitle: string; coverImage?: string | null }) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  const combinedImages = useMemo(() => {
+    const result: GalleryImage[] = [];
+    const seen = new Set<string>();
+    const pushImage = (image: GalleryImage) => {
+      const normalized = image.src.trim();
+      if (!normalized || seen.has(normalized)) return;
+      seen.add(normalized);
+      result.push({ ...image, src: normalized });
+    };
+
+    if (coverImage) pushImage({ src: coverImage, alt: projectTitle });
+    images.forEach(pushImage);
+    return result;
+  }, [coverImage, images, projectTitle]);
+
   const availableTags = useMemo(() => {
     const tagMap = new Map<string, string>();
-    images.forEach((image) => {
+    combinedImages.forEach((image) => {
       (image.area_tags || []).forEach((tag) => {
         const normalized = tag.trim();
         if (!normalized) return;
@@ -17,13 +34,36 @@ export default function ProjectImageGallery({ images, projectTitle }: { images: 
       });
     });
     return Array.from(tagMap.values()).sort((a, b) => a.localeCompare(b));
-  }, [images]);
+  }, [combinedImages]);
 
   const [activeTag, setActiveTag] = useState('All');
   const filteredImages = useMemo(() => {
-    if (activeTag === 'All') return images;
-    return images.filter((image) => (image.area_tags || []).includes(activeTag));
-  }, [activeTag, images]);
+    if (activeTag === 'All') return combinedImages;
+    return combinedImages.filter((image) => (image.area_tags || []).includes(activeTag));
+  }, [activeTag, combinedImages]);
+
+  const hasMultiple = filteredImages.length > 1;
+  const activeImage = activeIndex !== null ? filteredImages[activeIndex] : null;
+
+  useEffect(() => {
+    if (activeIndex === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveIndex(null);
+      if (event.key === 'ArrowRight' && hasMultiple) setActiveIndex((prev) => (prev === null ? 0 : (prev + 1) % filteredImages.length));
+      if (event.key === 'ArrowLeft' && hasMultiple) setActiveIndex((prev) => (prev === null ? 0 : (prev - 1 + filteredImages.length) % filteredImages.length));
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [activeIndex, filteredImages.length, hasMultiple]);
+
+  const closeLightbox = () => {
+    setActiveIndex(null);
+    triggerRef.current?.focus();
+  };
 
   return (
     <div>
@@ -41,7 +81,42 @@ export default function ProjectImageGallery({ images, projectTitle }: { images: 
           ))}
         </div>
       ) : null}
-      <ProjectImageLightbox images={filteredImages.map((image) => ({ src: image.src, alt: image.alt }))} projectTitle={projectTitle} />
+
+      {filteredImages.length > 0 ? (
+        <>
+          <div className="grid gap-6 md:grid-cols-2">
+            {filteredImages.map((image, index) => (
+              <figure key={`${image.src}-${index}`} className={index === 0 ? 'md:col-span-2' : ''}>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    triggerRef.current = event.currentTarget;
+                    setActiveIndex(index);
+                  }}
+                  className="block w-full overflow-hidden rounded-sm border border-white/10 bg-white/[0.02] text-left"
+                >
+                  <img src={image.src} alt={image.alt || `${projectTitle} ${index + 1}`} className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'} />
+                </button>
+              </figure>
+            ))}
+          </div>
+
+          {activeImage ? (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5" role="dialog" aria-modal="true" onClick={closeLightbox}>
+              <div className="relative w-full max-w-6xl scale-100 opacity-100 transition duration-200" onClick={(event) => event.stopPropagation()}>
+                <img src={activeImage.src} alt={activeImage.alt || projectTitle} className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" />
+                <button type="button" aria-label="Tutup lightbox" onClick={closeLightbox} className="absolute right-2 top-2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xs text-[#D4AF37] transition hover:bg-black/90">Tutup</button>
+                {hasMultiple ? (
+                  <>
+                    <button type="button" aria-label="Gambar sebelumnya" onClick={() => setActiveIndex((prev) => (prev === null ? 0 : (prev - 1 + filteredImages.length) % filteredImages.length))} className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xl leading-none text-[#D4AF37] transition hover:bg-black/90">‹</button>
+                    <button type="button" aria-label="Gambar berikutnya" onClick={() => setActiveIndex((prev) => (prev === null ? 0 : (prev + 1) % filteredImages.length))} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xl leading-none text-[#D4AF37] transition hover:bg-black/90">›</button>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+        </>
+      ) : null}
     </div>
   );
 }
