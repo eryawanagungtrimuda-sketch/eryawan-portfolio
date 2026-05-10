@@ -39,6 +39,35 @@ const professionalValue = [
   },
 ];
 
+const trustSignals = [
+  {
+    title: '15+ Tahun',
+    description: 'Pengalaman dalam merancang ruang residensial, hospitality, dan workspace dengan kebutuhan yang beragam.',
+  },
+  {
+    title: 'Strategic Design',
+    description: 'Tidak hanya membuat visual, tetapi membantu menyusun arah desain, prioritas keputusan, dan logika ruang.',
+  },
+  {
+    title: 'Execution Aware',
+    description:
+      'Memahami bahwa desain harus mempertimbangkan waktu, biaya, koordinasi, material, dan realitas pelaksanaan.',
+  },
+  {
+    title: 'Business Context',
+    description:
+      'Menghubungkan keputusan desain dengan kenyamanan pengguna, citra brand, dan keberlanjutan operasional.',
+  },
+];
+
+const proofOfValue = [
+  'Membaca konteks sebelum menentukan bentuk.',
+  'Mengubah brief samar menjadi arah desain yang jelas.',
+  'Menjembatani bahasa desain dengan bahasa bisnis.',
+  'Menyusun keputusan yang siap dipresentasikan dan dieksekusi.',
+  'Melihat proyek sebagai sistem, bukan kumpulan elemen visual.',
+];
+
 const howIWork = [
   {
     title: 'Understand the Context',
@@ -118,6 +147,40 @@ export default function TentangPage() {
                 <p className="mt-5 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#0B0B0A] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(200,169,81,0.07),transparent_30%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Trust Signals</p>
+          <h2 className="font-display mt-5 max-w-5xl text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
+            Kepercayaan yang Dibangun dari Pengalaman
+          </h2>
+          <p className="mt-7 max-w-4xl text-base leading-[1.75] text-white/64 md:text-lg">
+            Tanpa mengandalkan klaim berlebihan, nilai kerja saya dibangun dari pengalaman membaca ruang, memahami kebutuhan
+            pengguna, dan menjaga keputusan desain tetap relevan dengan tujuan proyek.
+          </p>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {trustSignals.map((item) => (
+              <article key={item.title} className="border border-white/12 bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(200,169,81,0.2)] md:p-7">
+                <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-white/92">{item.title}</h3>
+                <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 border border-[#C8A951]/25 bg-[#C8A951]/[0.05] p-6 md:p-8">
+            <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA]">Bukti Nilai Kerja</h3>
+            <ul className="mt-6 grid gap-3 md:grid-cols-2">
+              {proofOfValue.map((item) => (
+                <li key={item} className="border border-white/10 bg-black/25 px-4 py-3 text-sm leading-[1.75] text-white/78 md:text-base">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
