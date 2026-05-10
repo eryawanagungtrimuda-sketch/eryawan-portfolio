@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
+import ContextualBackButton from '@/components/contextual-back-button';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Insight } from '@/lib/types';
 
@@ -61,7 +62,7 @@ export default function AdminInsightsPage() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link href="/admin/insights/new" className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#f8bb15]">Tambah Review Karya</Link>
-                <Link href="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5">Kembali ke Dashboard</Link>
+                <ContextualBackButton fallbackHref="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5" />
               </div>
             </div>
           </section>

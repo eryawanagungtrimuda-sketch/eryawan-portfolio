@@ -2,21 +2,19 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent } from 'react';
 
-type SmartBackLinkProps = {
+type ContextualBackButtonProps = {
   fallbackHref: string;
-  children?: ReactNode;
   label?: string;
   className?: string;
 };
 
-export default function SmartBackLink({
+export default function ContextualBackButton({
   fallbackHref,
-  children,
   label = '← Kembali ke Sebelumnya',
   className,
-}: SmartBackLinkProps) {
+}: ContextualBackButtonProps) {
   const router = useRouter();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -35,7 +33,7 @@ export default function SmartBackLink({
 
   return (
     <Link href={fallbackHref} onClick={handleClick} className={className}>
-      {children ?? label}
+      {label}
     </Link>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
+import ContextualBackButton from '@/components/contextual-back-button';
 import InsightForm from '@/components/insight-form';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Insight, InsightImage } from '@/lib/types';
@@ -40,7 +40,7 @@ export default function EditInsightPage({ params }: { params: { id: string } }) 
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl space-y-6">
-          <Link href="/admin/insights" className="inline-flex font-sans rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 hover:bg-white/5">← Kembali ke Kelola Wawasan</Link>
+          <ContextualBackButton fallbackHref="/admin/insights" className="inline-flex font-sans rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 hover:bg-white/5" />
           <div>
             <h1 className="font-sans text-[2rem] font-semibold tracking-[-0.02em] sm:text-[2.4rem] md:text-5xl">Edit Wawasan</h1>
             <p className="mt-2 text-sm text-white/70 md:text-base">Perbarui konten, review hasil AI, lalu simpan perubahan wawasan.</p>

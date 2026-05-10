@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ContextualBackButton from '@/components/contextual-back-button';
 
 export default function KontakPage() {
   return (
@@ -10,7 +11,7 @@ export default function KontakPage() {
         <a href="mailto:eryawanagungtrimuda@gmail.com" className="mt-8 inline-flex min-h-11 max-w-full break-all rounded-full border border-[#D4AF37] bg-[#D4AF37] px-4 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866] sm:px-6 sm:text-xs sm:tracking-[0.16em]">eryawanagungtrimuda@gmail.com</a>
                 <div className="mt-5 flex flex-wrap gap-3">
           <Link href="/mulai-project" className="inline-flex rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Susun Brief Project</Link>
-          <Link href="/" className="inline-flex rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Kembali ke Beranda</Link>
+          <ContextualBackButton fallbackHref="/" className="inline-flex rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" />
         </div>
       </section>
     </main>
