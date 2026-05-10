@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/wawasan',
     '/kontak',
     '/tentang',
+    '/mulai-project',
   ].map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified: new Date(),
