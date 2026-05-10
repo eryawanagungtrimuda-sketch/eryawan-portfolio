@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
 
 type FormState = {
   nama: string;
@@ -28,7 +28,19 @@ const kebutuhanOptions = [
   'Peluang Kerja / Rekrutmen',
   'Lainnya',
 ];
+const luasOptions = ['< 50 m²', '50–100 m²', '100–300 m²', '300–500 m²', '> 500 m²', 'Belum tahu'];
+const tahapOptions = [
+  'Masih ide awal',
+  'Sudah ada layout/gambar',
+  'Butuh review desain',
+  'Butuh konsep desain',
+  'Butuh design development',
+  'Siap masuk tahap eksekusi',
+  'Butuh partner strategis',
+];
 const timelineOptions = ['Secepatnya', '1–3 bulan', '3–6 bulan', '> 6 bulan', 'Fleksibel'];
+const budgetOptions = ['Belum ditentukan', '< Rp50 juta', 'Rp50–150 juta', 'Rp150–500 juta', 'Rp500 juta–1 M', '> Rp1 M', 'Rahasia / dibahas langsung'];
+const statusFileOptions = ['Belum ada file', 'Ada foto lokasi', 'Ada layout', 'Ada gambar 3D/render', 'Ada referensi moodboard', 'Ada brief tertulis'];
 const initialState: FormState = {
   nama: '',
   perusahaan: '',
@@ -51,11 +63,12 @@ export default function ProjectBriefForm() {
   const [submitState, setSubmitState] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
   const [isFormClosed, setIsFormClosed] = useState(false);
+  const isSubmittingRef = useRef(false);
   const waNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '').replace(/[^\d]/g, '');
 
   const message = useMemo(
     () =>
-      `Halo Eryawan, saya ingin diskusi project.\n\nNama: ${form.nama || '-'}\nPerusahaan / Brand: ${form.perusahaan || '-'}\nEmail: ${form.email || '-'}\nWhatsApp: ${form.whatsapp || '-'}\n\nJenis Kebutuhan: ${form.jenisKebutuhan || '-'}\nLokasi Project: ${form.lokasiProject || '-'}\nEstimasi Luas: ${form.estimasiLuas || '-'}\nTahap Project: ${form.tahapProject || '-'}\nTimeline: ${form.timeline || '-'}\nRange Budget: ${form.budgetRange || '-'}\nStatus File: ${form.statusFile || '-'}\n\nKebutuhan Utama:\n${form.kebutuhanUtama || '-'}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.",
+      `Halo Eryawan, saya ingin diskusi project.\n\nNama: ${form.nama || '-'}\nPerusahaan / Brand: ${form.perusahaan || '-'}\nEmail: ${form.email || '-'}\nWhatsApp: ${form.whatsapp || '-'}\n\nJenis Kebutuhan: ${form.jenisKebutuhan || '-'}\nLokasi Project: ${form.lokasiProject || '-'}\nEstimasi Luas: ${form.estimasiLuas || '-'}\nTahap Project: ${form.tahapProject || '-'}\nTimeline: ${form.timeline || '-'}\nRange Budget: ${form.budgetRange || '-'}\nStatus File: ${form.statusFile || '-'}\n\nKebutuhan Utama:\n${form.kebutuhanUtama || '-'}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
     [form],
   );
 
@@ -71,12 +84,13 @@ export default function ProjectBriefForm() {
 
   async function handleSend(event: FormEvent) {
     event.preventDefault();
-    if (submitState === 'saving' || submitState === 'success') return;
+    if (submitState === 'saving' || submitState === 'success' || isSubmittingRef.current) return;
 
     setSubmitMessage('');
     if (!validate()) return;
 
     setSubmitState('saving');
+    isSubmittingRef.current = true;
 
     const response = await fetch('/api/project-inquiries', {
       method: 'POST',
@@ -87,6 +101,7 @@ export default function ProjectBriefForm() {
     if (!response.ok) {
       setSubmitState('error');
       setSubmitMessage('Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.');
+      isSubmittingRef.current = false;
       return;
     }
 
@@ -98,7 +113,7 @@ export default function ProjectBriefForm() {
       return;
     }
 
-    setSubmitMessage('Brief berhasil disimpan. WhatsApp akan terbuka untuk melanjutkan percakapan.');
+    setSubmitMessage('Brief berhasil disimpan. WhatsApp sudah dibuka untuk melanjutkan percakapan.');
     const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setIsFormClosed(true);
@@ -116,6 +131,7 @@ export default function ProjectBriefForm() {
     setSubmitState('idle');
     setSubmitMessage('');
     setIsFormClosed(false);
+    isSubmittingRef.current = false;
   }
 
   const inputClass =
@@ -181,12 +197,25 @@ export default function ProjectBriefForm() {
           </div>
           {errors.jenisKebutuhan ? <p className="mt-2 text-xs text-amber-300">{errors.jenisKebutuhan}</p> : null}
         </div>
+        <div>
+          <label className="text-sm text-white/80">Lokasi project</label>
+          <input className={inputClass} value={form.lokasiProject} onChange={(e) => setForm({ ...form, lokasiProject: e.target.value })} />
+        </div>
+        <SelectField label="Estimasi luas area" value={form.estimasiLuas} options={luasOptions} onChange={(value) => setForm({ ...form, estimasiLuas: value })} />
+        <SelectField label="Tahap project saat ini" value={form.tahapProject} options={tahapOptions} onChange={(value) => setForm({ ...form, tahapProject: value })} />
         <SelectField label="Timeline" value={form.timeline} options={timelineOptions} onChange={(value) => setForm({ ...form, timeline: value })} />
+        <SelectField
+          label="Range budget / investasi project"
+          value={form.budgetRange}
+          options={budgetOptions}
+          onChange={(value) => setForm({ ...form, budgetRange: value })}
+        />
         <div>
           <label className="text-sm text-white/80">Kebutuhan utama *</label>
           <textarea className={`${inputClass} min-h-32`} value={form.kebutuhanUtama} onChange={(e) => setForm({ ...form, kebutuhanUtama: e.target.value })} />
           {errors.kebutuhanUtama ? <p className="mt-2 text-xs text-amber-300">{errors.kebutuhanUtama}</p> : null}
         </div>
+        <SelectField label="Status file" value={form.statusFile} options={statusFileOptions} onChange={(value) => setForm({ ...form, statusFile: value })} />
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="submit"
