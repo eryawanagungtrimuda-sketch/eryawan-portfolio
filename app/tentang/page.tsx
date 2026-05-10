@@ -129,7 +129,7 @@ export default function TentangPage() {
               serta menjembatani bahasa desain dengan tujuan bisnis dan operasional.
             </p>
           </div>
-          <Button href="/kontak" className="mt-10 px-8">
+          <Button href="/mulai-project" className="mt-10 px-8">
             Diskusikan Project Anda
           </Button>
         </div>
@@ -256,7 +256,7 @@ export default function TentangPage() {
             Jika perusahaan atau project Anda membutuhkan partner desain yang mampu membaca konteks, menyusun arah, dan
             menjaga keputusan tetap terukur, mari mulai diskusinya.
           </p>
-          <Button href="/kontak" className="mt-10 px-8">
+          <Button href="/mulai-project" className="mt-10 px-8">
             Hubungi Saya
           </Button>
         </div>

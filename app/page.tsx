@@ -174,7 +174,7 @@ export default async function Home() {
             <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="#contact">Kontak</a>
           </div>
 
-          <Button href="mailto:eryawanagungtrimuda@gmail.com" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
+          <Button href="/mulai-project" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
             Ajak Kolaborasi
           </Button>
         </nav>
@@ -204,7 +204,7 @@ export default async function Home() {
             </p>
 
             <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button href="mailto:eryawanagungtrimuda@gmail.com" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+              <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Diskusikan Proyek Secara Strategis
               </Button>
               <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">

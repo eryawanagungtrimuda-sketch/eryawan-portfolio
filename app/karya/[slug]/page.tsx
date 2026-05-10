@@ -178,7 +178,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         <section className="border-t border-white/10 py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
-              href="/kontak"
+              href="/mulai-project"
               className="inline-flex items-center rounded-2xl border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
               Diskusikan Project Serupa
