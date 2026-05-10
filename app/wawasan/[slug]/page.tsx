@@ -6,6 +6,11 @@ import InsightImageGallery from '@/components/insight-image-gallery';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+
+function buildInsightDescription(title: string, excerpt?: string | null) {
+  return excerpt || `Explore the detailed design analysis and strategy behind ${title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
+}
 
 function renderMarkdown(content?: string | null) {
   if (!content) {
@@ -29,7 +34,7 @@ function renderMarkdown(content?: string | null) {
         }
 
         if (text.startsWith('# ')) {
-          return <h1 key={index} className="font-display pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h1>;
+          return <h2 key={index} className="font-display pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h2>;
         }
 
         return <p key={index} className="font-sans whitespace-pre-wrap text-[15px] leading-8 text-white/66 sm:text-base">{line}</p>;
@@ -47,9 +52,27 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
+  const title = `${insight.title} | Eryawan Agung Design Portfolio`;
+  const description = buildInsightDescription(insight.title, insight.excerpt);
+  const url = `${SITE_URL}/wawasan/${insight.slug}`;
+
   return {
-    title: `${insight.title} | Wawasan Desain`,
-    description: insight.excerpt || 'Wawasan desain dari Eryawan Studio.',
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      images: insight.cover_image ? [{ url: insight.cover_image, alt: `${insight.title} insight image` }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: insight.cover_image ? [insight.cover_image] : undefined,
+    },
   };
 }
 
@@ -57,10 +80,22 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   const detail = await getPublishedInsightDetailBySlug(params.slug);
   if (!detail) return notFound();
   const { insight, sourceProject, images } = detail;
+  const description = buildInsightDescription(insight.title, insight.excerpt);
+  const schemaData = {
+    '@context': 'http://schema.org',
+    '@type': 'Article',
+    headline: insight.title,
+    description,
+    image: insight.cover_image || images[0]?.image_url || `${SITE_URL}/hero.jpg`,
+    author: { '@type': 'Person', name: 'Eryawan Agung' },
+    datePublished: insight.created_at,
+    publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
+  };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
 
   return (
     <main className="min-h-screen bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="mx-auto max-w-4xl">
         <SmartBackLink
           fallbackHref="/wawasan"

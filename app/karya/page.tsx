@@ -1,9 +1,24 @@
-export const dynamic = 'force-dynamic';
+import type { Metadata } from 'next';
 
 import Link from 'next/link';
 import BackButton from '@/components/back-button';
 import KaryaArchive from '@/components/karya-archive';
 import { getPublishedProjects } from '@/lib/projects';
+
+export const dynamic = 'force-dynamic';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+
+export const metadata: Metadata = {
+  title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
+  description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+  alternates: { canonical: `${SITE_URL}/karya` },
+  openGraph: {
+    title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
+    description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+    url: `${SITE_URL}/karya`,
+  },
+};
 
 export default async function KaryaPage() {
   const projects = await getPublishedProjects();

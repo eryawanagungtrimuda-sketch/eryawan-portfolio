@@ -1,7 +1,25 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getPublishedInsights } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+
+export const metadata: Metadata = {
+  title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
+  description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
+  alternates: { canonical: `${SITE_URL}/wawasan` },
+  openGraph: {
+    title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
+    description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
+    url: `${SITE_URL}/wawasan`,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
+    description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
+  },
+};
 
 function formatSourceType(sourceType?: string | null) {
   if (!sourceType) return null;
