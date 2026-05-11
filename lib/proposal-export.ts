@@ -7,7 +7,7 @@ function normalizeValue(value?: string | null) {
   return trimmed ? trimmed : fallbackText;
 }
 
-function sanitizeFilenamePart(value: string) {
+export function sanitizeFilenamePart(value: string) {
   const normalized = value.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
   const cleaned = normalized.replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   return cleaned || 'calon-klien';
