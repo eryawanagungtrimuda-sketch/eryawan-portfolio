@@ -107,7 +107,7 @@ export default function TentangPage() {
           <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
             Merancang ruang dengan cara membaca kebutuhan, karakter, dan arah hidup di dalamnya.
           </h1>
-          <div className="mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/68 sm:text-lg md:text-xl">
+          <div className="mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl">
             <p>
               Saya memulai setiap project dengan memahami bagaimana ruang akan dipakai, atmosfer seperti apa yang ingin
               dihadirkan, dan keputusan mana yang realistis untuk dieksekusi dengan baik.
@@ -128,10 +128,10 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/8 bg-[#090909] px-5 py-14 md:px-10 md:py-20 lg:px-16 lg:py-24">
+      <section className="border-y border-white/3 bg-[#090909] px-5 py-14 md:px-10 md:py-20 lg:px-16 lg:py-24">
         <div className="mx-auto max-w-4xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Cara Saya Melihat Ruang</h2>
-          <div className="mt-7 space-y-5 text-base leading-[1.8] text-white/68 md:text-lg">
+          <div className="mt-7 space-y-5 text-base leading-[1.8] text-white/70 md:text-lg">
             <p>
               Bagi saya, ruang selalu memiliki cerita sebelum desain dimulai. Ada kebiasaan pengguna, batasan teknis,
               arah visual yang diinginkan, serta keputusan-keputusan kecil yang menentukan apakah ruang itu nyaman
@@ -154,32 +154,32 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Fokus Keahlian</h2>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {fokusKeahlian.map((item, index) => (
-              <article key={item.title} className="border border-white/10 bg-white/[0.02] p-8 md:p-10">
+              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-8 md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
                 <h3 className="font-display mt-5 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/64">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-y border-white/8 bg-[#0B0B0A] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="border-y border-white/3 bg-[#0B0B0A] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Trust Signals</p>
           <h2 className="font-display mt-5 max-w-5xl text-4xl font-normal leading-[1.08] tracking-[-0.03em] md:text-6xl">
             Kepercayaan yang Dibangun dari Pengalaman
           </h2>
-          <p className="mt-7 max-w-4xl text-base leading-[1.75] text-white/66 md:text-lg">
+          <p className="mt-7 max-w-4xl text-base leading-[1.75] text-white/70 md:text-lg">
             Kredibilitas saya dibangun dari cara kerja yang konsisten: membaca konteks terlebih dulu, merapikan prioritas
             desain, lalu menjaga keputusan tetap bisa dipahami dan dijalankan.
           </p>
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {trustSignals.map((item) => (
-              <article key={item.title} className="border border-white/12 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-6 md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.2] tracking-[-0.02em] text-white/92">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
               </article>
             ))}
           </div>
@@ -193,9 +193,9 @@ export default function TentangPage() {
           </h2>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {professionalValue.map((item) => (
-              <article key={item.title} className="border border-white/12 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-6 md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.15] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/64">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
               </article>
             ))}
           </div>
@@ -207,11 +207,11 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Project</h2>
           <div className="mt-10 space-y-4">
             {howIWork.map((item, index) => (
-              <article key={item.title} className="grid gap-4 border border-white/10 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
+              <article key={item.title} className="grid gap-4 border border-white/4 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
                 <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-[#C8A951]">0{index + 1}</p>
                 <div>
                   <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                  <p className="mt-3 text-base leading-[1.75] text-white/62">{item.description}</p>
+                  <p className="mt-3 text-base leading-[1.75] text-white/70">{item.description}</p>
                 </div>
               </article>
             ))}
@@ -219,13 +219,13 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-t border-white/8 px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="relative overflow-hidden border-t border-white/3 px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(200,169,81,0.06),transparent_34%)]" />
         <div className="relative mx-auto max-w-5xl text-center">
           <h2 className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
             Punya ruang atau project yang perlu diarahkan?
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/64 md:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/70 md:text-lg">
             Bagikan konteks awal project Anda agar kebutuhan, prioritas, dan arah desain dapat dibaca dengan lebih jelas
             sebelum masuk ke diskusi lanjutan.
           </p>
