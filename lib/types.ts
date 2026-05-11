@@ -95,3 +95,20 @@ export type ProjectInquiry = {
   created_at: string;
   updated_at: string;
 };
+
+
+export type ProjectInquiryProposalDraftStatus = 'draft' | 'used' | 'archived';
+
+export type ProjectInquiryProposalDraft = {
+  id: string;
+  inquiry_id: string;
+  title: string;
+  draft_content: string;
+  follow_up_message: string | null;
+  status: ProjectInquiryProposalDraftStatus;
+  version: number;
+  model: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
