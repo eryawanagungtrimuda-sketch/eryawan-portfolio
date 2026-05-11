@@ -15,7 +15,7 @@ const baseStyles = 'inline-flex min-h-11 max-w-full items-center justify-center 
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-[#C8A951] text-[#080807] hover:bg-[#D7BD72]',
-  secondary: 'border border-[#C8A951] bg-transparent text-[#C8A951] hover:bg-[#C8A951]/10',
+  secondary: 'border border-white/10 bg-transparent text-[#C8A951] hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10',
 };
 
 export default function Button({ children, href, className = '', variant = 'primary', ariaLabel }: ButtonProps) {

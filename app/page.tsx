@@ -245,7 +245,7 @@ export default async function Home() {
 
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                 <div className="mb-14 flex items-center justify-between">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
@@ -281,13 +281,13 @@ export default async function Home() {
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group border border-white/10 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+                <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                   <div className="mb-16 flex items-center justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.code}</span>
                     </div>
-                    <span className="grid h-12 w-12 place-items-center border border-[#C8A951]/30 text-[#C8A951]/80 transition duration-300 group-hover:border-[#C8A951]/55 group-hover:bg-[#C8A951]/10 group-hover:text-[#C8A951]">
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl border border-[#C8A951]/24 text-[#C8A951]/80 transition duration-300 group-hover:border-[#C8A951]/45 group-hover:bg-[#C8A951]/10 group-hover:text-[#C8A951]">
                       <Icon size={21} strokeWidth={1.8} />
                     </span>
                   </div>
@@ -326,7 +326,7 @@ export default async function Home() {
             {decisions.map((decision, index) => (
               <article
                 key={decision.title}
-                className="group relative overflow-hidden border border-white/10 bg-white/[0.018] p-5 pl-12 transition duration-300 hover:border-[#C8A951]/35 hover:bg-white/[0.03] md:p-7 md:pl-14"
+                className="group relative overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.018] p-5 pl-12 transition duration-300 hover:border-[#C8A951]/24 hover:bg-white/[0.03] md:p-7 md:pl-14"
               >
                 <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 md:block" />
                 <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 md:block" />
@@ -364,7 +364,7 @@ export default async function Home() {
               {impacts.map((impact, index) => (
                 <article
                   key={impact.title}
-                  className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] px-5 py-5 transition duration-300 ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/30 hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(200,169,81,0.09)] sm:px-6"
+                  className="group relative overflow-hidden rounded-[30px] border border-white/5 bg-white/[0.02] px-5 py-5 transition duration-300 ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/22 hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(200,169,81,0.09)] sm:px-6"
                 >
                   <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#C8A951]/65 to-transparent" />
                   <div className="flex items-start justify-between gap-4">
@@ -447,8 +447,8 @@ export default async function Home() {
               const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
 
               return (
-                <article key={project.id} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/25 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
-                  <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0f1925]">
+                <article key={project.id} className="group relative overflow-hidden rounded-[30px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/22 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                  <div className="relative aspect-[16/9] overflow-hidden border-b border-white/5 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
                         <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" loading="lazy" />
@@ -456,14 +456,14 @@ export default async function Home() {
                       </>
                     ) : (
                       <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
-                        <div className="rounded-2xl border border-white/20 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
+                        <div className="rounded-2xl border border-white/10 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
                           Visual proyek belum tersedia
                         </div>
                       </div>
                     )}
                     <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
                       <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
-                      {meta ? <span className="rounded-full border border-white/20 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64">{meta}</span> : null}
+                      {meta ? <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64">{meta}</span> : null}
                     </div>
                   </div>
                   <div className="p-7 md:p-8">
@@ -494,7 +494,7 @@ export default async function Home() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wawasanCards.map((article) => (
-              <article key={article.title} className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/35 hover:bg-white/[0.045]">
+              <article key={article.title} className="group rounded-[24px] border border-white/5 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/24 hover:bg-white/[0.045]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
                   {article.title}
