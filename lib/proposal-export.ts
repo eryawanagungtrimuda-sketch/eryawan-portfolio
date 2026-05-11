@@ -14,8 +14,12 @@ function sanitizeFilenamePart(value: string) {
 }
 
 export function buildProposalTextContent(inquiry: ProjectInquiry, draft: ProjectInquiryProposalDraft) {
+  const disusunUntuk = normalizeValue(inquiry.perusahaan || inquiry.nama);
   const lines = [
-    `Judul Proposal: ${draft.title}`,
+    'PROPOSAL DRAFT',
+    `Judul: ${normalizeValue(draft.title)}`,
+    `Disusun oleh: Eryawan Agung (Eryawan Studio)`,
+    `Disusun untuk: ${disusunUntuk}`,
     '',
     'Ringkasan Inquiry',
     `- Nama calon klien: ${normalizeValue(inquiry.nama)}`,
@@ -42,6 +46,9 @@ export function buildProposalTextContent(inquiry: ProjectInquiry, draft: Project
     `- Status: ${draft.status}`,
     `- Tanggal dibuat: ${new Date(draft.created_at).toLocaleString('id-ID')}`,
     `- Dibuat oleh: ${normalizeValue(draft.created_by)}`,
+    '',
+    'Catatan',
+    'Dokumen ini merupakan draft awal dan masih dapat disesuaikan setelah konfirmasi kebutuhan, ruang lingkup, timeline, dan budget.',
   ];
 
   return lines.join('\n');
