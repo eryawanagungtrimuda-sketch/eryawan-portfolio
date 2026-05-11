@@ -154,10 +154,10 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Fokus Keahlian</h2>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {fokusKeahlian.map((item, index) => (
-              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-8 md:p-10">
-                <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/45">0{index + 1}</span>
+              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-8 md:p-10">
+                <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">0{index + 1}</span>
                 <h3 className="font-display mt-5 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
           </div>
@@ -177,9 +177,9 @@ export default function TentangPage() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {trustSignals.map((item) => (
-              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.2] tracking-[-0.02em] text-white/92">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
           </div>
@@ -193,9 +193,9 @@ export default function TentangPage() {
           </h2>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {professionalValue.map((item) => (
-              <article key={item.title} className="border border-white/4 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.15] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                <p className="mt-4 text-base leading-[1.75] text-white/70">{item.description}</p>
+                <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
           </div>
@@ -207,11 +207,11 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Project</h2>
           <div className="mt-10 space-y-4">
             {howIWork.map((item, index) => (
-              <article key={item.title} className="grid gap-4 border border-white/4 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
+              <article key={item.title} className="grid gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
                 <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-[#C8A951]">0{index + 1}</p>
                 <div>
                   <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-white/90">{item.title}</h3>
-                  <p className="mt-3 text-base leading-[1.75] text-white/70">{item.description}</p>
+                  <p className="mt-3 text-base leading-[1.75] text-white/62">{item.description}</p>
                 </div>
               </article>
             ))}
