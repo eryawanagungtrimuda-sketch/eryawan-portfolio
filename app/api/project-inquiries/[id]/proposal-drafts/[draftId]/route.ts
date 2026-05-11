@@ -18,6 +18,27 @@ async function getAuthedSupabase(request: Request) {
   return { supabase };
 }
 
+
+export async function GET(request: Request, { params }: { params: Promise<{ id: string; draftId: string }> }) {
+  const auth = await getAuthedSupabase(request); if ('error' in auth) return auth.error;
+  const { id, draftId } = await params;
+
+  if (!uuidPattern.test(id) || !uuidPattern.test(draftId)) {
+    return NextResponse.json({ error: 'ID inquiry atau draft tidak valid.' }, { status: 400 });
+  }
+
+  const { data, error } = await auth.supabase
+    .from('project_inquiry_proposal_drafts')
+    .select('id,inquiry_id,title,draft_content,follow_up_message,status,version,model,created_by,created_at,updated_at')
+    .eq('id', draftId)
+    .eq('inquiry_id', id)
+    .maybeSingle();
+
+  if (error) return NextResponse.json({ error: 'Gagal memuat draft proposal.' }, { status: 500 });
+  if (!data) return NextResponse.json({ error: 'Draft proposal tidak ditemukan.' }, { status: 404 });
+  return NextResponse.json({ data });
+}
+
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string; draftId: string }> }) {
   const auth = await getAuthedSupabase(request); if ('error' in auth) return auth.error;
   const { id, draftId } = await params;
