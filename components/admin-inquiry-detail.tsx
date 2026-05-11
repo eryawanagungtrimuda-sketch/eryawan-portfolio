@@ -54,7 +54,13 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
     if (!row || !proposalDraft) return;
     setSavingDraft(true); setSaveMessage('');
     const res = await authedFetch(`/api/project-inquiries/${id}/proposal-drafts`, { method: 'POST', body: JSON.stringify({ title: buildDraftTitle(row), draftContent: proposalDraft, followUpMessage, model: 'gpt-4o-mini' }) });
-    if (!res.ok) { setSaveMessage('Draft proposal belum berhasil disimpan. Silakan coba lagi.'); setSavingDraft(false); return; }
+    if (!res.ok) {
+      const json = await res.json().catch(() => null) as { code?: string; error?: string } | null;
+      const code = json?.code;
+      setSaveMessage(code ? `Draft proposal belum berhasil disimpan. Kode teknis: ${code}` : (json?.error || 'Draft proposal belum berhasil disimpan. Silakan coba lagi.'));
+      setSavingDraft(false);
+      return;
+    }
     setSaveMessage('Draft proposal berhasil disimpan.'); await load(); setSavingDraft(false);
   };
 
@@ -84,7 +90,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       {proposalError ? <p className="text-sm text-red-200">{proposalError}</p> : null}
       {proposalDraft ? <div className="space-y-3 rounded-xl border border-white/15 bg-black/20 p-4"><pre className="whitespace-pre-wrap font-sans text-sm text-white/90">{proposalDraft}</pre><div className="flex flex-wrap gap-2"><button onClick={() => copyText(proposalDraft, 'Draft berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Draft Proposal</button><button onClick={saveProposalDraft} disabled={savingDraft} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">{savingDraft ? 'Menyimpan draft...' : 'Simpan Draft Proposal'}</button>{followUpMessage ? <button onClick={() => copyText(followUpMessage, 'Pesan follow-up berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Pesan Follow-up</button> : null}</div></div> : null}
       {followUpMessage ? <pre className="whitespace-pre-wrap rounded-xl border border-white/15 bg-black/20 p-4 font-sans text-sm text-white/85">{followUpMessage}</pre> : null}
-      {saveMessage ? <p className="text-sm text-emerald-300">{saveMessage}</p> : null}
+      {saveMessage ? <p className={`text-sm ${saveMessage.includes('berhasil') ? 'text-emerald-300' : 'text-red-200'}`}>{saveMessage}</p> : null}
     </section>
 
     <section className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.015] p-5">
