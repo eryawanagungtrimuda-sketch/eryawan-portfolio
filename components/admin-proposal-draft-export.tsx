@@ -44,6 +44,7 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
   const [pdfState, setPdfState] = useState('');
   const [isPreparingPdf, setIsPreparingPdf] = useState(false);
   const proposalRef = useRef<HTMLDivElement | null>(null);
+  const pdfRef = useRef<HTMLDivElement | null>(null);
 
   const loadHtml2Pdf = async () => {
     const existing = (window as Window & { html2pdf?: unknown }).html2pdf;
@@ -104,7 +105,7 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
   }, [inquiry]);
 
   const downloadPdf = async () => {
-    if (!proposalRef.current || !inquiry || !draft || isPreparingPdf) return;
+    if (!pdfRef.current || !inquiry || !draft || isPreparingPdf) return;
     setIsPreparingPdf(true);
     setPdfState('Menyiapkan PDF...');
 
@@ -113,14 +114,24 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
       const clientOrCompany = inquiry.perusahaan || inquiry.nama || 'calon-klien';
       const filename = `proposal-${sanitizeFilenamePart(clientOrCompany)}-v${draft.version}.pdf`;
 
-      await html2pdf(proposalRef.current)
+      if (document.fonts?.ready) await document.fonts.ready;
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+      await html2pdf(pdfRef.current)
         .set({
-          margin: 10,
+          margin: [10, 10, 10, 10],
           filename,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: 794,
+          },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          pagebreak: { mode: ['css', 'legacy'] },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: ['.pdf-break-avoid'] },
         })
         .save();
 
@@ -141,6 +152,20 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
     <div className="space-y-6 pb-16 font-sans">
       <style jsx global>{`
         @page { margin: 18mm; }
+        .pdf-only-document {
+          position: fixed;
+          left: -10000px;
+          top: 0;
+          width: 794px;
+          min-height: auto;
+          background: #fff;
+          color: #111;
+          padding: 48px;
+          z-index: -1;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+        .pdf-only-document * { box-shadow: none; color: inherit; }
+        .pdf-section { page-break-inside: avoid; break-inside: avoid; }
         @media print {
           body, main, #admin-shell { background: #fff !important; color: #000 !important; }
           .no-print, button, a[href] { display: none !important; }
@@ -244,6 +269,51 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
         <p className="text-sm text-white/70 print-muted">Interior Design Portfolio</p>
         <p className="mt-4 text-xs leading-5 text-white/65 print-muted">Dokumen ini merupakan draft awal dan masih dapat disesuaikan setelah konfirmasi kebutuhan, ruang lingkup, timeline, dan budget.</p>
       </footer>
+      </div>
+
+      <div ref={pdfRef} className="pdf-only-document" aria-hidden="true">
+        <section className="pdf-section rounded-2xl border border-[#dddddd] bg-white p-7">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#111111]">PROPOSAL DRAFT</p>
+          <h1 className="mt-3 text-3xl font-semibold leading-tight text-[#111111]">{displayValue(draft.title)}</h1>
+          <p className="mt-4 max-w-3xl text-sm text-[#333333]">Disusun sebagai draft awal berdasarkan inquiry project dan dapat disesuaikan setelah diskusi lanjutan.</p>
+          <div className="mt-6 grid gap-3 text-sm md:grid-cols-2">
+            <div className="rounded-xl border border-[#dddddd] bg-white p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#666666]">Disusun untuk</p><p className="mt-1 text-sm text-[#111111]">{preparedFor}</p></div>
+            <div className="rounded-xl border border-[#dddddd] bg-white p-3"><p className="text-[11px] uppercase tracking-[0.12em] text-[#666666]">Tanggal</p><p className="mt-1 text-sm text-[#111111]">{formatDate(draft.created_at)}</p></div>
+          </div>
+          <p className="mt-4 text-xs text-[#666666]">Versi {draft.version}</p>
+        </section>
+        <section className="pdf-section mt-5 rounded-2xl border border-[#dddddd] bg-white p-6">
+          <h2 className="text-2xl font-semibold text-[#111111]">Ringkasan Inquiry</h2>
+          <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+            <p><span className="text-[#666666]">Calon klien:</span> {displayValue(inquiry.nama)}</p>
+            <p><span className="text-[#666666]">Perusahaan / Brand:</span> {displayValue(inquiry.perusahaan)}</p>
+            <p><span className="text-[#666666]">Jenis kebutuhan:</span> {displayValue(inquiry.jenis_kebutuhan)}</p>
+            <p><span className="text-[#666666]">Timeline:</span> {displayValue(inquiry.timeline)}</p>
+          </div>
+          <div className="mt-4 rounded-xl border border-[#dddddd] bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#444444]">Kebutuhan Utama</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm text-[#111111]">{displayValue(inquiry.kebutuhan_utama)}</p>
+          </div>
+        </section>
+        <section className="pdf-section mt-5 rounded-2xl border border-[#dddddd] bg-white p-6">
+          <h2 className="text-2xl font-semibold text-[#111111]">Isi Proposal</h2>
+          <div className="proposal-content mt-4 text-[15px] leading-7 text-[#111111]">
+            <ProposalDraftRenderer content={draft.draft_content} variant="pdf" />
+          </div>
+        </section>
+        {draft.follow_up_message ? (
+          <section className="pdf-section mt-5 rounded-2xl border border-[#dddddd] bg-white p-6">
+            <h2 className="text-2xl font-semibold text-[#111111]">Pesan Follow-up</h2>
+            <div className="mt-4 whitespace-pre-wrap rounded-xl border border-[#dddddd] bg-white p-4 text-sm text-[#111111]">{draft.follow_up_message}</div>
+          </section>
+        ) : null}
+        <section className="pdf-section mt-5 rounded-2xl border border-[#dddddd] bg-white p-6">
+          <h2 className="text-2xl font-semibold text-[#111111]">Metadata Draft</h2>
+          <div className="mt-3 grid gap-3 text-sm md:grid-cols-2">
+            <p><span className="text-[#666666]">Versi:</span> {draft.version}</p>
+            <p><span className="text-[#666666]">Status draft:</span> {displayValue(draft.status)}</p>
+          </div>
+        </section>
       </div>
 
       <section className="no-print sticky bottom-4 z-10 rounded-2xl border border-white/15 bg-[#0F0F0E]/95 p-4 backdrop-blur">
