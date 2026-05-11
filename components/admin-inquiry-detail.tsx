@@ -28,7 +28,16 @@ const statusLabel: Record<ProjectInquiry['status'], string> = {
 
 const fallbackText = 'Belum diisi';
 const formatDate = (v: string) => new Date(v).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-const sanitizeWhatsapp = (v: string) => v.replace(/\D/g, '');
+function sanitizeWhatsappNumber(value: string) {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('0')) return `62${digits.slice(1)}`;
+  return digits;
+}
+
+function buildWhatsappUrl(number: string, message?: string) {
+  return message ? `https://wa.me/${number}?text=${encodeURIComponent(message)}` : `https://wa.me/${number}`;
+}
 
 export default function AdminInquiryDetail({ id }: { id: string }) {
   const [row, setRow] = useState<ProjectInquiry | null>(null);
@@ -126,7 +135,19 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
   if (error && !row) return <p className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>;
   if (!row) return null;
 
-  const whatsappDigits = row.whatsapp ? sanitizeWhatsapp(row.whatsapp) : '';
+  const whatsappDigits = row.whatsapp ? sanitizeWhatsappNumber(row.whatsapp) : '';
+  const canMarkAsContacted = row.status === 'baru' || row.status === 'ditinjau';
+
+  const openWhatsappFollowUp = (message: string) => {
+    if (!whatsappDigits) {
+      setCopyState('Nomor WhatsApp belum tersedia.');
+      setTimeout(() => setCopyState(''), 2000);
+      return;
+    }
+    window.open(buildWhatsappUrl(whatsappDigits, message), '_blank', 'noopener,noreferrer');
+    setCopyState('WhatsApp follow-up dibuka. Kirim pesan secara manual.');
+    setTimeout(() => setCopyState(''), 2500);
+  };
 
   return <div className="space-y-6">
     <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -152,7 +173,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       <div className="mt-4 flex flex-wrap gap-2 text-xs">
         {row.email ? <button onClick={() => copyText(row.email || '', 'Email berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2">Salin Email</button> : null}
         {row.whatsapp ? <button onClick={() => copyText(row.whatsapp || '', 'Nomor WhatsApp berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2">Salin WhatsApp</button> : null}
-        {whatsappDigits ? <a href={`https://wa.me/${whatsappDigits}`} target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-[#D4AF37]">Buka WhatsApp</a> : null}
+        {whatsappDigits ? <a href={buildWhatsappUrl(whatsappDigits)} target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-[#D4AF37]">Buka WhatsApp</a> : null}
       </div>
     </section>
 
@@ -175,6 +196,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
     <section className="rounded-2xl border border-white/10 bg-white/[0.015] p-5">
       <h2 className="text-base font-semibold text-[#F4F1EA]">Status Inquiry</h2>
       <p className="mt-2 text-sm text-white/70">Gunakan status untuk memantau tindak lanjut calon project.</p>
+      <p className="mt-2 text-xs text-white/55">Setelah pesan follow-up dikirim manual melalui WhatsApp, tandai inquiry sebagai Dihubungi agar progress tercatat.</p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-3 py-1 text-xs font-semibold text-[#D4AF37]">Status Saat Ini: {statusLabel[row.status]}</span>
         {nextAction ? <button disabled={updating} onClick={() => patch(nextAction.status)} className="rounded-full border border-white/20 px-4 py-2 text-xs disabled:opacity-50">{updating ? 'Memperbarui status...' : nextAction.label}</button> : null}
@@ -186,7 +208,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       <p className="text-sm text-white/70">Workspace draft proposal untuk generate, review, copy, dan simpan draft proposal awal.</p>
       <button onClick={generateProposalDraft} disabled={proposalLoading} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">{proposalLoading ? 'Menyusun draft proposal...' : proposalDraft ? 'Generate Ulang' : 'Generate Draft Proposal'}</button>
       {proposalError ? <p className="text-sm text-red-200">{proposalError}</p> : null}
-      {proposalDraft ? <div className="space-y-3 rounded-xl border border-white/15 bg-black/20 p-4"><ProposalDraftRenderer content={proposalDraft} /><div className="flex flex-wrap gap-2"><button onClick={() => copyText(proposalDraft, 'Draft berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Draft Proposal</button><button onClick={saveProposalDraft} disabled={savingDraft} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">{savingDraft ? 'Menyimpan draft...' : 'Simpan Draft Proposal'}</button>{followUpMessage ? <button onClick={() => copyText(followUpMessage, 'Pesan follow-up berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Pesan Follow-up</button> : null}</div></div> : null}
+      {proposalDraft ? <div className="space-y-3 rounded-xl border border-white/15 bg-black/20 p-4"><ProposalDraftRenderer content={proposalDraft} /><div className="flex flex-wrap gap-2"><button onClick={() => copyText(proposalDraft, 'Draft berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Draft Proposal</button><button onClick={saveProposalDraft} disabled={savingDraft} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">{savingDraft ? 'Menyimpan draft...' : 'Simpan Draft Proposal'}</button>{followUpMessage ? <button onClick={() => copyText(followUpMessage, 'Pesan follow-up berhasil disalin.')} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Pesan Follow-up</button> : null}{followUpMessage && whatsappDigits ? <button onClick={() => openWhatsappFollowUp(followUpMessage)} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">Buka WhatsApp Follow-up</button> : null}{followUpMessage && !whatsappDigits ? <span className="rounded-full border border-white/15 px-4 py-2 text-xs text-white/60">Nomor WhatsApp belum tersedia.</span> : null}{canMarkAsContacted && followUpMessage ? <button onClick={() => patch('dihubungi')} disabled={updating} className="rounded-full border border-white/20 px-4 py-2 text-xs disabled:opacity-50">{updating ? 'Memperbarui status...' : 'Tandai Inquiry Dihubungi'}</button> : null}</div></div> : null}
       {followUpMessage ? <div className="whitespace-pre-wrap rounded-xl border border-white/15 bg-black/20 p-4 font-sans text-sm leading-relaxed text-white/85">{followUpMessage}</div> : null}
       {saveMessage ? <p className={`text-sm ${saveMessage.includes('berhasil') ? 'text-emerald-300' : 'text-red-200'}`}>{saveMessage}</p> : null}
     </section>
@@ -194,7 +216,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
     <section className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.015] p-5">
       <h2 className="text-base font-semibold text-[#F4F1EA]">Riwayat Draft Proposal</h2>
       <p className="text-sm text-white/70">Draft yang pernah disimpan untuk inquiry ini.</p>
-      {sortedHistory.length === 0 ? <p className="text-sm text-white/60">Belum ada draft proposal tersimpan.</p> : sortedHistory.map((draft) => <div key={draft.id} className={`rounded-xl border p-4 ${draft.status === 'archived' ? 'border-white/10 bg-black/15 opacity-65' : 'border-white/20 bg-black/10'}`}><div className="flex flex-wrap items-center gap-2 text-sm"><span className="font-semibold text-white">{draft.title}</span><span className="text-white/65">Versi {draft.version}</span><span className="rounded-full border border-[#D4AF37]/45 px-2 py-0.5 text-xs text-[#D4AF37]">{draft.status}</span></div><p className="mt-1 text-xs text-white/60">{formatDate(draft.created_at)}{draft.created_by ? ` • ${draft.created_by}` : ''}</p><p className="mt-2 text-sm text-white/80">{buildDraftPreview(draft.draft_content).slice(0, 180)}...</p><div className="mt-3 flex flex-wrap gap-2 text-xs"><button onClick={() => setExpandedId(expandedId === draft.id ? null : draft.id)} className="rounded-full border border-white/20 px-3 py-1">{expandedId === draft.id ? 'Tutup Draft' : 'Lihat Draft'}</button><button onClick={() => copyText(draft.draft_content, 'Draft berhasil disalin.')} className="rounded-full border border-white/20 px-3 py-1">Salin Draft</button>{draft.follow_up_message ? <button onClick={() => copyText(draft.follow_up_message || '', 'Pesan follow-up berhasil disalin.')} className="rounded-full border border-white/20 px-3 py-1">Salin Pesan Follow-up</button> : null}{draft.status !== 'used' && draft.status !== 'archived' ? <button onClick={() => updateDraftStatus(draft.id, 'used')} className="rounded-full border border-white/20 px-3 py-1">Tandai Digunakan</button> : null}{draft.status !== 'archived' ? <button onClick={() => updateDraftStatus(draft.id, 'archived')} className="rounded-full border border-white/20 px-3 py-1">Arsipkan Draft</button> : <button onClick={() => updateDraftStatus(draft.id, 'draft')} className="rounded-full border border-white/20 px-3 py-1">Kembalikan ke Draft</button>}</div>{expandedId === draft.id ? <div className="mt-3 space-y-2 rounded-lg border border-white/10 bg-black/20 p-3"><ProposalDraftRenderer content={draft.draft_content} />{draft.follow_up_message ? <div className="whitespace-pre-wrap rounded-lg border border-white/10 bg-black/30 p-3 font-sans text-xs leading-relaxed text-white/75">{draft.follow_up_message}</div> : null}</div> : null}</div>)}
+      {sortedHistory.length === 0 ? <p className="text-sm text-white/60">Belum ada draft proposal tersimpan.</p> : sortedHistory.map((draft) => <div key={draft.id} className={`rounded-xl border p-4 ${draft.status === 'archived' ? 'border-white/10 bg-black/15 opacity-65' : 'border-white/20 bg-black/10'}`}><div className="flex flex-wrap items-center gap-2 text-sm"><span className="font-semibold text-white">{draft.title}</span><span className="text-white/65">Versi {draft.version}</span><span className="rounded-full border border-[#D4AF37]/45 px-2 py-0.5 text-xs text-[#D4AF37]">{draft.status}</span></div><p className="mt-1 text-xs text-white/60">{formatDate(draft.created_at)}{draft.created_by ? ` • ${draft.created_by}` : ''}</p><p className="mt-2 text-sm text-white/80">{buildDraftPreview(draft.draft_content).slice(0, 180)}...</p>{draft.status === 'used' ? <p className="mt-2 text-xs text-[#D4AF37]">Draft ini ditandai sebagai draft yang digunakan untuk follow-up.</p> : null}<div className="mt-3 flex flex-wrap gap-2 text-xs"><button onClick={() => setExpandedId(expandedId === draft.id ? null : draft.id)} className="rounded-full border border-white/20 px-3 py-1">{expandedId === draft.id ? 'Tutup Draft' : 'Lihat Draft'}</button><button onClick={() => copyText(draft.draft_content, 'Draft berhasil disalin.')} className="rounded-full border border-white/20 px-3 py-1">Salin Draft</button>{draft.follow_up_message ? <button onClick={() => copyText(draft.follow_up_message || '', 'Pesan follow-up berhasil disalin.')} className="rounded-full border border-white/20 px-3 py-1">Salin Pesan Follow-up</button> : null}{draft.follow_up_message && whatsappDigits ? <button onClick={() => openWhatsappFollowUp(draft.follow_up_message || '')} className="rounded-full border border-[#D4AF37]/45 px-3 py-1 text-[#D4AF37]">Buka WhatsApp Follow-up</button> : null}{draft.follow_up_message && !whatsappDigits ? <span className="rounded-full border border-white/15 px-3 py-1 text-white/60">Nomor WhatsApp belum tersedia.</span> : null}{canMarkAsContacted && draft.follow_up_message ? <button onClick={() => patch('dihubungi')} disabled={updating} className="rounded-full border border-white/20 px-3 py-1 disabled:opacity-50">{updating ? 'Memperbarui status...' : 'Tandai Inquiry Dihubungi'}</button> : null}{draft.status !== 'used' && draft.status !== 'archived' ? <button onClick={() => updateDraftStatus(draft.id, 'used')} className="rounded-full border border-white/20 px-3 py-1">Tandai Digunakan</button> : null}{draft.status !== 'archived' ? <button onClick={() => updateDraftStatus(draft.id, 'archived')} className="rounded-full border border-white/20 px-3 py-1">Arsipkan Draft</button> : <button onClick={() => updateDraftStatus(draft.id, 'draft')} className="rounded-full border border-white/20 px-3 py-1">Kembalikan ke Draft</button>}</div>{expandedId === draft.id ? <div className="mt-3 space-y-2 rounded-lg border border-white/10 bg-black/20 p-3"><ProposalDraftRenderer content={draft.draft_content} />{draft.follow_up_message ? <div className="whitespace-pre-wrap rounded-lg border border-white/10 bg-black/30 p-3 font-sans text-xs leading-relaxed text-white/75">{draft.follow_up_message}</div> : null}</div> : null}</div>)}
     </section>
 
     {error ? <p className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error}</p> : null}
