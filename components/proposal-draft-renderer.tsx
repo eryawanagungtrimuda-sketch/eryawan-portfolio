@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 type ProposalDraftRendererProps = {
   content: string;
   compact?: boolean;
+  variant?: 'screen' | 'pdf';
 };
 
 type Block =
@@ -17,10 +18,10 @@ const unorderedPattern = /^-\s+(.+)$/;
 const orderedPattern = /^\d+\.\s+(.+)$/;
 const inlineBoldPattern = /(\*\*[^*]+\*\*)/g;
 
-function renderInlineBold(text: string) {
+function renderInlineBold(text: string, variant: 'screen' | 'pdf') {
   return text.split(inlineBoldPattern).map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={`${part}-${index}`} className="font-semibold text-white">{part.slice(2, -2)}</strong>;
+      return <strong key={`${part}-${index}`} className={variant === 'pdf' ? 'font-semibold text-[#111111]' : 'font-semibold text-white'}>{part.slice(2, -2)}</strong>;
     }
 
     return <Fragment key={`${part}-${index}`}>{part}</Fragment>;
@@ -90,7 +91,7 @@ function parseBlocks(content: string): Block[] {
   return blocks;
 }
 
-export function ProposalDraftRenderer({ content, compact = false }: ProposalDraftRendererProps) {
+export function ProposalDraftRenderer({ content, compact = false, variant = 'screen' }: ProposalDraftRendererProps) {
   const blocks = parseBlocks(content || '');
 
   return (
@@ -104,19 +105,19 @@ export function ProposalDraftRenderer({ content, compact = false }: ProposalDraf
           return (
             <h3
               key={`heading-${index}`}
-              className={`${compact ? 'pt-1 text-sm' : 'pt-2 text-base'} font-semibold tracking-wide text-[#E8D8A8]`}
+              className={`${compact ? 'pt-1 text-sm' : 'pt-2 text-base'} font-semibold tracking-wide ${variant === 'pdf' ? 'text-[#111111]' : 'text-[#E8D8A8]'}`}
             >
-              {renderInlineBold(block.text)}
+              {renderInlineBold(block.text, variant)}
             </h3>
           );
         }
 
         if (block.type === 'ul') {
           return (
-            <ul key={`ul-${index}`} className={`${compact ? 'space-y-1 pl-5' : 'space-y-1.5 pl-6'} list-disc text-white/85`}>
+            <ul key={`ul-${index}`} className={`${compact ? 'space-y-1 pl-5' : 'space-y-1.5 pl-6'} list-disc ${variant === 'pdf' ? 'text-[#111111]' : 'text-white/85'}`}>
               {block.items.map((item, itemIndex) => (
                 <li key={`ul-item-${itemIndex}`} className="leading-relaxed">
-                  {renderInlineBold(item)}
+                  {renderInlineBold(item, variant)}
                 </li>
               ))}
             </ul>
@@ -125,10 +126,10 @@ export function ProposalDraftRenderer({ content, compact = false }: ProposalDraf
 
         if (block.type === 'ol') {
           return (
-            <ol key={`ol-${index}`} className={`${compact ? 'space-y-1 pl-5' : 'space-y-1.5 pl-6'} list-decimal text-white/85`}>
+            <ol key={`ol-${index}`} className={`${compact ? 'space-y-1 pl-5' : 'space-y-1.5 pl-6'} list-decimal ${variant === 'pdf' ? 'text-[#111111]' : 'text-white/85'}`}>
               {block.items.map((item, itemIndex) => (
                 <li key={`ol-item-${itemIndex}`} className="leading-relaxed">
-                  {renderInlineBold(item)}
+                  {renderInlineBold(item, variant)}
                 </li>
               ))}
             </ol>
@@ -136,8 +137,8 @@ export function ProposalDraftRenderer({ content, compact = false }: ProposalDraf
         }
 
         return (
-          <p key={`paragraph-${index}`} className="whitespace-pre-wrap leading-relaxed text-white/85">
-            {renderInlineBold(block.text)}
+          <p key={`paragraph-${index}`} className={`whitespace-pre-wrap leading-relaxed ${variant === 'pdf' ? 'text-[#111111]' : 'text-white/85'}`}>
+            {renderInlineBold(block.text, variant)}
           </p>
         );
       })}
