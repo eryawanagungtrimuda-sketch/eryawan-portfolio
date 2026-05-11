@@ -83,8 +83,8 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
         {options.map((item) => {
           const active = item === value;
           return (
-            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition motion-safe:duration-500 motion-safe:ease-out ${
-              active ? 'border-[#D4AF37]/55 bg-[#D4AF37]/12 text-[#D4AF37]' : 'border-white/10 text-white/45 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/35 hover:text-[#D4AF37] hover:bg-white/[0.04]'
+            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
+              active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
             }`}>
               {item}
             </button>
@@ -97,7 +97,7 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
 
 function Badge({ children }: { children?: string | null }) {
   if (!children) return null;
-  return <span className="rounded-full border border-white/12 bg-white/[0.02] px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/55">{children}</span>;
+  return <span className="rounded-full border border-white/5 bg-white/[0.02] px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/55">{children}</span>;
 }
 
 export default function KaryaArchive({ projects }: Props) {
@@ -187,7 +187,7 @@ export default function KaryaArchive({ projects }: Props) {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Cari Karya</label>
-            <div className="flex items-center gap-3 rounded-2xl border border-white/12 bg-black/25 px-4 py-3.5 transition motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/35 hover:bg-white/[0.04] focus-within:border-[#D4AF37]/45 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.2)]">
+            <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-3.5 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/30 hover:bg-white/[0.035] focus-within:border-[#D4AF37]/40 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.16)]">
               <Search size={17} className="text-white/44" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari karya, kategori, style, area, atau narasi..." className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45" />
             </div>
@@ -195,7 +195,7 @@ export default function KaryaArchive({ projects }: Props) {
 
           <div>
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Urutkan</label>
-            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/35 hover:bg-white/[0.04] focus:border-[#D4AF37]/45">
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/5 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus:border-[#D4AF37]/40">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
               <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
             </select>
@@ -214,14 +214,14 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="flex flex-wrap gap-2.5">
             {areaTagOptions.map((tag) => {
               const active = selectedAreaTags.includes(tag);
-              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-full border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/55 bg-[#D4AF37]/12 text-[#D4AF37]' : 'border-white/10 text-white/45 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/35 hover:text-[#D4AF37] hover:bg-white/[0.04]'}`}>{tag}</button>;
+              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
             })}
           </div>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
           <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya</p>
-          <button type="button" onClick={resetFilters} className="min-h-11 rounded-full border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/40 hover:bg-white/[0.04] hover:text-[#D4AF37]">Reset Filter</button>
+          <button type="button" onClick={resetFilters} className="min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37]">Reset Filter</button>
         </div>
 
         {activeFilters.length > 0 ? <div className="mt-4 flex flex-wrap gap-2">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
@@ -238,9 +238,9 @@ export default function KaryaArchive({ projects }: Props) {
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
                 <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{project.area_type ? <Badge>{project.area_type}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-full border border-[#D4AF37]/60 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
-                  <a href={`mailto:hello@eryawan.com?subject=Pertanyaan%20${encodeURIComponent(project.title)}`} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition hover:border-white/35 hover:text-white">Email <Mail size={14} /></a>
-                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik dengan karya "${project.title}"`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition hover:border-white/35 hover:text-white">WhatsApp</a>
+                  <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
+                  <a href={`mailto:hello@eryawan.com?subject=Pertanyaan%20${encodeURIComponent(project.title)}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
+                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik dengan karya "${project.title}"`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">WhatsApp</a>
                 </div>
               </div>
             </article>
