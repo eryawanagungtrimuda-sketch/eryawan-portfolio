@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry, ProjectInquiryProposalDraft } from '@/lib/types';
 import { ProposalDraftRenderer } from '@/components/proposal-draft-renderer';
-import { downloadProposalText } from '@/lib/proposal-export';
+import { downloadProposalText, sanitizeFilenamePart } from '@/lib/proposal-export';
 
 const fallbackText = 'Belum diisi';
 const formatDate = (value: string) =>
@@ -41,6 +41,27 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
   const [draft, setDraft] = useState<ProjectInquiryProposalDraft | null>(null);
   const [error, setError] = useState('');
   const [copyState, setCopyState] = useState('');
+  const [pdfState, setPdfState] = useState('');
+  const [isPreparingPdf, setIsPreparingPdf] = useState(false);
+  const proposalRef = useRef<HTMLDivElement | null>(null);
+
+  const loadHtml2Pdf = async () => {
+    const existing = (window as Window & { html2pdf?: unknown }).html2pdf;
+    if (existing) return existing as (source: HTMLElement) => { set: (options: Record<string, unknown>) => { save: () => Promise<void> } };
+
+    await new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Gagal memuat library PDF.'));
+      document.body.appendChild(script);
+    });
+
+    const loaded = (window as Window & { html2pdf?: unknown }).html2pdf;
+    if (!loaded) throw new Error('Library PDF tidak tersedia.');
+    return loaded as (source: HTMLElement) => { set: (options: Record<string, unknown>) => { save: () => Promise<void> } };
+  };
 
   const authedFetch = async (url: string) => {
     const supabase = createSupabaseBrowserClient();
@@ -82,6 +103,36 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
     return inquiry.perusahaan?.trim() || inquiry.nama?.trim() || fallbackText;
   }, [inquiry]);
 
+  const downloadPdf = async () => {
+    if (!proposalRef.current || !inquiry || !draft || isPreparingPdf) return;
+    setIsPreparingPdf(true);
+    setPdfState('Menyiapkan PDF...');
+
+    try {
+      const html2pdf = await loadHtml2Pdf();
+      const clientOrCompany = inquiry.perusahaan || inquiry.nama || 'calon-klien';
+      const filename = `proposal-${sanitizeFilenamePart(clientOrCompany)}-v${draft.version}.pdf`;
+
+      await html2pdf(proposalRef.current)
+        .set({
+          margin: 10,
+          filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'] },
+        })
+        .save();
+
+      setPdfState('PDF berhasil dibuat.');
+    } catch {
+      setPdfState('PDF belum berhasil dibuat. Gunakan Print / Simpan PDF sebagai alternatif.');
+    } finally {
+      setIsPreparingPdf(false);
+      setTimeout(() => setPdfState(''), 2500);
+    }
+  };
+
   if (error && !draft)
     return <p className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error || 'Draft proposal tidak ditemukan.'}</p>;
   if (!inquiry || !draft) return <p className="text-white/65">Memuat draft proposal...</p>;
@@ -103,6 +154,7 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
         }
       `}</style>
 
+      <div id="proposal-export-document" ref={proposalRef}>
       <section className="print-card print-break-avoid rounded-2xl border border-[#D4AF37]/35 bg-[#0D0D0C] p-7">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#D4AF37]">PROPOSAL DRAFT</p>
         <h1 className="mt-3 text-3xl font-semibold leading-tight text-[#F4F1EA]">{displayValue(draft.title)}</h1>
@@ -192,16 +244,19 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
         <p className="text-sm text-white/70 print-muted">Interior Design Portfolio</p>
         <p className="mt-4 text-xs leading-5 text-white/65 print-muted">Dokumen ini merupakan draft awal dan masih dapat disesuaikan setelah konfirmasi kebutuhan, ruang lingkup, timeline, dan budget.</p>
       </footer>
+      </div>
 
       <section className="no-print sticky bottom-4 z-10 rounded-2xl border border-white/15 bg-[#0F0F0E]/95 p-4 backdrop-blur">
         <p className="mb-3 text-xs text-white/65">Gunakan Print / Simpan PDF untuk membuat file PDF dari browser.</p>
         <div className="flex flex-wrap items-center gap-2">
+          <button onClick={downloadPdf} disabled={isPreparingPdf} className="rounded-full border border-emerald-300/45 px-4 py-2 text-xs text-emerald-300 disabled:cursor-not-allowed disabled:opacity-70">{isPreparingPdf ? 'Menyiapkan PDF...' : 'Download PDF'}</button>
           <button onClick={() => window.print()} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">Print / Simpan PDF</button>
           <button onClick={() => downloadProposalText(inquiry, draft)} className="rounded-full border border-white/20 px-4 py-2 text-xs">Download Teks</button>
           <button onClick={copyDraft} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Draft</button>
           <button onClick={() => router.back()} className="rounded-full border border-white/20 px-4 py-2 text-xs">Kembali ke Sebelumnya</button>
           <Link href={`/admin/inquiries/${id}`} className="rounded-full border border-white/20 px-4 py-2 text-xs">Detail Inquiry</Link>
         </div>
+        {pdfState ? <p className="mt-2 text-xs text-emerald-300">{pdfState}</p> : null}
         {copyState ? <p className="mt-2 text-xs text-emerald-300">{copyState}</p> : null}
       </section>
     </div>
