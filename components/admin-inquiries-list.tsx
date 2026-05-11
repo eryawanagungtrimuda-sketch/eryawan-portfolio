@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry } from '@/lib/types';
 
+type StatusFilter = 'active' | 'all_with_archive' | ProjectInquiry['status'];
+
 const statusStyle: Record<ProjectInquiry['status'], string> = {
   baru: 'text-amber-200 bg-amber-400/10 border-amber-300/30',
   ditinjau: 'text-sky-200 bg-sky-400/10 border-sky-300/30',
@@ -13,13 +15,20 @@ const statusStyle: Record<ProjectInquiry['status'], string> = {
   arsip: 'text-white/65 bg-white/5 border-white/20',
 };
 
+const formatTanggalMasuk = (dateValue: string) =>
+  new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(dateValue));
+
 export default function AdminInquiriesList() {
   const [rows, setRows] = useState<ProjectInquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | ProjectInquiry['status']>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('active');
   const [dateFilter, setDateFilter] = useState('');
 
   const authedFetch = async (url: string, init?: RequestInit) => {
@@ -59,7 +68,9 @@ export default function AdminInquiriesList() {
 
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
-      if (statusFilter !== 'all' && row.status !== statusFilter) return false;
+      if (statusFilter === 'active' && row.status === 'arsip') return false;
+      if (statusFilter === 'arsip' && row.status !== 'arsip') return false;
+      if (statusFilter !== 'active' && statusFilter !== 'all_with_archive' && statusFilter !== 'arsip' && row.status !== statusFilter) return false;
       if (dateFilter && !row.created_at.startsWith(dateFilter)) return false;
       if (!query.trim()) return true;
 
@@ -95,73 +106,110 @@ export default function AdminInquiriesList() {
     setUpdatingId(null);
   };
 
+  const resetFilter = () => {
+    setQuery('');
+    setStatusFilter('active');
+    setDateFilter('');
+  };
+
   if (loading) return <p className="text-white/60">Memuat inquiry...</p>;
 
   return (
     <div className="space-y-6">
       {error ? <p className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error}</p> : null}
 
-      <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:grid-cols-3">
+      <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:grid-cols-4">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Cari nama / status / kebutuhan"
-          className="rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
+          placeholder="Cari nama, perusahaan, status, atau kebutuhan"
+          className="md:col-span-2 rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
         />
         <select
           value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value as 'all' | ProjectInquiry['status'])}
+          onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
           className="rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
         >
-          <option value="all">Semua status</option>
+          <option value="active">Semua status aktif</option>
           <option value="baru">Baru</option>
           <option value="ditinjau">Ditinjau</option>
           <option value="dihubungi">Dihubungi</option>
           <option value="selesai">Selesai</option>
           <option value="arsip">Arsip</option>
+          <option value="all_with_archive">Semua termasuk arsip</option>
         </select>
-        <input
-          type="date"
-          value={dateFilter}
-          onChange={(event) => setDateFilter(event.target.value)}
-          className="rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
-        />
+        <div className="space-y-1">
+          <label className="text-xs text-white/60">Tanggal masuk</label>
+          <input
+            type="date"
+            value={dateFilter}
+            onChange={(event) => setDateFilter(event.target.value)}
+            className="w-full rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
+          />
+        </div>
+        <button
+          onClick={resetFilter}
+          className="rounded-xl border border-white/20 px-4 py-2 text-sm text-white/80 transition hover:border-[#D4AF37]/50 hover:text-[#D4AF37]"
+        >
+          Reset Filter
+        </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ['Total Inquiry', stats.total],
-          ['Baru', stats.baru],
-          ['Ditinjau / Dihubungi', stats.progress],
-          ['Selesai', stats.selesai],
-        ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">{label}</p>
-            <p className="mt-3 font-display text-4xl">{String(value)}</p>
-          </div>
-        ))}
+      <div className="space-y-2">
+        <p className="text-xs text-white/55">Menampilkan inquiry aktif. Arsip dapat dilihat melalui filter status.</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ['Total Inquiry', stats.total],
+            ['Baru', stats.baru],
+            ['Ditinjau / Dihubungi', stats.progress],
+            ['Selesai', stats.selesai],
+          ].map(([label, value]) => (
+            <div key={String(label)} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">{label}</p>
+              <p className="mt-3 font-display text-4xl">{String(value)}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.015]">
         <table className="min-w-[950px] w-full text-sm">
           <thead>
             <tr className="text-left text-white/45">
-              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis kebutuhan</th><th>Timeline</th><th>Budget range</th><th>Status</th><th>Created at</th><th>Actions</th>
+              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map((r) => (
-              <tr key={r.id} className="border-t border-white/10">
-                <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
-                <td><span className={`rounded-full border px-3 py-1 text-xs ${statusStyle[r.status]}`}>{r.status}</span></td>
-                <td>{new Date(r.created_at).toLocaleDateString('id-ID')}</td>
-                <td className="space-x-2">
-                  <Link href={`/admin/inquiries/${r.id}`} className="rounded-full border border-white/20 px-3 py-2 text-xs hover:border-[#D4AF37]/50 hover:text-[#D4AF37]">Detail</Link>
-                  <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'dihubungi')} className="rounded-full border border-[#D4AF37]/35 px-3 py-2 text-xs text-[#D4AF37] disabled:opacity-50">Tandai Dihubungi</button>
-                  <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'arsip')} className="rounded-full border border-white/20 px-3 py-2 text-xs text-white/70 disabled:opacity-50">Arsipkan</button>
+            {filteredRows.length === 0 ? (
+              <tr className="border-t border-white/10">
+                <td colSpan={8} className="p-10 text-center">
+                  <p className="text-base font-semibold text-white/85">Tidak ada inquiry yang cocok</p>
+                  <p className="mt-1 text-sm text-white/55">Coba ubah kata kunci, status, atau tanggal filter.</p>
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredRows.map((r) => (
+                <tr key={r.id} className="border-t border-white/10">
+                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
+                  <td><span className={`rounded-full border px-3 py-1 text-xs ${statusStyle[r.status]}`}>{r.status}</span></td>
+                  <td>{formatTanggalMasuk(r.created_at)}</td>
+                  <td className="space-x-2">
+                    <Link href={`/admin/inquiries/${r.id}`} className="rounded-full border border-white/20 px-3 py-2 text-xs hover:border-[#D4AF37]/50 hover:text-[#D4AF37]">Detail</Link>
+                    {(r.status === 'baru' || r.status === 'ditinjau') && (
+                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'dihubungi')} className="rounded-full border border-[#D4AF37]/35 px-3 py-2 text-xs text-[#D4AF37] disabled:opacity-50">Tandai Dihubungi</button>
+                    )}
+                    {r.status === 'dihubungi' && (
+                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'selesai')} className="rounded-full border border-emerald-400/35 px-3 py-2 text-xs text-emerald-300 disabled:opacity-50">Tandai Selesai</button>
+                    )}
+                    {r.status === 'arsip' ? (
+                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'baru')} className="rounded-full border border-sky-400/35 px-3 py-2 text-xs text-sky-200 disabled:opacity-50">Kembalikan ke Baru</button>
+                    ) : (
+                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'arsip')} className="rounded-full border border-white/20 px-3 py-2 text-xs text-white/70 disabled:opacity-50">Arsipkan</button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
