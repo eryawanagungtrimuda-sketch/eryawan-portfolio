@@ -78,20 +78,27 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
   if (!inquiry) return errorJson('INQUIRY_NOT_FOUND', 'Inquiry tidak ditemukan.', 404);
 
-  const { data: currentMaxRow, error: maxError } = await auth.supabase
+  const { data: versionRows, error: versionError } = await auth.supabase
     .from('project_inquiry_proposal_drafts')
     .select('version')
     .eq('inquiry_id', id)
     .order('version', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(1);
 
-  if (maxError) {
-    console.error('[proposal-drafts][POST] max version failed', { inquiryId: id, code: maxError.code, details: maxError.details, hint: maxError.hint });
+  if (versionError) {
+    console.error('[proposal-drafts][POST] version lookup failed', {
+      inquiryId: id,
+      code: versionError.code,
+      details: versionError.details,
+      hint: versionError.hint,
+    });
     return errorJson('VERSION_CALCULATION_FAILED', 'Gagal memproses versi draft proposal.', 500);
   }
 
-  const nextVersion = (currentMaxRow?.version ?? 0) + 1;
+  const latestVersion = versionRows?.[0]?.version;
+  const nextVersion = typeof latestVersion === 'number' && Number.isFinite(latestVersion)
+    ? latestVersion + 1
+    : 1;
 
   const { data, error } = await auth.supabase
     .from('project_inquiry_proposal_drafts')
