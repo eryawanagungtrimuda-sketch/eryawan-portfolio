@@ -26,7 +26,7 @@ const ACCEPTED = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_IMAGE = 4;
 const MAX_SIZE = 5 * 1024 * 1024;
 const BUCKET = process.env.NEXT_PUBLIC_INSIGHT_IMAGES_BUCKET || 'insight-images';
-const CATEGORY_OPTIONS = ['Interior', 'Arsitektur', 'Hospitality', 'Residential', 'Commercial', 'Office', 'Retail', 'Public Space', 'Design Strategy', 'Material & Detail', 'Lighting', 'Furniture'];
+const CATEGORY_OPTIONS = ['Review Karya', 'Strategi Desain', 'Interior', 'Hospitality & Commercial', 'Residential', 'Material & Detail', 'Lighting & Atmosphere', 'Arsitektur & Ruang'];
 const NEW_CATEGORY_VALUE = '__new__';
 const slugify = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 
@@ -44,7 +44,12 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     source_project_id: insight?.source_project_id || '', cover_image: insight?.cover_image || '', excerpt: insight?.excerpt || '', content: insight?.content || '', is_published: insight?.is_published || false,
   });
   const [images, setImages] = useState<LocalImage[]>(initialImages.map((img) => ({ id: img.id, image_url: img.image_url, sort_order: img.sort_order })));
-  const initialCategoryPreset = CATEGORY_OPTIONS.includes(insight?.category || '') ? insight?.category || '' : '';
+  const categoryOptions = useMemo(() => {
+    const currentCategory = insight?.category?.trim();
+    if (!currentCategory || CATEGORY_OPTIONS.includes(currentCategory)) return CATEGORY_OPTIONS;
+    return [...CATEGORY_OPTIONS, currentCategory];
+  }, [insight?.category]);
+  const initialCategoryPreset = categoryOptions.includes(insight?.category || '') ? insight?.category || '' : '';
   const [categoryMode, setCategoryMode] = useState<'preset' | 'custom'>(insight?.category && !initialCategoryPreset ? 'custom' : 'preset');
   const [selectedCategory, setSelectedCategory] = useState(initialCategoryPreset);
   const [customCategory, setCustomCategory] = useState(insight?.category && !initialCategoryPreset ? insight.category : '');
@@ -252,7 +257,7 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     <div className="grid gap-5 md:grid-cols-2">
       <div className="space-y-1.5"><label className="text-sm font-medium tracking-normal text-white/88">{isReviewFlow ? 'Judul Review' : 'Judul Wawasan'}</label><input className="w-full rounded-lg border border-white/15 bg-transparent px-3 py-2" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></div>
       <div className="space-y-1.5"><div className="flex items-center justify-between gap-2"><label className="text-sm font-medium tracking-normal text-white/88">Slug URL</label><button type="button" className="text-xs text-white/70 underline underline-offset-2 hover:text-white" onClick={() => { setIsSlugEditable((prev) => !prev); if (!isSlugEditable) setIsSlugManuallyEdited(true); }}>{isSlugEditable ? 'Gunakan slug otomatis' : 'Edit slug'}</button></div><input className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 disabled:cursor-not-allowed disabled:text-white/60" value={form.slug} readOnly={!isSlugEditable} onChange={(e) => { setIsSlugManuallyEdited(true); setForm({ ...form, slug: slugify(e.target.value) }); }} /><p className="text-xs text-white/60">Slug dibuat otomatis dari judul review. Aktifkan Edit slug jika ingin ubah manual.</p></div>
-      <div className="space-y-1.5"><label className="text-sm font-medium tracking-normal text-white/88">Kategori</label><select className="w-full rounded-lg border border-white/15 bg-transparent px-3 py-2" value={categoryMode === 'preset' ? selectedCategory : NEW_CATEGORY_VALUE} onChange={(e) => { if (e.target.value === NEW_CATEGORY_VALUE) { setCategoryMode('custom'); return; } setCategoryMode('preset'); setSelectedCategory(e.target.value); }}><option value="">Pilih kategori</option>{CATEGORY_OPTIONS.map((category) => <option key={category} value={category}>{category}</option>)}<option value={NEW_CATEGORY_VALUE}>Tambah kategori baru</option></select>{categoryMode === 'custom' ? <input className="mt-2 w-full rounded-lg border border-white/15 bg-transparent px-3 py-2" placeholder="Masukkan kategori baru" value={customCategory} onChange={(e) => setCustomCategory(e.target.value)} /> : null}</div>
+      <div className="space-y-1.5"><label className="text-sm font-medium tracking-normal text-white/88">Kategori</label><select className="w-full rounded-lg border border-white/15 bg-transparent px-3 py-2" value={categoryMode === 'preset' ? selectedCategory : NEW_CATEGORY_VALUE} onChange={(e) => { if (e.target.value === NEW_CATEGORY_VALUE) { setCategoryMode('custom'); return; } setCategoryMode('preset'); setSelectedCategory(e.target.value); }}><option value="">Pilih kategori</option>{categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}<option value={NEW_CATEGORY_VALUE}>Tambah kategori baru</option></select><p className="text-xs text-white/60">Kategori berfungsi sebagai rubrik utama wawasan. Detail seperti tipe ruang, gaya, atau topik teknis sebaiknya ditulis di judul, ringkasan, atau konten.</p>{categoryMode === 'custom' ? <input className="mt-2 w-full rounded-lg border border-white/15 bg-transparent px-3 py-2" placeholder="Masukkan kategori baru" value={customCategory} onChange={(e) => setCustomCategory(e.target.value)} /> : null}</div>
       {isProjectFlow ? <div className="space-y-1.5"><label className="text-sm font-medium tracking-normal text-white/88">Sumber Wawasan</label><input value="Project-based artikel" disabled className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-white/70" /></div> : null}
     </div>
     {isProjectFlow ? <div className="space-y-1.5"><label className="text-sm font-medium tracking-normal text-white/88">Project Sumber</label><select disabled className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-white/70" value={form.source_project_id} onChange={(e) => setForm({ ...form, source_project_id: e.target.value })}><option value="">Pilih project</option>{projects.map((project) => <option key={project.id} value={project.id}>{project.title}</option>)}</select></div> : null}
