@@ -44,7 +44,7 @@ export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasan
   return (
     <Link
       href={`/admin/insights/${insightId}/edit`}
-      className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-[#D4AF37]/45 bg-[#D4AF37]/[0.08] px-4 py-2.5 text-center font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
+      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/[0.06] px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
     >
       Edit Wawasan
     </Link>
