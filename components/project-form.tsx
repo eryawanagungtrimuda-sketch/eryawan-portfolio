@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
@@ -234,6 +234,30 @@ export default function ProjectForm({ project }: Props) {
   const [pendekatan, setPendekatan] = useState(project?.pendekatan || '');
   const [dampak, setDampak] = useState(project?.dampak || project?.impact || '');
   const [insightKunci, setInsightKunci] = useState(project?.insight_kunci || '');
+
+
+  useEffect(() => {
+    if (!savedProjectId || !coverImage || coverUpdatingUrl || galleryImages.length === 0) return;
+    const coverStillExists = galleryImages.some((image) => image.image_url === coverImage);
+    if (coverStillExists) return;
+
+    const nextCover = galleryImages[0]?.image_url || '';
+    if (!nextCover) return;
+
+    setCoverImage(nextCover);
+    setMessage('Cover sebelumnya tidak ditemukan. Cover otomatis dipindahkan ke gambar gallery pertama.');
+
+    (async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase.from('projects').update({ cover_image: nextCover }).eq('id', savedProjectId);
+        if (error) throw error;
+      } catch (error) {
+        console.error('[ProjectForm] Auto-fix cover failed', error);
+        setGalleryError('Cover image tidak ditemukan dan gagal diperbarui otomatis. Silakan pilih ulang cover.');
+      }
+    })();
+  }, [coverImage, coverUpdatingUrl, galleryImages, savedProjectId]);
 
   function syncSlug(nextTitle: string) {
     setTitle(nextTitle);
@@ -735,7 +759,6 @@ export default function ProjectForm({ project }: Props) {
 
 
   const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => image.image_url === coverImage));
-  const selectedCoverGalleryImage = coverImage ? galleryImages.find((image) => image.image_url === coverImage) || null : null;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -818,9 +841,6 @@ export default function ProjectForm({ project }: Props) {
             <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>{coverExistsInGallery ? 'Cover image sudah dipilih dari gallery.' : 'Cover image aktif, tetapi belum ada di daftar gallery saat ini.'}</span></div>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingUrl)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
-              {selectedCoverGalleryImage ? (
-                <button type="button" onClick={() => removeGalleryImage(selectedCoverGalleryImage)} disabled={Boolean(coverUpdatingUrl)} className="inline-flex items-center gap-2 rounded-sm border border-red-400/30 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> Delete</button>
-              ) : null}
             </div>
           </div>
         ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
