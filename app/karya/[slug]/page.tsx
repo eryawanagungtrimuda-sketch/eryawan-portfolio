@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
 import SmartBackLink from '@/components/smart-back-link';
 import ProjectImageGallery from '@/components/project-image-gallery';
+import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
@@ -184,6 +185,7 @@ export default async function KaryaDetailPage({ params }: Props) {
             >
               Diskusikan Project Serupa
             </Link>
+            <AdminEditProjectShortcut projectId={project.id} />
             <SmartBackLink
               fallbackHref="/karya"
               className="inline-flex items-center rounded-2xl border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/10"
