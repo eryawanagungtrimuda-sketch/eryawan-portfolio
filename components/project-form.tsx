@@ -735,6 +735,7 @@ export default function ProjectForm({ project }: Props) {
 
 
   const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => image.image_url === coverImage));
+  const selectedCoverGalleryImage = coverImage ? galleryImages.find((image) => image.image_url === coverImage) || null : null;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -815,7 +816,12 @@ export default function ProjectForm({ project }: Props) {
         {coverImage ? (
           <div className="mt-6 flex flex-col gap-3 rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>{coverExistsInGallery ? 'Cover image sudah dipilih dari gallery.' : 'Cover image aktif, tetapi belum ada di daftar gallery saat ini.'}</span></div>
-            <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingUrl)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingUrl)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
+              {selectedCoverGalleryImage ? (
+                <button type="button" onClick={() => removeGalleryImage(selectedCoverGalleryImage)} disabled={Boolean(coverUpdatingUrl)} className="inline-flex items-center gap-2 rounded-sm border border-red-400/30 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> Delete</button>
+              ) : null}
+            </div>
           </div>
         ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
         {galleryError ? (
@@ -918,13 +924,16 @@ export default function ProjectForm({ project }: Props) {
                     </div>
                     <div className="mt-auto flex flex-wrap gap-2 pt-1">
                       {isCover ? (
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
-                          <Star size={13} /> Cover
-                        </div>
+                        <>
+                          <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
+                            <Star size={13} /> Cover
+                          </div>
+                          <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-red-400/30 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200 transition duration-300 hover:bg-red-500/10"><X size={13} /> Delete</button>
+                        </>
                       ) : (
                         <button type="button" onClick={() => setAsCover(image.image_url)} disabled={!hasImageUrl || Boolean(coverUpdatingUrl)} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.02] px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/72 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
                       )}
-                      <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button>
+                      {!isCover ? <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button> : null}
                     </div>
                   </div>
                 </div>
