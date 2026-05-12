@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SmartBackLink from '@/components/smart-back-link';
 import InsightImageGallery from '@/components/insight-image-gallery';
+import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -159,6 +160,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white" />
           <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Lihat Karya</Link>
           <Link href="/mulai-project" className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2.5 font-sans text-sm text-white/66 transition hover:border-white/30 hover:text-white">Diskusikan Project</Link>
+          <AdminEditWawasanShortcut insightId={insight.id} />
         </div>
       </div>
     </main>
