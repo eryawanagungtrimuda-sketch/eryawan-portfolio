@@ -193,6 +193,7 @@ export default function ProjectForm({ project }: Props) {
   const isEditing = Boolean(savedProjectId);
   const [loading, setLoading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
+  const [coverUpdatingUrl, setCoverUpdatingUrl] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [galleryError, setGalleryError] = useState('');
@@ -324,9 +325,15 @@ export default function ProjectForm({ project }: Props) {
   }
 
   async function setAsCover(imageUrl: string) {
+    if (!imageUrl || coverUpdatingUrl || coverImage === imageUrl) return;
+    setGalleryError('');
+    setCoverUpdatingUrl(imageUrl);
     setCoverImage(imageUrl);
     setMessage('Cover image dipilih dari gallery. Simpan project untuk menyimpan perubahan.');
-    if (!savedProjectId) return;
+    if (!savedProjectId) {
+      setCoverUpdatingUrl('');
+      return;
+    }
 
     try {
       const supabase = getSupabaseClient();
@@ -335,14 +342,22 @@ export default function ProjectForm({ project }: Props) {
       setMessage('Cover image berhasil diperbarui.');
     } catch (error) {
       console.error('[ProjectForm] Set cover failed', error);
-      setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan cover image.');
+      setGalleryError('Cover belum berhasil diperbarui. Silakan coba lagi.');
+    } finally {
+      setCoverUpdatingUrl('');
     }
   }
 
   async function clearCover() {
+    if (coverUpdatingUrl) return;
+    setGalleryError('');
+    setCoverUpdatingUrl('__clear__');
     setCoverImage('');
     setMessage('Cover image dihapus. Simpan project untuk menyimpan perubahan.');
-    if (!savedProjectId) return;
+    if (!savedProjectId) {
+      setCoverUpdatingUrl('');
+      return;
+    }
 
     try {
       const supabase = getSupabaseClient();
@@ -352,6 +367,8 @@ export default function ProjectForm({ project }: Props) {
     } catch (error) {
       console.error('[ProjectForm] Clear cover failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus cover image.');
+    } finally {
+      setCoverUpdatingUrl('');
     }
   }
 
@@ -717,6 +734,8 @@ export default function ProjectForm({ project }: Props) {
   }
 
 
+  const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => image.image_url === coverImage));
+
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid gap-6 rounded-sm border border-white/10 bg-white/[0.025] p-6 md:grid-cols-2 md:p-8">
@@ -795,8 +814,8 @@ export default function ProjectForm({ project }: Props) {
         </div>
         {coverImage ? (
           <div className="mt-6 flex flex-col gap-3 rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>Cover image sudah dipilih dari gallery.</span></div>
-            <button type="button" onClick={clearCover} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 md:self-auto">Clear Cover</button>
+            <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>{coverExistsInGallery ? 'Cover image sudah dipilih dari gallery.' : 'Cover image aktif, tetapi belum ada di daftar gallery saat ini.'}</span></div>
+            <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingUrl)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
           </div>
         ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
         {galleryError ? (
@@ -819,6 +838,8 @@ export default function ProjectForm({ project }: Props) {
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {galleryImages.map((image) => {
               const isCover = coverImage === image.image_url;
+              const hasImageUrl = Boolean(image.image_url);
+              const isSettingCover = coverUpdatingUrl === image.image_url;
               return (
                 <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
                   <div className="relative">
@@ -896,7 +917,7 @@ export default function ProjectForm({ project }: Props) {
                       </div>
                     </div>
                     <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                      <button type="button" onClick={() => setAsCover(image.image_url)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}><Star size={13} /> {isCover ? 'Selected Cover' : 'Set as Cover'}</button>
+                      <button type="button" onClick={() => setAsCover(image.image_url)} disabled={isCover || !hasImageUrl || Boolean(coverUpdatingUrl)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}><Star size={13} /> {isCover ? 'Cover' : isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
                       <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button>
                     </div>
                   </div>
