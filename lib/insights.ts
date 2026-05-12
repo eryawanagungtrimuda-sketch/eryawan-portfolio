@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Insight, InsightSourceProject, InsightSourceType } from './types';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -9,6 +10,7 @@ function slugify(value: string) {
 }
 
 export async function getPublishedInsights() {
+  noStore();
   if (!isSupabaseConfigured) return [] as Insight[];
   const supabase = createSupabaseServerClient();
   const { data } = await supabase
@@ -27,6 +29,7 @@ export async function getPublishedInsights() {
 }
 
 export async function getPublishedInsightBySlug(slug: string) {
+  noStore();
   if (!isSupabaseConfigured) return null;
   const supabase = createSupabaseServerClient();
   const { data } = await supabase.from('insights').select(insightColumns).eq('slug', slug).eq('is_published', true).maybeSingle();
@@ -34,6 +37,7 @@ export async function getPublishedInsightBySlug(slug: string) {
 }
 
 export async function getPublishedInsightDetailBySlug(slug: string) {
+  noStore();
   const insight = await getPublishedInsightBySlug(slug);
   if (!insight) return null;
 
