@@ -1,5 +1,6 @@
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
+import { unstable_noStore as noStore } from 'next/cache';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at';
 
@@ -62,6 +63,7 @@ export const fallbackProjects: Project[] = [
 ];
 
 export async function getPublishedProjects() {
+  noStore();
   if (!isSupabaseConfigured) return fallbackProjects;
 
   const supabase = createSupabaseServerClient();
@@ -76,6 +78,7 @@ export async function getPublishedProjects() {
 }
 
 export async function getPublishedProjectBySlug(slug: string) {
+  noStore();
   if (!isSupabaseConfigured) {
     return fallbackProjects.find((project) => project.slug === slug) || null;
   }

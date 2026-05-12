@@ -141,11 +141,6 @@ export default async function KaryaDetailPage({ params }: Props) {
                     ))}
                   </div>
                 </article>
-              ) : project.area_type ? (
-                <article className="rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-4">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951]">Area Type</p>
-                  <p className="mt-2 font-sans text-base text-white/86">{project.area_type}</p>
-                </article>
               ) : null}
             </div>
           </div>
