@@ -60,21 +60,21 @@ export default async function WawasanPage() {
       ) : (
         <section className="mx-auto mt-8 grid max-w-6xl grid-cols-1 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
           {insights.map((item) => (
-            <article key={item.id} className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/35 hover:bg-white/[0.04] hover:shadow-[0_20px_45px_rgba(0,0,0,0.3)]">
+            <article key={item.id} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02] transition motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.035] hover:shadow-[0_20px_45px_rgba(0,0,0,0.3)]">
               {item.cover_image ? (
-                <div className="aspect-[16/9] max-h-48 overflow-hidden border-b border-white/10 sm:aspect-[16/10] sm:max-h-none">
+                <div className="aspect-[16/9] max-h-48 overflow-hidden border-b border-white/8 sm:aspect-[16/10] sm:max-h-none">
                   <img src={item.cover_image} alt={item.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
                 </div>
               ) : null}
 
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 text-[11px] uppercase tracking-wide text-[#D4AF37]">
+                  <span className="rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D4AF37]">
                     {item.category || 'Uncategorized'}
                   </span>
-                  {item.content_type === 'review_karya' ? <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-wide text-white/70">Review Karya</span> : null}
+                  {item.content_type === 'review_karya' ? <span className="rounded-full border border-white/8 px-3 py-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
                   {formatSourceType(item.source_type) ? (
-                    <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-wide text-white/62">
+                    <span className="rounded-full border border-white/8 px-3 py-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/62">
                       {formatSourceType(item.source_type)}
                     </span>
                   ) : null}

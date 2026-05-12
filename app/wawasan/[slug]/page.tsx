@@ -105,8 +105,8 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         </SmartBackLink>
 
         <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
-          <span className="inline-block rounded-2xl border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
-          {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/20 px-3 py-1.5 font-sans text-xs uppercase tracking-wide text-white/70">Review Karya</span> : null}
+          <span className="inline-block rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
+          {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/8 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
         </div>
 
         <h1 className="font-display mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
