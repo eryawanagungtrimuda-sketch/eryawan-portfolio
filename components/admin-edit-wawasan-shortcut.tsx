@@ -1,0 +1,52 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { createSupabaseBrowserClient } from '@/lib/supabase';
+import { isAllowedAdminEmail } from '@/lib/admin-auth';
+
+type AdminEditWawasanShortcutProps = {
+  insightId?: string | null;
+};
+
+export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasanShortcutProps) {
+  const [ready, setReady] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function checkAdminSession() {
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        const allowed = isAllowedAdminEmail(data.user?.email);
+
+        if (!mounted) return;
+        setIsAdmin(allowed);
+        setReady(true);
+      } catch {
+        if (!mounted) return;
+        setIsAdmin(false);
+        setReady(true);
+      }
+    }
+
+    checkAdminSession();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!insightId || !ready || !isAdmin) return null;
+
+  return (
+    <Link
+      href={`/admin/insights/${insightId}/edit`}
+      className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-[#D4AF37]/45 bg-[#D4AF37]/[0.08] px-4 py-2.5 text-center font-sans text-xs font-semibold uppercase tracking-[0.14em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
+    >
+      Edit Wawasan
+    </Link>
+  );
+}
