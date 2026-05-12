@@ -917,7 +917,13 @@ export default function ProjectForm({ project }: Props) {
                       </div>
                     </div>
                     <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                      <button type="button" onClick={() => setAsCover(image.image_url)} disabled={isCover || !hasImageUrl || Boolean(coverUpdatingUrl)} className={`inline-flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] transition duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${isCover ? 'border-[#D4AF37]/40 text-[#D4AF37]' : 'border-white/10 text-white/52 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}><Star size={13} /> {isCover ? 'Cover' : isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
+                      {isCover ? (
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
+                          <Star size={13} /> Cover
+                        </div>
+                      ) : (
+                        <button type="button" onClick={() => setAsCover(image.image_url)} disabled={!hasImageUrl || Boolean(coverUpdatingUrl)} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.02] px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/72 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
+                      )}
                       <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button>
                     </div>
                   </div>
