@@ -1178,6 +1178,16 @@ export default function ProjectForm({ project }: Props) {
               const isCurrentReordering = reorderingImageId === image.id;
               const isFirstImage = index === 0;
               const isLastImage = index === galleryImages.length - 1;
+              const displayRatioLabel = displayRatioOptions.find((option) => option.value === (image.display_ratio || 'landscape'))?.label || 'Landscape';
+              const cropX = normalizeCropX(image.crop_x);
+              const cropY = normalizeCropY(image.crop_y);
+              const cropZoom = normalizeCropZoom(image.crop_zoom);
+              const hasDefaultCrop = cropX === DEFAULT_CROP_X && cropY === DEFAULT_CROP_Y && cropZoom === DEFAULT_CROP_ZOOM;
+              const displaySummary = cropZoom > DEFAULT_CROP_ZOOM
+                ? `Zoom ${cropZoom.toFixed(2)}x`
+                : hasDefaultCrop
+                  ? 'Default'
+                  : 'Crop custom';
               return (
                 <div key={image.id} className={`rounded-2xl border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/45 shadow-[0_16px_36px_rgba(212,175,55,0.06)]' : 'border-white/10 bg-white/[0.015] hover:border-[#D4AF37]/25'}`}>
                   <button
@@ -1195,44 +1205,31 @@ export default function ProjectForm({ project }: Props) {
                   </button>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
-                    <div>
-                      <label>Tampilan Gambar</label>
-                      <div className="mt-2 space-y-2.5 rounded-xl border border-white/10 bg-black/20 p-3">
-                        <div>
-                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Rasio</p>
-                          <div className="flex flex-wrap gap-1.5">
-                          {displayRatioOptions.map((option) => (
-                            <button key={`${image.id}-ratio-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { display_ratio: option.value })} className={`h-7 rounded-full border px-3 text-[10px] font-bold uppercase tracking-[0.08em] transition ${image.display_ratio === option.value ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 text-white/60 hover:border-[#D4AF37]/30 hover:text-[#D4AF37]'}`}>{option.label}</button>
-                          ))}
-                        </div>
-                        </div>
-                        <div>
-                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Posisi Cepat</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {[{ label: 'Tengah', x: 50, y: 50 }, { label: 'Atas', x: 50, y: 0 }, { label: 'Bawah', x: 50, y: 100 }, { label: 'Kiri', x: 0, y: 50 }, { label: 'Kanan', x: 100, y: 50 }].map((preset) => (
-                              <button key={`${image.id}-preset-${preset.label}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { crop_x: preset.x, crop_y: preset.y, object_position: 'center' })} className="h-7 rounded-full border border-white/10 px-3 text-[10px] font-bold uppercase tracking-[0.08em] text-white/60 transition hover:border-[#D4AF37]/30 hover:text-[#D4AF37]">{preset.label}</button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5">
+                      <p className="text-[10px] uppercase tracking-[0.08em] text-white/45">Tampilan Gambar</p>
+                      <p className="mt-1 text-xs text-white/75">{`Tampilan: ${displayRatioLabel} · ${displaySummary}`}</p>
                     </div>
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {isCover ? (
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
-                          <Star size={13} /> Cover
-                        </div>
-                      ) : (
-                        <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
-                      )}
-                      <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
-                      <button
-                        type="button"
-                        onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.01] px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
-                      >
-                        Kelola Tag
-                      </button>
-                      <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
+                    <div className="space-y-2 pt-1">
+                      <div className="flex flex-wrap gap-2">
+                        {isCover ? (
+                          <div className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
+                            <Star size={13} /> Cover
+                          </div>
+                        ) : (
+                          <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
+                        )}
+                        <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
+                          className="inline-flex h-8 items-center gap-2 rounded-full border border-white/15 bg-white/[0.01] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
+                        >
+                          Kelola Tag
+                        </button>
+                        <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex h-8 items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
+                      </div>
                     </div>
                     <div>
                       <label>Image Area Tags</label>
@@ -1294,7 +1291,7 @@ export default function ProjectForm({ project }: Props) {
                         ) : null}
                       </div>
                     </div>
-                    <div className="rounded-xl border border-white/10 bg-black/25 px-3.5 py-2.5">
+                    <div className="rounded-xl border border-white/8 bg-black/25 px-3 py-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/55">Urutan {String(index + 1).padStart(2, '0')}</span>
                         <div className="flex items-center gap-1.5">
