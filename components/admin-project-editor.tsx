@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+import { normalizeDisplayRatio, normalizeObjectPosition } from '@/lib/project-image-display';
 import type { Project } from '@/lib/types';
 import ProjectForm from './project-form';
 
@@ -32,7 +33,7 @@ export default function AdminProjectEditor({ id }: Props) {
         const { data, error, status } = await supabase
           .from('projects')
           .select(
-            'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,is_published,created_at,project_images(id,project_id,image_url,alt_text,sort_order,area_tags,created_at)'
+            'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,is_published,created_at,project_images(id,project_id,image_url,alt_text,sort_order,area_tags,display_ratio,object_position,created_at)'
           )
           .eq('id', id)
           .maybeSingle();
@@ -54,7 +55,9 @@ export default function AdminProjectEditor({ id }: Props) {
           return;
         }
 
-        const sortedImages = [...(data.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
+        const sortedImages = [...(data.project_images || [])]
+          .map((image) => ({ ...image, display_ratio: normalizeDisplayRatio(image.display_ratio), object_position: normalizeObjectPosition(image.object_position) }))
+          .sort((a, b) => a.sort_order - b.sort_order);
         setProject({ ...(data as Project), project_images: sortedImages });
       } catch (error) {
         setMessage(error instanceof Error ? error.message : 'Terjadi kesalahan saat memuat project.');

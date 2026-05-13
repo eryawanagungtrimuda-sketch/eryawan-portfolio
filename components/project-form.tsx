@@ -6,6 +6,7 @@ import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
+import { DisplayRatio, getAspectRatioClass, getObjectPositionClass, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -63,6 +64,20 @@ const areaTagOptions = [
   'Meeting Room', 'Consultation Room', 'Treatment Room', 'Retail Area', 'Display Area', 'Cafe Area', 'Pantry', 'Corridor',
   'Facade', 'Outdoor Area', 'Public Service Area', 'Furniture / Built-in', 'Other',
 ];
+const displayRatioOptions = [
+  { value: 'landscape', label: 'Landscape' },
+  { value: 'wide', label: 'Wide' },
+  { value: 'square', label: 'Square' },
+  { value: 'portrait', label: 'Portrait' },
+  { value: 'tall', label: 'Tall' },
+] as const;
+const objectPositionOptions = [
+  { value: 'center', label: 'Tengah' },
+  { value: 'top', label: 'Atas' },
+  { value: 'bottom', label: 'Bawah' },
+  { value: 'left', label: 'Kiri' },
+  { value: 'right', label: 'Kanan' },
+] as const;
 
 function slugify(value: string) {
   return value
@@ -200,7 +215,7 @@ export default function ProjectForm({ project }: Props) {
   const [aiError, setAiError] = useState('');
   const [formError, setFormError] = useState('');
   const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
-  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].sort((a, b) => a.sort_order - b.sort_order));
+  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center' })).sort((a, b) => a.sort_order - b.sort_order));
 
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || slugify(project?.title || ''));
@@ -460,8 +475,8 @@ export default function ProjectForm({ project }: Props) {
           const { data: publicUrl } = supabase.storage.from(projectImagesBucket).getPublicUrl(filePath);
           const { data, error: insertError } = await supabase
             .from('project_images')
-            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length, area_tags: [] })
-            .select('id,project_id,image_url,alt_text,sort_order,area_tags,created_at')
+            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length, area_tags: [], display_ratio: 'landscape', object_position: 'center' })
+            .select('id,project_id,image_url,alt_text,sort_order,area_tags,display_ratio,object_position,created_at')
             .single();
 
           if (insertError) {
@@ -518,7 +533,7 @@ export default function ProjectForm({ project }: Props) {
     await uploadGalleryFiles(pendingGalleryFiles);
   }
 
-  async function updateGalleryImageMeta(imageId: string, updates: { alt_text?: string | null; area_tags?: string[] }) {
+  async function updateGalleryImageMeta(imageId: string, updates: { alt_text?: string | null; area_tags?: string[]; display_ratio?: DisplayRatio; object_position?: ObjectPosition }) {
     try {
       const supabase = getSupabaseClient();
       const { error } = await supabase.from('project_images').update(updates).eq('id', imageId);
@@ -526,6 +541,7 @@ export default function ProjectForm({ project }: Props) {
     } catch (error) {
       console.error('[ProjectForm] Update gallery image meta failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menyimpan metadata gambar.');
+      throw error;
     }
   }
 
@@ -538,6 +554,18 @@ export default function ProjectForm({ project }: Props) {
     const normalizedTags = Array.from(new Set(tags.map((tag) => normalizeText(tag)).filter(Boolean)));
     setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, area_tags: normalizedTags } : image)));
     await updateGalleryImageMeta(imageId, { area_tags: normalizedTags });
+  }
+  async function updateGalleryDisplaySettings(imageId: string, updates: { display_ratio?: DisplayRatio; object_position?: ObjectPosition }) {
+    setGalleryError('');
+    const previousImage = galleryImages.find((image) => image.id === imageId);
+    setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, ...updates } : image)));
+    try {
+      await updateGalleryImageMeta(imageId, updates);
+      setMessage('Tampilan gambar tersimpan.');
+    } catch (error) {
+      setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, display_ratio: previousImage?.display_ratio || 'landscape', object_position: previousImage?.object_position || 'center' } : image)));
+      setGalleryError('Tampilan gambar gagal disimpan. Silakan coba lagi.');
+    }
   }
 
   async function removeGalleryImage(image: ProjectImage) {
@@ -869,11 +897,26 @@ export default function ProjectForm({ project }: Props) {
               return (
                 <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
                   <div className="relative">
-                    <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="aspect-[4/3] w-full object-cover" />
+                    <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`} />
                     {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#080807]"><Star size={12} /> Cover</div> : null}
                   </div>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
+                    <div>
+                      <label>Tampilan Gambar</label>
+                      <div className="mt-2 space-y-2">
+                        <div className="flex flex-wrap gap-1.5">
+                          {displayRatioOptions.map((option) => (
+                            <button key={`${image.id}-ratio-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { display_ratio: option.value })} className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition ${image.display_ratio === option.value ? 'border-[#D4AF37]/55 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/20 text-white/70 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{option.label}</button>
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {objectPositionOptions.map((option) => (
+                            <button key={`${image.id}-position-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { object_position: option.value })} className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition ${image.object_position === option.value ? 'border-[#D4AF37]/55 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/20 text-white/70 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{option.label}</button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                     <div>
                       <label>Image Area Tags</label>
                       <div className="mt-2 space-y-2.5">
