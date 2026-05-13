@@ -221,6 +221,44 @@ function TaxonomySelect({
   );
 }
 
+function toSentenceCase(value: string) {
+  const normalized = normalizeText(value);
+  if (!normalized) return '';
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
+}
+
+function buildGalleryAltText({
+  projectTitle,
+  imageAreaTags,
+  projectCategory,
+  designCategory,
+  designStyle,
+}: {
+  projectTitle: string;
+  imageAreaTags: string[];
+  projectCategory?: string;
+  designCategory?: string;
+  designStyle?: string;
+}) {
+  const cleanedTitle = normalizeText(projectTitle) || 'project ini';
+  const style = toSentenceCase(designStyle || '') || 'modern';
+  const tags = Array.from(new Set((imageAreaTags || []).map((tag) => normalizeText(getAreaTagLabel(tag))).filter(Boolean)));
+  const primaryArea = tags[0] ? toSentenceCase(tags[0]) : '';
+  const secondaryArea = tags[1] ? toSentenceCase(tags[1]) : '';
+  const categoryHint = toSentenceCase(designCategory || projectCategory || '');
+
+  if (primaryArea && secondaryArea) {
+    return `Area ${primaryArea} dan ${secondaryArea} ${cleanedTitle} dengan pendekatan interior ${style}.`;
+  }
+  if (primaryArea) {
+    return `${primaryArea} ${cleanedTitle} dengan nuansa interior ${style} dan tata ruang yang rapi.`;
+  }
+  if (categoryHint) {
+    return `Visual ${categoryHint.toLowerCase()} ${cleanedTitle} dengan suasana ruang ${style.toLowerCase()} yang nyaman.`;
+  }
+  return `Visual interior ${cleanedTitle} dengan suasana ruang ${style.toLowerCase()} yang nyaman.`;
+}
+
 export default function ProjectForm({ project }: Props) {
   const router = useRouter();
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
@@ -258,6 +296,7 @@ export default function ProjectForm({ project }: Props) {
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
   const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
+  const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
 
   const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
   const [designReference, setDesignReference] = useState(project?.design_reference || '');
@@ -623,6 +662,67 @@ export default function ProjectForm({ project }: Props) {
     setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, area_tags: normalizedTags } : image)));
     await updateGalleryImageMeta(imageId, { area_tags: normalizedTags });
   }
+
+  async function handleGenerateGalleryAltText(mode: 'fill-empty' | 'overwrite-all') {
+    if (bulkAltUpdating || galleryUploading || loading || aiGenerating) return;
+    if (galleryImages.length === 0) {
+      setGalleryError('Belum ada gallery images.');
+      return;
+    }
+    if (mode === 'overwrite-all' && !window.confirm('Timpa semua alt text gambar gallery?')) return;
+
+    const projectTitle = normalizeText(title);
+    const projectCategory = getSelectedValue(legacyCategory, legacyCategoryOptions);
+    const selectedDesignCategory = getSelectedValue(designCategory, designCategoryOptions);
+    const selectedDesignStyle = getSelectedValue(designStyle, designStyleOptions);
+    const shouldUpdate = (image: ProjectImage) => {
+      if (mode === 'overwrite-all') return true;
+      const currentAlt = normalizeText(image.alt_text || '');
+      return !currentAlt || (projectTitle && currentAlt === projectTitle);
+    };
+
+    const targets = galleryImages.filter(shouldUpdate);
+    if (targets.length === 0) {
+      setMessage('Tidak ada alt text yang perlu diperbarui.');
+      return;
+    }
+
+    const snapshot = galleryImages;
+    const generatedAltById = new Map(targets.map((image) => [image.id, buildGalleryAltText({
+      projectTitle,
+      imageAreaTags: image.area_tags || [],
+      projectCategory,
+      designCategory: selectedDesignCategory,
+      designStyle: selectedDesignStyle,
+    })]));
+
+    const nextImages = galleryImages.map((image) => (
+      generatedAltById.has(image.id)
+        ? { ...image, alt_text: generatedAltById.get(image.id) || image.alt_text }
+        : image
+    ));
+
+    setGalleryError('');
+    setMessage('');
+    setBulkAltUpdating(true);
+    setGalleryImages(nextImages);
+
+    try {
+      const supabase = getSupabaseClient();
+      const results = await Promise.all(
+        targets.map((image) => supabase.from('project_images').update({ alt_text: generatedAltById.get(image.id) || null }).eq('id', image.id)),
+      );
+      const updateError = results.find((result) => result.error)?.error;
+      if (updateError) throw updateError;
+      setMessage('Alt text gallery berhasil diperbarui.');
+    } catch (error) {
+      console.error('[ProjectForm] Bulk generate alt text failed', error);
+      setGalleryImages(snapshot);
+      setGalleryError('Alt text gagal diperbarui. Silakan coba lagi.');
+    } finally {
+      setBulkAltUpdating(false);
+    }
+  }
   async function updateGalleryDisplaySettings(imageId: string, updates: { display_ratio?: DisplayRatio; object_position?: ObjectPosition }) {
     setGalleryError('');
     const previousImage = galleryImages.find((image) => image.id === imageId);
@@ -983,10 +1083,19 @@ export default function ProjectForm({ project }: Props) {
           </div>
           <div>
             <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading || aiGenerating} className="hidden" />
-            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
               <ImagePlus size={16} /> {galleryUploading ? 'Uploading...' : 'Upload Gallery'}
             </button>
             <p className="mt-2 max-w-xs text-xs leading-5 text-white/45">Format: JPG, PNG, atau WEBP. Maksimal 2MB per file. Pilih gambar yang sudah terkurasi agar gallery tetap ringan.</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('fill-empty'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.15em] text-[#D4AF37] transition hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/20 disabled:cursor-not-allowed disabled:opacity-50">
+                {bulkAltUpdating ? 'Memproses...' : 'Isi Alt Kosong'}
+              </button>
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('overwrite-all'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.15em] text-white/75 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+                Timpa Semua Alt
+              </button>
+            </div>
+            <p className="mt-2 max-w-sm text-xs leading-5 text-white/42">Alt text dibuat otomatis dari judul project dan tag area gambar, tanpa menggunakan AI.</p>
           </div>
         </div>
         {coverImage ? (
