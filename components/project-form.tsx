@@ -96,6 +96,20 @@ function normalizeText(value: string) {
   return value.trim().replace(/\s+/g, ' ');
 }
 
+function normalizeImageUrl(url?: string | null) {
+  if (!url) return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+  try {
+    const parsed = new URL(trimmed);
+    parsed.hash = '';
+    parsed.search = '';
+    return parsed.toString().replace(/\/$/, '');
+  } catch {
+    return trimmed.replace(/[?#].*$/, '').replace(/\/$/, '');
+  }
+}
+
 function normalizeOption(value: string, options: string[]) {
   const normalized = normalizeText(value);
   const matched = options.find((option) => option.toLowerCase() === normalized.toLowerCase());
@@ -208,7 +222,8 @@ export default function ProjectForm({ project }: Props) {
   const isEditing = Boolean(savedProjectId);
   const [loading, setLoading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
-  const [coverUpdatingUrl, setCoverUpdatingUrl] = useState('');
+  const [coverUpdatingId, setCoverUpdatingId] = useState('');
+  const [deletingImageId, setDeletingImageId] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [galleryError, setGalleryError] = useState('');
@@ -252,8 +267,9 @@ export default function ProjectForm({ project }: Props) {
 
 
   useEffect(() => {
-    if (!savedProjectId || !coverImage || coverUpdatingUrl || galleryImages.length === 0) return;
-    const coverStillExists = galleryImages.some((image) => image.image_url === coverImage);
+    if (!savedProjectId || !coverImage || coverUpdatingId || galleryImages.length === 0) return;
+    const normalizedCover = normalizeImageUrl(coverImage);
+    const coverStillExists = galleryImages.some((image) => normalizeImageUrl(image.image_url) === normalizedCover);
     if (coverStillExists) return;
 
     const nextCover = galleryImages[0]?.image_url || '';
@@ -272,7 +288,7 @@ export default function ProjectForm({ project }: Props) {
         setGalleryError('Cover image tidak ditemukan dan gagal diperbarui otomatis. Silakan pilih ulang cover.');
       }
     })();
-  }, [coverImage, coverUpdatingUrl, galleryImages, savedProjectId]);
+  }, [coverImage, coverUpdatingId, galleryImages, savedProjectId]);
 
   function syncSlug(nextTitle: string) {
     setTitle(nextTitle);
@@ -363,38 +379,41 @@ export default function ProjectForm({ project }: Props) {
     galleryInputRef.current?.click();
   }
 
-  async function setAsCover(imageUrl: string) {
-    if (!imageUrl || coverUpdatingUrl || coverImage === imageUrl) return;
+  async function setExistingGalleryImageAsCover(image: ProjectImage) {
+    if (!image.image_url || coverUpdatingId || deletingImageId) return;
+    const nextCover = normalizeImageUrl(image.image_url);
+    const previousCover = coverImage;
+    if (!nextCover || normalizeImageUrl(coverImage) === nextCover) return;
     setGalleryError('');
-    setCoverUpdatingUrl(imageUrl);
-    setCoverImage(imageUrl);
-    setMessage('Cover image dipilih dari gallery. Simpan project untuk menyimpan perubahan.');
+    setCoverUpdatingId(image.id);
+    setCoverImage(image.image_url);
+    setMessage('Cover project diperbarui dari gallery.');
     if (!savedProjectId) {
-      setCoverUpdatingUrl('');
+      setCoverUpdatingId('');
       return;
     }
 
     try {
       const supabase = getSupabaseClient();
-      const { error } = await supabase.from('projects').update({ cover_image: imageUrl }).eq('id', savedProjectId);
+      const { error } = await supabase.from('projects').update({ cover_image: image.image_url }).eq('id', savedProjectId);
       if (error) throw error;
-      setMessage('Cover image berhasil diperbarui.');
     } catch (error) {
       console.error('[ProjectForm] Set cover failed', error);
+      setCoverImage(previousCover);
       setGalleryError('Cover belum berhasil diperbarui. Silakan coba lagi.');
     } finally {
-      setCoverUpdatingUrl('');
+      setCoverUpdatingId('');
     }
   }
 
   async function clearCover() {
-    if (coverUpdatingUrl) return;
+    if (coverUpdatingId) return;
     setGalleryError('');
-    setCoverUpdatingUrl('__clear__');
+    setCoverUpdatingId('__clear__');
     setCoverImage('');
     setMessage('Cover image dihapus. Simpan project untuk menyimpan perubahan.');
     if (!savedProjectId) {
-      setCoverUpdatingUrl('');
+      setCoverUpdatingId('');
       return;
     }
 
@@ -407,7 +426,7 @@ export default function ProjectForm({ project }: Props) {
       console.error('[ProjectForm] Clear cover failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus cover image.');
     } finally {
-      setCoverUpdatingUrl('');
+      setCoverUpdatingId('');
     }
   }
 
@@ -569,9 +588,10 @@ export default function ProjectForm({ project }: Props) {
   }
 
   async function removeGalleryImage(image: ProjectImage) {
-    if (!window.confirm('Hapus gambar gallery ini?')) return;
+    if (!window.confirm(`Hapus gambar gallery ini? Tindakan ini tidak dapat dibatalkan.\n${image.alt_text ? `Alt: ${image.alt_text}` : ''}`.trim())) return;
     setGalleryError('');
     setAiError('');
+    setDeletingImageId(image.id);
 
     try {
       const supabase = getSupabaseClient();
@@ -588,7 +608,7 @@ export default function ProjectForm({ project }: Props) {
       const remainingImages = galleryImages.filter((item) => item.id !== image.id);
       setGalleryImages(remainingImages);
 
-      if (coverImage === image.image_url) {
+      if (normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url)) {
         const nextCover = remainingImages[0]?.image_url || null;
         setCoverImage(nextCover || '');
         if (savedProjectId) {
@@ -599,6 +619,8 @@ export default function ProjectForm({ project }: Props) {
     } catch (error) {
       console.error('[ProjectForm] Remove gallery image failed', error);
       setGalleryError(error instanceof Error ? error.message : 'Gagal menghapus gambar gallery.');
+    } finally {
+      setDeletingImageId('');
     }
   }
 
@@ -786,7 +808,7 @@ export default function ProjectForm({ project }: Props) {
   }
 
 
-  const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => image.image_url === coverImage));
+  const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => normalizeImageUrl(image.image_url) === normalizeImageUrl(coverImage)));
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
@@ -868,7 +890,7 @@ export default function ProjectForm({ project }: Props) {
           <div className="mt-6 flex flex-col gap-3 rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>{coverExistsInGallery ? 'Cover image sudah dipilih dari gallery.' : 'Cover image aktif, tetapi belum ada di daftar gallery saat ini.'}</span></div>
             <div className="flex flex-wrap items-center gap-2">
-              <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingUrl)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
+              <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingId)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
             </div>
           </div>
         ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
@@ -891,15 +913,23 @@ export default function ProjectForm({ project }: Props) {
         {galleryImages.length > 0 ? (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {galleryImages.map((image) => {
-              const isCover = coverImage === image.image_url;
+              const isCover = normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url);
               const hasImageUrl = Boolean(image.image_url);
-              const isSettingCover = coverUpdatingUrl === image.image_url;
+              const isSettingCover = coverUpdatingId === image.id;
+              const isDeleting = deletingImageId === image.id;
               return (
                 <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
-                  <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => { if (!isCover) void setExistingGalleryImageAsCover(image); }}
+                    disabled={!hasImageUrl || isCover || Boolean(coverUpdatingId) || isDeleting}
+                    aria-label={isCover ? 'Gambar ini adalah cover aktif' : 'Pilih gambar ini sebagai cover'}
+                    className={`relative block w-full text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
+                  >
                     <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`} />
                     {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#080807]"><Star size={12} /> Cover</div> : null}
-                  </div>
+                    {!isCover ? <div className="absolute inset-x-3 bottom-3 rounded-full border border-[#D4AF37]/40 bg-black/55 px-3 py-1 text-center text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
+                  </button>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
                     <div>
@@ -991,12 +1021,12 @@ export default function ProjectForm({ project }: Props) {
                           <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
                             <Star size={13} /> Cover
                           </div>
-                          <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-red-400/30 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200 transition duration-300 hover:bg-red-500/10"><X size={13} /> Delete</button>
+                          <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/35 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/90 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
                         </>
                       ) : (
-                        <button type="button" onClick={() => setAsCover(image.image_url)} disabled={!hasImageUrl || Boolean(coverUpdatingUrl)} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.02] px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/72 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
+                        <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
                       )}
-                      {!isCover ? <button type="button" onClick={() => removeGalleryImage(image)} className="inline-flex items-center gap-2 rounded-sm border border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/52 transition duration-300 hover:border-red-400/30 hover:text-red-200"><X size={13} /> Remove</button> : null}
+                      {!isCover ? <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/30 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button> : null}
                     </div>
                   </div>
                 </div>
