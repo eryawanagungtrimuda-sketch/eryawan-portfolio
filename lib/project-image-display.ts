@@ -26,6 +26,16 @@ export function getAspectRatioClass(displayRatio?: string | null) {
   return 'aspect-[16/9]';
 }
 
+
+export function getDisplayRatioNumber(displayRatio?: string | null) {
+  const ratio = normalizeDisplayRatio(displayRatio);
+  if (ratio === 'wide') return 21 / 9;
+  if (ratio === 'square') return 1;
+  if (ratio === 'portrait') return 4 / 5;
+  if (ratio === 'tall') return 3 / 4;
+  return 16 / 9;
+}
+
 export function getAspectRatioValue(displayRatio?: string | null) {
   const ratio = normalizeDisplayRatio(displayRatio);
   if (ratio === 'wide') return '21 / 9';
