@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAreaTagLabel } from '@/lib/area-tags';
-import { getAspectRatioValue, getObjectPositionValue } from '@/lib/project-image-display';
+import { getGalleryImageFrameStyle, getGalleryImageStyle } from '@/lib/project-image-display';
 
-type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null };
+type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null; crop_x?: number | null; crop_y?: number | null; crop_zoom?: number | null };
 
 function normalizeImageSrc(src?: string | null) {
   return (src || '').trim().replace(/[?#].*$/, '').replace(/\/$/, '');
@@ -110,12 +110,12 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                   }}
                   className="block w-full rounded-sm border border-white/10 bg-white/[0.02] text-left"
                 >
-                  <div className="relative w-full overflow-hidden rounded-sm" style={{ aspectRatio: getAspectRatioValue(image.display_ratio) }}>
+                  <div className="relative w-full overflow-hidden rounded-sm" style={getGalleryImageFrameStyle(image)}>
                     <img
                       src={image.src}
                       alt={image.alt || `${projectTitle} ${index + 1}`}
                       className="absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: getObjectPositionValue(image.object_position) }}
+                      style={getGalleryImageStyle(image)}
                     />
                   </div>
                 </button>

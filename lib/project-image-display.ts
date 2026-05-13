@@ -3,6 +3,9 @@ export type ObjectPosition = 'center' | 'top' | 'bottom' | 'left' | 'right';
 
 export const DEFAULT_DISPLAY_RATIO: DisplayRatio = 'landscape';
 export const DEFAULT_OBJECT_POSITION: ObjectPosition = 'center';
+export const DEFAULT_CROP_X = 50;
+export const DEFAULT_CROP_Y = 50;
+export const DEFAULT_CROP_ZOOM = 1;
 
 export function normalizeDisplayRatio(value?: string | null): DisplayRatio {
   if (value === 'wide' || value === 'square' || value === 'portrait' || value === 'tall' || value === 'landscape') return value;
@@ -48,4 +51,35 @@ export function getObjectPositionClass(objectPosition?: string | null) {
   if (position === 'left') return 'object-left';
   if (position === 'right') return 'object-right';
   return 'object-center';
+}
+
+export function normalizeCropX(value?: number | null) {
+  if (typeof value !== 'number' || Number.isNaN(value)) return DEFAULT_CROP_X;
+  return Math.min(100, Math.max(0, value));
+}
+
+export function normalizeCropY(value?: number | null) {
+  if (typeof value !== 'number' || Number.isNaN(value)) return DEFAULT_CROP_Y;
+  return Math.min(100, Math.max(0, value));
+}
+
+export function normalizeCropZoom(value?: number | null) {
+  if (typeof value !== 'number' || Number.isNaN(value)) return DEFAULT_CROP_ZOOM;
+  return Math.min(2.5, Math.max(1, value));
+}
+
+export function getGalleryImageFrameStyle(image: { display_ratio?: string | null }) {
+  return { aspectRatio: getAspectRatioValue(image.display_ratio) };
+}
+
+export function getGalleryImageStyle(image: { crop_x?: number | null; crop_y?: number | null; crop_zoom?: number | null }) {
+  const cropX = normalizeCropX(image.crop_x);
+  const cropY = normalizeCropY(image.crop_y);
+  const cropZoom = normalizeCropZoom(image.crop_zoom);
+  return {
+    objectFit: 'cover' as const,
+    objectPosition: `${cropX}% ${cropY}%`,
+    transform: `scale(${cropZoom})`,
+    transformOrigin: `${cropX}% ${cropY}%`,
+  };
 }
