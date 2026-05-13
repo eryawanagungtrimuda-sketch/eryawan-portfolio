@@ -74,6 +74,8 @@ export default async function KaryaDetailPage({ params }: Props) {
     src: image.image_url,
     alt: image.alt_text || `${project.title} gallery ${index + 1}`,
     area_tags: image.area_tags || [],
+    display_ratio: image.display_ratio,
+    object_position: image.object_position,
   }));
   const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
   const areaTags = (project.area_tags || []).filter(Boolean);

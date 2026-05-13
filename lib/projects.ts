@@ -86,7 +86,7 @@ export async function getPublishedProjectBySlug(slug: string) {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select(`${projectColumns},project_images(id,project_id,image_url,alt_text,sort_order,area_tags,created_at)`)
+    .select(`${projectColumns},project_images(id,project_id,image_url,alt_text,sort_order,area_tags,display_ratio,object_position,created_at)`)
     .eq('slug', slug)
     .eq('is_published', true)
     .order('sort_order', { referencedTable: 'project_images', ascending: true })

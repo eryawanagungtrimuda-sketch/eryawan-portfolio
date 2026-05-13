@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAreaTagLabel } from '@/lib/area-tags';
+import { getAspectRatioClass, getObjectPositionClass } from '@/lib/project-image-display';
 
-type GalleryImage = { src: string; alt: string; area_tags?: string[] | null };
+type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null };
 
 export default function ProjectImageGallery({ images, projectTitle, coverImage }: { images: GalleryImage[]; projectTitle: string; coverImage?: string | null }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -95,7 +96,11 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                   }}
                   className="block w-full overflow-hidden rounded-sm border border-white/10 bg-white/[0.02] text-left"
                 >
-                  <img src={image.src} alt={image.alt || `${projectTitle} ${index + 1}`} className={index === 0 ? 'aspect-[16/9] w-full object-cover' : 'aspect-[4/3] w-full object-cover'} />
+                  <img
+                    src={image.src}
+                    alt={image.alt || `${projectTitle} ${index + 1}`}
+                    className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`}
+                  />
                 </button>
               </figure>
             ))}

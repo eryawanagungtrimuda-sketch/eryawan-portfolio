@@ -5,6 +5,8 @@ export type ProjectImage = {
   alt_text: string | null;
   sort_order: number;
   area_tags: string[] | null;
+  display_ratio: 'landscape' | 'wide' | 'square' | 'portrait' | 'tall' | null;
+  object_position: 'center' | 'top' | 'bottom' | 'left' | 'right' | null;
   created_at: string;
 };
 
