@@ -2,27 +2,41 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAreaTagLabel } from '@/lib/area-tags';
-import { getAspectRatioClass, getObjectPositionClass } from '@/lib/project-image-display';
+import { getAspectRatioValue, getObjectPositionValue } from '@/lib/project-image-display';
 
 type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null };
+
+function normalizeImageSrc(src?: string | null) {
+  return (src || '').trim().replace(/[?#].*$/, '').replace(/\/$/, '');
+}
 
 export default function ProjectImageGallery({ images, projectTitle, coverImage }: { images: GalleryImage[]; projectTitle: string; coverImage?: string | null }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
   const combinedImages = useMemo(() => {
-    const result: GalleryImage[] = [];
-    const seen = new Set<string>();
-    const pushImage = (image: GalleryImage) => {
-      const normalized = image.src.trim();
-      if (!normalized || seen.has(normalized)) return;
-      seen.add(normalized);
-      result.push({ ...image, src: normalized });
-    };
+    const normalizedImages = images
+      .map((image) => ({ ...image, src: image.src?.trim() || '' }))
+      .filter((image) => Boolean(image.src));
 
-    if (coverImage) pushImage({ src: coverImage, alt: projectTitle });
-    images.forEach(pushImage);
-    return result;
+    const normalizedCover = normalizeImageSrc(coverImage);
+    const coverMatch = normalizedCover
+      ? normalizedImages.find((image) => normalizeImageSrc(image.src) === normalizedCover)
+      : undefined;
+
+    const baseImages = coverMatch
+      ? [coverMatch, ...normalizedImages.filter((image) => image !== coverMatch)]
+      : normalizedCover
+        ? [{ src: coverImage!.trim(), alt: projectTitle, display_ratio: 'landscape', object_position: 'center' }, ...normalizedImages]
+        : normalizedImages;
+
+    const seen = new Set<string>();
+    return baseImages.filter((image) => {
+      const normalizedSrc = normalizeImageSrc(image.src);
+      if (!normalizedSrc || seen.has(normalizedSrc)) return false;
+      seen.add(normalizedSrc);
+      return true;
+    });
   }, [coverImage, images, projectTitle]);
 
   const availableTags = useMemo(() => {
@@ -96,11 +110,12 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                   }}
                   className="block w-full rounded-sm border border-white/10 bg-white/[0.02] text-left"
                 >
-                  <div className={`${getAspectRatioClass(image.display_ratio)} relative w-full overflow-hidden rounded-sm`}>
+                  <div className="relative w-full overflow-hidden rounded-sm" style={{ aspectRatio: getAspectRatioValue(image.display_ratio) }}>
                     <img
                       src={image.src}
                       alt={image.alt || `${projectTitle} ${index + 1}`}
-                      className={`${getObjectPositionClass(image.object_position)} absolute inset-0 h-full w-full object-cover`}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      style={{ objectPosition: getObjectPositionValue(image.object_position) }}
                     />
                   </div>
                 </button>
