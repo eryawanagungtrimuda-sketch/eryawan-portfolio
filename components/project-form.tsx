@@ -13,6 +13,8 @@ type Props = { project?: Project };
 type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
 type CustomSelectState = { choice: string; custom: string };
 type ApiJsonResult = { id?: string; error?: string };
+type UploadQueueStatus = 'pending' | 'uploading' | 'saved' | 'failed';
+type UploadQueueItem = { key: string; name: string; status: UploadQueueStatus; error?: string };
 
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -128,9 +130,13 @@ function getSelectedValue(state: CustomSelectState, options: string[]) {
 }
 
 function validateImage(file: File) {
-  if (!allowedImageTypes.includes(file.type)) return 'Format gambar harus JPG, PNG, atau WEBP.';
-  if (file.size > maxImageSize) return 'Ukuran gambar maksimal 2MB per file.';
+  if (!allowedImageTypes.includes(file.type)) return 'Format gambar tidak didukung. Gunakan JPG, PNG, atau WEBP.';
+  if (file.size > maxImageSize) return 'Ukuran gambar terlalu besar. Maksimal 2MB per file.';
   return '';
+}
+
+function getFileDuplicateKey(file: File) {
+  return `${file.name}__${file.size}__${file.lastModified}`;
 }
 
 function isBucketMissingError(message?: string) {
@@ -231,6 +237,7 @@ export default function ProjectForm({ project }: Props) {
   const [aiError, setAiError] = useState('');
   const [formError, setFormError] = useState('');
   const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
+  const [uploadQueueItems, setUploadQueueItems] = useState<UploadQueueItem[]>([]);
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center' })).sort((a, b) => a.sort_order - b.sort_order));
 
   const [title, setTitle] = useState(project?.title || '');
@@ -442,7 +449,7 @@ export default function ProjectForm({ project }: Props) {
   }
 
   async function uploadGalleryFiles(files: File[]) {
-    if (files.length === 0) return;
+    if (galleryUploading || files.length === 0) return;
 
     setGalleryError('');
     setAiError('');
@@ -464,6 +471,7 @@ export default function ProjectForm({ project }: Props) {
     }
 
     setGalleryUploading(true);
+    setUploadQueueItems(files.map((file) => ({ key: getFileDuplicateKey(file), name: file.name, status: 'pending' })));
     try {
       await validateAdminSessionForUpload();
       await checkProjectImagesBucket();
@@ -478,8 +486,10 @@ export default function ProjectForm({ project }: Props) {
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];
         if (!file) continue;
+        const fileKey = getFileDuplicateKey(file);
 
         try {
+          setUploadQueueItems((current) => current.map((item) => (item.key === fileKey ? { ...item, status: 'uploading', error: '' } : item)));
           const filePath = `${currentSlug}/${createUniqueStorageFileName(file.name)}`;
           const { error: uploadError } = await supabase.storage.from(projectImagesBucket).upload(filePath, file, {
             cacheControl: '3600',
@@ -501,14 +511,22 @@ export default function ProjectForm({ project }: Props) {
 
           if (insertError) {
             console.error('[ProjectForm] Gallery database insert failed', { projectId, imageUrl: publicUrl.publicUrl, message: insertError.message });
+            const { error: rollbackError } = await supabase.storage.from(projectImagesBucket).remove([filePath]);
+            if (rollbackError) {
+              console.error('[ProjectForm] Gallery rollback remove failed', { path: filePath, message: rollbackError.message });
+              throw new Error('Upload gagal dan file sementara mungkin perlu dibersihkan manual.');
+            }
             throw new Error(getProjectImageInsertErrorMessage(insertError.message));
           }
 
           uploadedImages.push(data as ProjectImage);
+          setUploadQueueItems((current) => current.map((item) => (item.key === fileKey ? { ...item, status: 'saved', error: '' } : item)));
         } catch (error) {
           console.error(error);
           failedFiles.push(file);
-          failureMessages.push(`${file.name}: ${error instanceof Error ? error.message : 'Upload gagal.'}`);
+          const itemError = error instanceof Error ? error.message : 'Upload gagal.';
+          failureMessages.push(`${file.name}: ${itemError}`);
+          setUploadQueueItems((current) => current.map((item) => (item.key === fileKey ? { ...item, status: 'failed', error: itemError } : item)));
         }
       }
 
@@ -544,8 +562,38 @@ export default function ProjectForm({ project }: Props) {
   }
 
   async function handleGalleryUpload(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files || []);
-    await uploadGalleryFiles(files);
+    const selectedFiles = Array.from(event.target.files || []);
+    if (selectedFiles.length === 0) {
+      event.target.value = '';
+      return;
+    }
+
+    const existingPendingKeys = new Set(pendingGalleryFiles.map((file) => getFileDuplicateKey(file)));
+    const processedKeys = new Set<string>();
+    const dedupedFiles: File[] = [];
+    let hasDuplicate = false;
+
+    selectedFiles.forEach((file) => {
+      const key = getFileDuplicateKey(file);
+      if (processedKeys.has(key) || existingPendingKeys.has(key)) {
+        hasDuplicate = true;
+        return;
+      }
+      processedKeys.add(key);
+      dedupedFiles.push(file);
+    });
+
+    if (hasDuplicate) {
+      setMessage('Beberapa gambar duplikat dilewati.');
+    }
+
+    if (dedupedFiles.length === 0) {
+      setGalleryError('Tidak ada file baru untuk diupload.');
+      event.target.value = '';
+      return;
+    }
+
+    await uploadGalleryFiles(dedupedFiles);
     event.target.value = '';
   }
 
@@ -855,6 +903,12 @@ export default function ProjectForm({ project }: Props) {
     addImageAreaTag(imageId, value);
   }
 
+  function getUploadStatusLabel(status: UploadQueueStatus) {
+    if (status === 'uploading') return 'Mengunggah';
+    if (status === 'saved') return 'Tersimpan';
+    if (status === 'failed') return 'Gagal';
+    return 'Menunggu';
+  }
 
   const coverExistsInGallery = Boolean(coverImage && galleryImages.some((image) => normalizeImageUrl(image.image_url) === normalizeImageUrl(coverImage)));
 
@@ -932,6 +986,7 @@ export default function ProjectForm({ project }: Props) {
             <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
               <ImagePlus size={16} /> {galleryUploading ? 'Uploading...' : 'Upload Gallery'}
             </button>
+            <p className="mt-2 max-w-xs text-xs leading-5 text-white/45">Format: JPG, PNG, atau WEBP. Maksimal 2MB per file. Pilih gambar yang sudah terkurasi agar gallery tetap ringan.</p>
           </div>
         </div>
         {coverImage ? (
@@ -955,6 +1010,33 @@ export default function ProjectForm({ project }: Props) {
                 Coba Upload Lagi
               </button>
             ) : null}
+          </div>
+        ) : null}
+        {uploadQueueItems.length > 0 ? (
+          <div className="mt-4 rounded-sm border border-[#D4AF37]/20 bg-black/20 p-3">
+            <p className="text-[11px] uppercase tracking-[0.12em] text-white/45">Status Upload</p>
+            <div className="mt-2 space-y-2">
+              {uploadQueueItems.map((item) => (
+                <div key={item.key} className="rounded-sm border border-white/10 bg-white/[0.02] px-3 py-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-xs text-white/75">{item.name}</p>
+                    <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] ${
+                      item.status === 'failed'
+                        ? 'border-red-300/30 bg-red-400/10 text-red-200'
+                        : item.status === 'saved'
+                          ? 'border-emerald-300/30 bg-emerald-400/10 text-emerald-200'
+                          : item.status === 'uploading'
+                            ? 'border-[#D4AF37]/40 bg-[#D4AF37]/15 text-[#D4AF37]'
+                            : 'border-white/20 bg-white/[0.03] text-white/60'
+                    }`}
+                    >
+                      {getUploadStatusLabel(item.status)}
+                    </span>
+                  </div>
+                  {item.error ? <p className="mt-1 text-[11px] leading-5 text-red-200/90">{item.error}</p> : null}
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
