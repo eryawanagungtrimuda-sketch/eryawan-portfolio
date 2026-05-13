@@ -999,6 +999,23 @@ export default function ProjectForm({ project }: Props) {
                         </div>
                       </div>
                     </div>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {isCover ? (
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
+                          <Star size={13} /> Cover
+                        </div>
+                      ) : (
+                        <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
+                      )}
+                      <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/30 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/80 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+                      >
+                        Kelola Tag
+                      </button>
+                    </div>
                     <div>
                       <label>Image Area Tags</label>
                       <div className="mt-2 space-y-2.5">
@@ -1009,15 +1026,7 @@ export default function ProjectForm({ project }: Props) {
                             ))}
                           </div>
                         ) : <p className="text-xs text-white/40">Belum ada tag area gambar.</p>}
-                        {!expandedImageTagPanels[image.id] ? (
-                          <button
-                            type="button"
-                            onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: true }))}
-                            className="rounded-sm border border-white/12 px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
-                          >
-                            Kelola Tag
-                          </button>
-                        ) : (
+                        {expandedImageTagPanels[image.id] ? (
                           <div className="space-y-2.5 rounded-sm border border-white/12 bg-black/20 p-2.5">
                             <div className="max-h-56 overflow-y-auto pr-1">
                               <div className="flex flex-wrap gap-1.5">
@@ -1064,7 +1073,7 @@ export default function ProjectForm({ project }: Props) {
                               Selesai
                             </button>
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                     <div className="rounded-sm border border-white/10 bg-black/20 px-3 py-2">
@@ -1076,19 +1085,6 @@ export default function ProjectForm({ project }: Props) {
                         </div>
                       </div>
                       {isCurrentReordering ? <p className="mt-2 text-[11px] text-[#D4AF37]">Menyimpan urutan...</p> : null}
-                    </div>
-                    <div className="mt-auto flex flex-wrap gap-2 pt-1">
-                      {isCover ? (
-                        <>
-                          <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
-                            <Star size={13} /> Cover
-                          </div>
-                          <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/35 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/90 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
-                        </>
-                      ) : (
-                        <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
-                      )}
-                      {!isCover ? <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/30 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button> : null}
                     </div>
                   </div>
                 </div>
