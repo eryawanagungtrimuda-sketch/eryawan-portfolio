@@ -1353,22 +1353,32 @@ export default function ProjectForm({ project }: Props) {
         {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button> : null}
       </div>
       {activeCropEditor ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setActiveCropEditor(null)}>
-          <div className="w-full max-w-3xl rounded-2xl border border-[#D4AF37]/25 bg-[#0b0b0a] p-6" onClick={(event) => event.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-[#D4AF37]">Atur Crop Gambar</h3>
-            <div className="mt-4 overflow-hidden rounded-2xl bg-black" style={getGalleryImageFrameStyle(activeCropEditor)}>
-              <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 md:p-4" onClick={() => setActiveCropEditor(null)}>
+          <div className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#D4AF37]/25 bg-[#0b0b0a]" onClick={(event) => event.stopPropagation()}>
+            <div className="shrink-0 border-b border-white/10 p-5">
+              <h3 className="text-lg font-semibold text-[#D4AF37]">Atur Crop Gambar</h3>
             </div>
-            <div className="mt-4 space-y-4">
-              <div><p className="mb-2 text-xs text-white/70">Rasio</p><div className="flex flex-wrap gap-2">{displayRatioOptions.map((option) => <button key={option.value} type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: option.value } : cur)} className={`rounded-full border px-3 py-1 text-xs ${activeCropEditor.display_ratio === option.value ? 'border-[#D4AF37]/50 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/15 text-white/70'}`}>{option.label}</button>)}</div></div>
-              <div><p className="text-xs text-white/70">Zoom ({activeCropEditor.crop_zoom.toFixed(2)}x)</p><input type="range" min={1} max={2.5} step={0.05} value={activeCropEditor.crop_zoom} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_zoom: Number(event.target.value) } : cur)} className="w-full" /></div>
-              <div><p className="text-xs text-white/70">Geser Horizontal ({Math.round(activeCropEditor.crop_x)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_x} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_x: Number(event.target.value) } : cur)} className="w-full" /></div>
-              <div><p className="text-xs text-white/70">Geser Vertikal ({Math.round(activeCropEditor.crop_y)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_y} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_y: Number(event.target.value) } : cur)} className="w-full" /></div>
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
+              <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.8fr)] lg:items-start">
+                <div className="flex max-h-[34vh] min-h-[220px] items-center justify-center overflow-hidden rounded-2xl bg-black sm:max-h-[42vh]">
+                  <div className="mx-auto h-auto max-h-[34vh] w-full max-w-full sm:max-h-[42vh]" style={getGalleryImageFrameStyle(activeCropEditor)}>
+                    <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div><p className="mb-2 text-xs text-white/70">Rasio</p><div className="flex flex-wrap gap-2">{displayRatioOptions.map((option) => <button key={option.value} type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: option.value } : cur)} className={`rounded-full border px-3 py-1 text-xs ${activeCropEditor.display_ratio === option.value ? 'border-[#D4AF37]/50 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/15 text-white/70'}`}>{option.label}</button>)}</div></div>
+                  <div><p className="text-xs text-white/70">Zoom ({activeCropEditor.crop_zoom.toFixed(2)}x)</p><input type="range" min={1} max={2.5} step={0.05} value={activeCropEditor.crop_zoom} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_zoom: Number(event.target.value) } : cur)} className="w-full" /></div>
+                  <div><p className="text-xs text-white/70">Geser Horizontal ({Math.round(activeCropEditor.crop_x)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_x} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_x: Number(event.target.value) } : cur)} className="w-full" /></div>
+                  <div><p className="text-xs text-white/70">Geser Vertikal ({Math.round(activeCropEditor.crop_y)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_y} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_y: Number(event.target.value) } : cur)} className="w-full" /></div>
+                </div>
+              </div>
             </div>
-            <div className="mt-6 flex flex-wrap justify-end gap-2">
-              <button type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: 'landscape', crop_x: 50, crop_y: 50, crop_zoom: 1 } : cur)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Reset</button>
-              <button type="button" onClick={() => setActiveCropEditor(null)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Batal</button>
-              <button type="button" disabled={cropSaving} onClick={saveCropSettings} className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/15 px-4 py-2 text-xs font-semibold text-[#D4AF37]">{cropSaving ? 'Menyimpan...' : 'Simpan Crop'}</button>
+            <div className="shrink-0 border-t border-white/10 bg-[#0b0b0a]/95 p-4 backdrop-blur">
+              <div className="flex flex-wrap justify-end gap-2">
+                <button type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: 'landscape', crop_x: 50, crop_y: 50, crop_zoom: 1 } : cur)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Reset</button>
+                <button type="button" onClick={() => setActiveCropEditor(null)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Batal</button>
+                <button type="button" disabled={cropSaving} onClick={saveCropSettings} className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/15 px-4 py-2 text-xs font-semibold text-[#D4AF37]">{cropSaving ? 'Menyimpan...' : 'Simpan Crop'}</button>
+              </div>
             </div>
           </div>
         </div>
