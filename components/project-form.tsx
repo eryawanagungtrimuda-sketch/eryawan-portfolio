@@ -6,7 +6,7 @@ import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
-import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
+import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -1360,9 +1360,16 @@ export default function ProjectForm({ project }: Props) {
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto p-5">
               <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.8fr)] lg:items-start">
-                <div className="flex max-h-[34vh] min-h-[220px] items-center justify-center overflow-hidden rounded-2xl bg-black sm:max-h-[42vh]">
-                  <div className="mx-auto h-auto max-h-[34vh] w-full max-w-full sm:max-h-[42vh]" style={getGalleryImageFrameStyle(activeCropEditor)}>
-                    <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
+                <div className="flex min-h-[220px] items-center justify-center rounded-2xl bg-black/60 p-3">
+                  <div
+                    className="relative mx-auto overflow-hidden rounded-2xl bg-black"
+                    style={{
+                      ...getGalleryImageFrameStyle(activeCropEditor),
+                      width: `min(100%, calc(34vh * ${getDisplayRatioNumber(activeCropEditor.display_ratio)}))`,
+                      maxHeight: '34vh',
+                    }}
+                  >
+                    <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
                   </div>
                 </div>
                 <div className="space-y-4">
