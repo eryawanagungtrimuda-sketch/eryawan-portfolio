@@ -1075,37 +1075,37 @@ export default function ProjectForm({ project }: Props) {
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
       </div>
 
-      <div className="rounded-sm border border-white/10 bg-white/[0.025] p-6 md:p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 font-sans md:p-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-2.5">
             <label>Project Gallery</label>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/42">Upload multiple images untuk halaman detail project. Pilih salah satu gambar dari gallery sebagai cover thumbnail.</p>
+            <p className="max-w-2xl text-sm leading-6 text-white/70">Upload multiple images untuk halaman detail project. Pilih salah satu gambar dari gallery sebagai cover thumbnail.</p>
+            <p className="max-w-xl text-xs leading-5 text-white/45">Format: JPG, PNG, atau WEBP. Maksimal 2MB per file. Pilih gambar yang sudah terkurasi agar gallery tetap ringan.</p>
           </div>
-          <div>
+          <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/20 p-3.5 md:w-auto">
             <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading || aiGenerating} className="hidden" />
-            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-3 rounded-[4px] border border-white/12 bg-white/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-10 w-full items-center justify-center gap-2.5 rounded-full border border-white/12 bg-white/[0.02] px-5 text-xs font-semibold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50 md:w-auto">
               <ImagePlus size={16} /> {galleryUploading ? 'Uploading...' : 'Upload Gallery'}
             </button>
-            <p className="mt-2 max-w-xs text-xs leading-5 text-white/45">Format: JPG, PNG, atau WEBP. Maksimal 2MB per file. Pilih gambar yang sudah terkurasi agar gallery tetap ringan.</p>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <button type="button" onClick={() => { void handleGenerateGalleryAltText('fill-empty'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.15em] text-[#D4AF37] transition hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/20 disabled:cursor-not-allowed disabled:opacity-50">
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('fill-empty'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50">
                 {bulkAltUpdating ? 'Memproses...' : 'Isi Alt Kosong'}
               </button>
-              <button type="button" onClick={() => { void handleGenerateGalleryAltText('overwrite-all'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.15em] text-white/75 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('overwrite-all'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/15 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
                 Timpa Semua Alt
               </button>
             </div>
-            <p className="mt-2 max-w-sm text-xs leading-5 text-white/42">Alt text dibuat otomatis dari judul project dan tag area gambar, tanpa menggunakan AI.</p>
+            <p className="mt-2 text-xs leading-5 text-white/45">Alt text dibuat otomatis dari judul project dan tag area gambar, tanpa menggunakan AI.</p>
           </div>
         </div>
         {coverImage ? (
-          <div className="mt-6 flex flex-col gap-3 rounded-sm border border-[#D4AF37]/20 bg-[#D4AF37]/[0.035] p-4 md:flex-row md:items-center md:justify-between">
+          <div className="mt-6 flex flex-col gap-3 rounded-xl border border-[#D4AF37]/25 bg-[#D4AF37]/[0.04] p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-sm text-[#D4AF37]"><Star size={16} /><span>{coverExistsInGallery ? 'Cover image sudah dipilih dari gallery.' : 'Cover image aktif, tetapi belum ada di daftar gallery saat ini.'}</span></div>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" onClick={clearCover} disabled={Boolean(coverUpdatingId)} className="self-start font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/50 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 md:self-auto">Clear Cover</button>
             </div>
           </div>
-        ) : <div className="mt-6 rounded-sm border border-white/10 bg-black/10 p-4 text-sm leading-6 text-white/42">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
+        ) : <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-white/45">Belum ada cover. Upload gallery lalu pilih satu gambar sebagai cover.</div>}
         {galleryError ? (
           <div className="mt-4 rounded-sm border border-red-400/20 bg-red-500/10 p-4">
             <p className="whitespace-pre-line text-sm leading-6 text-red-200">{galleryError}</p>
@@ -1122,11 +1122,11 @@ export default function ProjectForm({ project }: Props) {
           </div>
         ) : null}
         {uploadQueueItems.length > 0 ? (
-          <div className="mt-4 rounded-sm border border-[#D4AF37]/20 bg-black/20 p-3">
+          <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-3">
             <p className="text-[11px] uppercase tracking-[0.12em] text-white/45">Status Upload</p>
             <div className="mt-2 space-y-2">
               {uploadQueueItems.map((item) => (
-                <div key={item.key} className="rounded-sm border border-white/10 bg-white/[0.02] px-3 py-2">
+                <div key={item.key} className="rounded-lg border border-white/10 bg-white/[0.015] px-3 py-2">
                   <div className="flex items-center justify-between gap-2">
                     <p className="truncate text-xs text-white/75">{item.name}</p>
                     <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] ${
@@ -1150,7 +1150,7 @@ export default function ProjectForm({ project }: Props) {
         ) : null}
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
         {galleryImages.length > 0 ? (
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
             {galleryImages.map((image, index) => {
               const isCover = normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url);
               const hasImageUrl = Boolean(image.image_url);
@@ -1161,32 +1161,38 @@ export default function ProjectForm({ project }: Props) {
               const isFirstImage = index === 0;
               const isLastImage = index === galleryImages.length - 1;
               return (
-                <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
+                <div key={image.id} className={`rounded-2xl border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/45 shadow-[0_16px_36px_rgba(212,175,55,0.06)]' : 'border-white/10 bg-white/[0.015] hover:border-[#D4AF37]/25'}`}>
                   <button
                     type="button"
                     onClick={() => { if (!isCover) void setExistingGalleryImageAsCover(image); }}
                     disabled={!hasImageUrl || isCover || Boolean(coverUpdatingId) || isDeleting}
                     aria-label={isCover ? 'Gambar ini adalah cover aktif' : 'Pilih gambar ini sebagai cover'}
-                    className={`relative block w-full text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
+                    className={`relative block w-full overflow-hidden rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
                   >
                     <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`} />
-                    {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#080807]"><Star size={12} /> Cover</div> : null}
-                    {!isCover ? <div className="absolute inset-x-3 bottom-3 rounded-full border border-[#D4AF37]/40 bg-black/55 px-3 py-1 text-center text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
+                    {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
+                    {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
                   </button>
                   <div className="flex h-full flex-col gap-3 p-4">
-                    <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" /></div>
+                    <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
                     <div>
                       <label>Tampilan Gambar</label>
-                      <div className="mt-2 space-y-2">
-                        <div className="flex flex-wrap gap-1.5">
+                      <div className="mt-2 space-y-2.5 rounded-xl border border-white/10 bg-black/20 p-3">
+                        <div>
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Rasio</p>
+                          <div className="flex flex-wrap gap-1.5">
                           {displayRatioOptions.map((option) => (
-                            <button key={`${image.id}-ratio-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { display_ratio: option.value })} className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition ${image.display_ratio === option.value ? 'border-[#D4AF37]/55 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/20 text-white/70 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{option.label}</button>
+                            <button key={`${image.id}-ratio-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { display_ratio: option.value })} className={`h-7 rounded-full border px-3 text-[10px] font-bold uppercase tracking-[0.08em] transition ${image.display_ratio === option.value ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 text-white/60 hover:border-[#D4AF37]/30 hover:text-[#D4AF37]'}`}>{option.label}</button>
                           ))}
                         </div>
-                        <div className="flex flex-wrap gap-1.5">
+                        </div>
+                        <div>
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Posisi Crop</p>
+                          <div className="flex flex-wrap gap-1.5">
                           {objectPositionOptions.map((option) => (
-                            <button key={`${image.id}-position-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { object_position: option.value })} className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition ${image.object_position === option.value ? 'border-[#D4AF37]/55 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/20 text-white/70 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>{option.label}</button>
+                            <button key={`${image.id}-position-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { object_position: option.value })} className={`h-7 rounded-full border px-3 text-[10px] font-bold uppercase tracking-[0.08em] transition ${image.object_position === option.value ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 text-white/60 hover:border-[#D4AF37]/30 hover:text-[#D4AF37]'}`}>{option.label}</button>
                           ))}
+                        </div>
                         </div>
                       </div>
                     </div>
@@ -1198,11 +1204,11 @@ export default function ProjectForm({ project }: Props) {
                       ) : (
                         <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
                       )}
-                      <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/30 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
+                      <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
                       <button
                         type="button"
                         onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/80 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.01] px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
                       >
                         Kelola Tag
                       </button>
@@ -1218,7 +1224,7 @@ export default function ProjectForm({ project }: Props) {
                           </div>
                         ) : <p className="text-xs text-white/40">Belum ada tag area gambar.</p>}
                         {expandedImageTagPanels[image.id] ? (
-                          <div className="space-y-2.5 rounded-sm border border-white/12 bg-black/20 p-2.5">
+                          <div className="space-y-2.5 rounded-xl border border-white/10 bg-black/30 p-3">
                             <div className="max-h-56 overflow-y-auto pr-1">
                               <div className="flex flex-wrap gap-1.5">
                               {areaTagOptions.map((option) => {
@@ -1267,9 +1273,9 @@ export default function ProjectForm({ project }: Props) {
                         ) : null}
                       </div>
                     </div>
-                    <div className="rounded-sm border border-white/10 bg-black/20 px-3 py-2">
+                    <div className="rounded-xl border border-white/10 bg-black/25 px-3.5 py-2.5">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="text-[10px] font-black uppercase tracking-[0.14em] text-white/50">Urutan {String(index + 1).padStart(2, '0')}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/55">Urutan {String(index + 1).padStart(2, '0')}</span>
                         <div className="flex items-center gap-1.5">
                           <button type="button" onClick={() => reorderGalleryImage(image.id, 'previous')} disabled={isFirstImage || isDeleting || isReordering || Boolean(coverUpdatingId)} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white/60 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40">Sebelumnya</button>
                           <button type="button" onClick={() => reorderGalleryImage(image.id, 'next')} disabled={isLastImage || isDeleting || isReordering || Boolean(coverUpdatingId)} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white/60 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40">Berikutnya</button>
