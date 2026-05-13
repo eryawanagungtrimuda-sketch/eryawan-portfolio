@@ -23,6 +23,24 @@ export function getAspectRatioClass(displayRatio?: string | null) {
   return 'aspect-[16/9]';
 }
 
+export function getAspectRatioValue(displayRatio?: string | null) {
+  const ratio = normalizeDisplayRatio(displayRatio);
+  if (ratio === 'wide') return '21 / 9';
+  if (ratio === 'square') return '1 / 1';
+  if (ratio === 'portrait') return '4 / 5';
+  if (ratio === 'tall') return '3 / 4';
+  return '16 / 9';
+}
+
+export function getObjectPositionValue(objectPosition?: string | null) {
+  const position = normalizeObjectPosition(objectPosition);
+  if (position === 'top') return 'center top';
+  if (position === 'bottom') return 'center bottom';
+  if (position === 'left') return 'left center';
+  if (position === 'right') return 'right center';
+  return 'center center';
+}
+
 export function getObjectPositionClass(objectPosition?: string | null) {
   const position = normalizeObjectPosition(objectPosition);
   if (position === 'top') return 'object-top';

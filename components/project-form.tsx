@@ -6,7 +6,7 @@ import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
-import { DisplayRatio, getAspectRatioClass, getObjectPositionClass, ObjectPosition } from '@/lib/project-image-display';
+import { DisplayRatio, getAspectRatioValue, getObjectPositionValue, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -1169,8 +1169,8 @@ export default function ProjectForm({ project }: Props) {
                     aria-label={isCover ? 'Gambar ini adalah cover aktif' : 'Pilih gambar ini sebagai cover'}
                     className={`relative block w-full rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
                   >
-                    <div className={`${getAspectRatioClass(image.display_ratio)} relative w-full overflow-hidden rounded-t-2xl bg-black/30`}>
-                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getObjectPositionClass(image.object_position)} absolute inset-0 h-full w-full object-cover`} />
+                    <div className="relative w-full overflow-hidden rounded-t-2xl bg-black/30" style={{ aspectRatio: getAspectRatioValue(image.display_ratio) }}>
+                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: getObjectPositionValue(image.object_position) }} />
                       {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
                       {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
                     </div>
