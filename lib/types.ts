@@ -7,6 +7,9 @@ export type ProjectImage = {
   area_tags: string[] | null;
   display_ratio: 'landscape' | 'wide' | 'square' | 'portrait' | 'tall' | null;
   object_position: 'center' | 'top' | 'bottom' | 'left' | 'right' | null;
+  crop_x?: number | null;
+  crop_y?: number | null;
+  crop_zoom?: number | null;
   created_at: string;
 };
 

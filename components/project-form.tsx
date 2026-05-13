@@ -6,7 +6,7 @@ import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
-import { DisplayRatio, getAspectRatioValue, getObjectPositionValue, ObjectPosition } from '@/lib/project-image-display';
+import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 
 type Props = { project?: Project };
@@ -15,6 +15,7 @@ type CustomSelectState = { choice: string; custom: string };
 type ApiJsonResult = { id?: string; error?: string };
 type UploadQueueStatus = 'pending' | 'uploading' | 'saved' | 'failed';
 type UploadQueueItem = { key: string; name: string; status: UploadQueueStatus; error?: string };
+type GalleryCropDraft = { imageId: string; display_ratio: DisplayRatio; crop_x: number; crop_y: number; crop_zoom: number };
 
 const maxImageSize = 2 * 1024 * 1024;
 const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -72,13 +73,6 @@ const displayRatioOptions = [
   { value: 'square', label: 'Square' },
   { value: 'portrait', label: 'Portrait' },
   { value: 'tall', label: 'Tall' },
-] as const;
-const objectPositionOptions = [
-  { value: 'center', label: 'Tengah' },
-  { value: 'top', label: 'Atas' },
-  { value: 'bottom', label: 'Bawah' },
-  { value: 'left', label: 'Kiri' },
-  { value: 'right', label: 'Kanan' },
 ] as const;
 
 function slugify(value: string) {
@@ -276,7 +270,9 @@ export default function ProjectForm({ project }: Props) {
   const [formError, setFormError] = useState('');
   const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
   const [uploadQueueItems, setUploadQueueItems] = useState<UploadQueueItem[]>([]);
-  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center' })).sort((a, b) => a.sort_order - b.sort_order));
+  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center', crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })).sort((a, b) => a.sort_order - b.sort_order));
+  const [activeCropEditor, setActiveCropEditor] = useState<GalleryCropDraft | null>(null);
+  const [cropSaving, setCropSaving] = useState(false);
 
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || slugify(project?.title || ''));
@@ -544,8 +540,8 @@ export default function ProjectForm({ project }: Props) {
           const { data: publicUrl } = supabase.storage.from(projectImagesBucket).getPublicUrl(filePath);
           const { data, error: insertError } = await supabase
             .from('project_images')
-            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length, area_tags: [], display_ratio: 'landscape', object_position: 'center' })
-            .select('id,project_id,image_url,alt_text,sort_order,area_tags,display_ratio,object_position,created_at')
+            .insert({ project_id: projectId, image_url: publicUrl.publicUrl, alt_text: title || null, sort_order: startOrder + uploadedImages.length, area_tags: [], display_ratio: 'landscape', object_position: 'center', crop_x: DEFAULT_CROP_X, crop_y: DEFAULT_CROP_Y, crop_zoom: DEFAULT_CROP_ZOOM })
+            .select('id,project_id,image_url,alt_text,sort_order,area_tags,display_ratio,object_position,crop_x,crop_y,crop_zoom,created_at')
             .single();
 
           if (insertError) {
@@ -723,7 +719,7 @@ export default function ProjectForm({ project }: Props) {
       setBulkAltUpdating(false);
     }
   }
-  async function updateGalleryDisplaySettings(imageId: string, updates: { display_ratio?: DisplayRatio; object_position?: ObjectPosition }) {
+  async function updateGalleryDisplaySettings(imageId: string, updates: { display_ratio?: DisplayRatio; object_position?: ObjectPosition; crop_x?: number; crop_y?: number; crop_zoom?: number }) {
     setGalleryError('');
     const previousImage = galleryImages.find((image) => image.id === imageId);
     setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, ...updates } : image)));
@@ -731,8 +727,30 @@ export default function ProjectForm({ project }: Props) {
       await updateGalleryImageMeta(imageId, updates);
       setMessage('Tampilan gambar tersimpan.');
     } catch (error) {
-      setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, display_ratio: previousImage?.display_ratio || 'landscape', object_position: previousImage?.object_position || 'center' } : image)));
+      setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, display_ratio: previousImage?.display_ratio || 'landscape', object_position: previousImage?.object_position || 'center', crop_x: normalizeCropX(previousImage?.crop_x), crop_y: normalizeCropY(previousImage?.crop_y), crop_zoom: normalizeCropZoom(previousImage?.crop_zoom) } : image)));
       setGalleryError('Tampilan gambar gagal disimpan. Silakan coba lagi.');
+    }
+  }
+
+  async function saveCropSettings() {
+    if (!activeCropEditor || cropSaving) return;
+    const nextPayload = {
+      display_ratio: activeCropEditor.display_ratio,
+      crop_x: normalizeCropX(activeCropEditor.crop_x),
+      crop_y: normalizeCropY(activeCropEditor.crop_y),
+      crop_zoom: normalizeCropZoom(activeCropEditor.crop_zoom),
+      object_position: 'center' as ObjectPosition,
+    };
+    setCropSaving(true);
+    setGalleryError('');
+    try {
+      await updateGalleryDisplaySettings(activeCropEditor.imageId, nextPayload);
+      setMessage('Crop gambar berhasil disimpan.');
+      setActiveCropEditor(null);
+    } catch {
+      setGalleryError('Crop gambar gagal disimpan. Silakan coba lagi.');
+    } finally {
+      setCropSaving(false);
     }
   }
 
@@ -1169,8 +1187,8 @@ export default function ProjectForm({ project }: Props) {
                     aria-label={isCover ? 'Gambar ini adalah cover aktif' : 'Pilih gambar ini sebagai cover'}
                     className={`relative block w-full rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
                   >
-                    <div className="relative w-full overflow-hidden rounded-t-2xl bg-black/30" style={{ aspectRatio: getAspectRatioValue(image.display_ratio) }}>
-                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: getObjectPositionValue(image.object_position) }} />
+                    <div className="relative w-full overflow-hidden rounded-t-2xl bg-black/30" style={getGalleryImageFrameStyle(image)}>
+                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(image)} />
                       {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
                       {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
                     </div>
@@ -1189,12 +1207,12 @@ export default function ProjectForm({ project }: Props) {
                         </div>
                         </div>
                         <div>
-                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Posisi Crop</p>
+                          <p className="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/45">Posisi Cepat</p>
                           <div className="flex flex-wrap gap-1.5">
-                          {objectPositionOptions.map((option) => (
-                            <button key={`${image.id}-position-${option.value}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { object_position: option.value })} className={`h-7 rounded-full border px-3 text-[10px] font-bold uppercase tracking-[0.08em] transition ${image.object_position === option.value ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 text-white/60 hover:border-[#D4AF37]/30 hover:text-[#D4AF37]'}`}>{option.label}</button>
-                          ))}
-                        </div>
+                            {[{ label: 'Tengah', x: 50, y: 50 }, { label: 'Atas', x: 50, y: 0 }, { label: 'Bawah', x: 50, y: 100 }, { label: 'Kiri', x: 0, y: 50 }, { label: 'Kanan', x: 100, y: 50 }].map((preset) => (
+                              <button key={`${image.id}-preset-${preset.label}`} type="button" onClick={() => updateGalleryDisplaySettings(image.id, { crop_x: preset.x, crop_y: preset.y, object_position: 'center' })} className="h-7 rounded-full border border-white/10 px-3 text-[10px] font-bold uppercase tracking-[0.08em] text-white/60 transition hover:border-[#D4AF37]/30 hover:text-[#D4AF37]">{preset.label}</button>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1214,6 +1232,7 @@ export default function ProjectForm({ project }: Props) {
                       >
                         Kelola Tag
                       </button>
+                      <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
                     </div>
                     <div>
                       <label>Image Area Tags</label>
@@ -1333,6 +1352,27 @@ export default function ProjectForm({ project }: Props) {
         {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleBuildInsightFromProject} className="rounded-[4px] border border-[#D4AF37]/40 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10 disabled:opacity-60">Bangun Wawasan dari Project Ini</button> : null}
         {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button> : null}
       </div>
+      {activeCropEditor ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setActiveCropEditor(null)}>
+          <div className="w-full max-w-3xl rounded-2xl border border-[#D4AF37]/25 bg-[#0b0b0a] p-6" onClick={(event) => event.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-[#D4AF37]">Atur Crop Gambar</h3>
+            <div className="mt-4 overflow-hidden rounded-2xl bg-black" style={getGalleryImageFrameStyle(activeCropEditor)}>
+              <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
+            </div>
+            <div className="mt-4 space-y-4">
+              <div><p className="mb-2 text-xs text-white/70">Rasio</p><div className="flex flex-wrap gap-2">{displayRatioOptions.map((option) => <button key={option.value} type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: option.value } : cur)} className={`rounded-full border px-3 py-1 text-xs ${activeCropEditor.display_ratio === option.value ? 'border-[#D4AF37]/50 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/15 text-white/70'}`}>{option.label}</button>)}</div></div>
+              <div><p className="text-xs text-white/70">Zoom ({activeCropEditor.crop_zoom.toFixed(2)}x)</p><input type="range" min={1} max={2.5} step={0.05} value={activeCropEditor.crop_zoom} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_zoom: Number(event.target.value) } : cur)} className="w-full" /></div>
+              <div><p className="text-xs text-white/70">Geser Horizontal ({Math.round(activeCropEditor.crop_x)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_x} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_x: Number(event.target.value) } : cur)} className="w-full" /></div>
+              <div><p className="text-xs text-white/70">Geser Vertikal ({Math.round(activeCropEditor.crop_y)}%)</p><input type="range" min={0} max={100} step={1} value={activeCropEditor.crop_y} onChange={(event) => setActiveCropEditor((cur) => cur ? { ...cur, crop_y: Number(event.target.value) } : cur)} className="w-full" /></div>
+            </div>
+            <div className="mt-6 flex flex-wrap justify-end gap-2">
+              <button type="button" onClick={() => setActiveCropEditor((cur) => cur ? { ...cur, display_ratio: 'landscape', crop_x: 50, crop_y: 50, crop_zoom: 1 } : cur)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Reset</button>
+              <button type="button" onClick={() => setActiveCropEditor(null)} className="rounded-full border border-white/20 px-4 py-2 text-xs text-white/70">Batal</button>
+              <button type="button" disabled={cropSaving} onClick={saveCropSettings} className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/15 px-4 py-2 text-xs font-semibold text-[#D4AF37]">{cropSaving ? 'Menyimpan...' : 'Simpan Crop'}</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </form>
   );
 }
