@@ -94,13 +94,15 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                     triggerRef.current = event.currentTarget;
                     setActiveIndex(index);
                   }}
-                  className="block w-full overflow-hidden rounded-sm border border-white/10 bg-white/[0.02] text-left"
+                  className="block w-full rounded-sm border border-white/10 bg-white/[0.02] text-left"
                 >
-                  <img
-                    src={image.src}
-                    alt={image.alt || `${projectTitle} ${index + 1}`}
-                    className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`}
-                  />
+                  <div className={`${getAspectRatioClass(image.display_ratio)} relative w-full overflow-hidden rounded-sm`}>
+                    <img
+                      src={image.src}
+                      alt={image.alt || `${projectTitle} ${index + 1}`}
+                      className={`${getObjectPositionClass(image.object_position)} absolute inset-0 h-full w-full object-cover`}
+                    />
+                  </div>
                 </button>
               </figure>
             ))}

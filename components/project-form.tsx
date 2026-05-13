@@ -1167,11 +1167,13 @@ export default function ProjectForm({ project }: Props) {
                     onClick={() => { if (!isCover) void setExistingGalleryImageAsCover(image); }}
                     disabled={!hasImageUrl || isCover || Boolean(coverUpdatingId) || isDeleting}
                     aria-label={isCover ? 'Gambar ini adalah cover aktif' : 'Pilih gambar ini sebagai cover'}
-                    className={`relative block w-full overflow-hidden rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
+                    className={`relative block w-full rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
                   >
-                    <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getAspectRatioClass(image.display_ratio)} ${getObjectPositionClass(image.object_position)} h-full w-full object-cover`} />
-                    {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
-                    {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
+                    <div className={`${getAspectRatioClass(image.display_ratio)} relative w-full overflow-hidden rounded-t-2xl bg-black/30`}>
+                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className={`${getObjectPositionClass(image.object_position)} absolute inset-0 h-full w-full object-cover`} />
+                      {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
+                      {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
+                    </div>
                   </button>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
