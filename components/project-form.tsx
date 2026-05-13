@@ -224,6 +224,7 @@ export default function ProjectForm({ project }: Props) {
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [coverUpdatingId, setCoverUpdatingId] = useState('');
   const [deletingImageId, setDeletingImageId] = useState('');
+  const [reorderingImageId, setReorderingImageId] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
   const [galleryError, setGalleryError] = useState('');
@@ -587,6 +588,53 @@ export default function ProjectForm({ project }: Props) {
     }
   }
 
+
+  function normalizeGalleryOrder(images: ProjectImage[]) {
+    return images.map((image, index) => ({ ...image, sort_order: index }));
+  }
+
+  async function reorderGalleryImage(imageId: string, direction: 'previous' | 'next') {
+    if (reorderingImageId || galleryImages.length <= 1) return;
+
+    const currentImages = normalizeGalleryOrder(galleryImages);
+    const currentIndex = currentImages.findIndex((image) => image.id === imageId);
+    if (currentIndex === -1) return;
+
+    const swapIndex = direction === 'previous' ? currentIndex - 1 : currentIndex + 1;
+    if (swapIndex < 0 || swapIndex >= currentImages.length) return;
+
+    const nextImages = [...currentImages];
+    [nextImages[currentIndex], nextImages[swapIndex]] = [nextImages[swapIndex], nextImages[currentIndex]];
+    const normalizedNextImages = normalizeGalleryOrder(nextImages);
+    const movedImage = normalizedNextImages[swapIndex];
+    const swappedImage = normalizedNextImages[currentIndex];
+
+    setGalleryError('');
+    setReorderingImageId(imageId);
+    setGalleryImages(normalizedNextImages);
+
+    try {
+      const supabase = getSupabaseClient();
+      const updates = [
+        { id: movedImage.id, sort_order: movedImage.sort_order },
+        { id: swappedImage.id, sort_order: swappedImage.sort_order },
+      ];
+
+      const updateTasks = updates.map((update) => supabase.from('project_images').update({ sort_order: update.sort_order }).eq('id', update.id));
+      const updateResults = await Promise.all(updateTasks);
+      const updateError = updateResults.find((result) => result.error)?.error;
+      if (updateError) throw updateError;
+
+      setMessage('Urutan gallery tersimpan.');
+    } catch (error) {
+      console.error('[ProjectForm] Reorder gallery image failed', error);
+      setGalleryImages(currentImages);
+      setGalleryError('Urutan gallery gagal disimpan. Silakan coba lagi.');
+    } finally {
+      setReorderingImageId('');
+    }
+  }
+
   async function removeGalleryImage(image: ProjectImage) {
     if (!window.confirm(`Hapus gambar gallery ini? Tindakan ini tidak dapat dibatalkan.\n${image.alt_text ? `Alt: ${image.alt_text}` : ''}`.trim())) return;
     setGalleryError('');
@@ -912,11 +960,15 @@ export default function ProjectForm({ project }: Props) {
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
         {galleryImages.length > 0 ? (
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {galleryImages.map((image) => {
+            {galleryImages.map((image, index) => {
               const isCover = normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url);
               const hasImageUrl = Boolean(image.image_url);
               const isSettingCover = coverUpdatingId === image.id;
               const isDeleting = deletingImageId === image.id;
+              const isReordering = Boolean(reorderingImageId);
+              const isCurrentReordering = reorderingImageId === image.id;
+              const isFirstImage = index === 0;
+              const isLastImage = index === galleryImages.length - 1;
               return (
                 <div key={image.id} className={`overflow-hidden rounded-sm border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/70 shadow-[0_18px_44px_rgba(212,175,55,0.08)]' : 'border-white/10 hover:border-[#D4AF37]/25'}`}>
                   <button
@@ -1014,6 +1066,16 @@ export default function ProjectForm({ project }: Props) {
                           </div>
                         )}
                       </div>
+                    </div>
+                    <div className="rounded-sm border border-white/10 bg-black/20 px-3 py-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-[0.14em] text-white/50">Urutan {String(index + 1).padStart(2, '0')}</span>
+                        <div className="flex items-center gap-1.5">
+                          <button type="button" onClick={() => reorderGalleryImage(image.id, 'previous')} disabled={isFirstImage || isDeleting || isReordering || Boolean(coverUpdatingId)} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white/60 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40">Sebelumnya</button>
+                          <button type="button" onClick={() => reorderGalleryImage(image.id, 'next')} disabled={isLastImage || isDeleting || isReordering || Boolean(coverUpdatingId)} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-white/60 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40">Berikutnya</button>
+                        </div>
+                      </div>
+                      {isCurrentReordering ? <p className="mt-2 text-[11px] text-[#D4AF37]">Menyimpan urutan...</p> : null}
                     </div>
                     <div className="mt-auto flex flex-wrap gap-2 pt-1">
                       {isCover ? (
