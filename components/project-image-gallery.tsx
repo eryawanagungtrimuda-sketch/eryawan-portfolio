@@ -123,7 +123,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
           ) : null}
 
           {masonryImages.length > 0 ? (
-            <div className="mt-7 columns-1 gap-5 md:mt-8 md:gap-6 lg:gap-7 xl:gap-6">
+            <div className="mt-7 columns-1 gap-5 md:mt-8 md:columns-2 md:gap-6 lg:gap-7 xl:gap-6">
               {masonryImages.map((image, index) => {
                 const imageIndex = index + 1;
                 return (
