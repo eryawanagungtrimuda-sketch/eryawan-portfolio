@@ -1172,22 +1172,11 @@ export default function ProjectForm({ project }: Props) {
             {galleryImages.map((image, index) => {
               const isCover = normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url);
               const hasImageUrl = Boolean(image.image_url);
-              const isSettingCover = coverUpdatingId === image.id;
               const isDeleting = deletingImageId === image.id;
               const isReordering = Boolean(reorderingImageId);
               const isCurrentReordering = reorderingImageId === image.id;
               const isFirstImage = index === 0;
               const isLastImage = index === galleryImages.length - 1;
-              const displayRatioLabel = displayRatioOptions.find((option) => option.value === (image.display_ratio || 'landscape'))?.label || 'Landscape';
-              const cropX = normalizeCropX(image.crop_x);
-              const cropY = normalizeCropY(image.crop_y);
-              const cropZoom = normalizeCropZoom(image.crop_zoom);
-              const hasDefaultCrop = cropX === DEFAULT_CROP_X && cropY === DEFAULT_CROP_Y && cropZoom === DEFAULT_CROP_ZOOM;
-              const displaySummary = cropZoom > DEFAULT_CROP_ZOOM
-                ? `Zoom ${cropZoom.toFixed(2)}x`
-                : hasDefaultCrop
-                  ? 'Default'
-                  : 'Crop custom';
               return (
                 <div key={image.id} className={`rounded-2xl border bg-black/20 transition duration-300 ${isCover ? 'border-[#D4AF37]/45 shadow-[0_16px_36px_rgba(212,175,55,0.06)]' : 'border-white/10 bg-white/[0.015] hover:border-[#D4AF37]/25'}`}>
                   <button
@@ -1205,22 +1194,9 @@ export default function ProjectForm({ project }: Props) {
                   </button>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
-                    <div className="rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5">
-                      <p className="text-[10px] uppercase tracking-[0.08em] text-white/45">Tampilan Gambar</p>
-                      <p className="mt-1 text-xs text-white/75">{`Tampilan: ${displayRatioLabel} · ${displaySummary}`}</p>
-                    </div>
                     <div className="space-y-2 pt-1">
                       <div className="flex flex-wrap gap-2">
-                        {isCover ? (
-                          <div className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/15 px-3.5 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37]">
-                            <Star size={13} /> Cover
-                          </div>
-                        ) : (
-                          <button type="button" onClick={() => setExistingGalleryImageAsCover(image)} disabled={!hasImageUrl || Boolean(coverUpdatingId) || isDeleting} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50"><Star size={13} /> {isSettingCover ? 'Memproses...' : 'Jadikan Cover'}</button>
-                        )}
                         <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
@@ -1228,6 +1204,8 @@ export default function ProjectForm({ project }: Props) {
                         >
                           Kelola Tag
                         </button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
                         <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex h-8 items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
                       </div>
                     </div>
