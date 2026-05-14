@@ -82,9 +82,9 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
   };
 
   return (
-    <div>
+    <div className="pb-10 md:pb-14">
       {availableTags.length > 0 ? (
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mt-5 mb-8 flex flex-wrap gap-2.5 md:mt-6 md:mb-9">
           {['All', ...availableTags].map((tag) => (
             <button
               key={tag}
@@ -108,13 +108,13 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                   triggerRef.current = event.currentTarget;
                   setActiveIndex(0);
                 }}
-                className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/30"
+                className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/25"
               >
                 <div className="relative w-full overflow-hidden" style={getGalleryImageFrameStyle(featureImage)}>
                   <img
                     src={featureImage.src}
                     alt={featureImage.alt || `${projectTitle} 1`}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.015] group-hover:opacity-95"
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                     style={getGalleryImageStyle(featureImage)}
                   />
                 </div>
@@ -123,11 +123,11 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
           ) : null}
 
           {masonryImages.length > 0 ? (
-            <div className="mt-6 columns-1 gap-5 md:columns-2 md:gap-6">
+            <div className="mt-7 columns-1 gap-5 md:mt-8 md:gap-6 lg:gap-7 xl:gap-6">
               {masonryImages.map((image, index) => {
                 const imageIndex = index + 1;
                 return (
-                  <figure key={`${image.src}-${imageIndex}`} className="mb-5 break-inside-avoid md:mb-6">
+                  <figure key={`${image.src}-${imageIndex}`} className="mb-5 break-inside-avoid md:mb-6 lg:mb-7 xl:mb-6">
                     <button
                       type="button"
                       onClick={(event) => {
@@ -140,7 +140,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                         <img
                           src={image.src}
                           alt={image.alt || `${projectTitle} ${imageIndex + 1}`}
-                          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.015] group-hover:opacity-95"
+                          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                           style={getGalleryImageStyle(image)}
                         />
                       </div>
