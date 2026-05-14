@@ -59,6 +59,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
 
   const hasMultiple = filteredImages.length > 1;
   const activeImage = activeIndex !== null ? filteredImages[activeIndex] : null;
+  const [featureImage, ...masonryImages] = filteredImages;
 
   useEffect(() => {
     if (activeIndex === null) return;
@@ -99,29 +100,56 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
 
       {filteredImages.length > 0 ? (
         <>
-          <div className="grid gap-6 md:grid-cols-2">
-            {filteredImages.map((image, index) => (
-              <figure key={`${image.src}-${index}`} className={index === 0 ? 'md:col-span-2' : ''}>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    triggerRef.current = event.currentTarget;
-                    setActiveIndex(index);
-                  }}
-                  className="block w-full rounded-sm border border-white/10 bg-white/[0.02] text-left"
-                >
-                  <div className="relative w-full overflow-hidden rounded-sm" style={getGalleryImageFrameStyle(image)}>
-                    <img
-                      src={image.src}
-                      alt={image.alt || `${projectTitle} ${index + 1}`}
-                      className="absolute inset-0 h-full w-full object-cover"
-                      style={getGalleryImageStyle(image)}
-                    />
-                  </div>
-                </button>
-              </figure>
-            ))}
-          </div>
+          {featureImage ? (
+            <figure>
+              <button
+                type="button"
+                onClick={(event) => {
+                  triggerRef.current = event.currentTarget;
+                  setActiveIndex(0);
+                }}
+                className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/30"
+              >
+                <div className="relative w-full overflow-hidden" style={getGalleryImageFrameStyle(featureImage)}>
+                  <img
+                    src={featureImage.src}
+                    alt={featureImage.alt || `${projectTitle} 1`}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.015] group-hover:opacity-95"
+                    style={getGalleryImageStyle(featureImage)}
+                  />
+                </div>
+              </button>
+            </figure>
+          ) : null}
+
+          {masonryImages.length > 0 ? (
+            <div className="mt-6 columns-1 gap-5 md:columns-2 md:gap-6">
+              {masonryImages.map((image, index) => {
+                const imageIndex = index + 1;
+                return (
+                  <figure key={`${image.src}-${imageIndex}`} className="mb-5 break-inside-avoid md:mb-6">
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        triggerRef.current = event.currentTarget;
+                        setActiveIndex(imageIndex);
+                      }}
+                      className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/25"
+                    >
+                      <div className="relative w-full overflow-hidden" style={getGalleryImageFrameStyle(image)}>
+                        <img
+                          src={image.src}
+                          alt={image.alt || `${projectTitle} ${imageIndex + 1}`}
+                          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.015] group-hover:opacity-95"
+                          style={getGalleryImageStyle(image)}
+                        />
+                      </div>
+                    </button>
+                  </figure>
+                );
+              })}
+            </div>
+          ) : null}
 
           {activeImage ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5" role="dialog" aria-modal="true" onClick={closeLightbox}>
