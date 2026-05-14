@@ -160,16 +160,16 @@ export default async function KaryaDetailPage({ params }: Props) {
           <TextBlock label="Insight Kunci" body={project.insight_kunci} index={6} fallback="Insight kunci belum ditambahkan." />
         </section>
 
-        <section className="border-t border-white/10 py-20">
+        <section className="border-t border-white/10 pt-24 pb-12 md:pt-28 md:pb-16">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37]">Galeri Gambar</p>
-              <h2 className="font-display mt-5 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Dokumentasi Visual</h2>
+              <h2 className="font-display mt-3 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:mt-4 md:text-5xl">Dokumentasi Visual</h2>
             </div>
           </div>
 
           {galleryImages.length > 0 ? (
-            <div className="mt-10">
+            <div className="mt-6 md:mt-7">
               <ProjectImageGallery images={galleryLightboxImages} projectTitle={project.title} coverImage={project.cover_image} />
             </div>
           ) : (
