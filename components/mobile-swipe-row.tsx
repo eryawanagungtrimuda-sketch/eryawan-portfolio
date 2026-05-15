@@ -121,7 +121,7 @@ export default function MobileSwipeRow({
                 cardRefs.current[index] = node;
               }}
               data-swipe-card="true"
-              className={`h-full min-w-0 snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
+              className={`h-full min-w-0 self-stretch snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
             >
               {child}
             </div>
