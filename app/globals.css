@@ -40,9 +40,23 @@ body {
 }
 
 .reveal-on-scroll {
-  animation: fade-in-up linear both;
-  animation-timeline: view();
-  animation-range: entry 10% cover 32%;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 ::selection {
