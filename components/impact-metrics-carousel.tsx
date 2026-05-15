@@ -13,7 +13,7 @@ type ImpactMetricsCarouselProps = {
 
 export default function ImpactMetricsCarousel({ impacts }: ImpactMetricsCarouselProps) {
   return (
-    <MobileSwipeRow ariaLabel="Metrik dampak dapat digeser horizontal" desktopGridClassName="md:grid-cols-2 md:gap-5 lg:gap-4" backgroundTone="#142030">
+    <MobileSwipeRow ariaLabel="Metrik dampak dapat digeser horizontal" desktopGridClassName="lg:grid-cols-2 lg:gap-4" backgroundTone="#142030">
       {impacts.map((impact, index) => (
         <article
           key={impact.title}
