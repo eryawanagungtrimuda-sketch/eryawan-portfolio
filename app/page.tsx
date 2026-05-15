@@ -325,15 +325,19 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="relative space-y-5 lg:pt-3">
-            <span className="pointer-events-none absolute bottom-4 left-[18px] top-4 hidden w-px bg-gradient-to-b from-[#C8A951]/20 via-white/10 to-transparent md:block" />
+          <MobileSwipeRow
+            className="relative lg:pt-3"
+            ariaLabel="Decision cards dapat digeser horizontal"
+            desktopGridClassName="lg:grid-cols-1 lg:gap-5"
+            backgroundTone="#070707"
+          >
             {decisions.map((decision, index) => (
               <article
                 key={decision.title}
-                className="group relative overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.018] p-5 pl-12 transition duration-300 hover:border-[#C8A951]/24 hover:bg-white/[0.03] md:p-7 md:pl-14"
+                className="group relative overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.018] p-5 transition duration-300 hover:border-[#C8A951]/24 hover:bg-white/[0.03] md:p-7 lg:pl-14"
               >
-                <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 md:block" />
-                <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 md:block" />
+                <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 lg:block" />
+                <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 lg:block" />
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]">0{index + 1}</p>
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-white/42">Decision Point</p>
@@ -346,7 +350,7 @@ export default async function Home() {
                 </p>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
@@ -379,7 +383,12 @@ export default async function Home() {
             </h2>
           </div>
 
-          <div className="mt-16 grid gap-12 lg:grid-cols-3 lg:gap-0">
+          <MobileSwipeRow
+            className="mt-16"
+            ariaLabel="Differentiation cards dapat digeser horizontal"
+            desktopGridClassName="lg:grid-cols-3 lg:gap-0"
+            backgroundTone="#2D2D2B"
+          >
             {differentiations.map((item, index) => (
               <article key={item.title} className="group lg:border-l lg:border-white/10 lg:px-12 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
                 <div className="flex items-start gap-4">
@@ -396,7 +405,7 @@ export default async function Home() {
                 </div>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
