@@ -12,10 +12,12 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 @keyframes fade-in-up {

@@ -8,6 +8,7 @@ type MobileSwipeRowProps = {
   desktopGridClassName: string;
   className?: string;
   cardClassName?: string;
+  mobileCardClassName?: string;
   backgroundTone?: string;
   showHint?: boolean;
 };
@@ -18,6 +19,7 @@ export default function MobileSwipeRow({
   desktopGridClassName,
   className = '',
   cardClassName = '',
+  mobileCardClassName = '',
   backgroundTone = '#090909',
   showHint = true,
 }: MobileSwipeRowProps) {
@@ -56,13 +58,16 @@ export default function MobileSwipeRow({
   }, [updateActiveCard]);
 
   const scrollToCard = useCallback((index: number) => {
+    const scroller = scrollRef.current;
     const card = cardRefs.current[index];
-    if (!card) return;
+    if (!scroller || !card) return;
 
-    card.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      inline: 'start',
-      block: 'nearest',
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const targetLeft = card.offsetLeft - scroller.offsetLeft;
+
+    scroller.scrollTo({
+      left: targetLeft,
+      behavior: reducedMotion ? 'auto' : 'smooth',
     });
 
     setActiveCardIndex(index);
@@ -89,7 +94,7 @@ export default function MobileSwipeRow({
   }, []);
 
   return (
-    <div className={className}>
+    <div className={`overflow-hidden ${className}`}>
       {showHint ? (
         <p className="mb-3 text-[10px] font-mono font-semibold uppercase tracking-[0.18em] text-[#D4AF37]/65 lg:hidden">
           Geser untuk melihat
@@ -99,7 +104,7 @@ export default function MobileSwipeRow({
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
+          className={`no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
           onScroll={scheduleActiveUpdate}
           onTouchEnd={() => {
@@ -116,7 +121,7 @@ export default function MobileSwipeRow({
                 cardRefs.current[index] = node;
               }}
               data-swipe-card="true"
-              className={`basis-[82vw] flex-none snap-start sm:basis-[76vw] md:basis-[48vw] lg:basis-auto lg:flex-auto lg:snap-none ${cardClassName}`}
+              className={`basis-[82%] flex-none snap-start sm:basis-[76%] md:basis-[48%] lg:basis-auto lg:flex-auto lg:snap-none ${mobileCardClassName} ${cardClassName}`}
             >
               {child}
             </div>
