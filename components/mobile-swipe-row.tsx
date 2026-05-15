@@ -104,7 +104,7 @@ export default function MobileSwipeRow({
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
+          className={`no-scrollbar grid grid-flow-col auto-cols-[82%] items-stretch snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x sm:auto-cols-[76%] md:auto-cols-[48%] lg:grid lg:grid-flow-row lg:auto-cols-auto lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
           onScroll={scheduleActiveUpdate}
           onTouchEnd={() => {
@@ -121,7 +121,7 @@ export default function MobileSwipeRow({
                 cardRefs.current[index] = node;
               }}
               data-swipe-card="true"
-              className={`basis-[82%] flex-none snap-start sm:basis-[76%] md:basis-[48%] lg:basis-auto lg:flex-auto lg:snap-none ${mobileCardClassName} ${cardClassName}`}
+              className={`h-full min-w-0 snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
             >
               {child}
             </div>
