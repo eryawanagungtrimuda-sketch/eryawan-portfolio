@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Project } from '@/lib/types';
 
 type Props = { projects: Project[] };
@@ -110,6 +110,9 @@ export default function KaryaArchive({ projects }: Props) {
   const [sort, setSort] = useState<SortOption>('newest');
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const hasSearchQuery = search.trim().length > 0;
 
   const areaTagOptions = useMemo(() => {
     const set = new Set<string>();
@@ -192,6 +195,24 @@ export default function KaryaArchive({ projects }: Props) {
     setSort('newest');
   };
 
+  const handleMobilePrimaryAction = () => {
+    if (hasSearchQuery) {
+      searchInputRef.current?.blur();
+      resultsRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+      return;
+    }
+
+    setIsMobileFilterOpen(true);
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    searchInputRef.current?.focus();
+  };
+
   useEffect(() => {
     const onEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsMobileFilterOpen(false);
@@ -212,7 +233,26 @@ export default function KaryaArchive({ projects }: Props) {
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Cari Karya</label>
             <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-3.5 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/30 hover:bg-white/[0.035] focus-within:border-[#D4AF37]/40 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.16)]">
               <Search size={17} className="text-white/44" />
-              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari karya, kategori, style, area, atau narasi..." className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45" />
+              <input
+                ref={searchInputRef}
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') handleMobilePrimaryAction();
+                }}
+                placeholder="Cari karya, kategori, style, area, atau narasi..."
+                className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45"
+              />
+              {hasSearchQuery ? (
+                <button
+                  type="button"
+                  aria-label="Hapus pencarian"
+                  onClick={handleClearSearch}
+                  className="rounded-full border border-transparent p-1 text-white/45 transition hover:border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866]"
+                >
+                  <X size={15} />
+                </button>
+              ) : null}
             </div>
           </div>
 
@@ -229,11 +269,11 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              aria-expanded={isMobileFilterOpen}
-              onClick={() => setIsMobileFilterOpen(true)}
-              className="min-h-11 rounded-full border border-[#D4AF37]/35 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37]/10"
+              aria-expanded={hasSearchQuery ? undefined : isMobileFilterOpen}
+              onClick={handleMobilePrimaryAction}
+              className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] ${hasSearchQuery ? 'border-[#D4AF37]/50 bg-[#D4AF37]/20 text-[#F0DA8B] shadow-[0_10px_24px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/25' : 'border-[#D4AF37]/35 text-[#D4AF37] hover:bg-[#D4AF37]/10'}`}
             >
-              Filter{activeFilterCount > 0 ? ` ${activeFilterCount}` : ''}
+              {hasSearchQuery ? 'Cari' : activeFilterCount > 0 ? `Filter ${activeFilterCount}` : 'Filter'}
             </button>
             <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-full border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40 sm:max-w-[220px]">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
@@ -249,7 +289,7 @@ export default function KaryaArchive({ projects }: Props) {
                   <span aria-hidden>×</span>
                 </button>
               ))}
-              {mobileActiveChips.length > 1 ? <button type="button" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline-offset-4 hover:text-[#D4AF37] hover:underline">Reset semua</button> : null}
+              {mobileActiveChips.length > 0 ? <button type="button" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline-offset-4 hover:text-[#D4AF37] hover:underline">Reset semua</button> : null}
             </div>
           ) : null}
         </div>
@@ -333,9 +373,10 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
       ) : null}
 
-      {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
-        <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
-          {filteredProjects.map((project, index) => (
+      <div ref={resultsRef}>
+        {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
+          <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+            {filteredProjects.map((project, index) => (
             <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
               {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[21/10]' : 'aspect-[16/10]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" /></button> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
@@ -350,9 +391,10 @@ export default function KaryaArchive({ projects }: Props) {
                 </div>
               </div>
             </article>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
       {lightboxImage ? (
         <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setLightboxImage(null)}>
           <div className="relative max-h-[92vh] w-full max-w-6xl" onClick={(event) => event.stopPropagation()}>
