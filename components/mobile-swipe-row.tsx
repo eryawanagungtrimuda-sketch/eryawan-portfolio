@@ -22,6 +22,7 @@ export default function MobileSwipeRow({
   showHint = true,
 }: MobileSwipeRowProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const frameRef = useRef<number | null>(null);
   const items = useMemo(() => Children.toArray(children), [children]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
@@ -64,10 +65,16 @@ export default function MobileSwipeRow({
     }
   }, [items.length]);
 
+  useEffect(() => {
+    return () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, []);
+
   return (
     <div className={className}>
       {showHint ? (
-        <p className="mb-3 text-[10px] font-mono font-semibold uppercase tracking-[0.18em] text-[#D4AF37]/65 md:hidden">
+        <p className="mb-3 text-[10px] font-mono font-semibold uppercase tracking-[0.18em] text-[#D4AF37]/65 lg:hidden">
           Geser untuk melihat
         </p>
       ) : null}
@@ -77,7 +84,10 @@ export default function MobileSwipeRow({
           ref={scrollRef}
           className={`no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
-          onScroll={updateActiveCard}
+          onScroll={() => {
+            if (frameRef.current) cancelAnimationFrame(frameRef.current);
+            frameRef.current = requestAnimationFrame(updateActiveCard);
+          }}
         >
           {items.map((child, index) => (
             <div
@@ -96,7 +106,7 @@ export default function MobileSwipeRow({
         />
       </div>
 
-      <div className="mt-3 flex justify-center gap-1.5 md:hidden" aria-hidden="true">
+      <div className="mt-3 flex justify-center gap-1.5 lg:hidden" aria-hidden="true">
         {items.map((_, index) => (
           <span
             key={index}
