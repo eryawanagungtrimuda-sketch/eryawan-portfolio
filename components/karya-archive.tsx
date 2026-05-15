@@ -172,13 +172,14 @@ export default function KaryaArchive({ projects }: Props) {
     designCategory !== 'Semua',
     designStyle !== 'Semua',
     projectStatus !== 'Semua',
-  ].filter(Boolean).length;
+  ].filter(Boolean).length + selectedAreaTags.length;
 
   const mobileActiveChips = [
     category !== 'Semua' ? { key: 'category', label: category, onRemove: () => setCategory('Semua') } : null,
     designCategory !== 'Semua' ? { key: 'designCategory', label: designCategory, onRemove: () => setDesignCategory('Semua') } : null,
     designStyle !== 'Semua' ? { key: 'designStyle', label: designStyle, onRemove: () => setDesignStyle('Semua') } : null,
     projectStatus !== 'Semua' ? { key: 'status', label: projectStatus, onRemove: () => setProjectStatus('Semua') } : null,
+    ...selectedAreaTags.map((tag) => ({ key: `area-${tag}`, label: tag, onRemove: () => setSelectedAreaTags((prev) => prev.filter((item) => item !== tag)) })),
   ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[];
 
   const resetFilters = () => {
@@ -215,7 +216,7 @@ export default function KaryaArchive({ projects }: Props) {
             </div>
           </div>
 
-          <div>
+          <div className="hidden lg:block">
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</label>
             <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/5 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus:border-[#D4AF37]/40">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
@@ -296,6 +297,24 @@ export default function KaryaArchive({ projects }: Props) {
               <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
               <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
               <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
+              <div>
+                <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Area / Ruang</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {areaTagOptions.map((tag) => {
+                    const active = selectedAreaTags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
+                        className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                      >
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <div>
                 <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
                 <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
