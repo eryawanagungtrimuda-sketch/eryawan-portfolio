@@ -5,6 +5,7 @@ import Button from '@/components/ui/button';
 import { getPublishedInsights } from '@/lib/insights';
 import { getPublishedProjects } from '@/lib/projects';
 import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
+import MobileSwipeRow from '@/components/mobile-swipe-row';
 
 const clientWorkflow = [
   {
@@ -244,9 +245,9 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 lg:grid-cols-3">
+          <MobileSwipeRow className="mt-16" ariaLabel="Client collaboration cards" desktopGridClassName="md:grid-cols-2 lg:grid-cols-3 md:gap-6" backgroundTone="#090909">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                 <div className="mb-14 flex items-center justify-between">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
@@ -259,7 +260,7 @@ export default async function Home() {
                 </p>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
@@ -278,11 +279,11 @@ export default async function Home() {
             </blockquote>
           </div>
 
-          <div className="mt-20 grid gap-6 lg:grid-cols-3">
+          <MobileSwipeRow className="mt-20" ariaLabel="Framework cards" desktopGridClassName="md:grid-cols-2 lg:grid-cols-3 md:gap-6" backgroundTone="#2D2D2B">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+                <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                   <div className="mb-16 flex items-center justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
@@ -301,7 +302,7 @@ export default async function Home() {
                 </article>
               );
             })}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
