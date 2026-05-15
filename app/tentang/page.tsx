@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
 import BackButton from '@/components/back-button';
+import MobileSwipeRow from '@/components/mobile-swipe-row';
+import RevealObserver from '@/components/reveal-observer';
 import Button from '@/components/ui/button';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
@@ -96,8 +98,9 @@ const howIWork = [
 
 export default function TentangPage() {
   return (
-    <main className="min-h-screen bg-[#080807] font-sans text-[#F4F1EA]">
-      <section className="relative overflow-hidden px-4 py-16 sm:px-5 md:px-8 lg:px-12 lg:py-24">
+    <main className="min-h-screen overflow-x-clip bg-[#080807] font-sans text-[#F4F1EA]">
+      <RevealObserver />
+      <section className="reveal-on-scroll relative overflow-hidden px-4 py-16 sm:px-5 md:px-8 md:py-24 lg:px-12 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-10">
@@ -128,7 +131,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/3 bg-[#090909] px-5 py-14 md:px-10 md:py-20 lg:px-16 lg:py-24">
+      <section className="reveal-on-scroll border-y border-white/3 bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-4xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Cara Saya Melihat Ruang</h2>
           <div className="mt-7 space-y-5 text-base leading-[1.8] text-white/70 md:text-lg">
@@ -149,18 +152,18 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Fokus Keahlian</h2>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          <MobileSwipeRow className="mt-12" ariaLabel="Fokus keahlian" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#080807">
             {fokusKeahlian.map((item, index) => (
-              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-8 md:p-10">
+              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">0{index + 1}</span>
                 <h3 className="font-display mt-5 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
@@ -175,14 +178,14 @@ export default function TentangPage() {
             desain, lalu menjaga keputusan tetap bisa dipahami dan dijalankan.
           </p>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <MobileSwipeRow className="mt-12" ariaLabel="Trust signals" desktopGridClassName="md:grid-cols-2 xl:grid-cols-4 md:gap-4" backgroundTone="#0B0B0A">
             {trustSignals.map((item) => (
-              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="rounded-[24px] border border-white/5 bg-white/[0.02] p-6 md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.2] tracking-[-0.02em] text-white/92">{item.title}</h3>
                 <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 

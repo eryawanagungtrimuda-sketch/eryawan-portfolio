@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import SmartBackLink from '@/components/smart-back-link';
 import InsightImageGallery from '@/components/insight-image-gallery';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
+import RevealObserver from '@/components/reveal-observer';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 
 export const dynamic = 'force-dynamic';
@@ -95,9 +96,10 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
 
   return (
-    <main className="min-h-screen bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+      <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-      <div className="mx-auto max-w-4xl">
+      <div className="reveal-on-scroll mx-auto max-w-4xl">
         <SmartBackLink
           fallbackHref="/wawasan"
           className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-white/15 px-3 py-2 font-sans text-sm text-white/64 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
@@ -106,7 +108,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         </SmartBackLink>
 
         <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
-          <span className="inline-block rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
+          <span className="inline-block rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-[11px] font-semibold text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
           {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/8 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
         </div>
 
@@ -152,7 +154,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         ) : null}
 
 
-        <article className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
+        <article className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
           {renderMarkdown(insight.content)}
         </article>
 

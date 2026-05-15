@@ -97,7 +97,7 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
 
 function Badge({ children }: { children?: string | null }) {
   if (!children) return null;
-  return <span className="rounded-full border border-white/5 bg-white/[0.02] px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/55">{children}</span>;
+  return <span className="rounded-full border border-white/8 bg-white/[0.02] px-3 py-1 font-sans text-[11px] font-semibold text-white/65">{children}</span>;
 }
 
 export default function KaryaArchive({ projects }: Props) {
@@ -182,11 +182,11 @@ export default function KaryaArchive({ projects }: Props) {
   }
 
   return (
-    <section className="pb-24">
+    <section className="reveal-on-scroll pb-24">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] transition motion-safe:duration-700 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.04] md:p-7 lg:p-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
-            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Cari Karya</label>
+            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Cari Karya</label>
             <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-3.5 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/30 hover:bg-white/[0.035] focus-within:border-[#D4AF37]/40 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.16)]">
               <Search size={17} className="text-white/44" />
               <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari karya, kategori, style, area, atau narasi..." className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45" />
@@ -194,7 +194,7 @@ export default function KaryaArchive({ projects }: Props) {
           </div>
 
           <div>
-            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Urutkan</label>
+            <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</label>
             <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/5 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus:border-[#D4AF37]/40">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
               <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>

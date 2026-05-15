@@ -7,6 +7,7 @@ import BackButton from '@/components/back-button';
 import SmartBackLink from '@/components/smart-back-link';
 import ProjectImageGallery from '@/components/project-image-gallery';
 import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
+import RevealObserver from '@/components/reveal-observer';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
@@ -94,7 +95,8 @@ export default async function KaryaDetailPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
+    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
+      <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -104,7 +106,7 @@ export default async function KaryaDetailPage({ params }: Props) {
           <BackButton fallbackHref="/karya" />
         </div>
 
-        <section className="py-20 md:py-28">
+        <section className="reveal-on-scroll py-16 md:py-24 lg:py-28">
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] sm:text-[2.35rem] md:text-7xl">{project.title}</h1>
@@ -177,18 +179,18 @@ export default async function KaryaDetailPage({ params }: Props) {
           )}
         </section>
 
-        <section className="border-t border-white/10 py-16">
+        <section className="reveal-on-scroll border-t border-white/10 py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/mulai-project"
-              className="inline-flex items-center rounded-2xl border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
+              className="inline-flex items-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-sans text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
               Diskusikan Project Serupa
             </Link>
             <AdminEditProjectShortcut projectId={project.id} />
             <SmartBackLink
               fallbackHref="/karya"
-              className="inline-flex items-center rounded-2xl border border-[#D4AF37] px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/10"
+              className="inline-flex items-center rounded-full border border-white/20 px-6 py-3 font-sans text-sm font-semibold text-white/80 transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
             />
           </div>
         </section>
