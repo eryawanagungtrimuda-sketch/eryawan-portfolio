@@ -41,6 +41,19 @@ body {
   display: none;
 }
 
+.mobile-swipe-track {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-stop: always;
+}
+
+.mobile-swipe-track [data-swipe-card='true'] {
+  transition: transform 280ms ease, opacity 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+}
+
+.mobile-swipe-track [data-swipe-card='true']:active {
+  transform: scale(0.99);
+}
+
 .reveal-on-scroll {
   opacity: 1;
   transform: none;

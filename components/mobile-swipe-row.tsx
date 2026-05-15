@@ -104,7 +104,7 @@ export default function MobileSwipeRow({
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`no-scrollbar grid grid-flow-col auto-cols-[82%] items-stretch snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x sm:auto-cols-[76%] md:auto-cols-[48%] lg:grid lg:grid-flow-row lg:auto-cols-auto lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
+          className={`mobile-swipe-track no-scrollbar grid grid-flow-col auto-cols-[86%] items-stretch snap-x snap-mandatory gap-3.5 overflow-x-auto scroll-smooth scroll-px-4 px-4 pb-6 pt-1 overscroll-x-contain touch-pan-x sm:auto-cols-[72%] sm:gap-4 sm:scroll-px-5 sm:px-5 md:auto-cols-[48%] lg:grid lg:grid-flow-row lg:auto-cols-auto lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
           onScroll={scheduleActiveUpdate}
           onTouchEnd={() => {

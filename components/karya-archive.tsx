@@ -208,6 +208,11 @@ export default function KaryaArchive({ projects }: Props) {
     setIsMobileFilterOpen(true);
   };
 
+  const handleClearSearch = () => {
+    setSearch('');
+    searchInputRef.current?.focus();
+  };
+
   useEffect(() => {
     const onEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsMobileFilterOpen(false);
@@ -239,7 +244,12 @@ export default function KaryaArchive({ projects }: Props) {
                 className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45"
               />
               {hasSearchQuery ? (
-                <button type="button" aria-label="Hapus pencarian" onClick={() => setSearch('')} className="rounded-full p-1 text-white/45 transition hover:text-[#D4AF37]">
+                <button
+                  type="button"
+                  aria-label="Hapus pencarian"
+                  onClick={handleClearSearch}
+                  className="rounded-full border border-transparent p-1 text-white/45 transition hover:border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866]"
+                >
                   <X size={15} />
                 </button>
               ) : null}
@@ -259,9 +269,9 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              aria-expanded={hasSearchQuery ? false : isMobileFilterOpen}
+              aria-expanded={hasSearchQuery ? undefined : isMobileFilterOpen}
               onClick={handleMobilePrimaryAction}
-              className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] ${hasSearchQuery ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#E2C866]' : 'border-[#D4AF37]/35 text-[#D4AF37] hover:bg-[#D4AF37]/10'}`}
+              className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] ${hasSearchQuery ? 'border-[#D4AF37]/50 bg-[#D4AF37]/20 text-[#F0DA8B] shadow-[0_10px_24px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/25' : 'border-[#D4AF37]/35 text-[#D4AF37] hover:bg-[#D4AF37]/10'}`}
             >
               {hasSearchQuery ? 'Cari' : activeFilterCount > 0 ? `Filter ${activeFilterCount}` : 'Filter'}
             </button>
@@ -279,7 +289,7 @@ export default function KaryaArchive({ projects }: Props) {
                   <span aria-hidden>×</span>
                 </button>
               ))}
-              {mobileActiveChips.length > 1 ? <button type="button" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline-offset-4 hover:text-[#D4AF37] hover:underline">Reset semua</button> : null}
+              {mobileActiveChips.length > 0 ? <button type="button" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline-offset-4 hover:text-[#D4AF37] hover:underline">Reset semua</button> : null}
             </div>
           ) : null}
         </div>
