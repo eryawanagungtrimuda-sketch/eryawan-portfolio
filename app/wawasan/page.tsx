@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ContextualBackButton from '@/components/contextual-back-button';
-import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import { getPublishedInsights } from '@/lib/insights';
+import WawasanArchive from '@/components/wawasan-archive';
 
 export const dynamic = 'force-dynamic';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
@@ -23,12 +23,6 @@ export const metadata: Metadata = {
     description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
   },
 };
-
-function formatSourceType(sourceType?: string | null) {
-  if (!sourceType) return null;
-  if (sourceType === 'project') return 'Dari Project';
-  return sourceType.replace(/_/g, ' ');
-}
 
 export default async function WawasanPage() {
   const insights = await getPublishedInsights();
@@ -61,38 +55,7 @@ export default async function WawasanPage() {
           </div>
         </section>
       ) : (
-        <MobileSwipeRow className="reveal-on-scroll mx-auto mt-8 max-w-7xl sm:mt-10" ariaLabel="Daftar wawasan" desktopGridClassName="md:grid-cols-2 xl:grid-cols-3 md:gap-5" backgroundTone="#080807">
-          {insights.map((item) => (
-            <article key={item.id} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02] transition motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.035] hover:shadow-[0_20px_45px_rgba(0,0,0,0.3)]">
-              {item.cover_image ? (
-                <div className="aspect-[16/9] max-h-48 overflow-hidden border-b border-white/8 sm:aspect-[16/10] sm:max-h-none">
-                  <img src={item.cover_image} alt={item.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
-                </div>
-              ) : null}
-
-              <div className="flex flex-1 flex-col p-5 sm:p-6">
-                <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1 font-sans text-[11px] font-semibold text-[#D4AF37]">
-                    {item.category || 'Uncategorized'}
-                  </span>
-                  {item.content_type === 'review_karya' ? <span className="rounded-full border border-white/8 px-3 py-1 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
-                  {formatSourceType(item.source_type) ? (
-                    <span className="rounded-full border border-white/8 px-3 py-1 font-sans text-[11px] font-semibold text-white/62">
-                      {formatSourceType(item.source_type)}
-                    </span>
-                  ) : null}
-                </div>
-
-                <h2 className="font-display mt-3 text-[1.65rem] font-normal leading-[1.14] tracking-[-0.01em] sm:mt-4 sm:text-2xl">{item.title}</h2>
-                <p className="mt-3 line-clamp-4 font-sans text-sm leading-7 text-white/62 sm:line-clamp-3 sm:leading-relaxed">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
-
-                <Link className="mt-5 inline-flex min-h-11 w-fit items-center gap-2 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out group-hover:text-[#e6c461] sm:mt-6" href={`/wawasan/${item.slug}`}>
-                  Baca Wawasan <span aria-hidden className="transition motion-safe:duration-500 motion-safe:group-hover:translate-x-1">→</span>
-                </Link>
-              </div>
-            </article>
-          ))}
-        </MobileSwipeRow>
+        <WawasanArchive insights={insights} />
       )}
     </main>
   );
