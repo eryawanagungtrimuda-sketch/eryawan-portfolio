@@ -4,12 +4,16 @@ import { useEffect } from 'react';
 
 export default function RevealObserver() {
   useEffect(() => {
+    document.documentElement.classList.add('reveal-ready');
+
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const nodes = Array.from(document.querySelectorAll<HTMLElement>('.reveal-on-scroll'));
 
     if (media.matches) {
       nodes.forEach((node) => node.classList.add('is-visible'));
-      return;
+      return () => {
+        document.documentElement.classList.remove('reveal-ready');
+      };
     }
 
     const observer = new IntersectionObserver(
@@ -21,11 +25,14 @@ export default function RevealObserver() {
           }
         });
       },
-      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
 
     nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove('reveal-ready');
+    };
   }, []);
 
   return null;

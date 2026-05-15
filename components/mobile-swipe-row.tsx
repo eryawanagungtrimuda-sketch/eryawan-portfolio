@@ -22,6 +22,7 @@ export default function MobileSwipeRow({
   showHint = true,
 }: MobileSwipeRowProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const frameRef = useRef<number | null>(null);
   const items = useMemo(() => Children.toArray(children), [children]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -30,7 +31,7 @@ export default function MobileSwipeRow({
     const scroller = scrollRef.current;
     if (!scroller) return;
 
-    const cards = Array.from(scroller.querySelectorAll<HTMLElement>('[data-swipe-card="true"]'));
+    const cards = cardRefs.current.filter((card): card is HTMLDivElement => card !== null);
     if (cards.length === 0) return;
 
     const viewportCenter = scroller.scrollLeft + scroller.clientWidth / 2;
@@ -49,16 +50,32 @@ export default function MobileSwipeRow({
     setActiveCardIndex(closest);
   }, []);
 
+  const scheduleActiveUpdate = useCallback(() => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    frameRef.current = requestAnimationFrame(updateActiveCard);
+  }, [updateActiveCard]);
+
+  const scrollToCard = useCallback((index: number) => {
+    const card = cardRefs.current[index];
+    if (!card) return;
+
+    card.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      inline: 'start',
+      block: 'nearest',
+    });
+
+    setActiveCardIndex(index);
+  }, []);
+
   useEffect(() => {
+    cardRefs.current = cardRefs.current.slice(0, items.length);
     updateActiveCard();
   }, [items.length, updateActiveCard]);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      const scroller = scrollRef.current;
-      if (!scroller) return;
-
-      const renderedCards = scroller.querySelectorAll('[data-swipe-card="true"]').length;
+    if (process.env.NODE_ENV === 'development') {
+      const renderedCards = cardRefs.current.filter((card) => card !== null).length;
       if (renderedCards !== items.length) {
         console.warn(`MobileSwipeRow expected ${items.length} cards but rendered ${renderedCards}.`);
       }
@@ -84,32 +101,41 @@ export default function MobileSwipeRow({
           ref={scrollRef}
           className={`no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
-          onScroll={() => {
-            if (frameRef.current) cancelAnimationFrame(frameRef.current);
-            frameRef.current = requestAnimationFrame(updateActiveCard);
+          onScroll={scheduleActiveUpdate}
+          onTouchEnd={() => {
+            window.setTimeout(scheduleActiveUpdate, 120);
+          }}
+          onPointerUp={() => {
+            window.setTimeout(scheduleActiveUpdate, 120);
           }}
         >
           {items.map((child, index) => (
             <div
               key={index}
+              ref={(node) => {
+                cardRefs.current[index] = node;
+              }}
               data-swipe-card="true"
-              className={`w-[82vw] max-w-[360px] flex-none snap-start sm:w-[72vw] md:w-[46vw] lg:w-auto lg:max-w-none lg:flex-auto lg:snap-none ${cardClassName}`}
+              className={`basis-[82vw] flex-none snap-start sm:basis-[76vw] md:basis-[48vw] lg:basis-auto lg:flex-auto lg:snap-none ${cardClassName}`}
             >
               {child}
             </div>
           ))}
         </div>
         <span
-          className="pointer-events-none absolute right-0 top-0 bottom-6 w-10 bg-gradient-to-l to-transparent md:hidden"
+          className="pointer-events-none absolute right-0 top-0 bottom-6 w-10 bg-gradient-to-l to-transparent lg:hidden"
           style={{ backgroundImage: `linear-gradient(to left, ${backgroundTone}, transparent)` }}
           aria-hidden="true"
         />
       </div>
 
-      <div className="mt-3 flex justify-center gap-1.5 lg:hidden" aria-hidden="true">
+      <div className="mt-3 flex justify-center gap-1.5 lg:hidden">
         {items.map((_, index) => (
-          <span
+          <button
             key={index}
+            type="button"
+            aria-label={`Lihat kartu ${index + 1}`}
+            onClick={() => scrollToCard(index)}
             className={`h-1.5 rounded-full transition-all duration-300 motion-reduce:transition-none ${index === activeCardIndex ? 'w-5 bg-[#D4AF37]' : 'w-1.5 bg-white/25'}`}
           />
         ))}
