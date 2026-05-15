@@ -249,15 +249,15 @@ export default async function Home() {
 
           <MobileSwipeRow className="mt-16" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
-                <div className="mb-14 flex items-center justify-between">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+                <div className="mb-14 flex shrink-0 items-center justify-between">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
                 </div>
-                <h3 className="font-display text-3xl font-normal leading-[1.08] tracking-[-0.028em] text-white/90 md:text-4xl">
+                <h3 className="shrink-0 font-display text-3xl font-normal leading-[1.08] tracking-[-0.028em] text-white/90 md:text-4xl">
                   {item.title}
                 </h3>
-                <p className="mt-6 font-sans text-base leading-[1.7] text-white/66">
+                <p className="mt-6 flex-1 font-sans text-base leading-[1.7] text-white/66">
                   {item.description}
                 </p>
               </article>
@@ -285,8 +285,8 @@ export default async function Home() {
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
-                  <div className="mb-16 flex items-center justify-between">
+                <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
+                  <div className="mb-16 flex shrink-0 items-center justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.code}</span>
@@ -295,10 +295,10 @@ export default async function Home() {
                       <Icon size={21} strokeWidth={1.8} />
                     </span>
                   </div>
-                  <h3 className="font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
+                  <h3 className="shrink-0 font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
                     {item.title}
                   </h3>
-                  <p className="mt-6 max-w-sm font-sans text-base leading-[1.7] text-white/66">
+                  <p className="mt-6 max-w-sm flex-1 font-sans text-base leading-[1.7] text-white/66">
                     {item.description}
                   </p>
                 </article>
@@ -336,18 +336,18 @@ export default async function Home() {
             {decisions.map((decision, index) => (
               <article
                 key={decision.title}
-                className="group relative overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.018] p-5 transition duration-300 hover:border-[#C8A951]/24 hover:bg-white/[0.03] md:p-7 lg:pl-14"
+                className="group relative flex h-full min-h-full flex-col overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.018] p-5 transition duration-300 hover:border-[#C8A951]/24 hover:bg-white/[0.03] md:p-7 lg:pl-14"
               >
                 <span className="pointer-events-none absolute bottom-0 left-4 top-0 hidden w-px bg-white/10 lg:block" />
                 <span className="absolute left-[11px] top-6 hidden h-3 w-3 rounded-full border border-[#D4AF37]/45 bg-[#C8A951]/30 transition duration-300 group-hover:border-[#D4AF37]/65 group-hover:bg-[#C8A951]/50 lg:block" />
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex shrink-0 items-center justify-between gap-4">
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951]">0{index + 1}</p>
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-white/42">Decision Point</p>
                 </div>
-                <h3 className="mt-4 max-w-2xl font-sans text-[1rem] font-semibold leading-7 tracking-[-0.018em] text-white/88 md:text-[1.35rem] md:leading-[1.45]">
+                <h3 className="mt-4 max-w-2xl shrink-0 font-sans text-[1rem] font-semibold leading-7 tracking-[-0.018em] text-white/88 md:text-[1.35rem] md:leading-[1.45]">
                   {decision.title}
                 </h3>
-                <p className="mt-3 max-w-2xl font-sans text-sm leading-6 text-white/60 md:text-base md:leading-[1.72]">
+                <p className="mt-3 max-w-2xl flex-1 font-sans text-sm leading-6 text-white/60 md:text-base md:leading-[1.72]">
                   {decision.description}
                 </p>
               </article>
@@ -392,15 +392,15 @@ export default async function Home() {
             backgroundTone="#2D2D2B"
           >
             {differentiations.map((item, index) => (
-              <article key={item.title} className="group lg:border-l lg:border-white/10 lg:px-12 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-7 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] lg:rounded-none lg:border-y-0 lg:border-r-0 lg:border-l lg:border-white/10 lg:bg-transparent lg:px-12 lg:py-0 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 shrink-0 text-[#C8A951]/78 transition duration-300 group-hover:text-[#C8A951]" size={18} strokeWidth={2.1} />
-                  <div>
+                  <div className="flex min-h-full flex-1 flex-col">
                     <p className="mb-4 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/40">0{index + 1}</p>
-                    <h3 className="text-lg font-semibold uppercase leading-snug tracking-[-0.018em] text-white/90 md:text-xl">
+                    <h3 className="shrink-0 text-lg font-semibold uppercase leading-snug tracking-[-0.018em] text-white/90 md:text-xl">
                       {item.title}
                     </h3>
-                    <p className="mt-5 max-w-sm font-sans text-base leading-[1.7] text-white/66">
+                    <p className="mt-5 max-w-sm flex-1 font-sans text-base leading-[1.7] text-white/66">
                       {item.description}
                     </p>
                   </div>
