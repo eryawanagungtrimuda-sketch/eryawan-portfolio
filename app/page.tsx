@@ -228,7 +228,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="client-workflow" className="relative overflow-hidden bg-[#090909] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="client-workflow" className="reveal-on-scroll relative overflow-hidden bg-[#090909] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(200,169,81,0.055),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
@@ -262,7 +262,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="framework" className="relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="framework" className="reveal-on-scroll relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.08),transparent_27%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_58%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
@@ -304,7 +304,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="design-decisions" className="relative overflow-hidden bg-[#070707] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="design-decisions" className="reveal-on-scroll relative overflow-hidden bg-[#070707] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -346,7 +346,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="impact" className="relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="impact" className="reveal-on-scroll relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_10%,rgba(200,169,81,0.1),transparent_34%),radial-gradient(circle_at_82%_82%,rgba(200,169,81,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14">
@@ -360,11 +360,11 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:gap-4">
+            <div className="impact-scroll relative -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-6 pt-1 sm:mx-0 sm:grid sm:snap-none sm:overflow-visible sm:px-0 sm:pb-0 sm:pt-0 sm:grid-cols-2 sm:gap-5 lg:gap-4" aria-label="Metrik dampak dapat digeser horizontal">
               {impacts.map((impact, index) => (
                 <article
                   key={impact.title}
-                  className="group relative overflow-hidden rounded-[30px] border border-white/5 bg-white/[0.02] px-5 py-5 transition duration-300 ease-out motion-safe:transform-gpu motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/22 hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(200,169,81,0.09)] sm:px-6"
+                  className="group relative min-w-[82%] snap-start overflow-hidden rounded-[30px] border border-white/5 bg-white/[0.02] px-5 py-5 transition-all duration-500 ease-out motion-safe:transform-gpu active:scale-[0.99] motion-safe:hover:-translate-y-1.5 hover:border-[#C8A951]/22 hover:bg-white/[0.045] hover:shadow-[0_16px_34px_rgba(200,169,81,0.09)] sm:min-w-0 sm:px-6"
                 >
                   <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#C8A951]/65 to-transparent" />
                   <div className="flex items-start justify-between gap-4">
@@ -384,6 +384,10 @@ export default async function Home() {
                   <span className="mt-5 block h-1.5 w-16 rounded-full bg-gradient-to-r from-[#C8A951]/70 to-[#C8A951]/15 transition duration-300 group-hover:w-24" />
                 </article>
               ))}
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#D4AF37]/70 sm:hidden">
+              <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-[#D4AF37]" />
+              Geser metrik ke samping
             </div>
           </div>
         </div>
