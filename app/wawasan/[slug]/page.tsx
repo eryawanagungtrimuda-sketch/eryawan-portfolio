@@ -28,15 +28,15 @@ function renderMarkdown(content?: string | null) {
         if (!text) return <div key={index} className="h-2" />;
 
         if (text.startsWith('### ')) {
-          return <h3 key={index} className="font-display pt-3 text-lg font-normal leading-[1.2] tracking-[-0.01em] text-[#F4F1EA] sm:text-xl md:text-2xl">{text.replace(/^###\s*/, '')}</h3>;
+          return <h3 key={index} className="font-sans pt-3 text-lg font-normal leading-[1.2] tracking-[-0.01em] text-[#F4F1EA] sm:text-xl md:text-2xl">{text.replace(/^###\s*/, '')}</h3>;
         }
 
         if (text.startsWith('## ')) {
-          return <h2 key={index} className="font-display pt-5 text-xl font-normal leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl md:text-3xl">{text.replace(/^##\s*/, '')}</h2>;
+          return <h2 key={index} className="font-sans pt-5 text-xl font-normal leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl md:text-3xl">{text.replace(/^##\s*/, '')}</h2>;
         }
 
         if (text.startsWith('# ')) {
-          return <h2 key={index} className="font-display pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h2>;
+          return <h2 key={index} className="font-sans pt-6 text-2xl font-normal leading-[1.1] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl md:text-4xl">{text.replace(/^#\s*/, '')}</h2>;
         }
 
         return <p key={index} className="font-sans whitespace-pre-wrap text-[15px] leading-8 text-white/66 sm:text-base">{line}</p>;
@@ -112,7 +112,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/8 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
         </div>
 
-        <h1 className="font-display mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
+        <h1 className="font-sans mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
         {insight.excerpt ? <p className="mt-4 max-w-3xl font-sans text-base leading-7 text-white/64 sm:mt-5 sm:text-lg sm:leading-relaxed">{insight.excerpt}</p> : null}
 
         {insight.content_type === 'review_karya' ? (
@@ -143,7 +143,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
                 />
               ) : null}
               <div className="min-w-0">
-                <h2 className="font-display text-xl leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl">{sourceProject.title}</h2>
+                <h2 className="font-sans text-xl leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl">{sourceProject.title}</h2>
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/62">{sourceProject.category}</p> : null}
               </div>
             </div>
