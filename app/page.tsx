@@ -312,15 +312,14 @@ export default async function Home() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <div className="min-w-0 max-w-full lg:sticky lg:top-28 lg:self-start">
-            <p className="max-w-full break-words font-mono text-[10px] font-black uppercase tracking-[0.42em] text-[#D4AF37] md:text-[11px] md:tracking-[0.52em]">Design Decisions</p>
-            <h2 className="font-display mt-5 max-w-full break-words text-[2rem] font-normal leading-[1.12] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.35rem] md:mt-6 md:text-[3.5rem] lg:text-[4.1rem]">
+            <p className="mb-7 max-w-xl break-words font-sans text-[0.82rem] leading-[1.75] tracking-normal text-white/58 sm:text-sm md:mb-8 md:text-base md:leading-[1.8]">
+              Saya mengontrol kualitas keputusan desain sejak awal: mana yang perlu diprioritaskan, mana yang bisa disederhanakan, dan mana yang akan berdampak paling besar pada ruang.
+            </p>
+            <h2 className="font-display max-w-full break-words text-[2rem] font-normal leading-[1.12] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.35rem] md:text-[3.5rem] lg:text-[4.1rem]">
               Setiap Ruang Adalah Keputusan
             </h2>
             <p className="font-display mt-5 max-w-xl text-[1.25rem] italic leading-[1.45] tracking-[-0.01em] text-white/86 sm:text-[1.45rem] md:mt-8 md:text-[2rem]">
               Desain yang kuat bukan yang paling ramai. Desain yang kuat adalah yang bekerja dengan tenang.
-            </p>
-            <p className="mt-5 max-w-xl break-words font-sans text-[0.82rem] leading-[1.75] tracking-normal text-white/58 sm:text-sm md:mt-6 md:text-base md:leading-[1.8]">
-              Saya mengontrol kualitas keputusan desain sejak awal: mana yang perlu diprioritaskan, mana yang bisa disederhanakan, dan mana yang akan berdampak paling besar pada ruang.
             </p>
             <div className="mt-7 h-px w-24 bg-gradient-to-r from-[#C8A951]/70 to-transparent md:mt-8" />
             <p className="font-display mt-6 max-w-xl text-[1.25rem] italic leading-[1.45] tracking-[-0.01em] text-white/86 sm:text-[1.45rem] md:mt-8 md:text-[2rem]">
