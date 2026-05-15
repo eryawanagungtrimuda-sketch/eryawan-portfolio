@@ -316,7 +316,7 @@ export default async function Home() {
             <h2 className="font-display mt-5 max-w-full break-words text-[2rem] font-normal leading-[1.12] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.35rem] md:mt-6 md:text-[3.5rem] lg:text-[4.1rem]">
               Setiap Ruang Adalah Keputusan
             </h2>
-            <p className="mt-5 max-w-full break-words text-pretty font-sans text-sm leading-[1.8] text-white/64 sm:text-base md:mt-6 md:max-w-xl md:text-[1.04rem]">
+            <p className="mt-6 max-w-xl break-words font-sans text-[1.25rem] leading-[1.45] tracking-[-0.01em] text-white/78 sm:text-[1.45rem] md:mt-8 md:text-[2rem]">
               Saya mengontrol kualitas keputusan desain sejak awal: mana yang perlu diprioritaskan, mana yang bisa disederhanakan, dan mana yang akan berdampak paling besar pada ruang.
             </p>
             <div className="mt-7 h-px w-24 bg-gradient-to-r from-[#C8A951]/70 to-transparent md:mt-8" />
