@@ -29,6 +29,22 @@ body {
   }
 }
 
+.impact-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-padding-inline: 0.25rem;
+}
+
+.impact-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.reveal-on-scroll {
+  animation: fade-in-up linear both;
+  animation-timeline: view();
+  animation-range: entry 10% cover 32%;
+}
+
 ::selection {
   background: #b86f52;
   color: #fff;
