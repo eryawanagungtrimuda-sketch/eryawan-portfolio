@@ -155,9 +155,9 @@ export default function TentangPage() {
       <section className="reveal-on-scroll px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Fokus Keahlian</h2>
-          <MobileSwipeRow className="mt-12" ariaLabel="Fokus keahlian" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#080807">
+          <MobileSwipeRow className="mt-12" ariaLabel="Fokus keahlian" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#080807" cardClassName="h-full self-stretch">
             {fokusKeahlian.map((item, index) => (
-              <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:p-10">
+              <article key={item.title} className="group flex h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:p-10">
                 <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">0{index + 1}</span>
                 <h3 className="font-display mt-5 text-3xl font-normal leading-[1.08] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
@@ -178,9 +178,9 @@ export default function TentangPage() {
             desain, lalu menjaga keputusan tetap bisa dipahami dan dijalankan.
           </p>
 
-          <MobileSwipeRow className="mt-12" ariaLabel="Trust signals" desktopGridClassName="md:grid-cols-2 xl:grid-cols-4 md:gap-4" backgroundTone="#0B0B0A">
+          <MobileSwipeRow className="mt-12" ariaLabel="Trust signals" desktopGridClassName="md:grid-cols-2 xl:grid-cols-4 md:gap-4" backgroundTone="#0B0B0A" cardClassName="h-full self-stretch">
             {trustSignals.map((item) => (
-              <article key={item.title} className="rounded-[24px] border border-white/5 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="flex h-full flex-col rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.2] tracking-[-0.02em] text-white/92">{item.title}</h3>
                 <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
@@ -194,31 +194,43 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
             Nilai Profesional yang Saya Bawa
           </h2>
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
+          <MobileSwipeRow
+            className="mt-12"
+            ariaLabel="Nilai profesional dapat digeser horizontal"
+            desktopGridClassName="md:grid-cols-2 lg:grid-cols-2 lg:gap-6"
+            backgroundTone="#2D2D2B"
+            cardClassName="h-full self-stretch"
+          >
             {professionalValue.map((item) => (
-              <article key={item.title} className="rounded-xl border border-white/5 bg-white/[0.02] p-6 md:p-7">
+              <article key={item.title} className="flex h-full flex-col rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:p-7">
                 <h3 className="font-display text-2xl font-normal leading-[1.15] tracking-[-0.02em] text-white/90">{item.title}</h3>
                 <p className="mt-4 text-base leading-[1.75] text-white/62">{item.description}</p>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
       <section className="bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Project</h2>
-          <div className="mt-10 space-y-4">
+          <MobileSwipeRow
+            className="mt-12"
+            ariaLabel="Cara saya membaca project dapat digeser horizontal"
+            desktopGridClassName="lg:grid-cols-2 lg:gap-6"
+            backgroundTone="#090909"
+            cardClassName="h-full self-stretch"
+          >
             {howIWork.map((item, index) => (
-              <article key={item.title} className="grid gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-6 md:grid-cols-[220px_1fr] md:items-center md:gap-8 md:p-7">
+              <article key={item.title} className="flex h-full flex-col gap-4 rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] md:gap-6 md:p-7">
                 <p className="font-mono text-xs font-black uppercase tracking-[0.24em] text-[#C8A951]">0{index + 1}</p>
-                <div>
+                <div className="flex flex-1 flex-col">
                   <h3 className="font-display text-3xl font-normal leading-[1.1] tracking-[-0.02em] text-white/90">{item.title}</h3>
                   <p className="mt-3 text-base leading-[1.75] text-white/62">{item.description}</p>
                 </div>
               </article>
             ))}
-          </div>
+          </MobileSwipeRow>
         </div>
       </section>
 
