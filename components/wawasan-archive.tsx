@@ -35,7 +35,7 @@ function InsightCard({ item }: { item: Insight }) {
           <span className="rounded-full border border-white/15 px-3 py-1 font-sans text-white/70">{toLabel(item.content_type)}</span>
           <span className="rounded-full border border-white/15 px-3 py-1 font-sans text-white/70">{toLabel(item.source_type, 'source')}</span>
         </div>
-        <h3 className="mt-3 font-display text-2xl leading-tight text-white">{item.title}</h3>
+        <h3 className="mt-3 font-sans text-2xl leading-tight text-white">{item.title}</h3>
         <p className="mt-2 line-clamp-3 font-sans text-sm text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
         <Link href={`/wawasan/${item.slug}`} className="mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37]">
           Baca Wawasan <span aria-hidden>→</span>
@@ -143,7 +143,7 @@ export default function WawasanArchive({ insights }: Props) {
               {featured.cover_image ? <img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" /> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
-                <h2 className="mt-4 font-display text-3xl leading-tight">{featured.title}</h2>
+                <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
                 <p className="mt-3 font-sans text-white/70">{featured.excerpt || 'Wawasan utama pilihan editorial minggu ini.'}</p>
                 <Link href={`/wawasan/${featured.slug}`} className="mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37]">Baca Wawasan</Link>
               </div>
@@ -160,28 +160,28 @@ export default function WawasanArchive({ insights }: Props) {
         <div className="fixed inset-0 z-[9999]">
           <button aria-label="Tutup filter" className="absolute inset-0 bg-black/70" onClick={() => setIsFilterOpen(false)} />
           <div role="dialog" aria-modal="true" className="absolute bottom-0 left-0 right-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#11100d] p-5">
-            <button aria-label="Tutup" onClick={() => setIsFilterOpen(false)} className="mb-4 rounded-full border border-white/20 px-3 py-1 text-sm text-white/70">Tutup</button>
+            <button aria-label="Tutup" onClick={() => setIsFilterOpen(false)} className="mb-4 min-h-11 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/70 transition active:scale-[0.98]">Tutup</button>
             {[
               ['Topik', categoryOptions, draftCategory, setDraftCategory, undefined],
               ['Jenis Konten', contentTypeOptions, draftContentType, setDraftContentType, undefined],
               ['Sumber', sourceTypeOptions, draftSourceType, setDraftSourceType, 'source'],
             ].map(([label, options, value, setter, kind]) => (
               <div key={label as string} className="mb-4">
-                <p className="mb-2 font-mono text-xs uppercase tracking-[0.14em] text-white/55">{label as string}</p>
-                <div className="flex flex-wrap gap-2">{(options as string[]).map((opt) => <button key={opt} onClick={() => (setter as (v: string) => void)(opt)} className={`rounded-full border px-3 py-1 text-xs ${(value as string) === opt ? 'border-[#D4AF37]/60 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/20 text-white/75'}`}>{toLabel(opt, kind as 'source')}</button>)}</div>
+                <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/55">{label as string}</p>
+                <div className="flex flex-wrap gap-2">{(options as string[]).map((opt) => <button key={opt} onClick={() => (setter as (v: string) => void)(opt)} className={`rounded-full border px-4 py-2 font-sans text-xs font-semibold transition active:scale-[0.98] ${(value as string) === opt ? 'border-[#D4AF37]/60 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/20 text-white/75'}`}>{toLabel(opt, kind as 'source')}</button>)}</div>
               </div>
             ))}
             <div>
               <label htmlFor="sort" className="mb-2 block font-mono text-xs uppercase tracking-[0.14em] text-white/55">Urutkan</label>
-              <select id="sort" value={draftSort} onChange={(e) => setDraftSort(e.target.value as SortType)} className="h-11 w-full rounded-2xl border border-white/15 bg-[#080807] px-3 font-sans text-sm text-white">
+              <select id="sort" value={draftSort} onChange={(e) => setDraftSort(e.target.value as SortType)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
                 <option value="terbaru">Terbaru</option>
                 <option value="terlama">Terlama</option>
                 <option value="judul_az">Judul A-Z</option>
               </select>
             </div>
             <div className="sticky bottom-0 mt-6 flex gap-2 border-t border-white/10 bg-[#11100d] pt-4">
-              <button onClick={() => { setDraftCategory(ALL); setDraftContentType(ALL); setDraftSourceType(ALL); setDraftSort('terbaru'); }} className="h-11 flex-1 rounded-2xl border border-white/20 text-sm text-white/80">Reset</button>
-              <button onClick={() => { setCategory(draftCategory); setContentType(draftContentType); setSourceType(draftSourceType); setSort(draftSort); setIsFilterOpen(false); }} className="h-11 flex-1 rounded-2xl border border-[#D4AF37]/50 bg-[#D4AF37]/10 text-sm text-[#D4AF37]">Terapkan</button>
+              <button onClick={() => { setDraftCategory(ALL); setDraftContentType(ALL); setDraftSourceType(ALL); setDraftSort('terbaru'); }} className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80 transition active:scale-[0.98]">Reset</button>
+              <button onClick={() => { setCategory(draftCategory); setContentType(draftContentType); setSourceType(draftSourceType); setSort(draftSort); setIsFilterOpen(false); }} className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition active:scale-[0.98]">Terapkan</button>
             </div>
           </div>
         </div>, document.body)}
