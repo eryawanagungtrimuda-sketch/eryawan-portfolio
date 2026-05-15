@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Project } from '@/lib/types';
 
 type Props = { projects: Project[] };
@@ -110,6 +111,7 @@ export default function KaryaArchive({ projects }: Props) {
   const [sort, setSort] = useState<SortOption>('newest');
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const hasSearchQuery = search.trim().length > 0;
@@ -195,6 +197,9 @@ export default function KaryaArchive({ projects }: Props) {
     setSort('newest');
   };
 
+  const openMobileFilter = () => setIsMobileFilterOpen(true);
+  const closeMobileFilter = () => setIsMobileFilterOpen(false);
+
   const handleMobilePrimaryAction = () => {
     if (hasSearchQuery) {
       searchInputRef.current?.blur();
@@ -205,7 +210,7 @@ export default function KaryaArchive({ projects }: Props) {
       return;
     }
 
-    setIsMobileFilterOpen(true);
+    openMobileFilter();
   };
 
   const handleClearSearch = () => {
@@ -214,12 +219,92 @@ export default function KaryaArchive({ projects }: Props) {
   };
 
   useEffect(() => {
-    const onEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsMobileFilterOpen(false);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileFilterOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
     };
+  }, [isMobileFilterOpen]);
+
+  useEffect(() => {
+    if (!isMobileFilterOpen) return;
+
+    const onEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMobileFilter();
+    };
+
     window.addEventListener('keydown', onEsc);
     return () => window.removeEventListener('keydown', onEsc);
-  }, []);
+  }, [isMobileFilterOpen]);
+
+  const mobileFilterSheet = isMobileFilterOpen ? (
+    <div className="fixed inset-0 z-[9999] lg:hidden" onClick={closeMobileFilter}>
+      <div className="absolute inset-0 bg-black/70" />
+      <div
+        id="karya-mobile-filter-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Filter Karya"
+        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-white/20" />
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="font-sans text-lg font-semibold text-white">Filter Karya</h2>
+            <p className="mt-1 text-sm text-white/58">Pilih kategori untuk mempersempit hasil.</p>
+          </div>
+          <button type="button" aria-label="Tutup panel filter" onClick={closeMobileFilter} className="rounded-full border border-white/15 p-2 text-white/80">
+            <X size={16} />
+          </button>
+        </div>
+        <div className="space-y-5">
+          <FilterChips label="Kategori Project" options={filterOptions.category} value={category} onChange={setCategory} />
+          <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
+          <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
+          <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
+          <div>
+            <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Area / Ruang</p>
+            <div className="flex flex-wrap gap-2.5">
+              {areaTagOptions.map((tag) => {
+                const active = selectedAreaTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
+                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
+              <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
+              <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
+            </select>
+          </div>
+        </div>
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B0B0A] from-70% to-transparent px-5 pb-5 pt-8">
+          <div className="pointer-events-auto grid grid-cols-2 gap-3">
+            <button type="button" onClick={resetFilters} className="min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/85">Reset</button>
+            <button type="button" onClick={closeMobileFilter} className="min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866]">Terapkan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   if (projects.length === 0) {
     return <section className="pb-24"><div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center md:p-12"><div className="max-w-xl"><p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada karya</p><p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/60 md:text-lg">Portfolio sedang disiapkan. Project yang dipublikasikan dari CMS akan tampil di halaman ini.</p></div></div></section>;
@@ -270,6 +355,7 @@ export default function KaryaArchive({ projects }: Props) {
             <button
               type="button"
               aria-expanded={hasSearchQuery ? undefined : isMobileFilterOpen}
+              aria-controls={hasSearchQuery ? undefined : 'karya-mobile-filter-sheet'}
               onClick={handleMobilePrimaryAction}
               className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] ${hasSearchQuery ? 'border-[#D4AF37]/50 bg-[#D4AF37]/20 text-[#F0DA8B] shadow-[0_10px_24px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/25' : 'border-[#D4AF37]/35 text-[#D4AF37] hover:bg-[#D4AF37]/10'}`}
             >
@@ -318,60 +404,7 @@ export default function KaryaArchive({ projects }: Props) {
 
         {activeFilters.length > 0 ? <div className="mt-4 hidden flex-wrap gap-2 lg:flex">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
       </div>
-      {isMobileFilterOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setIsMobileFilterOpen(false)}>
-          <div className="absolute inset-0 bg-black/60" />
-          <div role="dialog" aria-modal="true" className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24" onClick={(event) => event.stopPropagation()}>
-            <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-white/20" />
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-sans text-lg font-semibold text-white">Filter Karya</h2>
-                <p className="mt-1 text-sm text-white/58">Pilih kategori untuk mempersempit hasil.</p>
-              </div>
-              <button type="button" aria-label="Tutup panel filter" onClick={() => setIsMobileFilterOpen(false)} className="rounded-full border border-white/15 p-2 text-white/80">
-                <X size={16} />
-              </button>
-            </div>
-            <div className="space-y-5">
-              <FilterChips label="Kategori Project" options={filterOptions.category} value={category} onChange={setCategory} />
-              <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
-              <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
-              <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
-              <div>
-                <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Area / Ruang</p>
-                <div className="flex flex-wrap gap-2.5">
-                  {areaTagOptions.map((tag) => {
-                    const active = selectedAreaTags.includes(tag);
-                    return (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
-                        className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
-                      >
-                        {tag}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div>
-                <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
-                <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
-                  <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
-                  <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
-                </select>
-              </div>
-            </div>
-            <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B0B0A] from-70% to-transparent px-5 pb-5 pt-8">
-              <div className="pointer-events-auto grid grid-cols-2 gap-3">
-                <button type="button" onClick={resetFilters} className="min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/85">Reset</button>
-                <button type="button" onClick={() => setIsMobileFilterOpen(false)} className="min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866]">Terapkan</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {mounted && mobileFilterSheet ? createPortal(mobileFilterSheet, document.body) : null}
 
       <div ref={resultsRef}>
         {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
