@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 type MobileSwipeRowProps = {
-  children: ReactNode[];
+  children: ReactNode;
   ariaLabel: string;
   desktopGridClassName: string;
   className?: string;
@@ -22,6 +22,7 @@ export default function MobileSwipeRow({
   showHint = true,
 }: MobileSwipeRowProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const items = useMemo(() => Children.toArray(children), [children]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
   const updateActiveCard = useCallback(() => {
@@ -49,7 +50,19 @@ export default function MobileSwipeRow({
 
   useEffect(() => {
     updateActiveCard();
-  }, [children.length, updateActiveCard]);
+  }, [items.length, updateActiveCard]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      const scroller = scrollRef.current;
+      if (!scroller) return;
+
+      const renderedCards = scroller.querySelectorAll('[data-swipe-card="true"]').length;
+      if (renderedCards !== items.length) {
+        console.warn(`MobileSwipeRow expected ${items.length} cards but rendered ${renderedCards}.`);
+      }
+    }
+  }, [items.length]);
 
   return (
     <div className={className}>
@@ -62,15 +75,15 @@ export default function MobileSwipeRow({
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0 md:pt-0 md:snap-none ${desktopGridClassName}`}
+          className={`no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scroll-px-5 px-5 pb-6 pt-1 overscroll-x-contain touch-pan-x lg:mx-0 lg:grid lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0 lg:snap-none ${desktopGridClassName}`}
           aria-label={ariaLabel}
           onScroll={updateActiveCard}
         >
-          {children.map((child, index) => (
+          {items.map((child, index) => (
             <div
               key={index}
               data-swipe-card="true"
-              className={`min-w-[82vw] max-w-[360px] shrink-0 snap-start md:min-w-0 md:max-w-none md:shrink ${cardClassName}`}
+              className={`w-[82vw] max-w-[360px] flex-none snap-start sm:w-[72vw] md:w-[46vw] lg:w-auto lg:max-w-none lg:flex-auto lg:snap-none ${cardClassName}`}
             >
               {child}
             </div>
@@ -84,7 +97,7 @@ export default function MobileSwipeRow({
       </div>
 
       <div className="mt-3 flex justify-center gap-1.5 md:hidden" aria-hidden="true">
-        {children.map((_, index) => (
+        {items.map((_, index) => (
           <span
             key={index}
             className={`h-1.5 rounded-full transition-all duration-300 motion-reduce:transition-none ${index === activeCardIndex ? 'w-5 bg-[#D4AF37]' : 'w-1.5 bg-white/25'}`}

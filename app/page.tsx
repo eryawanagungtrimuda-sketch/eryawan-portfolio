@@ -245,7 +245,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <MobileSwipeRow className="mt-16" ariaLabel="Client collaboration cards" desktopGridClassName="md:grid-cols-2 lg:grid-cols-3 md:gap-6" backgroundTone="#090909">
+          <MobileSwipeRow className="mt-16" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
             {clientWorkflow.map((item) => (
               <article key={item.title} className="group rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
                 <div className="mb-14 flex items-center justify-between">
@@ -279,7 +279,7 @@ export default async function Home() {
             </blockquote>
           </div>
 
-          <MobileSwipeRow className="mt-20" ariaLabel="Framework cards" desktopGridClassName="md:grid-cols-2 lg:grid-cols-3 md:gap-6" backgroundTone="#2D2D2B">
+          <MobileSwipeRow className="mt-20" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
