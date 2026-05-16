@@ -411,7 +411,7 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
             {filteredProjects.map((project, index) => (
             <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
-              {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[21/10]' : 'aspect-[16/10]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" /></button> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
+              {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[21/10]' : 'aspect-[16/10]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
@@ -434,7 +434,7 @@ export default function KaryaArchive({ projects }: Props) {
             <button type="button" onClick={() => setLightboxImage(null)} className="absolute right-3 top-3 z-10 rounded-full border border-white/20 bg-black/60 p-2 text-white">
               <X size={18} />
             </button>
-            <img src={lightboxImage.src} alt={lightboxImage.alt} className="max-h-[92vh] w-full rounded-xl border border-white/15 object-contain" />
+            <img src={lightboxImage.src} alt={lightboxImage.alt} className="max-h-[92vh] w-full rounded-xl border border-white/15 object-contain" decoding="async" />
           </div>
         </div>
       ) : null}
