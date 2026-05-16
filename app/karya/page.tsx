@@ -5,19 +5,18 @@ import BackButton from '@/components/back-button';
 import KaryaArchive from '@/components/karya-archive';
 import RevealObserver from '@/components/reveal-observer';
 import { getPublishedProjects } from '@/lib/projects';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
 
 export const metadata: Metadata = {
   title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
   description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
-  alternates: { canonical: `${SITE_URL}/karya` },
+  alternates: { canonical: absoluteUrl('/karya') },
   openGraph: {
     title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
     description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
-    url: `${SITE_URL}/karya`,
+    url: absoluteUrl('/karya'),
   },
 };
 

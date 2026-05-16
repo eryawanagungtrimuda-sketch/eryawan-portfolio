@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Belleza, Great_Vibes, Inter } from 'next/font/google';
 import PortfolioClicks from './portfolio-clicks';
+import { SITE_URL } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
 
@@ -17,7 +18,7 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.my.id'),
+  metadataBase: new URL(SITE_URL),
   title: 'Eryawan Agung | Portfolio Design Strategy',
   description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
   alternates: {

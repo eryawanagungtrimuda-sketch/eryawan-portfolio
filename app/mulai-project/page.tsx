@@ -2,15 +2,14 @@ import type { Metadata } from 'next';
 import ContextualBackButton from '@/components/contextual-back-button';
 import ProjectBriefForm from '@/components/project-brief-form';
 import RevealObserver from '@/components/reveal-observer';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
   title: 'Mulai Diskusi Project | Eryawan Agung Design Portfolio',
   description:
     'Susun brief awal untuk diskusi project interior, hospitality, workspace, design review, atau kolaborasi strategis bersama Eryawan Agung.',
   alternates: {
-    canonical: `${SITE_URL}/mulai-project`,
+    canonical: absoluteUrl('/mulai-project'),
   },
 };
 

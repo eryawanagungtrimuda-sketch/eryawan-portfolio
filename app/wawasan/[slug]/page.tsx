@@ -6,9 +6,9 @@ import InsightImageGallery from '@/components/insight-image-gallery';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import RevealObserver from '@/components/reveal-observer';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
 
 function buildInsightDescription(title: string, excerpt?: string | null) {
   return excerpt || `Explore the detailed design analysis and strategy behind ${title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   const title = `${insight.title} | Eryawan Agung Design Portfolio`;
   const description = buildInsightDescription(insight.title, insight.excerpt);
-  const url = `${SITE_URL}/wawasan/${insight.slug}`;
+  const url = absoluteUrl(`/wawasan/${insight.slug}`);
 
   return {
     title,
@@ -88,7 +88,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
     '@type': 'Article',
     headline: insight.title,
     description,
-    image: insight.cover_image || images[0]?.image_url || `${SITE_URL}/hero.jpg`,
+    image: insight.cover_image || images[0]?.image_url || absoluteUrl('/hero.jpg'),
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: insight.created_at,
     publisher: { '@type': 'Organization', name: 'Eryawan Studio' },

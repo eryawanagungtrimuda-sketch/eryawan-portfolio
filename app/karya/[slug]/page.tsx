@@ -10,12 +10,11 @@ import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
 import RevealObserver from '@/components/reveal-observer';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
+import { absoluteUrl } from '@/lib/site-url';
 
 type Props = {
   params: { slug: string };
 };
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
 
 function buildProjectDescription(projectName: string) {
   return `Explore the detailed design analysis and strategy behind ${projectName}. Read how design decisions were made and their impact on functionality and aesthetics.`;
@@ -32,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${project.title} | Eryawan Agung Design Portfolio`;
   const description = buildProjectDescription(project.title);
-  const url = `${SITE_URL}/karya/${project.slug}`;
+  const url = absoluteUrl(`/karya/${project.slug}`);
 
   return {
     title,
@@ -88,7 +87,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     '@type': 'CreativeWork',
     name: project.title,
     description: buildProjectDescription(project.title),
-    image: project.cover_image || galleryImages[0]?.image_url || `${SITE_URL}/hero.jpg`,
+    image: project.cover_image || galleryImages[0]?.image_url || absoluteUrl('/hero.jpg'),
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: project.created_at,
     publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
