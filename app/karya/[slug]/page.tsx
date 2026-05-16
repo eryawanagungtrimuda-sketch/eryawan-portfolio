@@ -80,9 +80,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     crop_y: image.crop_y,
     crop_zoom: image.crop_zoom,
   }));
-  const openingDescription =
-    project.problem ||
-    'Ringkasan singkat project ini disusun untuk memberi gambaran awal sebelum pembaca masuk ke konteks, keputusan desain, pendekatan, dan dampak ruang.';
+  const openingDescription = project.problem?.trim() || null;
   const areaTags = (project.area_tags || []).filter(Boolean);
   const schemaData = {
     '@context': 'http://schema.org',
@@ -111,7 +109,9 @@ export default async function KaryaDetailPage({ params }: Props) {
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <p className="mt-7 font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Decision-Based Case Study</p>
           <h1 className="font-display mt-6 max-w-5xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] sm:text-[2.35rem] md:text-7xl">{project.title}</h1>
-          <p className="mt-8 max-w-4xl text-base leading-[1.7] text-white/64 sm:text-lg md:text-2xl">{openingDescription}</p>
+          {openingDescription ? (
+            <p className="mt-8 max-w-4xl text-base leading-[1.7] text-white/64 sm:text-lg md:text-2xl">{openingDescription}</p>
+          ) : null}
         </section>
 
 
