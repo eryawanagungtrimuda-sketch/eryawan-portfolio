@@ -31,25 +31,30 @@ const clientWorkflow = [
 
 const framework = [
   {
-    title: 'Context Reading',
-    description: 'Membaca konteks ruang, perilaku pengguna ruang, tujuan bisnis, dan batasan proyek.',
+    title: 'Pahami',
+    description:
+      `Desain terbaik lahir dari mendengarkan
+Saya mendesain untuk cara hidup Anda yang sesungguhnya. Setiap keputusan punya alasan yang jelas, berakar dari kebutuhan, kebiasaan, dan nilai-nilai yang Anda jaga.`,
     icon: Search,
     number: '01',
-    code: 'READ',
+    code: 'Context Reading',
   },
   {
-    title: 'Spatial Logic',
-    description: 'Mengubah kebutuhan dan kompleksitas menjadi sistem ruang yang jelas, efisien, dan mudah dijalankan.',
+    title: 'Bentuk',
+    description:
+      'Garis, proporsi, dan komposisi menciptakan nada emosional sebuah ruang sebelum segala isinya. Saya memilih bentuk dengan sengaja, karena kesan pertama yang kuat adalah fondasi dari desain yang tak terlupakan.',
     icon: Compass,
-    number: '02',
-    code: 'PLAN',
+    number: '2',
+    code: 'Spatial Logic',
   },
   {
-    title: 'Strategic Decision',
-    description: 'Setiap keputusan desain harus punya alasan, prioritas, dan dampak yang dapat dipahami.',
+    title: 'Putuskan',
+    description:
+      `Ruang yang benar mengubah cara Anda merasakannya.
+Fungsi maksimal bukan soal kekuatannya tapi soal kemudahan yang terasa alami setiap hari. Desain yang berhasil bukan yang Anda kagumi sekali, tapi yang terus membuat Anda merasa lebih baik setiap berada di sana.`,
     icon: Zap,
     number: '03',
-    code: 'ACT',
+    code: 'Strategic Decision',
   },
 ];
 
@@ -272,13 +277,13 @@ export default async function Home() {
           <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Framework</p>
-              <h2 className="font-display mt-5 max-w-2xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
-                Cara Saya Berpikir
+              <h2 className="font-display mt-5 max-w-2xl text-[2.1rem] font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.45rem] md:text-[3rem] lg:text-[3.6rem]">
+                Cara saya berpikir tentang desain
               </h2>
             </div>
-            <blockquote className="font-display max-w-4xl text-3xl italic leading-[1.16] tracking-[-0.012em] text-white/66 md:text-5xl">
-              “Desain yang baik tidak berhenti pada bentuk. Ia harus menjawab alasan, fungsi, dan dampak.”
-            </blockquote>
+            <p className="max-w-4xl font-sans text-base leading-[1.72] text-white/72 sm:text-[1.05rem] md:text-[1.12rem] md:leading-[1.78] lg:text-[1.2rem]">
+              Desain yang baik bukan kebetulan. Ini adalah hasil dari cara berpikir yang tepat tentang alasan, fungsi, bentuk dan dampak setelahnya.
+            </p>
           </div>
 
           <MobileSwipeRow className="mt-20" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
@@ -298,7 +303,7 @@ export default async function Home() {
                   <h3 className="shrink-0 font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
                     {item.title}
                   </h3>
-                  <p className="mt-6 max-w-sm flex-1 font-sans text-base leading-[1.7] text-white/66">
+                  <p className="mt-6 max-w-sm flex-1 whitespace-pre-line font-sans text-base leading-[1.7] text-white/66">
                     {item.description}
                   </p>
                 </article>
