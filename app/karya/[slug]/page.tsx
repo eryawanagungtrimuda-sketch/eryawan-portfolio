@@ -80,7 +80,9 @@ export default async function KaryaDetailPage({ params }: Props) {
     crop_y: image.crop_y,
     crop_zoom: image.crop_zoom,
   }));
-  const openingDescription = project.problem || project.konteks || 'Ringkasan studi kasus akan ditampilkan setelah konten proyek dilengkapi.';
+  const openingDescription =
+    project.problem ||
+    'Ringkasan singkat project ini disusun untuk memberi gambaran awal sebelum pembaca masuk ke konteks, keputusan desain, pendekatan, dan dampak ruang.';
   const areaTags = (project.area_tags || []).filter(Boolean);
   const schemaData = {
     '@context': 'http://schema.org',
