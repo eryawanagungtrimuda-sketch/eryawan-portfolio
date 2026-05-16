@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
+import { adminShortcutsEnabled } from '@/lib/admin-shortcuts';
 
 type AdminEditProjectShortcutProps = {
   projectId?: string | null;
@@ -14,6 +15,12 @@ export default function AdminEditProjectShortcut({ projectId }: AdminEditProject
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    if (!adminShortcutsEnabled) {
+      setReady(true);
+      setIsAdmin(false);
+      return;
+    }
+
     let mounted = true;
 
     async function checkAdminSession() {
@@ -39,7 +46,7 @@ export default function AdminEditProjectShortcut({ projectId }: AdminEditProject
     };
   }, []);
 
-  if (!projectId || !ready || !isAdmin) return null;
+  if (!adminShortcutsEnabled || !projectId || !ready || !isAdmin) return null;
 
   return (
     <Link
