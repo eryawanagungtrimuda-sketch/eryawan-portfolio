@@ -17,8 +17,34 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.my.id'),
   title: 'Eryawan Agung | Portfolio Design Strategy',
   description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Eryawan Agung | Portfolio Design Strategy',
+    description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+    url: '/',
+    siteName: 'Eryawan Agung',
+    locale: 'id_ID',
+    type: 'website',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Eryawan Agung Portfolio Design Strategy',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Eryawan Agung | Portfolio Design Strategy',
+    description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+    images: ['/opengraph-image'],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
