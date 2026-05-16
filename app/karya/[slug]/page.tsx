@@ -94,7 +94,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
       <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="mx-auto max-w-6xl">

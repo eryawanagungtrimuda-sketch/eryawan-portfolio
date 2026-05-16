@@ -96,7 +96,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
       <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="reveal-on-scroll mx-auto max-w-4xl">
@@ -123,7 +123,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           />
         ) : insight.cover_image ? (
           <div className="mt-8 overflow-hidden rounded-xl border border-white/10 sm:mt-10">
-            <img src={insight.cover_image} alt={insight.title} className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" />
+            <img src={insight.cover_image} alt={insight.title || 'Gambar wawasan desain'} className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" />
           </div>
         ) : (
           <div className="mt-8 rounded-xl border border-white/10 bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] p-6 sm:mt-10 sm:p-10">
@@ -138,7 +138,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
               {sourceProject.cover_image ? (
                 <img
                   src={sourceProject.cover_image}
-                  alt={sourceProject.title}
+                  alt={sourceProject.title || 'Dokumentasi visual project'}
                   className="h-16 w-16 rounded-xl border border-white/10 object-cover sm:h-20 sm:w-20"
                 />
               ) : null}

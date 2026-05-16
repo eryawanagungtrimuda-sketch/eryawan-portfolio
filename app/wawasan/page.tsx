@@ -28,7 +28,7 @@ export default async function WawasanPage() {
   const insights = await getPublishedInsights();
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
       <RevealObserver />
       <section className="reveal-on-scroll mx-auto max-w-7xl rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-6 sm:p-8 md:p-12">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Insight Hub</p>
