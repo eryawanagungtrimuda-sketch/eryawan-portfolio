@@ -44,7 +44,7 @@ Saya mendesain untuk cara hidup Anda yang sesungguhnya. Setiap keputusan punya a
     description:
       'Garis, proporsi, dan komposisi menciptakan nada emosional sebuah ruang sebelum segala isinya. Saya memilih bentuk dengan sengaja, karena kesan pertama yang kuat adalah fondasi dari desain yang tak terlupakan.',
     icon: Compass,
-    number: '2',
+    number: '02',
     code: 'Spatial Logic',
   },
   {
@@ -294,14 +294,14 @@ export default async function Home() {
                   <div className="mb-16 flex shrink-0 items-center justify-between">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.code}</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.title}</span>
                     </div>
                     <span className="grid h-12 w-12 place-items-center rounded-2xl border border-[#C8A951]/24 text-[#C8A951]/80 transition duration-300 group-hover:border-[#C8A951]/45 group-hover:bg-[#C8A951]/10 group-hover:text-[#C8A951]">
                       <Icon size={21} strokeWidth={1.8} />
                     </span>
                   </div>
                   <h3 className="shrink-0 font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
-                    {item.title}
+                    {item.code}
                   </h3>
                   <p className="mt-6 max-w-sm flex-1 whitespace-pre-line font-sans text-base leading-[1.7] text-white/66">
                     {item.description}
