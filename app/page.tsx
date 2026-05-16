@@ -526,7 +526,7 @@ export default async function Home() {
               Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
             </p>
 
-            <Button href="mailto:eryawanagungtrimuda@gmail.com" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">
+            <Button href="/mulai-project" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">
               Mulai Diskusi Strategis
             </Button>
 
@@ -559,7 +559,13 @@ export default async function Home() {
           <div className="mt-14 flex flex-col gap-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/42 md:flex-row md:items-center md:justify-between md:text-[11px]">
             <p>© 2026 Eryawan Agung — Strategic Design & Spatial Logic</p>
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
-              <span>Panel</span>
+              <a
+                href="/admin"
+                aria-label="Panel admin"
+                className="select-none text-[9px] tracking-[0.28em] text-white/[0.05] transition hover:text-[#C8A951]/40 focus-visible:text-[#C8A951]/70 focus-visible:outline-none"
+              >
+                Panel
+              </a>
               <span>Surabaya • Melayani Indonesia</span>
             </div>
           </div>
