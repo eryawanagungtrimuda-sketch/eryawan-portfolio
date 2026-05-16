@@ -180,7 +180,6 @@ body {
 /* Strategic positioning copy refinement: visible editorial copy without changing major layout */
 #home h1 + p,
 #client-workflow > div > div:first-child > p,
-#client-workflow article p:last-child,
 #framework article p:last-child,
 #design-decisions > div > div:first-child > p:first-of-type,
 #design-decisions > div > div:first-child > p:nth-of-type(2),
@@ -193,7 +192,6 @@ body {
 
 #home h1 + p::after,
 #client-workflow > div > div:first-child > p::after,
-#client-workflow article p:last-child::after,
 #framework article p:last-child::after,
 #design-decisions > div > div:first-child > p:first-of-type::after,
 #design-decisions > div > div:first-child > p:nth-of-type(2)::after,
@@ -217,27 +215,6 @@ body {
   font-size: 1.15rem;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.70);
-}
-
-#client-workflow article:nth-child(1) p:last-child::after {
-  content: "Brief sering hanya menunjukkan permukaan. Saya membaca masalah sebenarnya lebih dulu agar solusi tidak berhenti pada permintaan awal.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
-}
-
-#client-workflow article:nth-child(2) p:last-child::after {
-  content: "Gambar adalah hasil, bukan titik awal. Saya menyusun logika fungsi, sirkulasi, dan pengalaman agar ruang bekerja bagi pengguna ruang.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
-}
-
-#client-workflow article:nth-child(3) p:last-child::after {
-  content: "Preferensi perlu diterjemahkan menjadi prioritas. Saya membantu klien dan pengambil keputusan melihat dampak jangka panjang sebelum desain dikunci.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
 }
 
 #framework article:nth-child(1) p:last-child::after {
