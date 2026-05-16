@@ -442,7 +442,7 @@ export default async function Home() {
                   <div className="relative aspect-[16/9] overflow-hidden border-b border-white/5 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
-                        <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover" loading="lazy" />
+                        <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
                       </>
                     ) : (

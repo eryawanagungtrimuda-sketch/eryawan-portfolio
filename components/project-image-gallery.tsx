@@ -116,6 +116,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                     alt={featureImage.alt || `${projectTitle} 1`}
                     className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                     style={getGalleryImageStyle(featureImage)}
+                    decoding="async"
                   />
                 </div>
               </button>
@@ -142,6 +143,8 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                           alt={image.alt || `${projectTitle} ${imageIndex + 1}`}
                           className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                           style={getGalleryImageStyle(image)}
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     </button>
@@ -154,7 +157,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
           {activeImage ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5" role="dialog" aria-modal="true" onClick={closeLightbox}>
               <div className="relative w-full max-w-6xl scale-100 opacity-100 transition duration-200" onClick={(event) => event.stopPropagation()}>
-                <img src={activeImage.src} alt={activeImage.alt || projectTitle} className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" />
+                <img src={activeImage.src} alt={activeImage.alt || projectTitle} className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" decoding="async" />
                 <button type="button" aria-label="Tutup lightbox" onClick={closeLightbox} className="absolute right-2 top-2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xs text-[#D4AF37] transition hover:bg-black/90">Tutup</button>
                 {hasMultiple ? (
                   <>

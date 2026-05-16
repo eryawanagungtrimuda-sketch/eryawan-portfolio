@@ -28,7 +28,7 @@ function toLabel(value?: string | null, kind?: 'source') {
 function InsightCard({ item }: { item: Insight }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
-      {item.cover_image ? <img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" /> : null}
+      {item.cover_image ? <img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /> : null}
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-wrap gap-2 text-[11px]">
           <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-sans font-semibold text-[#D4AF37]">{toLabel(item.category)}</span>
@@ -140,7 +140,7 @@ export default function WawasanArchive({ insights }: Props) {
         <>
           {featured ? (
             <article className="mt-6 overflow-hidden rounded-3xl border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
-              {featured.cover_image ? <img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" /> : null}
+              {featured.cover_image ? <img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="lazy" decoding="async" /> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>

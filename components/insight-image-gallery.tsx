@@ -42,7 +42,7 @@ export default function InsightImageGallery({ title, coverImage, images }: Insig
             className="block w-full bg-black/30 text-left transition duration-200 hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
             aria-label="Buka gambar utama dalam lightbox"
           >
-            <img src={coverImage} alt={title} className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" />
+            <img src={coverImage} alt={title} className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" decoding="async" />
           </button>
         </div>
       ) : null}
@@ -59,7 +59,7 @@ export default function InsightImageGallery({ title, coverImage, images }: Insig
                   className="block w-full bg-black/30 transition duration-200 hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
                   aria-label={`Buka gambar ${idx + 1} dalam lightbox`}
                 >
-                  <img src={img.image_url} alt={img.alt_text || img.caption || `${title} ${idx + 1}`} className="h-32 w-full object-cover sm:h-40" />
+                  <img src={img.image_url} alt={img.alt_text || img.caption || `${title} ${idx + 1}`} className="h-32 w-full object-cover sm:h-40" loading="lazy" decoding="async" />
                 </button>
               </div>
             );
