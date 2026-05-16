@@ -4,19 +4,18 @@ import BackButton from '@/components/back-button';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import Button from '@/components/ui/button';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
   title: 'Tentang Eryawan Agung | Design Portfolio',
   description:
     'Kenali cara Eryawan Agung membaca ruang, menyusun arah desain, dan menghubungkan estetika, fungsi, serta konteks eksekusi project.',
-  alternates: { canonical: `${SITE_URL}/tentang` },
+  alternates: { canonical: absoluteUrl('/tentang') },
   openGraph: {
     title: 'Tentang Eryawan Agung | Design Portfolio',
     description:
       'Kenali cara Eryawan Agung membaca ruang, menyusun arah desain, dan menghubungkan estetika, fungsi, serta konteks eksekusi project.',
-    url: `${SITE_URL}/tentang`,
+    url: absoluteUrl('/tentang'),
   },
 };
 

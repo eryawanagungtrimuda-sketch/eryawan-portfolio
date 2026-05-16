@@ -4,18 +4,18 @@ import ContextualBackButton from '@/components/contextual-back-button';
 import RevealObserver from '@/components/reveal-observer';
 import { getPublishedInsights } from '@/lib/insights';
 import WawasanArchive from '@/components/wawasan-archive';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
 
 export const metadata: Metadata = {
   title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
   description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
-  alternates: { canonical: `${SITE_URL}/wawasan` },
+  alternates: { canonical: absoluteUrl('/wawasan') },
   openGraph: {
     title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
     description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
-    url: `${SITE_URL}/wawasan`,
+    url: absoluteUrl('/wawasan'),
   },
   twitter: {
     card: 'summary_large_image',

@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getPublishedProjects } from '@/lib/projects';
 import { getPublishedInsights } from '@/lib/insights';
+import { absoluteUrl } from '@/lib/site-url';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://eryawanagung.com';
+const SITE_LAST_MODIFIED = new Date('2026-05-16');
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [projects, insights] = await Promise.all([getPublishedProjects(), getPublishedInsights()]);
@@ -15,22 +16,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/tentang',
     '/mulai-project',
   ].map((path) => ({
-    url: `${SITE_URL}${path}`,
-    lastModified: new Date(),
+    url: absoluteUrl(path),
+    lastModified: SITE_LAST_MODIFIED,
     changeFrequency: 'weekly',
     priority: path === '/' ? 1 : 0.8,
   }));
 
-  const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `${SITE_URL}/karya/${project.slug}`,
-    lastModified: project.created_at ? new Date(project.created_at) : new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }));
+  const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => {
+    const updatedAt = (project as { updated_at?: string | null }).updated_at;
+    return {
+      url: absoluteUrl(`/karya/${project.slug}`),
+      lastModified: updatedAt ? new Date(updatedAt) : project.created_at ? new Date(project.created_at) : SITE_LAST_MODIFIED,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    };
+  });
 
   const insightRoutes: MetadataRoute.Sitemap = insights.map((insight) => ({
-    url: `${SITE_URL}/wawasan/${insight.slug}`,
-    lastModified: insight.updated_at ? new Date(insight.updated_at) : new Date(insight.created_at || Date.now()),
+    url: absoluteUrl(`/wawasan/${insight.slug}`),
+    lastModified: insight.updated_at
+      ? new Date(insight.updated_at)
+      : insight.created_at
+        ? new Date(insight.created_at)
+        : SITE_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.7,
   }));
