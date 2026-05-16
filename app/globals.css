@@ -180,7 +180,6 @@ body {
 /* Strategic positioning copy refinement: visible editorial copy without changing major layout */
 #home h1 + p,
 #client-workflow > div > div:first-child > p,
-#framework article p:last-child,
 #design-decisions > div > div:first-child > p:first-of-type,
 #design-decisions > div > div:first-child > p:nth-of-type(2),
 #impact .mt-20 + div p:first-child,
@@ -192,7 +191,6 @@ body {
 
 #home h1 + p::after,
 #client-workflow > div > div:first-child > p::after,
-#framework article p:last-child::after,
 #design-decisions > div > div:first-child > p:first-of-type::after,
 #design-decisions > div > div:first-child > p:nth-of-type(2)::after,
 #impact .mt-20 + div p:first-child::after,
@@ -217,26 +215,8 @@ body {
   color: rgba(255, 255, 255, 0.70);
 }
 
-#framework article:nth-child(1) p:last-child::after {
-  content: "Setiap proyek dimulai dari pembacaan konteks: siapa pengguna ruangnya, apa batasannya, dan keputusan apa yang paling menentukan hasil.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
-}
 
-#framework article:nth-child(2) p:last-child::after {
-  content: "Kebutuhan diterjemahkan menjadi sistem ruang yang jelas, agar fungsi, sirkulasi, dan prioritas dapat dibaca dengan mudah.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
-}
 
-#framework article:nth-child(3) p:last-child::after {
-  content: "Keputusan desain dipilih berdasarkan alasan, dampak, dan nilai jangka panjang—bukan sekadar preferensi visual.";
-  font-size: 1rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.64);
-}
 
 #design-decisions > div > div:first-child > p:first-of-type::after {
   content: "Saya mengontrol kualitas keputusan desain sejak awal: mana yang perlu diprioritaskan, mana yang bisa disederhanakan, dan mana yang akan berdampak paling besar pada ruang.";
