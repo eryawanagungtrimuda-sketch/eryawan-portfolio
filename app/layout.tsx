@@ -52,6 +52,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id">
       <body className={`${inter.variable} ${belleza.variable} ${greatVibes.variable} bg-[#080807] text-[#f5f1e8] antialiased`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-full focus:border focus:border-[#D4AF37]/50 focus:bg-black focus:px-5 focus:py-3 focus:font-sans focus:text-sm focus:font-semibold focus:text-[#D4AF37] focus:outline-none"
+        >
+          Lewati ke konten utama
+        </a>
         {children}
         <PortfolioClicks />
       </body>

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function MulaiProjectPage() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-6 md:px-8 lg:px-12">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-6 md:px-8 lg:px-12">
       <RevealObserver />
       <div className="mx-auto max-w-6xl">
         <ContextualBackButton

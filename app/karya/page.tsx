@@ -24,7 +24,7 @@ export default async function KaryaPage() {
   const projects = await getPublishedProjects();
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
       <RevealObserver />
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

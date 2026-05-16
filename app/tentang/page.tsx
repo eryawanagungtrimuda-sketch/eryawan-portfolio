@@ -97,7 +97,7 @@ const howIWork = [
 
 export default function TentangPage() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#080807] font-sans text-[#F4F1EA]">
+    <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] font-sans text-[#F4F1EA]">
       <RevealObserver />
       <section className="reveal-on-scroll relative overflow-hidden px-4 py-16 sm:px-5 md:px-8 md:py-24 lg:px-12 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />

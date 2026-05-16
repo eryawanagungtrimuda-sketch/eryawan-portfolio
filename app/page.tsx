@@ -150,7 +150,7 @@ export default async function Home() {
           href: '/wawasan',
         }));
   return (
-    <main className="min-h-screen overflow-x-clip overflow-y-visible bg-[#080807] font-sans text-[#F4F1EA]">
+    <main id="main-content" className="min-h-screen overflow-x-clip overflow-y-visible bg-[#080807] font-sans text-[#F4F1EA]">
       <RevealObserver />
       <section
         id="home"
@@ -442,7 +442,7 @@ export default async function Home() {
                   <div className="relative aspect-[16/9] overflow-hidden border-b border-white/5 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
-                        <img src={project.cover_image} alt={project.title} className="h-full w-full object-cover" loading="lazy" />
+                        <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover" loading="lazy" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
                       </>
                     ) : (
