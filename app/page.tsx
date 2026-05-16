@@ -10,21 +10,21 @@ import RevealObserver from '@/components/reveal-observer';
 
 const clientWorkflow = [
   {
-    title: 'Tidak hanya menerima brief.',
+    title: 'Visi Anda adalah Titik Awal Saya',
     description:
-      'Saya membaca masalah di balik permintaan, lalu membantu memperjelas keputusan desain yang benar-benar dibutuhkan.',
+      'Setiap proyek dimulai dari cerita Anda: impian, kebiasaan, dan ruang ideal yang Anda bayangkan. Visi Anda bukan sekadar masukan, melainkan fondasi dari seluruh proses desain.',
     number: '01',
   },
   {
-    title: 'Tidak hanya menggambar ruang.',
+    title: 'Keahlian Saya untuk Memperkuat Ide Anda',
     description:
-      'Saya menyusun logika sirkulasi, fungsi, material, dan pengalaman ruang agar desain bekerja secara nyata bagi pengguna ruang.',
+      'Saya hadir bukan untuk mengubah keinginan Anda, melainkan untuk menyempurnakannya dengan solusi yang estetis dan fungsional. Setiap keputusan desain akan saya jelaskan secara jelas dan transparan.',
     number: '02',
   },
   {
-    title: 'Tidak hanya mengikuti preferensi.',
+    title: 'Proses yang Terbuka dan Menyenangkan',
     description:
-      'Saya membantu klien dan pengambil keputusan melihat konsekuensi jangka panjang dari setiap keputusan desain.',
+      'Anda akan selalu dilibatkan di setiap tahap, dari konsep hingga hasil akhir. Kepuasan Anda adalah ukuran keberhasilan saya.',
     number: '03',
   },
 ];
