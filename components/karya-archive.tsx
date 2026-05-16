@@ -102,6 +102,7 @@ function Badge({ children }: { children?: string | null }) {
 }
 
 export default function KaryaArchive({ projects }: Props) {
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@eryawanagung.my.id';
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
   const [designCategory, setDesignCategory] = useState('Semua');
@@ -409,8 +410,10 @@ export default function KaryaArchive({ projects }: Props) {
       <div ref={resultsRef}>
         {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><p className="max-w-md text-lg leading-8 text-white/66">Tidak ada karya yang sesuai dengan filter ini.</p></div> : (
           <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {filteredProjects.map((project, index) => (
-            <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
+            {filteredProjects.map((project, index) => {
+            const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
+            const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain saya.`);
+            return <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
               {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[21/10]' : 'aspect-[16/10]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
@@ -419,12 +422,12 @@ export default function KaryaArchive({ projects }: Props) {
                 <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{project.area_type ? <Badge>{project.area_type}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
-                  <a href={`mailto:hello@eryawan.com?subject=Pertanyaan%20${encodeURIComponent(project.title)}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
+                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
                   <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik dengan karya "${project.title}"`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">WhatsApp</a>
                 </div>
               </div>
-            </article>
-            ))}
+            </article>;
+            })}
           </div>
         )}
       </div>
