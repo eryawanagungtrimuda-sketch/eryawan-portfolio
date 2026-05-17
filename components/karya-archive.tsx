@@ -44,6 +44,15 @@ function projectAreaTags(project: Project) {
   return Array.from(set);
 }
 
+function limitedAreaTags(project: Project, max = 2) {
+  const category = normalize(project.category || project.design_category);
+  const tags = projectAreaTags(project).filter((tag) => normalize(tag) !== category);
+  return {
+    visible: tags.slice(0, max),
+    overflow: Math.max(tags.length - max, 0),
+  };
+}
+
 function getProjectTeaser(project: Project) {
   const projectTeaser = project.problem || project.solution || project.impact || project.dampak;
   return projectTeaser?.trim() ? projectTeaser : null;
@@ -51,29 +60,6 @@ function getProjectTeaser(project: Project) {
 
 function getProjectStatus(project: Project) {
   return project.impact?.trim() || project.dampak?.trim() ? 'Selesai' : 'Konsep';
-}
-
-function buildProjectBadges(project: Project, max = 4) {
-  const deduped: string[] = [];
-  const seen = new Set<string>();
-
-  const addBadge = (value?: string | null) => {
-    const trimmed = value?.trim();
-    if (!trimmed) return;
-
-    const normalized = normalize(trimmed);
-    if (!normalized || seen.has(normalized)) return;
-
-    seen.add(normalized);
-    deduped.push(trimmed);
-  };
-
-  addBadge(project.category || project.design_category);
-  addBadge(project.design_style);
-  addBadge(project.area_type);
-  (project.area_tags || []).forEach(addBadge);
-
-  return deduped.slice(0, max);
 }
 
 function FilterChips({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (value: string) => void }) {
@@ -413,13 +399,14 @@ export default function KaryaArchive({ projects }: Props) {
             {filteredProjects.map((project, index) => {
             const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
             const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain saya.`);
+            const { visible: visibleAreaTags, overflow: areaOverflow } = limitedAreaTags(project);
             return <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
-              {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[21/10]' : 'aspect-[16/10]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className="flex aspect-[16/10] items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
+              {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className={`overflow-hidden border-b border-white/10 bg-white/[0.02] ${index === 0 ? 'aspect-[16/7]' : 'aspect-[4/3]'}`}><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className={`flex items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46 ${index === 0 ? 'aspect-[16/7]' : 'aspect-[4/3]'}`}>Cover image belum tersedia</div>}
               <div className="flex h-full flex-col p-5 md:p-6">
-                <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p><div className="flex flex-wrap justify-end gap-2">{buildProjectBadges(project).map((badge) => <Badge key={`${project.id}-${normalize(badge)}`}>{badge}</Badge>)}</div></div>
+                <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
-                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{project.area_type ? <Badge>{project.area_type}</Badge> : null}</div>
+                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{tag}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
                   <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
