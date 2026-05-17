@@ -45,6 +45,11 @@ const legacyCategoryOptions = [
 
 const designCategoryOptions = ['Interior', 'Architecture', 'Interior & Architecture', 'Furniture / Built-in'];
 const designStyleOptions = ['Modern', 'Minimalist', 'Contemporary', 'Japandi', 'Industrial', 'Classic', 'Tropical', 'Luxury', 'Custom'];
+const projectStatusOptions = [
+  { value: 'konsep', label: 'Konsep' },
+  { value: 'berjalan', label: 'Berjalan' },
+  { value: 'selesai', label: 'Selesai' },
+] as const;
 const areaTypeOptions = [
   'Living Room',
   'Bedroom',
@@ -307,6 +312,8 @@ export default function ProjectForm({ project }: Props) {
   const [pendekatan, setPendekatan] = useState(project?.pendekatan || '');
   const [dampak, setDampak] = useState(project?.dampak || project?.impact || '');
   const [insightKunci, setInsightKunci] = useState(project?.insight_kunci || '');
+  const [projectStatus, setProjectStatus] = useState<'konsep' | 'berjalan' | 'selesai' | ''>(project?.project_status || '');
+  const [completionYear, setCompletionYear] = useState(project?.completion_year?.toString() || '');
 
 
   useEffect(() => {
@@ -377,6 +384,8 @@ export default function ProjectForm({ project }: Props) {
       pendekatan,
       dampak,
       insight_kunci: insightKunci,
+      project_status: projectStatus || null,
+      completion_year: completionYear.trim() ? Number.parseInt(completionYear.trim(), 10) || null : null,
       client_problem_raw: clientProblemRaw || null,
       design_reference: designReference || null,
       area_scope: areaScope || null,
@@ -1045,6 +1054,17 @@ export default function ProjectForm({ project }: Props) {
         <TaxonomySelect label="Category" state={legacyCategory} setState={setLegacyCategory} options={legacyCategoryOptions} placeholder="Pilih kategori project" customPlaceholder="Contoh: Clinic Interior" required />
         <TaxonomySelect label="Kategori Desain" state={designCategory} setState={setDesignCategory} options={designCategoryOptions} placeholder="Pilih kategori desain" customPlaceholder="Contoh: Interior Branding" required />
         <TaxonomySelect label="Gaya Desain" state={designStyle} setState={setDesignStyle} options={designStyleOptions} placeholder="Pilih gaya desain" customPlaceholder="Contoh: Scandinavian" required />
+        <div>
+          <label>Status Proyek</label>
+          <select value={projectStatus} onChange={(event) => setProjectStatus(event.target.value as 'konsep' | 'berjalan' | 'selesai' | '')} className="mt-2 w-full rounded-sm border border-white/10 bg-[#0b0b0a] px-4 py-3 text-sm text-white/78 outline-none transition duration-300 hover:border-[#D4AF37]/35 focus:border-[#D4AF37]/45">
+            <option value="">Pilih status proyek (opsional)</option>
+            {projectStatusOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+        </div>
+        <div>
+          <label>Tahun Selesai</label>
+          <input type="number" inputMode="numeric" min={1900} max={3000} placeholder="2026" value={completionYear} onChange={(event) => setCompletionYear(event.target.value)} />
+        </div>
         <div className="md:col-span-2">
           <label>Area/Ruang Tags</label>
           <p className="mt-2 text-xs leading-5 text-white/42">Pilih satu atau lebih area/ruang yang termasuk dalam project ini. Tags ini akan dipakai untuk filter referensi visual pada tahap berikutnya.</p>

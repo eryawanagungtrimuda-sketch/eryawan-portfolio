@@ -36,6 +36,8 @@ export type Project = {
   design_reference: string | null;
   area_scope: string | null;
   project_size: string | null;
+  project_status: 'konsep' | 'berjalan' | 'selesai' | null;
+  completion_year: number | null;
   is_published: boolean;
   created_at: string;
   project_images?: ProjectImage[];
