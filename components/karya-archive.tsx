@@ -15,12 +15,27 @@ function getProjectDate(project: Project) {
 }
 
 function getProjectYear(project: Project) {
+  if (typeof project.completion_year === 'number' && Number.isFinite(project.completion_year)) return project.completion_year;
   const year = new Date(project.created_at).getFullYear();
   return Number.isFinite(year) ? year : 0;
 }
 
 function normalize(value?: string | null) {
   return (value || '').trim().toLowerCase();
+}
+
+function localizeFilterValue(value: string) {
+  const map: Record<string, string> = {
+    'Commercial Interior': 'Komersial Interior',
+    'Office / Workspace Interior': 'Interior Kantor / Ruang Kerja',
+    'Public / Government Interior': 'Interior Publik / Pemerintahan',
+    'Residential Interior': 'Interior Residensial',
+    Contemporary: 'Kontemporer',
+    Minimalist: 'Minimalis',
+    'Concept / Konsep': 'Konsep',
+    'Done / Selesai': 'Selesai',
+  };
+  return map[value] || value;
 }
 
 function truncateText(value?: string | null, limit = 150) {
@@ -32,7 +47,7 @@ function truncateText(value?: string | null, limit = 150) {
 function uniqueOptions(projects: Project[], key: keyof Project) {
   const values = projects.map((project) => project[key]);
   const unique = Array.from(new Set(values.filter((value): value is string => typeof value === 'string' && value.trim().length > 0).map((value) => value.trim())));
-  return ['Semua', ...unique.sort((a, b) => a.localeCompare(b))];
+  return ['Semua', ...unique.sort((a, b) => a.localeCompare(b)).map(localizeFilterValue)];
 }
 
 function projectAreaTags(project: Project) {
@@ -59,6 +74,9 @@ function getProjectTeaser(project: Project) {
 }
 
 function getProjectStatus(project: Project) {
+  if (project.project_status === 'selesai') return 'Selesai';
+  if (project.project_status === 'berjalan') return 'Berjalan';
+  if (project.project_status === 'konsep') return 'Konsep';
   return project.impact?.trim() || project.dampak?.trim() ? 'Selesai' : 'Konsep';
 }
 
@@ -113,7 +131,7 @@ export default function KaryaArchive({ projects }: Props) {
     category: uniqueOptions(projects, 'category'),
     designCategory: uniqueOptions(projects, 'design_category'),
     designStyle: uniqueOptions(projects, 'design_style'),
-    status: ['Semua', 'Selesai', 'Konsep'],
+    status: ['Semua', 'Selesai', 'Berjalan', 'Konsep'],
   }), [projects]);
 
   const filteredProjects = useMemo(() => {
@@ -135,9 +153,9 @@ export default function KaryaArchive({ projects }: Props) {
         ].map(normalize).join(' ');
 
         const matchesSearch = !query || searchFields.includes(query);
-        const matchesCategory = category === 'Semua' || normalize(project.category) === normalize(category);
-        const matchesDesignCategory = designCategory === 'Semua' || normalize(project.design_category) === normalize(designCategory);
-        const matchesDesignStyle = designStyle === 'Semua' || normalize(project.design_style) === normalize(designStyle);
+        const matchesCategory = category === 'Semua' || normalize(localizeFilterValue(project.category || '')) === normalize(category);
+        const matchesDesignCategory = designCategory === 'Semua' || normalize(localizeFilterValue(project.design_category || '')) === normalize(designCategory);
+        const matchesDesignStyle = designStyle === 'Semua' || normalize(localizeFilterValue(project.design_style || '')) === normalize(designStyle);
         const matchesAreaTags = selectedAreaTags.length === 0 || selectedAreaTags.some((selected) => projectTags.some((tag) => normalize(tag) === normalize(selected)));
         const matchesStatus = projectStatus === 'Semua' || normalize(getProjectStatus(project)) === normalize(projectStatus);
         return matchesSearch && matchesCategory && matchesDesignCategory && matchesDesignStyle && matchesAreaTags && matchesStatus;
@@ -152,7 +170,7 @@ export default function KaryaArchive({ projects }: Props) {
   }, [category, designCategory, designStyle, projectStatus, projects, search, selectedAreaTags, sort]);
 
   const activeFilters = [
-    category !== 'Semua' ? `Kategori Project: ${category}` : null,
+    category !== 'Semua' ? `Kategori Proyek: ${category}` : null,
     designCategory !== 'Semua' ? `Kategori Desain: ${designCategory}` : null,
     designStyle !== 'Semua' ? `Gaya: ${designStyle}` : null,
     projectStatus !== 'Semua' ? `Status: ${projectStatus}` : null,
@@ -253,7 +271,7 @@ export default function KaryaArchive({ projects }: Props) {
           </button>
         </div>
         <div className="space-y-5">
-          <FilterChips label="Kategori Project" options={filterOptions.category} value={category} onChange={setCategory} />
+          <FilterChips label="Kategori Proyek" options={filterOptions.category} value={category} onChange={setCategory} />
           <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
           <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
           <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
@@ -368,7 +386,7 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
 
         <div className="mt-8 hidden gap-6 border-t border-white/10 pt-7 md:mt-9 md:grid-cols-2 lg:grid lg:grid-cols-3 lg:pt-8">
-          <FilterChips label="Kategori Project" options={filterOptions.category} value={category} onChange={setCategory} />
+          <FilterChips label="Kategori Proyek" options={filterOptions.category} value={category} onChange={setCategory} />
           <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
           <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
           <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />

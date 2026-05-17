@@ -2,7 +2,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,is_published,created_at';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,project_status,completion_year,is_published,created_at';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -32,6 +32,8 @@ export const fallbackProjects: Project[] = [
     dampak: 'Dampak proyek fallback belum tersedia.',
     insight_kunci: 'Insight kunci proyek fallback belum tersedia.',
     ...internalBriefFallbackFields,
+    project_status: null,
+    completion_year: null,
     is_published: true,
     created_at: new Date().toISOString(),
     project_images: [],
@@ -56,6 +58,8 @@ export const fallbackProjects: Project[] = [
     dampak: 'Dampak proyek fallback belum tersedia.',
     insight_kunci: 'Insight kunci proyek fallback belum tersedia.',
     ...internalBriefFallbackFields,
+    project_status: null,
+    completion_year: null,
     is_published: true,
     created_at: new Date().toISOString(),
     project_images: [],
