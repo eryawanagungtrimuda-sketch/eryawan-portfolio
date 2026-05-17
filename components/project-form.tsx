@@ -1051,7 +1051,7 @@ export default function ProjectForm({ project }: Props) {
           <input value={slug} onChange={(event) => handleSlugChange(event.target.value)} required />
           <p className="mt-2 text-xs leading-5 text-white/38">Slug otomatis dibuat dari title dan digunakan sebagai URL project.</p>
         </div>
-        <TaxonomySelect label="Category" state={legacyCategory} setState={setLegacyCategory} options={legacyCategoryOptions} placeholder="Pilih kategori project" customPlaceholder="Contoh: Clinic Interior" required />
+        <TaxonomySelect label="Kategori Proyek" state={legacyCategory} setState={setLegacyCategory} options={legacyCategoryOptions} placeholder="Pilih kategori project" customPlaceholder="Contoh: Clinic Interior" required />
         <TaxonomySelect label="Kategori Desain" state={designCategory} setState={setDesignCategory} options={designCategoryOptions} placeholder="Pilih kategori desain" customPlaceholder="Contoh: Interior Branding" required />
         <TaxonomySelect label="Gaya Desain" state={designStyle} setState={setDesignStyle} options={designStyleOptions} placeholder="Pilih gaya desain" customPlaceholder="Contoh: Scandinavian" required />
         <div>

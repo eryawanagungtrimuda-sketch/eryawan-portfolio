@@ -24,14 +24,25 @@ function normalize(value?: string | null) {
   return (value || '').trim().toLowerCase();
 }
 
+const displayLabelMap: Record<string, string> = {
+  'Commercial Interior': 'Interior Komersial',
+  'Office / Workspace Interior': 'Interior Kantor / Ruang Kerja',
+  'Public / Government Interior': 'Interior Publik / Pemerintahan',
+  'Residential Interior': 'Interior Residensial',
+  Contemporary: 'Kontemporer',
+  Minimalist: 'Minimalis',
+  Modern: 'Modern',
+};
+
+function getDisplayLabel(value?: string | null) {
+  const normalized = (value || '').trim();
+  if (!normalized) return '';
+  return displayLabelMap[normalized] || normalized;
+}
+
 function localizeFilterValue(value: string) {
   const map: Record<string, string> = {
-    'Commercial Interior': 'Komersial Interior',
-    'Office / Workspace Interior': 'Interior Kantor / Ruang Kerja',
-    'Public / Government Interior': 'Interior Publik / Pemerintahan',
-    'Residential Interior': 'Interior Residensial',
-    Contemporary: 'Kontemporer',
-    Minimalist: 'Minimalis',
+    ...displayLabelMap,
     'Concept / Konsep': 'Konsep',
     'Done / Selesai': 'Selesai',
   };
@@ -424,7 +435,7 @@ export default function KaryaArchive({ projects }: Props) {
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
-                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{project.category || project.design_category || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{tag}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
+                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{tag}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
                   <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
