@@ -209,7 +209,7 @@ export default async function Home() {
                 Bukan Sekadar Visual, tetapi Nilai Bisnis.
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[#C8A951]/10 via-[#C8A951]/75 to-[#C8A951]/10 sm:-bottom-1.5"
+                  className="pointer-events-none absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[#C8A951]/8 via-[#C8A951]/55 to-[#C8A951]/8 sm:-bottom-1.5"
                 />
               </span>
             </h1>
@@ -218,28 +218,28 @@ export default async function Home() {
               Saya membantu perusahaan dan pemilik bisnis menerjemahkan kebutuhan menjadi keputusan desain yang efisien, terukur, dan berdampak pada performa ruang.
             </p>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              <div className="flex flex-col items-center sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]">
-                <Button href="/mulai-project" className="w-full max-w-[320px] motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center lg:mt-11 lg:justify-start lg:gap-5">
+              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
+                <Button href="/mulai-project" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                   Jadwalkan Diskusi Proyek
                 </Button>
-                <p className="mt-2 w-full max-w-[180px] text-center font-sans text-[0.65rem] font-normal leading-[1.4] text-[#B6AE9A] sm:text-[0.67rem]">
+                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
                   Dapatkan insight awal proyek dalam 30 menit
                 </p>
               </div>
-              <div className="flex flex-col items-center sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]">
-                <Button href="#framework" variant="secondary" className="w-full max-w-[320px] motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
+                <Button href="#framework" variant="secondary" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                   Lihat Kerangka Berpikir Saya
                 </Button>
-                <p className="mt-2 w-full max-w-[180px] text-center font-sans text-[0.65rem] font-normal leading-[1.4] text-[#B6AE9A] sm:text-[0.67rem]">
+                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
                   Pahami metode dan keputusan di balik setiap desain
                 </p>
               </div>
-              <div className="flex flex-col items-center sm:w-full lg:w-[calc(33.333%-0.5rem)]">
-                <Button href="/tentang" variant="secondary" className="w-full max-w-[320px] motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
+                <Button href="/tentang" variant="secondary" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                   Lihat Profil Profesional
                 </Button>
-                <p className="mt-2 w-full max-w-[180px] text-center font-sans text-[0.65rem] font-normal leading-[1.4] text-[#B6AE9A] sm:text-[0.67rem]">
+                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
                   Temui pengalaman dan spesialisasi saya secara ringkas
                 </p>
               </div>
