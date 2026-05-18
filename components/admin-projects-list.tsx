@@ -8,10 +8,11 @@ type AdminProjectListItem = {
   title: string;
   slug: string;
   category: string | null;
-  hasInsight: boolean;
+  hasWawasan: boolean;
+  relatedInsightId: string | null;
 };
 
-type InsightFilter = 'all' | 'without_insight' | 'with_insight';
+type InsightFilter = 'all' | 'without_wawasan' | 'with_wawasan';
 
 export default function AdminProjectsList() {
   const [projects, setProjects] = useState<AdminProjectListItem[]>([]);
@@ -38,7 +39,8 @@ export default function AdminProjectsList() {
             title: project.title,
             slug: project.slug,
             category: project.category,
-            hasInsight: linkedInsights.length > 0,
+            hasWawasan: linkedInsights.length > 0,
+            relatedInsightId: linkedInsights[0]?.id || null,
           };
         });
 
@@ -57,8 +59,8 @@ export default function AdminProjectsList() {
   if (message) return <p className="py-10 text-red-300">{message}</p>;
 
   const filteredProjects = projects.filter((project) => {
-    if (insightFilter === 'without_insight') return !project.hasInsight;
-    if (insightFilter === 'with_insight') return project.hasInsight;
+    if (insightFilter === 'without_wawasan') return !project.hasWawasan;
+    if (insightFilter === 'with_wawasan') return project.hasWawasan;
     return true;
   });
 
@@ -72,8 +74,8 @@ export default function AdminProjectsList() {
           className="rounded-sm border border-white/15 bg-[#14100A] px-3 py-2 text-xs uppercase tracking-[0.14em] text-white/80 outline-none transition focus:border-[#D4AF37]/50"
         >
           <option value="all">Semua</option>
-          <option value="without_insight">Belum Wawasan</option>
-          <option value="with_insight">Sudah Wawasan</option>
+          <option value="with_wawasan">Sudah Jadi Wawasan</option>
+          <option value="without_wawasan">Belum Jadi Wawasan</option>
         </select>
       </div>
 
@@ -103,13 +105,13 @@ export default function AdminProjectsList() {
                   {project.category}
                 </span>
               ) : null}
-              {project.hasInsight ? (
-                <span className="rounded-full border border-white/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/50">
-                  Wawasan Ada
+              {project.hasWawasan ? (
+                <span className="rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-200">
+                  Sudah Jadi Wawasan
                 </span>
               ) : (
-                <span className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#F2D98C]">
-                  Belum Dijadikan Wawasan
+                <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-white/65">
+                  Belum Jadi Wawasan
                 </span>
               )}
             </div>

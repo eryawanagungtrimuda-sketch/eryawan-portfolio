@@ -40,6 +40,8 @@ export type Project = {
   completion_year: number | null;
   is_published: boolean;
   created_at: string;
+  hasWawasan?: boolean;
+  relatedInsight?: Pick<Insight, 'id' | 'slug' | 'title'> | null;
   project_images?: ProjectImage[];
 };
 
