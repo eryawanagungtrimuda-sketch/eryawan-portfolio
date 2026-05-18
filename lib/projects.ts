@@ -2,7 +2,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,project_status,completion_year,is_published,created_at';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,project_status,completion_year,is_published,created_at,insights(id,slug,title)';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -78,7 +78,15 @@ export async function getPublishedProjects() {
     .order('created_at', { ascending: false });
 
   if (error || !data) return fallbackProjects;
-  return data as Project[];
+
+  return (data as (Project & { insights?: { id: string; slug: string; title: string }[] | null })[]).map((project) => {
+    const relatedInsight = Array.isArray(project.insights) ? project.insights[0] : null;
+    return {
+      ...project,
+      hasWawasan: Boolean(relatedInsight),
+      relatedInsight,
+    };
+  });
 }
 
 export async function getPublishedProjectBySlug(slug: string) {
