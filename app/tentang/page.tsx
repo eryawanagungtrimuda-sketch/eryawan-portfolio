@@ -7,14 +7,14 @@ import Button from '@/components/ui/button';
 import { absoluteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
-  title: 'Tentang Eryawan Agung | Design Portfolio',
+  title: 'Tentang Eryawan Agung | Interior Design Strategy',
   description:
-    'Kenali cara Eryawan Agung membaca ruang, menyusun arah desain, dan menghubungkan estetika, fungsi, serta konteks eksekusi project.',
+    'Profil Eryawan Agung sebagai desainer interior strategis yang membantu membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, eksekusi, serta nilai bisnis.',
   alternates: { canonical: absoluteUrl('/tentang') },
   openGraph: {
-    title: 'Tentang Eryawan Agung | Design Portfolio',
+    title: 'Tentang Eryawan Agung | Interior Design Strategy',
     description:
-      'Kenali cara Eryawan Agung membaca ruang, menyusun arah desain, dan menghubungkan estetika, fungsi, serta konteks eksekusi project.',
+      'Profil Eryawan Agung sebagai desainer interior strategis yang membantu membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, eksekusi, serta nilai bisnis.',
     url: absoluteUrl('/tentang'),
   },
 };
@@ -23,47 +23,47 @@ const fokusKeahlian = [
   {
     title: 'Residential & Hospitality',
     description:
-      'Merancang ruang tinggal, villa, dan hospitality dengan perhatian pada suasana, kenyamanan, alur aktivitas, dan karakter ruang.',
+      'Merancang ruang tinggal, villa, dan hospitality dengan perhatian pada kenyamanan, suasana, alur aktivitas, privasi, dan pengalaman pengguna.',
   },
   {
-    title: 'Workspace & Corporate',
+    title: 'Commercial & Workspace',
     description:
-      'Membantu ruang kerja dan komersial memiliki arah visual yang rapi, fungsional, dan selaras dengan identitas brand.',
+      'Membantu ruang kerja, kantor, dan area komersial memiliki identitas visual yang rapi, fungsi yang jelas, dan alur ruang yang mendukung produktivitas.',
   },
   {
     title: 'Design Development',
     description:
-      'Mengembangkan gagasan awal menjadi arah desain yang lebih jelas, siap dibahas, dan lebih mudah diterjemahkan ke tahap eksekusi.',
+      'Mengembangkan gagasan awal menjadi arah desain yang lebih matang, mudah dipresentasikan, dan realistis untuk diterjemahkan ke tahap eksekusi.',
   },
 ];
 
 const trustSignals = [
   {
-    title: '15+ Tahun',
-    description: 'Mengawal project lintas kebutuhan dengan pola pikir yang tetap tenang, terukur, dan berorientasi hasil.',
+    title: '15+ Tahun Pengalaman',
+    description: 'Terlibat dalam berbagai kebutuhan ruang dengan pola kerja yang tenang, terukur, dan berorientasi pada hasil.',
   },
   {
-    title: 'Membaca konteks sebelum menentukan bentuk',
-    description: 'Setiap keputusan dimulai dari pemahaman fungsi, pengguna, suasana, dan batasan riil di lapangan.',
+    title: 'Membaca Konteks Sebelum Bentuk',
+    description: 'Setiap keputusan dimulai dari pemahaman fungsi, pengguna, suasana, batasan teknis, dan kondisi lapangan.',
   },
   {
-    title: 'Menghubungkan desain dengan fungsi dan eksekusi',
-    description: 'Arah visual disusun agar tetap indah sekaligus realistis untuk diterjemahkan ke proses pengerjaan.',
+    title: 'Menghubungkan Desain dan Eksekusi',
+    description: 'Arah visual disusun agar tetap kuat secara estetika, tetapi juga realistis untuk diwujudkan dalam proses pengerjaan.',
   },
   {
-    title: 'Menjaga komunikasi desain tetap jelas',
-    description: 'Saya merapikan bahasa desain agar keputusan lebih mudah dipahami klien dan tim pelaksana.',
+    title: 'Komunikasi Desain yang Jelas',
+    description: 'Saya membantu merapikan bahasa desain agar keputusan lebih mudah dipahami oleh klien, owner, HRD, dan tim pelaksana.',
   },
 ];
 
 const professionalValue = [
   {
     title: 'Strategic Design Thinking',
-    description: 'Melihat desain sebagai rangkaian keputusan, bukan sekadar susunan elemen visual.',
+    description: 'Melihat desain sebagai rangkaian keputusan yang memengaruhi fungsi, pengalaman, citra, dan nilai ruang.',
   },
   {
     title: 'Decision Clarity',
-    description: 'Membantu ide yang masih samar menjadi arah desain yang lebih jelas dan siap dibahas.',
+    description: 'Membantu ide yang masih luas menjadi prioritas desain yang lebih jelas, terukur, dan mudah dievaluasi.',
   },
   {
     title: 'Execution Awareness',
@@ -71,27 +71,27 @@ const professionalValue = [
   },
   {
     title: 'Business Relevance',
-    description: 'Mengaitkan keputusan desain dengan kenyamanan pengguna, citra brand, dan keberlanjutan operasional.',
+    description: 'Mengaitkan keputusan desain dengan kenyamanan pengguna, citra brand, efisiensi aktivitas, dan kebutuhan operasional.',
   },
 ];
 
 const howIWork = [
   {
-    title: 'Mendengar dan Memahami Brief',
+    title: 'Mendengar Brief',
     description:
-      'Saya mulai dari memahami kebutuhan utama, batasan, tujuan ruang, dan hal-hal yang masih belum jelas dari sisi klien.',
+      'Saya mulai dari memahami tujuan utama, kebutuhan pengguna, batasan proyek, dan hal-hal yang belum jelas dari sisi klien atau tim.',
   },
   {
     title: 'Membaca Konteks Ruang',
-    description: 'Saya menilai pola aktivitas, karakter pengguna, dan kondisi lapangan agar arah desain punya dasar yang tepat.',
+    description: 'Saya menilai pola aktivitas, karakter pengguna, kondisi lapangan, dan potensi ruang agar arah desain memiliki dasar yang kuat.',
   },
   {
     title: 'Menyusun Arah Desain',
-    description: 'Prioritas visual, fungsi, dan material dirapikan menjadi keputusan yang selaras dan mudah dievaluasi bersama.',
+    description: 'Prioritas visual, fungsi, material, dan pengalaman ruang dirapikan menjadi keputusan yang dapat dibahas secara objektif.',
   },
   {
     title: 'Menentukan Langkah Lanjut',
-    description: 'Setelah arah disepakati, saya bantu merumuskan langkah berikutnya supaya proses desain bergerak lebih efektif.',
+    description: 'Setelah arah desain terbaca, saya membantu merumuskan langkah berikutnya agar proses bergerak lebih efektif dan tidak melebar.',
   },
 ];
 
@@ -107,24 +107,28 @@ export default function TentangPage() {
           </div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">TENTANG ERYAWAN AGUNG</p>
           <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
-            Merancang ruang dengan cara membaca kebutuhan, karakter, dan arah hidup di dalamnya.
+            Desainer interior yang membaca ruang sebagai strategi, bukan sekadar tampilan.
           </h1>
           <div className="mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl">
             <p>
-              Saya memulai setiap project dengan memahami bagaimana ruang akan dipakai, atmosfer seperti apa yang ingin
-              dihadirkan, dan keputusan mana yang realistis untuk dieksekusi dengan baik.
+              Saya membantu perusahaan, owner, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan desain yang
+              jelas, fungsional, dan dapat dipertanggungjawabkan.
             </p>
             <p>
-              Bagi saya, desain bukan hanya soal tampilan akhir. Desain adalah upaya menyatukan fungsi, karakter visual,
-              arah material, dan konteks project agar hasilnya terasa tepat, matang, dan relevan dalam jangka panjang.
+              Pendekatan saya menghubungkan estetika, alur aktivitas, material, eksekusi, dan nilai bisnis agar ruang
+              tidak hanya terlihat baik, tetapi juga bekerja dengan tepat.
+            </p>
+            <p>
+              Saya terbuka untuk peluang profesional di bidang arsitektur dan interior design, serta kolaborasi proyek
+              yang membutuhkan cara berpikir strategis sejak tahap awal.
             </p>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button href="/mulai-project" className="px-8">
-              Mulai Diskusi Project
+              Diskusikan Peluang Proyek
             </Button>
             <Button href="/karya" variant="secondary" className="px-8">
-              Lihat Karya
+              Lihat Portfolio Karya
             </Button>
           </div>
         </div>
@@ -135,17 +139,17 @@ export default function TentangPage() {
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Cara Saya Melihat Ruang</h2>
           <div className="mt-7 space-y-5 text-base leading-[1.8] text-white/70 md:text-lg">
             <p>
-              Bagi saya, ruang selalu memiliki cerita sebelum desain dimulai. Ada kebiasaan pengguna, batasan teknis,
-              arah visual yang diinginkan, serta keputusan-keputusan kecil yang menentukan apakah ruang itu nyaman
-              digunakan atau hanya terlihat menarik.
+              Bagi saya, ruang selalu membawa data sebelum desain dimulai. Ada pola aktivitas, karakter pengguna, batasan
+              teknis, arah visual, budget, serta keputusan kecil yang menentukan apakah ruang benar-benar nyaman digunakan.
             </p>
             <p>
-              Dalam membaca project, saya melihat ruang bukan sebagai area kosong yang perlu dihias, melainkan sistem
-              yang berisi pergerakan, prioritas, identitas, dan kebutuhan praktis yang harus dipertemukan secara seimbang.
+              Saya membaca ruang sebagai sistem yang berisi pergerakan, prioritas, identitas, dan kebutuhan praktis. Dari
+              proses itu, desain tidak berhenti sebagai bentuk visual, tetapi menjadi keputusan yang membantu aktivitas
+              berjalan lebih efektif.
             </p>
             <p>
-              Peran saya adalah menerjemahkan konteks tersebut menjadi arah desain yang lebih jelas, sehingga diskusi,
-              keputusan, dan eksekusi dapat berjalan lebih terarah.
+              Peran saya adalah menerjemahkan konteks tersebut menjadi arah desain yang jelas, mudah dibahas, dan
+              realistis untuk dieksekusi bersama tim.
             </p>
           </div>
         </div>
@@ -212,10 +216,10 @@ export default function TentangPage() {
 
       <section className="bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
-          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Project</h2>
+          <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Proyek</h2>
           <MobileSwipeRow
             className="mt-12"
-            ariaLabel="Cara saya membaca project dapat digeser horizontal"
+            ariaLabel="Cara saya membaca proyek dapat digeser horizontal"
             desktopGridClassName="lg:grid-cols-2 lg:gap-6"
             backgroundTone="#090909"
             cardClassName="h-full"
@@ -237,18 +241,18 @@ export default function TentangPage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(200,169,81,0.06),transparent_34%)]" />
         <div className="relative mx-auto max-w-5xl text-center">
           <h2 className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
-            Punya ruang atau project yang perlu diarahkan?
+            Mari mulai dari membaca kebutuhan ruang dengan benar.
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-base leading-[1.75] text-white/70 md:text-lg">
-            Bagikan konteks awal project Anda agar kebutuhan, prioritas, dan arah desain dapat dibaca dengan lebih jelas
-            sebelum masuk ke diskusi lanjutan.
+            Baik untuk peluang kerja profesional, kolaborasi dengan perusahaan, maupun proyek desain, saya siap membantu
+            membaca konteks dan menyusun arah ruang secara lebih strategis.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Button href="/mulai-project" className="px-8">
-              Mulai Diskusi Project
+              Mulai Diskusi Profesional
             </Button>
             <Button href="/wawasan" variant="secondary" className="px-8">
-              Lihat Wawasan
+              Baca Wawasan Desain
             </Button>
           </div>
         </div>
