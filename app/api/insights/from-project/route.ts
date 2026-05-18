@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { createInsightDraftFromProject } from '@/lib/insights';
+import { createInsightDraftFromProject, findRelatedInsightForProject } from '@/lib/insights';
 
 export async function POST(req: Request) {
   try {
@@ -36,15 +36,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Session admin tidak valid. Login ulang lalu coba lagi.' }, { status: 401 });
     }
 
-    const insight = await createInsightDraftFromProject(projectId, {
-      supabase: createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-        { global: { headers: { Authorization: `Bearer ${token}` } } },
-      ),
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      { global: { headers: { Authorization: `Bearer ${token}` } } },
+    );
+    const { data: project, error: projectError } = await supabase.from('projects').select('id,slug,title').eq('id', projectId).maybeSingle();
+    if (projectError || !project) {
+      return NextResponse.json({ error: 'Project tidak ditemukan.' }, { status: 404 });
+    }
+    const existingInsight = await findRelatedInsightForProject(project, { supabase });
+    const insight = existingInsight || await createInsightDraftFromProject(projectId, { supabase });
+    const hasExisting = Boolean(existingInsight);
+    return NextResponse.json({
+      id: insight.id,
+      exists: hasExisting,
+      message: hasExisting ? 'Wawasan untuk proyek ini sudah ada.' : undefined,
+      slug: insight.slug || undefined,
     });
-
-    return NextResponse.json({ id: insight.id });
   } catch (error) {
     console.error('[insights/from-project] Failed to build insight draft', {
       message: error instanceof Error ? error.message : 'unknown error',

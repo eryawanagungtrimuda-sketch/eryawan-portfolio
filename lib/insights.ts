@@ -9,6 +9,54 @@ function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 
+function normalizeLegacyText(value?: string | null) {
+  return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+function normalizeLegacySlug(value?: string | null) {
+  return normalizeLegacyText(value).replace(/&/g, ' ').replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function includesToken(text: string, token: string) {
+  return Boolean(token) && text.includes(token);
+}
+
+export async function findRelatedInsightForProject(
+  project: { id: string; slug?: string | null; title?: string | null },
+  options?: { supabase?: SupabaseClient },
+) {
+  const supabase = options?.supabase || createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('insights')
+    .select('id,slug,source_project_id,ai_prompt_source,title,excerpt,content')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+
+  const projectId = (project.id || '').trim();
+  const projectSlug = normalizeLegacySlug(project.slug);
+  const projectTitle = normalizeLegacyText(project.title);
+
+  const rows = (data || []) as Pick<Insight, 'id' | 'slug' | 'source_project_id' | 'title' | 'excerpt' | 'content' | 'ai_prompt_source'>[];
+
+  for (const row of rows) {
+    if ((row.source_project_id || '').trim() === projectId) return row;
+  }
+
+  for (const row of rows) {
+    if (row.source_project_id) continue;
+    const haystack = normalizeLegacyText([row.ai_prompt_source, row.excerpt, row.content].filter(Boolean).join(' '));
+    if (projectSlug && includesToken(haystack, projectSlug)) return row;
+  }
+
+  for (const row of rows) {
+    if (row.source_project_id) continue;
+    const haystack = normalizeLegacyText([row.ai_prompt_source, row.excerpt, row.content, row.title].filter(Boolean).join(' '));
+    if (projectTitle && includesToken(haystack, projectTitle)) return row;
+  }
+
+  return null;
+}
+
 export async function getPublishedInsights() {
   noStore();
   if (!isSupabaseConfigured) return [] as Insight[];
@@ -83,6 +131,10 @@ export async function createInsightDraftFromProject(projectId: string, options?:
   const supabase = options?.supabase || createSupabaseServerClient();
   const { data: project, error } = await supabase.from('projects').select('*').eq('id', projectId).single();
   if (error || !project) throw error || new Error('Project tidak ditemukan.');
+  const existingInsight = await findRelatedInsightForProject(project, { supabase });
+  if (existingInsight) {
+    return existingInsight as Insight;
+  }
   const title = `Pelajaran Desain dari ${project.title}`;
   const excerpt = `Wawasan ini membaca keputusan ruang, masalah utama, dan dampak desain dari project ${project.title}.`;
   const content = [
