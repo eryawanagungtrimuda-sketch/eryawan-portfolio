@@ -218,31 +218,16 @@ export default async function Home() {
               Saya membantu perusahaan dan pemilik bisnis menerjemahkan kebutuhan menjadi keputusan desain yang efisien, terukur, dan berdampak pada performa ruang.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center lg:mt-11 lg:justify-start lg:gap-5">
-              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
-                <Button href="/mulai-project" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                  Jadwalkan Diskusi Proyek
-                </Button>
-                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
-                  Dapatkan insight awal proyek dalam 30 menit
-                </p>
-              </div>
-              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
-                <Button href="#framework" variant="secondary" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                  Lihat Kerangka Berpikir Saya
-                </Button>
-                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
-                  Pahami metode dan keputusan di balik setiap desain
-                </p>
-              </div>
-              <div className="hero-cta-item flex w-full flex-col items-center sm:w-[calc(50%-0.5rem)] lg:w-[260px] xl:w-[280px]">
-                <Button href="/tentang" variant="secondary" className="w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                  Lihat Profil Profesional
-                </Button>
-                <p className="mt-2 max-w-[220px] text-center font-sans text-[11px] font-normal leading-[1.35] tracking-normal text-white/42">
-                  Temui pengalaman dan spesialisasi saya secara ringkas
-                </p>
-              </div>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 lg:mt-11 lg:gap-5">
+              <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                Jadwalkan Diskusi Proyek
+              </Button>
+              <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                Lihat Kerangka Berpikir Saya
+              </Button>
+              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                Lihat Profil Profesional
+              </Button>
             </div>
           </div>
         </div>
