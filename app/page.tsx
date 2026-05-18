@@ -205,7 +205,13 @@ export default async function Home() {
 
             <h1 className="font-display max-w-6xl text-[2rem] font-normal uppercase leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.4rem] md:text-[clamp(3rem,5.7vw,6.45rem)]">
               Desain Strategis untuk Kinerja Ruang.<br />
-              <span className="block text-[#C8A951] italic tracking-[-0.055em]">Bukan Sekadar Visual, tetapi Nilai Bisnis.</span>
+              <span className="relative inline-block text-[#C8A951] italic tracking-[-0.055em]">
+                Bukan Sekadar Visual, tetapi Nilai Bisnis.
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[#C8A951]/10 via-[#C8A951]/75 to-[#C8A951]/10 sm:-bottom-1.5"
+                />
+              </span>
             </h1>
 
             <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 drop-shadow-md md:text-[1.25rem]">
@@ -213,15 +219,30 @@ export default async function Home() {
             </p>
 
             <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Jadwalkan Diskusi Proyek
-              </Button>
-              <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Kerangka Berpikir Saya
-              </Button>
-              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Profil Profesional
-              </Button>
+              <div className="flex flex-col gap-2 sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]">
+                <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                  Jadwalkan Diskusi Proyek
+                </Button>
+                <p className="font-sans text-xs leading-relaxed text-white/62 sm:text-[0.82rem]">
+                  Dapatkan insight awal proyek dalam 30 menit
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]">
+                <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                  Lihat Kerangka Berpikir Saya
+                </Button>
+                <p className="font-sans text-xs leading-relaxed text-white/62 sm:text-[0.82rem]">
+                  Pahami metode dan keputusan di balik setiap desain
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 sm:w-full lg:w-[calc(33.333%-0.5rem)]">
+                <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                  Lihat Profil Profesional
+                </Button>
+                <p className="font-sans text-xs leading-relaxed text-white/62 sm:text-[0.82rem]">
+                  Temui pengalaman dan spesialisasi saya secara ringkas
+                </p>
+              </div>
             </div>
           </div>
         </div>
