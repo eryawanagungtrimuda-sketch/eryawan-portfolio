@@ -11,16 +11,12 @@ type AdminEditProjectShortcutProps = {
 };
 
 export default function AdminEditProjectShortcut({ projectId }: AdminEditProjectShortcutProps) {
+  if (!adminShortcutsEnabled || !projectId) return null;
+
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!adminShortcutsEnabled) {
-      setReady(true);
-      setIsAdmin(false);
-      return;
-    }
-
     let mounted = true;
 
     async function checkAdminSession() {
@@ -46,14 +42,15 @@ export default function AdminEditProjectShortcut({ projectId }: AdminEditProject
     };
   }, []);
 
-  if (!adminShortcutsEnabled || !projectId || !ready || !isAdmin) return null;
+  if (!ready || !isAdmin) return null;
 
   return (
     <Link
       href={`/admin/projects/${projectId}/edit`}
+      aria-label="Edit project"
       className="inline-flex items-center justify-center rounded-2xl border border-[#D4AF37]/45 bg-[#D4AF37]/[0.08] px-6 py-3 text-center font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
     >
-      Edit Project
+      Edit
     </Link>
   );
 }
