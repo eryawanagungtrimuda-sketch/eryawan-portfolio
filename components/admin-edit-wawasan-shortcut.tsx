@@ -11,16 +11,12 @@ type AdminEditWawasanShortcutProps = {
 };
 
 export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasanShortcutProps) {
+  if (!adminShortcutsEnabled || !insightId) return null;
+
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!adminShortcutsEnabled) {
-      setReady(true);
-      setIsAdmin(false);
-      return;
-    }
-
     let mounted = true;
 
     async function checkAdminSession() {
@@ -46,14 +42,15 @@ export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasan
     };
   }, []);
 
-  if (!adminShortcutsEnabled || !insightId || !ready || !isAdmin) return null;
+  if (!ready || !isAdmin) return null;
 
   return (
     <Link
       href={`/admin/insights/${insightId}/edit`}
+      aria-label="Edit wawasan"
       className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/[0.06] px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
     >
-      Edit Wawasan
+      Edit
     </Link>
   );
 }
