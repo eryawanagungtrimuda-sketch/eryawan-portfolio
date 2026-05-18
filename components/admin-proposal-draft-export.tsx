@@ -41,7 +41,6 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
   const [draft, setDraft] = useState<ProjectInquiryProposalDraft | null>(null);
   const [error, setError] = useState('');
   const [copyState, setCopyState] = useState('');
-  const [pdfState, setPdfState] = useState('');
   const proposalRef = useRef<HTMLDivElement | null>(null);
 
   const authedFetch = async (url: string) => {
@@ -83,12 +82,6 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
     if (!inquiry) return fallbackText;
     return inquiry.perusahaan?.trim() || inquiry.nama?.trim() || fallbackText;
   }, [inquiry]);
-
-  const downloadPdf = () => {
-    setPdfState('Fitur Download PDF sedang ditunda. Gunakan Print / Simpan PDF dari browser untuk sementara.');
-    setTimeout(() => setPdfState(''), 4000);
-  };
-
 
   if (error && !draft)
     return <p className="rounded-xl border border-red-400/25 bg-red-500/10 p-3 text-sm text-red-200">{error || 'Draft proposal tidak ditemukan.'}</p>;
@@ -207,14 +200,12 @@ export default function AdminProposalDraftExport({ id, draftId }: { id: string; 
       <section className="no-print sticky bottom-4 z-10 rounded-2xl border border-white/15 bg-[#0F0F0E]/95 p-4 backdrop-blur">
         <p className="mb-3 text-xs text-white/65">Gunakan Print / Simpan PDF untuk membuat file PDF dari browser.</p>
         <div className="flex flex-wrap items-center gap-2">
-          <button onClick={downloadPdf} className="rounded-full border border-amber-300/45 px-4 py-2 text-xs text-amber-300">Download PDF (Ditunda)</button>
           <button onClick={() => window.print()} className="rounded-full border border-[#D4AF37]/45 px-4 py-2 text-xs text-[#D4AF37]">Print / Simpan PDF</button>
           <button onClick={() => downloadProposalText(inquiry, draft)} className="rounded-full border border-white/20 px-4 py-2 text-xs">Download Teks</button>
           <button onClick={copyDraft} className="rounded-full border border-white/20 px-4 py-2 text-xs">Salin Draft</button>
           <button onClick={() => router.back()} className="rounded-full border border-white/20 px-4 py-2 text-xs">Kembali ke Sebelumnya</button>
           <Link href={`/admin/inquiries/${id}`} className="rounded-full border border-white/20 px-4 py-2 text-xs">Detail Inquiry</Link>
         </div>
-        {pdfState ? <p className="mt-2 text-xs text-emerald-300">{pdfState}</p> : null}
         {copyState ? <p className="mt-2 text-xs text-emerald-300">{copyState}</p> : null}
       </section>
     </div>
