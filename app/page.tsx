@@ -118,17 +118,17 @@ const differentiations = [
 
 const wawasanPreview = [
   {
-    title: 'Membaca Tren Interior dari Pinterest',
+    title: 'Membaca Tren Interior tanpa Kehilangan Arah Bisnis',
     excerpt: 'Mengamati pola visual dari Pinterest untuk memetakan arah gaya yang relevan tanpa kehilangan logika fungsi ruang.',
     tag: 'Trend Analysis',
   },
   {
-    title: 'Kenapa Desain Unik Tidak Selalu Efektif',
+    title: 'Mengapa Desain Unik Belum Tentu Efektif',
     excerpt: 'Membahas batas antara keunikan visual dan efektivitas ruang agar keputusan desain tetap masuk akal untuk pengguna.',
     tag: 'Design Strategy',
   },
   {
-    title: 'Review Ruang Komersial yang Menarik Perhatian',
+    title: 'Membedah Ruang Komersial yang Menarik dan Produktif',
     excerpt: 'Menganalisis elemen ruang komersial yang kuat secara first impression sekaligus efisien untuk aktivitas harian.',
     tag: 'Commercial Review',
   },
@@ -204,23 +204,23 @@ export default async function Home() {
             </p>
 
             <h1 className="font-display max-w-6xl text-[2rem] font-normal uppercase leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.4rem] md:text-[clamp(3rem,5.7vw,6.45rem)]">
-              Desain Bukan Sekadar Visual.<br />
-              <span className="block text-[#C8A951] italic tracking-[-0.055em]">Ini Adalah Keputusan Bisnis.</span>
+              Desain Strategis untuk Kinerja Ruang.<br />
+              <span className="block text-[#C8A951] italic tracking-[-0.055em]">Bukan Sekadar Visual, tetapi Nilai Bisnis.</span>
             </h1>
 
             <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 drop-shadow-md md:text-[1.25rem]">
-              Saya membantu klien dan tim merancang ruang yang tidak hanya indah, tetapi efisien, terukur, dan berdampak jangka panjang.
+              Saya membantu perusahaan dan pemilik bisnis menerjemahkan kebutuhan menjadi keputusan desain yang efisien, terukur, dan berdampak pada performa ruang.
             </p>
 
             <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Diskusikan Proyek Secara Strategis
+                Jadwalkan Diskusi Proyek
               </Button>
               <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Cara Saya Berpikir
+                Lihat Kerangka Berpikir Saya
               </Button>
               <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Tentang Saya
+                Lihat Profil Profesional
               </Button>
             </div>
           </div>
@@ -484,7 +484,7 @@ export default async function Home() {
               Wawasan Desain
             </h2>
             <p className="font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
-              Cara saya membaca ruang, tren, dan keputusan desain secara strategis.
+              Insight singkat tentang cara saya membaca ruang, menilai tren, dan menyusun keputusan desain berbasis tujuan bisnis.
             </p>
           </div>
 
@@ -500,7 +500,7 @@ export default async function Home() {
                   href={article.href}
                   className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
                 >
-                  Baca Wawasan
+                  Baca Insight
                   <MoveRight className="transition duration-300 group-hover:translate-x-1" size={14} />
                 </a>
               </article>
@@ -511,7 +511,7 @@ export default async function Home() {
             href="/wawasan"
             className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
           >
-            Lihat Semua Wawasan
+            Jelajahi Semua Insight
             <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
           </a>
         </div>
@@ -525,18 +525,18 @@ export default async function Home() {
               Mulai Kolaborasi
             </p>
             <h2 className="font-display mt-8 text-4xl font-normal italic leading-[1.35] tracking-[-0.04em] text-[#F4F1EA] md:text-6xl lg:text-7xl">
-              Jika Anda mencari designer, banyak pilihan.<br className="hidden lg:block" /> Jika Anda mencari partner berpikir, kita perlu bicara.
+              Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden lg:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
-              Saya siap membantu tim dan klien membangun ruang yang tidak hanya terlihat baik, tetapi bekerja secara strategis.
+              Saya terbuka untuk peran profesional maupun kolaborasi proyek dalam merancang ruang yang kuat secara fungsi, pengalaman, dan arah bisnis.
             </p>
 
             <Button href="/mulai-project" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">
-              Mulai Diskusi Strategis
+              Hubungi untuk Peluang Profesional
             </Button>
 
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/32">
-              Respon langsung oleh desainer, bukan bot.
+              Respon langsung dari Eryawan Agung.
             </p>
 
             <div className="mt-8 flex items-center justify-center gap-8 text-white/50">
