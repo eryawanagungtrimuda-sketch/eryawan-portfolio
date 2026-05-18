@@ -7,6 +7,58 @@ import type { Project } from '@/lib/types';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at';
 
+type DashboardInsight = {
+  id: string;
+  slug?: string | null;
+  source_project_id?: string | null;
+  ai_prompt_source?: string | null;
+  title?: string | null;
+  excerpt?: string | null;
+  content?: string | null;
+};
+
+type DashboardProject = Project & {
+  hasWawasan: boolean;
+  relatedInsightId?: string | null;
+  relatedInsightSlug?: string | null;
+};
+
+function normalizeText(value?: string | null) {
+  return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+function normalizeSlug(value?: string | null) {
+  return normalizeText(value)
+    .replace(/&/g, ' ')
+    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function findRelatedInsight(project: Project, insights: DashboardInsight[]) {
+  const projectId = (project.id || '').trim();
+  const projectSlug = normalizeSlug(project.slug);
+  const projectTitle = normalizeText(project.title);
+
+  const sourceProjectMatch = insights.find((insight) => (insight.source_project_id || '').trim() === projectId);
+  if (sourceProjectMatch) return sourceProjectMatch;
+
+  const legacyInsights = insights.filter((insight) => !(insight.source_project_id || '').trim());
+  const legacySlugMatch = legacyInsights.find((insight) => {
+    const haystack = normalizeSlug([insight.ai_prompt_source, insight.excerpt, insight.content, insight.title].join(' '));
+    return Boolean(projectSlug) && haystack.includes(projectSlug);
+  });
+  if (legacySlugMatch) return legacySlugMatch;
+
+  const legacyTitleMatch = legacyInsights.find((insight) => {
+    const haystack = normalizeText([insight.ai_prompt_source, insight.excerpt, insight.content, insight.title].join(' '));
+    return Boolean(projectTitle) && haystack.includes(projectTitle);
+  });
+
+  return legacyTitleMatch || null;
+}
+
 function formatDate(value?: string | null) {
   if (!value) return '—';
   try {
@@ -32,10 +84,11 @@ function formatDateTime(value?: string | null) {
 }
 
 export default function AdminDashboardCMS() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<DashboardProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
 
   async function loadProjects() {
     setLoading(true);
@@ -75,7 +128,32 @@ export default function AdminDashboardCMS() {
         return;
       }
 
-      setProjects(Array.isArray(data) ? (data as Project[]) : []);
+      const { data: insights, error: insightsError } = await supabase
+        .from('insights')
+        .select('id,slug,source_project_id,ai_prompt_source,title,excerpt,content')
+        .order('created_at', { ascending: false });
+
+      if (insightsError) {
+        console.error('[AdminDashboardCMS] Failed to fetch public.insights', {
+          table: 'public.insights',
+          code: insightsError.code,
+          message: insightsError.message,
+          details: insightsError.details,
+          hint: insightsError.hint,
+        });
+      }
+
+      const mappedProjects = (data || []).map((project) => {
+        const relatedInsight = insightsError ? null : findRelatedInsight(project as Project, (insights || []) as DashboardInsight[]);
+        return {
+          ...(project as Project),
+          hasWawasan: Boolean(relatedInsight),
+          relatedInsightId: relatedInsight?.id || null,
+          relatedInsightSlug: relatedInsight?.slug || null,
+        };
+      });
+
+      setProjects(mappedProjects);
       setMessage('');
     } catch (error) {
       console.error('[AdminDashboardCMS] Unexpected projects fetch failure', error);
@@ -95,7 +173,13 @@ export default function AdminDashboardCMS() {
     return [...projects].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
   }, [projects]);
 
-  async function deleteProject(project: Project) {
+  const filteredProjects = useMemo(() => {
+    if (wawasanFilter === 'with_wawasan') return projects.filter((project) => project.hasWawasan);
+    if (wawasanFilter === 'without_wawasan') return projects.filter((project) => !project.hasWawasan);
+    return projects;
+  }, [projects, wawasanFilter]);
+
+  async function deleteProject(project: DashboardProject) {
     const confirmed = window.confirm(`Hapus project "${project.title}"?`);
     if (!confirmed) return;
 
@@ -146,7 +230,7 @@ export default function AdminDashboardCMS() {
           <div className="hidden h-px flex-1 bg-white/[0.07] md:block" />
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
@@ -168,6 +252,12 @@ export default function AdminDashboardCMS() {
             ) : (
               <p className="mt-6 text-base leading-7 text-white/38">Belum ada data project.</p>
             )}
+          </div>
+
+          <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Projects With Wawasan</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.hasWawasan).length}</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Project yang sudah diangkat menjadi Wawasan.</p>
           </div>
         </div>
       </section>
@@ -195,7 +285,24 @@ export default function AdminDashboardCMS() {
             </div>
           </div>
         ) : (
-          <div className="mt-10 overflow-hidden rounded-2xl border border-white/8 bg-white/[0.016]">
+          <div className="mt-10 space-y-4">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="wawasan-filter" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
+                Filter Status Wawasan
+              </label>
+              <select
+                id="wawasan-filter"
+                value={wawasanFilter}
+                onChange={(event) => setWawasanFilter(event.target.value as 'all' | 'with_wawasan' | 'without_wawasan')}
+                className="w-full max-w-xs rounded-lg border border-white/12 bg-[#121212] px-4 py-2.5 text-sm text-white/80 outline-none transition focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20"
+              >
+                <option value="all">Semua Project</option>
+                <option value="with_wawasan">Sudah Jadi Wawasan</option>
+                <option value="without_wawasan">Belum Jadi Wawasan</option>
+              </select>
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/[0.016]">
             <div className="hidden grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] border-b border-white/[0.07] px-6 py-4 font-mono text-[9px] font-black uppercase tracking-[0.24em] text-white/34 md:grid">
               <span>Title</span>
               <span>Taxonomy</span>
@@ -205,7 +312,7 @@ export default function AdminDashboardCMS() {
             </div>
 
             <div className="divide-y divide-white/[0.07]">
-              {projects.map((project) => (
+              {filteredProjects.map((project) => (
                 <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] md:items-center">
                   <div>
                     <p className="text-base font-semibold leading-6 text-white/90">{project.title}</p>
@@ -216,7 +323,19 @@ export default function AdminDashboardCMS() {
                     <p className="text-xs text-white/46">{project.design_category || '—'} · {project.design_style || '—'}</p>
                     <p className="text-xs text-white/38">{project.area_type || ((project.area_tags || []).slice(0, 2).join(', ') || '—')}</p>
                   </div>
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em]">{project.category?.trim() && project.design_category?.trim() && project.design_style?.trim() && (project.area_type?.trim() || (project.area_tags || []).length > 0) ? <span className="text-emerald-300">Siap Filter</span> : <span className="text-amber-300">Lengkapi Taxonomy</span>}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em]">
+                    {project.hasWawasan ? (
+                      project.relatedInsightSlug ? (
+                        <Link href={`/wawasan/${project.relatedInsightSlug}`} target="_blank" rel="noreferrer" className="text-emerald-300 hover:underline">
+                          Sudah Jadi Wawasan
+                        </Link>
+                      ) : (
+                        <span className="text-emerald-300">Sudah Jadi Wawasan</span>
+                      )
+                    ) : (
+                      <span className="text-white/45">Belum Jadi Wawasan</span>
+                    )}
+                  </p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
                   <div className="flex flex-wrap items-center gap-3 md:justify-end">
                     <Link href={`/admin/projects/${project.id}/edit`} className="min-h-11 rounded-full border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
@@ -228,6 +347,10 @@ export default function AdminDashboardCMS() {
                   </div>
                 </div>
               ))}
+            </div>
+            {projects.length > 0 && filteredProjects.length === 0 ? (
+              <div className="px-6 py-8 text-sm text-white/52">Tidak ada project yang sesuai filter Wawasan.</div>
+            ) : null}
             </div>
           </div>
         )}
