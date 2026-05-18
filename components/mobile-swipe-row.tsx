@@ -26,6 +26,7 @@ export default function MobileSwipeRow({
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const frameRef = useRef<number | null>(null);
+  const isSettlingRef = useRef(false);
   const items = useMemo(() => Children.toArray(children), [children]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
 
@@ -56,6 +57,58 @@ export default function MobileSwipeRow({
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(updateActiveCard);
   }, [updateActiveCard]);
+
+  const findNearestCardIndex = useCallback(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return 0;
+
+    const cards = cardRefs.current.filter((card): card is HTMLDivElement => card !== null);
+    if (cards.length === 0) return 0;
+
+    const viewportCenter = scroller.scrollLeft + scroller.clientWidth / 2;
+    let nearestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    cards.forEach((card, index) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(viewportCenter - cardCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    return nearestIndex;
+  }, []);
+
+  const settleToNearestCard = useCallback(() => {
+    if (typeof window === 'undefined' || window.innerWidth >= 1024 || isSettlingRef.current) return;
+
+    const scroller = scrollRef.current;
+    const nearestIndex = findNearestCardIndex();
+    const targetCard = cardRefs.current[nearestIndex];
+
+    if (!scroller || !targetCard) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const targetLeft = targetCard.offsetLeft - scroller.offsetLeft;
+
+    if (Math.abs(scroller.scrollLeft - targetLeft) < 1) {
+      setActiveCardIndex(nearestIndex);
+      return;
+    }
+
+    isSettlingRef.current = true;
+    scroller.scrollTo({
+      left: targetLeft,
+      behavior: reducedMotion ? 'auto' : 'smooth',
+    });
+    setActiveCardIndex(nearestIndex);
+
+    window.setTimeout(() => {
+      isSettlingRef.current = false;
+    }, reducedMotion ? 0 : 260);
+  }, [findNearestCardIndex]);
 
   const scrollToCard = useCallback((index: number) => {
     const scroller = scrollRef.current;
@@ -93,6 +146,22 @@ export default function MobileSwipeRow({
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('onscrollend' in window)) return;
+
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+
+    const handleScrollEnd = () => {
+      settleToNearestCard();
+    };
+
+    scroller.addEventListener('scrollend', handleScrollEnd);
+    return () => {
+      scroller.removeEventListener('scrollend', handleScrollEnd);
+    };
+  }, [settleToNearestCard]);
+
   return (
     <div className={`overflow-hidden ${className}`}>
       {showHint ? (
@@ -108,10 +177,10 @@ export default function MobileSwipeRow({
           aria-label={ariaLabel}
           onScroll={scheduleActiveUpdate}
           onTouchEnd={() => {
-            window.setTimeout(scheduleActiveUpdate, 120);
+            window.setTimeout(settleToNearestCard, 80);
           }}
           onPointerUp={() => {
-            window.setTimeout(scheduleActiveUpdate, 120);
+            window.setTimeout(settleToNearestCard, 80);
           }}
         >
           {items.map((child, index) => (
@@ -122,6 +191,7 @@ export default function MobileSwipeRow({
               }}
               data-swipe-card="true"
               className={`h-full min-w-0 self-stretch snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
+              style={{ scrollSnapStop: 'always' }}
             >
               {child}
             </div>
