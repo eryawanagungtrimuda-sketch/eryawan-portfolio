@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+
 type AdminProjectListItem = {
   id: string;
   title: string;
@@ -21,9 +22,10 @@ export default function AdminProjectsList() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+
     async function loadProjects() {
       try {
-        const supabase = getSupabaseClient();
         const { data, error } = await supabase
           .from('projects')
           .select('id,title,slug,category,cover_image,problem,solution,impact,created_at,insights(id)')
@@ -52,17 +54,31 @@ export default function AdminProjectsList() {
       }
     }
 
+    const realtimeChannel = supabase
+      .channel('admin-projects-wawasan-status')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, loadProjects)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'insights' }, loadProjects)
+      .subscribe();
+
     loadProjects();
+
+    return () => {
+      void supabase.removeChannel(realtimeChannel);
+    };
   }, []);
+
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter((project) => {
+        if (insightFilter === 'without_wawasan') return !project.hasWawasan;
+        if (insightFilter === 'with_wawasan') return project.hasWawasan;
+        return true;
+      }),
+    [projects, insightFilter],
+  );
 
   if (loading) return <p className="py-10 text-white/50">Memuat projects...</p>;
   if (message) return <p className="py-10 text-red-300">{message}</p>;
-
-  const filteredProjects = projects.filter((project) => {
-    if (insightFilter === 'without_wawasan') return !project.hasWawasan;
-    if (insightFilter === 'with_wawasan') return project.hasWawasan;
-    return true;
-  });
 
   return (
     <div className="space-y-4">
