@@ -12,10 +12,19 @@ type Props = {
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+function normalizeLegacyText(value?: string | null) {
+  return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+function normalizeLegacySlug(value?: string | null) {
+  return normalizeLegacyText(value).replace(/&/g, ' ').replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 export default function AdminProjectEditor({ id }: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [relatedInsight, setRelatedInsight] = useState<{ id: string; slug: string } | null>(null);
 
   useEffect(() => {
     async function loadProject() {
@@ -59,6 +68,22 @@ export default function AdminProjectEditor({ id }: Props) {
           .map((image) => ({ ...image, display_ratio: normalizeDisplayRatio(image.display_ratio), object_position: normalizeObjectPosition(image.object_position) }))
           .sort((a, b) => a.sort_order - b.sort_order);
         setProject({ ...(data as Project), project_images: sortedImages });
+        const { data: insights } = await supabase.from('insights').select('id,slug,source_project_id,ai_prompt_source,title,excerpt,content').order('created_at', { ascending: false });
+        const projectSlug = normalizeLegacySlug(data.slug);
+        const projectTitle = normalizeLegacyText(data.title);
+        const relatedById = (insights || []).find((item) => item.source_project_id === data.id);
+        const relatedBySlug = !relatedById ? (insights || []).find((item) => {
+          if (item.source_project_id) return false;
+          const haystack = normalizeLegacyText([item.ai_prompt_source, item.excerpt, item.content].filter(Boolean).join(' '));
+          return projectSlug ? haystack.includes(projectSlug) : false;
+        }) : null;
+        const relatedByTitle = !relatedById && !relatedBySlug ? (insights || []).find((item) => {
+          if (item.source_project_id) return false;
+          const haystack = normalizeLegacyText([item.ai_prompt_source, item.excerpt, item.content, item.title].filter(Boolean).join(' '));
+          return projectTitle ? haystack.includes(projectTitle) : false;
+        }) : null;
+        const related = relatedById || relatedBySlug || relatedByTitle;
+        setRelatedInsight(related ? { id: related.id, slug: related.slug } : null);
       } catch (error) {
         setMessage(error instanceof Error ? error.message : 'Terjadi kesalahan saat memuat project.');
       } finally {
@@ -73,5 +98,5 @@ export default function AdminProjectEditor({ id }: Props) {
   if (message) return <p className="py-10 text-red-300">{message}</p>;
   if (!project) return <p className="py-10 text-white/50">Project belum tersedia.</p>;
 
-  return <ProjectForm project={project} />;
+  return <ProjectForm project={project} initialRelatedInsight={relatedInsight} />;
 }

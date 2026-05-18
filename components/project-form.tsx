@@ -9,10 +9,10 @@ import { getAreaTagLabel } from '@/lib/area-tags';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 
-type Props = { project?: Project };
+type Props = { project?: Project; initialRelatedInsight?: { id: string; slug: string } | null };
 type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
 type CustomSelectState = { choice: string; custom: string };
-type ApiJsonResult = { id?: string; error?: string };
+type ApiJsonResult = { id?: string; error?: string; exists?: boolean; message?: string; slug?: string };
 type UploadQueueStatus = 'pending' | 'uploading' | 'saved' | 'failed';
 type UploadQueueItem = { key: string; name: string; status: UploadQueueStatus; error?: string };
 type GalleryCropDraft = { imageId: string; display_ratio: DisplayRatio; crop_x: number; crop_y: number; crop_zoom: number };
@@ -258,7 +258,7 @@ function buildGalleryAltText({
   return `Visual interior ${cleanedTitle} dengan suasana ruang ${style.toLowerCase()} yang nyaman.`;
 }
 
-export default function ProjectForm({ project }: Props) {
+export default function ProjectForm({ project, initialRelatedInsight = null }: Props) {
   const router = useRouter();
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const [savedProjectId, setSavedProjectId] = useState(project?.id || '');
@@ -270,6 +270,7 @@ export default function ProjectForm({ project }: Props) {
   const [reorderingImageId, setReorderingImageId] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
   const [message, setMessage] = useState('');
+  const [relatedInsight, setRelatedInsight] = useState<{ id: string; slug?: string } | null>(initialRelatedInsight);
   const [galleryError, setGalleryError] = useState('');
   const [aiError, setAiError] = useState('');
   const [formError, setFormError] = useState('');
@@ -298,6 +299,7 @@ export default function ProjectForm({ project }: Props) {
   const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
   const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
   const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
+  const hasRelatedWawasan = Boolean(relatedInsight);
 
   const [clientProblemRaw, setClientProblemRaw] = useState(project?.client_problem_raw || '');
   const [designReference, setDesignReference] = useState(project?.design_reference || '');
@@ -965,6 +967,12 @@ export default function ProjectForm({ project }: Props) {
       if (!isJson || !data?.id) {
         throw new Error('Server mengembalikan respons tidak valid saat membuat draft wawasan.');
       }
+      if (data.exists) {
+        setRelatedInsight({ id: data.id, slug: data.slug });
+        setMessage(data.message || 'Wawasan untuk proyek ini sudah ada.');
+        return;
+      }
+      setRelatedInsight({ id: data.id, slug: data.slug });
       router.push(`/admin/insights/${data.id}/edit`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Gagal membuat draft wawasan. Periksa session admin atau policy Supabase insights.');
@@ -1344,7 +1352,18 @@ export default function ProjectForm({ project }: Props) {
       {message ? <p className="text-sm leading-6 text-white/70">{message}</p> : null}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <button disabled={loading || galleryUploading || aiGenerating} type="submit" className="rounded-[4px] bg-[#D4AF37] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] disabled:opacity-60">{loading ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Project'}</button>
-        {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleBuildInsightFromProject} className="rounded-[4px] border border-[#D4AF37]/40 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition hover:bg-[#D4AF37]/10 disabled:opacity-60">Bangun Wawasan dari Project Ini</button> : null}
+        {isEditing ? <div className="flex flex-col gap-2">
+          <button
+            disabled={loading || galleryUploading || aiGenerating || hasRelatedWawasan}
+            type="button"
+            onClick={hasRelatedWawasan ? undefined : handleBuildInsightFromProject}
+            className={`rounded-[4px] border border-[#D4AF37]/40 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition ${hasRelatedWawasan ? 'cursor-not-allowed opacity-60' : 'hover:bg-[#D4AF37]/10'} disabled:opacity-60`}
+          >
+            {hasRelatedWawasan ? 'Wawasan Sudah Dibuat' : 'Bangun Wawasan dari Project Ini'}
+          </button>
+          {hasRelatedWawasan ? <p className="text-xs text-white/70">Proyek ini sudah memiliki Wawasan, sehingga tidak perlu dibuat ulang.</p> : null}
+          {hasRelatedWawasan && relatedInsight?.slug ? <a href={`/wawasan/${relatedInsight.slug}`} target="_blank" rel="noreferrer" className="text-xs text-[#D4AF37] underline underline-offset-2">Buka Wawasan Terkait</a> : null}
+        </div> : null}
         {isEditing ? <button disabled={loading || galleryUploading || aiGenerating} type="button" onClick={handleDelete} className="rounded-[4px] border border-red-400/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/10 disabled:opacity-60">Hapus Project</button> : null}
       </div>
       {activeCropEditor ? (
