@@ -36,12 +36,31 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Session admin tidak valid. Login ulang lalu coba lagi.' }, { status: 401 });
     }
 
+    
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      { global: { headers: { Authorization: `Bearer ${token}` } } },
+    );
+
+    const { data: existingInsight, error: existingError } = await supabase
+      .from('insights')
+      .select('id')
+      .eq('source_project_id', projectId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (existingError) {
+      throw new Error(`Gagal memeriksa wawasan existing: ${existingError.message}`);
+    }
+
+    if (existingInsight?.id) {
+      return NextResponse.json({ id: existingInsight.id, alreadyExists: true });
+    }
+
     const insight = await createInsightDraftFromProject(projectId, {
-      supabase: createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-        { global: { headers: { Authorization: `Bearer ${token}` } } },
-      ),
+      supabase,
     });
 
     return NextResponse.json({ id: insight.id });
