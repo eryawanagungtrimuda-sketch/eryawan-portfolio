@@ -1,6 +1,6 @@
 'use client';
 
-import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Children, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 type MobileSwipeRowProps = {
   children: ReactNode;
@@ -190,8 +190,8 @@ export default function MobileSwipeRow({
                 cardRefs.current[index] = node;
               }}
               data-swipe-card="true"
-              className={`h-full min-w-0 self-stretch snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
-              style={{ scrollSnapStop: 'always' }}
+              className={`mobile-card-reveal reveal-on-scroll h-full min-w-0 self-stretch snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
+              style={{ scrollSnapStop: 'always', '--reveal-delay': `${index * 80}ms` } as CSSProperties}
             >
               {child}
             </div>
