@@ -114,11 +114,11 @@ export default function WawasanArchive({ insights }: Props) {
 
   return (
     <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl sm:mt-10">
-      <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame rounded-3xl border border-transparent bg-white/[0.02] p-4 sm:p-5">
+      <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame border border-transparent bg-white/[0.02] p-5 sm:p-5">
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari wawasan</label>
-        <div className="flex gap-2">
-          <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari wawasan..." className="h-11 flex-1 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
-          <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="premium-interactive h-11 rounded-2xl border border-[#C8A951]/40 px-4 font-sans text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
+        <div className="grid grid-cols-[minmax(0,1fr)_76px] gap-3 sm:grid-cols-[minmax(0,1fr)_92px]">
+          <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari wawasan..." className="h-11 min-w-0 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
+          <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="premium-interactive flex h-11 w-full items-center justify-center rounded-2xl border border-[#C8A951]/40 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
             Filter{activeFilterCount > 0 ? ` ${activeFilterCount}` : ''}
           </button>
         </div>
