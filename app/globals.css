@@ -173,12 +173,13 @@ body {
   }
 
   .mobile-card-breathing {
-    margin-top: 18px;
-    margin-bottom: 18px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   .mobile-reveal-card {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: inherit;
   }
 
   .reveal-ready .mobile-reveal-card.reveal-on-scroll {

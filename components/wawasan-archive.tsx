@@ -151,7 +151,7 @@ export default function WawasanArchive({ insights }: Props) {
           ) : null}
 
           <div className="mt-8 grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 100}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-reveal-card rounded-2xl"><InsightCard item={item} /></div>)}
+            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-reveal-card rounded-2xl"><InsightCard item={item} /></div>)}
           </div>
         </>
       )}
