@@ -34,7 +34,7 @@ export default async function KaryaPage() {
           <BackButton fallbackHref="/" />
         </div>
 
-        <section className="reveal-on-scroll py-16 md:py-24 lg:py-28">
+        <section className="reveal-on-scroll pt-12 pb-10 md:py-24 lg:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Beranda / Karya</p>
           <h1 className="font-display mt-7 max-w-4xl text-[2.05rem] font-normal leading-[1.04] tracking-[-0.035em] sm:text-[2.4rem] md:text-7xl">
             Karya Berbasis Keputusan
