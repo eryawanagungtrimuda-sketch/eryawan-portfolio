@@ -25,6 +25,24 @@ export default function RevealObserver() {
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
+    if (isMobile) {
+      const groups = new Map<HTMLElement, HTMLElement[]>();
+      nodes.forEach((node) => {
+        if (node.style.getPropertyValue('--reveal-delay')) return;
+        const group = node.closest('section') as HTMLElement | null;
+        if (!group) return;
+        const current = groups.get(group) || [];
+        current.push(node);
+        groups.set(group, current);
+      });
+
+      groups.forEach((groupNodes) => {
+        groupNodes.forEach((node, index) => {
+          node.style.setProperty('--reveal-delay', `${Math.min(index * 100, 700)}ms`);
+        });
+      });
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -35,7 +53,7 @@ export default function RevealObserver() {
         });
       },
       isMobile
-        ? { threshold: 0.04, rootMargin: '0px 0px -2% 0px' }
+        ? { threshold: 0.12, rootMargin: '0px 0px -4% 0px' }
         : { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
 
