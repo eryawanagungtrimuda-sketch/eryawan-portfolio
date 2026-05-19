@@ -113,7 +113,7 @@ export default function WawasanArchive({ insights }: Props) {
   };
 
   return (
-    <section className="reveal-on-scroll mx-auto mt-8 max-w-7xl sm:mt-10">
+    <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl sm:mt-10">
       <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari wawasan</label>
         <div className="flex gap-2">
