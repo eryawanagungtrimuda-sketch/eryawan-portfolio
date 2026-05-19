@@ -45,18 +45,33 @@ body {
 }
 
 
-.premium-oval-card {
-  border-radius: 30px;
+.premium-oval-card,
+.premium-oval-card-lg {
+  position: relative;
   overflow: hidden;
   isolation: isolate;
-  clip-path: inset(0 round 30px);
+}
+
+.premium-oval-card {
+  border-radius: 30px;
 }
 
 .premium-oval-card-lg {
   border-radius: 34px;
-  overflow: hidden;
-  isolation: isolate;
-  clip-path: inset(0 round 34px);
+}
+
+.premium-oval-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border: 1px solid var(--premium-card-border, rgba(255, 255, 255, 0.12));
+  border-radius: inherit;
+}
+
+.premium-oval-frame:hover {
+  --premium-card-border: rgba(212, 175, 55, 0.35);
 }
 
 .premium-oval-media {
@@ -158,12 +173,10 @@ body {
 @media (min-width: 768px) {
   .premium-oval-card {
     border-radius: 32px;
-    clip-path: inset(0 round 32px);
   }
 
   .premium-oval-card-lg {
     border-radius: 36px;
-    clip-path: inset(0 round 36px);
   }
 
   .reveal-ready .reveal-on-scroll {
