@@ -23,6 +23,8 @@ export default function RevealObserver() {
       };
     }
 
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -32,7 +34,9 @@ export default function RevealObserver() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      isMobile
+        ? { threshold: 0.08, rootMargin: '0px 0px -4% 0px' }
+        : { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
     );
 
     nodes.forEach((node) => observer.observe(node));
