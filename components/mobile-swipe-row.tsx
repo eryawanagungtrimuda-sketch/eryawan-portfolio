@@ -11,6 +11,7 @@ type MobileSwipeRowProps = {
   mobileCardClassName?: string;
   backgroundTone?: string;
   showHint?: boolean;
+  revealStaggerMs?: number;
 };
 
 export default function MobileSwipeRow({
@@ -22,6 +23,7 @@ export default function MobileSwipeRow({
   mobileCardClassName = '',
   backgroundTone = '#090909',
   showHint = true,
+  revealStaggerMs = 70,
 }: MobileSwipeRowProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -191,7 +193,7 @@ export default function MobileSwipeRow({
               }}
               data-swipe-card="true"
               className={`mobile-card-reveal reveal-on-scroll h-full min-w-0 self-stretch snap-start lg:snap-none ${mobileCardClassName} ${cardClassName}`}
-              style={{ scrollSnapStop: 'always', '--reveal-delay': `${index * 80}ms` } as CSSProperties}
+              style={{ scrollSnapStop: 'always', '--reveal-delay': `${index * revealStaggerMs}ms` } as CSSProperties}
             >
               {child}
             </div>

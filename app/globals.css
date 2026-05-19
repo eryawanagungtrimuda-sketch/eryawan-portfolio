@@ -178,22 +178,24 @@ body {
   }
 
   .mobile-card-reveal {
-    will-change: opacity, transform;
+    transform: translateZ(0);
   }
 
   .reveal-ready .mobile-card-reveal.reveal-on-scroll {
     opacity: 0;
-    transform: translate3d(0, 14px, 0);
+    transform: translate3d(0, 12px, 0);
     filter: none;
+    will-change: opacity, transform;
     transition:
-      opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
-      transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 440ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 440ms cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
   }
 
   .reveal-ready .mobile-card-reveal.reveal-on-scroll.is-visible {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+    will-change: auto;
   }
 
   section[id] {
