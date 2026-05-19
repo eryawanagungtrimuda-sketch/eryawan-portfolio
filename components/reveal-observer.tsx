@@ -16,6 +16,13 @@ export default function RevealObserver() {
       };
     }
 
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach((node) => node.classList.add('is-visible'));
+      return () => {
+        document.documentElement.classList.remove('reveal-ready');
+      };
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
