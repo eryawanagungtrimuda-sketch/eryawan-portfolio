@@ -94,7 +94,34 @@ export default function AdminProjectEditor({ id }: Props) {
     loadProject();
   }, [id]);
 
-  if (loading) return <p className="py-10 text-white/50">Memuat project...</p>;
+  if (loading) {
+    return (
+      <section className="space-y-6 py-10" aria-label="Memuat editor project" aria-busy="true">
+        <div className="space-y-3">
+          <div className="premium-skeleton h-3 w-28" />
+          <div className="premium-skeleton h-10 w-72 max-w-full" />
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-5">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="premium-skeleton h-11" />
+            <div className="premium-skeleton h-11" />
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="premium-skeleton h-11" />
+            <div className="premium-skeleton h-11" />
+            <div className="premium-skeleton h-11" />
+          </div>
+          <div className="premium-skeleton h-28" />
+          <div className="premium-skeleton h-28" />
+          <div className="flex gap-3 pt-2">
+            <div className="premium-skeleton h-10 w-36" />
+            <div className="premium-skeleton h-10 w-28" />
+          </div>
+        </div>
+      </section>
+    );
+  }
   if (message) return <p className="py-10 text-red-300">{message}</p>;
   if (!project) return <p className="py-10 text-white/50">Project belum tersedia.</p>;
 

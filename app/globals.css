@@ -44,6 +44,30 @@ body {
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
+.premium-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.premium-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.08), transparent);
+  animation: premium-skeleton-shimmer 1.8s ease-in-out infinite;
+  opacity: 0.65;
+}
+
+@keyframes premium-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -104,6 +128,12 @@ body {
     transition-property: border-color, background-color, color, box-shadow, opacity;
     transition-duration: 160ms;
     will-change: auto;
+  }
+
+  .premium-skeleton::after {
+    animation: none;
+    transform: none;
+    opacity: 0.35;
   }
 
   .reveal-on-scroll,

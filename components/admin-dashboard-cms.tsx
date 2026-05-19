@@ -211,9 +211,37 @@ export default function AdminDashboardCMS() {
 
   if (loading) {
     return (
-      <section className="py-16">
-        <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-10">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-white/42">Memuat data project...</p>
+      <section className="py-14 space-y-10" aria-label="Memuat dashboard project" aria-busy="true">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="rounded-2xl border border-white/8 bg-white/[0.022] p-7">
+              <div className="premium-skeleton h-3 w-28" />
+              <div className="premium-skeleton mt-6 h-14 w-24" />
+              <div className="premium-skeleton mt-5 h-3 w-11/12" />
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-4">
+          <div className="premium-skeleton h-4 w-44" />
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015] p-4">
+            <div className="grid grid-cols-5 gap-4 border-b border-white/10 pb-4">
+              <div className="premium-skeleton col-span-2 h-3" />
+              <div className="premium-skeleton h-3" />
+              <div className="premium-skeleton h-3" />
+              <div className="premium-skeleton h-3" />
+            </div>
+            <div className="space-y-3 pt-4">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="grid grid-cols-5 gap-4">
+                  <div className="premium-skeleton col-span-2 h-9" />
+                  <div className="premium-skeleton h-9" />
+                  <div className="premium-skeleton h-9" />
+                  <div className="premium-skeleton h-9" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     );

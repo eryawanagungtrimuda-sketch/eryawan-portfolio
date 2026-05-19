@@ -112,7 +112,41 @@ export default function AdminInquiriesList() {
     setDateFilter('');
   };
 
-  if (loading) return <p className="text-white/60">Memuat inquiry...</p>;
+  if (loading) {
+    return (
+      <section className="space-y-4" aria-label="Memuat inquiry" aria-busy="true">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+          <div className="premium-skeleton h-10 w-full" />
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="premium-skeleton h-10" />
+            <div className="premium-skeleton h-10" />
+            <div className="premium-skeleton h-10" />
+          </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-3">
+              <div className="premium-skeleton h-3 w-24" />
+              <div className="premium-skeleton h-10 w-16" />
+            </div>
+          ))}
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015] p-4 space-y-3">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="grid grid-cols-8 gap-3">
+              <div className="premium-skeleton col-span-2 h-8" />
+              <div className="premium-skeleton h-8" />
+              <div className="premium-skeleton h-8" />
+              <div className="premium-skeleton h-8" />
+              <div className="premium-skeleton h-8" />
+              <div className="premium-skeleton h-8" />
+              <div className="premium-skeleton h-8" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <div className="space-y-6">
