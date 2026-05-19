@@ -54,6 +54,9 @@ export default function AdminInsightsPage() {
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl space-y-8">
+          <div className="flex justify-start">
+            <ContextualBackButton fallbackHref="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5" />
+          </div>
           <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
@@ -62,7 +65,6 @@ export default function AdminInsightsPage() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link href="/admin/insights/new" className="rounded-lg bg-[#E5A900] px-4 py-2 text-sm font-medium text-black transition hover:bg-[#f8bb15]">Tambah Review Karya</Link>
-                <ContextualBackButton fallbackHref="/admin" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/5" />
               </div>
             </div>
           </section>
@@ -80,48 +82,46 @@ export default function AdminInsightsPage() {
             ))}
           </section>
 
-          <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+          <section className="space-y-4">
             {loading ? (
-              <p className="p-6 text-sm text-white/70">Memuat data wawasan...</p>
+              <p className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-white/70">Memuat data wawasan...</p>
             ) : items.length === 0 ? (
-              <div className="p-8 text-center">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center">
                 <p className="text-lg font-medium">Belum ada wawasan.</p>
                 <p className="mt-1 text-sm text-white/70">Mulai dengan menambahkan wawasan baru untuk ditinjau dan dipublikasikan.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-white/10 font-sans text-sm">
-                  <thead className="bg-white/[0.03] text-left text-xs uppercase tracking-wide text-white/60">
-                    <tr>
-                      <th className="px-4 py-3">Title</th><th className="px-4 py-3">Category</th><th className="px-4 py-3">Source Type</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Created At</th><th className="px-4 py-3">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {items.map((item) => (
-                      <tr key={item.id}>
-                        <td className="px-4 py-3">{item.title}</td>
-                        <td className="px-4 py-3 text-white/80">{item.category || '-'}</td>
-                        <td className="px-4 py-3 text-white/80">{item.source_type}</td>
-                        <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${item.is_published ? 'bg-emerald-400/15 text-emerald-300' : 'bg-amber-400/15 text-amber-300'}`}>{item.is_published ? 'Published' : 'Draft'}</span></td>
-                        <td className="px-4 py-3 text-white/80">{formatDate(item.created_at)}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-wrap gap-3">
-                            <Link href={`/admin/insights/${item.id}/edit`} className="font-sans text-[#F6C453] hover:underline">Edit</Link>
-                            <button
-                              className="font-sans text-red-300 hover:underline"
-                              onClick={async () => {
-                                await getSupabaseClient().from('insights').delete().eq('id', item.id);
-                                setItems((current) => current.filter((row) => row.id !== item.id));
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="grid gap-4 md:gap-5">
+                {items.map((item) => (
+                  <article
+                    key={item.id}
+                    className="premium-card-hover rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-5 md:p-6"
+                  >
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="min-w-0 space-y-3">
+                        <h3 className="text-lg font-semibold leading-tight text-white sm:text-xl">{item.title}</h3>
+                        <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
+                          <span className="rounded-full border border-[#C8A951]/45 bg-[#C8A951]/12 px-3 py-1 font-semibold text-[#D4AF37]">{item.category || '-'}</span>
+                          <span className="rounded-full border border-white/15 px-3 py-1 text-white/72">Source: {item.source_type}</span>
+                          <span className={`rounded-full border px-3 py-1 ${item.is_published ? 'border-emerald-300/25 bg-emerald-400/10 text-emerald-300' : 'border-amber-300/25 bg-amber-400/10 text-amber-300'}`}>{item.is_published ? 'Published' : 'Draft'}</span>
+                        </div>
+                        <p className="text-xs text-white/58 sm:text-sm">Dibuat {formatDate(item.created_at)}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-3 md:justify-end">
+                        <Link href={`/admin/insights/${item.id}/edit`} className="rounded-lg border border-[#D4AF37]/40 px-3 py-2 text-sm text-[#F6C453] transition hover:bg-[#D4AF37]/10">Edit</Link>
+                        <button
+                          className="rounded-lg border border-red-300/30 px-3 py-2 text-sm text-red-300 transition hover:bg-red-400/10"
+                          onClick={async () => {
+                            await getSupabaseClient().from('insights').delete().eq('id', item.id);
+                            setItems((current) => current.filter((row) => row.id !== item.id));
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             )}
           </section>
