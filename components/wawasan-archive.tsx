@@ -27,7 +27,7 @@ function toLabel(value?: string | null, kind?: 'source') {
 
 function InsightCard({ item }: { item: Insight }) {
   return (
-    <article className="premium-card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
+    <article className="premium-card-hover group flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04] md:rounded-[30px]">
       {item.cover_image ? <img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /> : null}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap gap-2 text-[11px] leading-none">
@@ -132,14 +132,14 @@ export default function WawasanArchive({ insights }: Props) {
       </div>
 
       {filteredInsights.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center">
+        <div className="mt-6 rounded-[28px] border border-white/10 bg-white/[0.02] p-8 text-center md:rounded-[30px]">
           <p className="font-sans text-white/70">Tidak ada wawasan yang sesuai dengan filter ini.</p>
           <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
         </div>
       ) : (
         <>
           {featured ? (
-            <article style={{ '--reveal-delay': '0ms' } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal mt-6 overflow-hidden rounded-3xl border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
+            <article style={{ '--reveal-delay': '0ms' } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal mt-6 overflow-hidden rounded-[30px] border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2 md:rounded-[34px]">
               {featured.cover_image ? <img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="lazy" decoding="async" /> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
@@ -151,7 +151,7 @@ export default function WawasanArchive({ insights }: Props) {
           ) : null}
 
           <div className="mt-8 grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal rounded-2xl"><InsightCard item={item} /></div>)}
+            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal rounded-[28px] md:rounded-[30px]"><InsightCard item={item} /></div>)}
           </div>
         </>
       )}
