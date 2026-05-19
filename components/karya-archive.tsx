@@ -125,7 +125,7 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
           const active = item === value;
           return (
             <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
-              active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
+              active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
             }`}>
               {item}
             </button>
@@ -321,7 +321,7 @@ export default function KaryaArchive({ projects }: Props) {
                     key={tag}
                     type="button"
                     onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
-                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
                   >
                     {tag}
                   </button>
@@ -339,8 +339,8 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B0B0A] from-70% to-transparent px-5 pb-5 pt-8">
           <div className="pointer-events-auto grid grid-cols-2 gap-3">
-            <button type="button" onClick={resetFilters} className="min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/85">Reset</button>
-            <button type="button" onClick={closeMobileFilter} className="min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866]">Terapkan</button>
+            <button type="button" onClick={resetFilters} className="premium-interactive min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/85 active:translate-y-0 active:scale-[0.98]">Reset</button>
+            <button type="button" onClick={closeMobileFilter} className="premium-interactive min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] active:translate-y-0 active:scale-[0.98]">Terapkan</button>
           </div>
         </div>
       </div>
@@ -433,14 +433,14 @@ export default function KaryaArchive({ projects }: Props) {
           <div className="flex flex-wrap gap-2.5">
             {areaTagOptions.map((tag) => {
               const active = selectedAreaTags.includes(tag);
-              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
+              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
             })}
           </div>
         </div>
 
         <div className="mt-6 hidden flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 lg:flex">
           <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya</p>
-          <button type="button" onClick={resetFilters} className="min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37]">Reset Filter</button>
+          <button type="button" onClick={resetFilters} className="premium-interactive min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
         </div>
 
         {activeFilters.length > 0 ? <div className="mt-4 hidden flex-wrap gap-2 lg:flex">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
@@ -454,7 +454,7 @@ export default function KaryaArchive({ projects }: Props) {
             const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
             const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain saya.`);
             const { visible: visibleAreaTags, overflow: areaOverflow } = limitedAreaTags(project);
-            return <article key={project.id} className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
+            return <article key={project.id} className={`premium-card-hover group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'border-[#D4AF37]/55 md:col-span-2 xl:col-span-2' : 'border-white/12 hover:border-[#D4AF37]/35'}`}>
               {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className="aspect-square overflow-hidden border-b border-white/10 bg-white/[0.02]"><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className="aspect-square flex items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p></div>
@@ -462,9 +462,9 @@ export default function KaryaArchive({ projects }: Props) {
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
                 <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{localizeAreaLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Link href={`/karya/${project.slug}`} className="inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866]">Detail Proyek <ArrowUpRight size={16} /></Link>
-                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">Email <Mail size={14} /></a>
-                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik dengan karya "${project.title}"`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.03] hover:text-white">WhatsApp</a>
+                  <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866] active:translate-y-0 active:scale-[0.98]">Detail Proyek <ArrowUpRight size={16} /></Link>
+                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">Email <Mail size={14} /></a>
+                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik dengan karya "${project.title}"`)}`} target="_blank" rel="noreferrer" className="premium-interactive inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">WhatsApp</a>
                 </div>
               </div>
             </article>;
