@@ -25,9 +25,9 @@ function toLabel(value?: string | null, kind?: 'source') {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function InsightCard({ item }: { item: Insight }) {
+function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string }) {
   return (
-    <article className="premium-card-hover premium-oval-card group flex h-full flex-col border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
+    <article style={{ "--premium-card-border": frameColor || "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-card-hover premium-oval-card premium-oval-frame group flex h-full flex-col border border-transparent bg-white/[0.02] transition hover:bg-white/[0.04]">
       {item.cover_image ? <div className="premium-oval-media-top border-b border-white/10"><img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /></div> : null}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap gap-2 text-[11px] leading-none">
@@ -114,7 +114,7 @@ export default function WawasanArchive({ insights }: Props) {
 
   return (
     <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl sm:mt-10">
-      <div className="premium-oval-card rounded-3xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
+      <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame rounded-3xl border border-transparent bg-white/[0.02] p-4 sm:p-5">
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari wawasan</label>
         <div className="flex gap-2">
           <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari wawasan..." className="h-11 flex-1 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
@@ -132,14 +132,14 @@ export default function WawasanArchive({ insights }: Props) {
       </div>
 
       {filteredInsights.length === 0 ? (
-        <div className="premium-oval-card mt-6 border border-white/10 bg-white/[0.02] p-8 text-center">
+        <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame mt-6 border border-transparent bg-white/[0.02] p-8 text-center">
           <p className="font-sans text-white/70">Tidak ada wawasan yang sesuai dengan filter ini.</p>
           <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
         </div>
       ) : (
         <>
           {featured ? (
-            <article style={{ '--reveal-delay': '0ms' } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal premium-oval-card-lg mt-6 border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
+            <article style={{ "--reveal-delay": "0ms", "--premium-card-border": "rgba(200, 169, 81, 0.25)" } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal premium-oval-card-lg premium-oval-frame mt-6 border border-transparent bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
               {featured.cover_image ? <div className="premium-oval-media"><img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="lazy" decoding="async" /></div> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
@@ -151,7 +151,7 @@ export default function WawasanArchive({ insights }: Props) {
           ) : null}
 
           <div className="mt-8 grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal"><InsightCard item={item} /></div>)}
+            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal"><InsightCard item={item} frameColor="rgba(255, 255, 255, 0.10)" /></div>)}
           </div>
         </>
       )}
