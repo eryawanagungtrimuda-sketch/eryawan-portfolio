@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 
-import Link from 'next/link';
 import BackButton from '@/components/back-button';
 import KaryaArchive from '@/components/karya-archive';
 import RevealObserver from '@/components/reveal-observer';
@@ -27,14 +26,11 @@ export default async function KaryaPage() {
     <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-8 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12 lg:py-12">
       <RevealObserver />
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
-            Eryawan Studio
-          </Link>
+        <div className="mb-10 flex justify-start md:mb-12">
           <BackButton fallbackHref="/" />
         </div>
 
-        <section className="reveal-on-scroll pt-12 pb-10 md:py-24 lg:py-28">
+        <section className="reveal-on-scroll pb-10 md:py-24 lg:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">Beranda / Karya</p>
           <h1 className="font-display mt-7 max-w-4xl text-[2.05rem] font-normal leading-[1.04] tracking-[-0.035em] sm:text-[2.4rem] md:text-7xl">
             Karya Berbasis Keputusan
