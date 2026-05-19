@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic';
-
+import type { CSSProperties } from 'react';
 import { CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
 import { getPublishedInsights } from '@/lib/insights';
@@ -7,6 +6,8 @@ import { getPublishedProjects } from '@/lib/projects';
 import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
+
+export const dynamic = 'force-dynamic';
 
 const clientWorkflow = [
   {
@@ -243,7 +244,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="client-workflow" className="reveal-on-scroll relative overflow-hidden bg-[#090909] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="client-workflow" className="reveal-on-scroll relative overflow-hidden bg-[#090909] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '0ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(200,169,81,0.055),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
@@ -277,7 +278,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="framework" className="reveal-on-scroll relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="framework" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.08),transparent_27%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_58%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
@@ -319,7 +320,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="design-decisions" className="reveal-on-scroll relative overflow-hidden bg-[#070707] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="design-decisions" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#070707] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <div className="min-w-0 max-w-full lg:sticky lg:top-28 lg:self-start">
@@ -367,7 +368,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="impact" className="reveal-on-scroll relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="impact" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_10%,rgba(200,169,81,0.1),transparent_34%),radial-gradient(circle_at_82%_82%,rgba(200,169,81,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14">
@@ -386,7 +387,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="differentiation" className="relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="differentiation" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#C8A951]/14" />
         <div className="relative mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -422,7 +423,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="portfolio" className="relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="portfolio" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#142030] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center">
@@ -481,7 +482,7 @@ export default async function Home() {
       </section>
 
 
-      <section id="wawasan-design" className="relative overflow-hidden bg-[#0B0B0A] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16">
+      <section id="wawasan-design" className="reveal-on-scroll relative overflow-hidden bg-[#0B0B0A] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-col gap-5 md:max-w-3xl">
@@ -523,7 +524,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="contact" className="relative overflow-hidden bg-[#050505] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32">
+      <section id="contact" className="reveal-on-scroll mobile-section-soft-boundary relative overflow-hidden bg-[#050505] px-5 py-16 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(200,169,81,0.042),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto max-w-6xl text-center">
