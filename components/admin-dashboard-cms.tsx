@@ -36,7 +36,7 @@ function normalizeSlug(value?: string | null) {
     .replace(/^-+|-+$/g, '');
 }
 
-function findRelatedInsight(project: Project, insights: DashboardInsight[]) {
+function findRelatedInsightForDashboardProject(project: Project, insights: DashboardInsight[]) {
   const projectId = (project.id || '').trim();
   const projectSlug = normalizeSlug(project.slug);
   const projectTitle = normalizeText(project.title);
@@ -134,7 +134,7 @@ export default function AdminDashboardCMS() {
         .order('created_at', { ascending: false });
 
       if (insightsError) {
-        console.error('[AdminDashboardCMS] Failed to fetch public.insights', {
+        console.warn('[AdminDashboardCMS] Failed to fetch public.insights', {
           table: 'public.insights',
           code: insightsError.code,
           message: insightsError.message,
@@ -144,7 +144,7 @@ export default function AdminDashboardCMS() {
       }
 
       const mappedProjects = (data || []).map((project) => {
-        const relatedInsight = insightsError ? null : findRelatedInsight(project as Project, (insights || []) as DashboardInsight[]);
+        const relatedInsight = insightsError ? null : findRelatedInsightForDashboardProject(project as Project, (insights || []) as DashboardInsight[]);
         return {
           ...(project as Project),
           hasWawasan: Boolean(relatedInsight),
