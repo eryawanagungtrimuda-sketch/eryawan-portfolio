@@ -8,6 +8,7 @@ import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePath
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
+import { useToast } from '@/components/toast-provider';
 
 type Props = { project?: Project; initialRelatedInsight?: { id: string; slug: string } | null };
 type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
@@ -279,6 +280,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center', crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })).sort((a, b) => a.sort_order - b.sort_order));
   const [activeCropEditor, setActiveCropEditor] = useState<GalleryCropDraft | null>(null);
   const [cropSaving, setCropSaving] = useState(false);
+  const { toast } = useToast();
 
   const [title, setTitle] = useState(project?.title || '');
   const [slug, setSlug] = useState(project?.slug || slugify(project?.title || ''));
@@ -901,8 +903,11 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
       setInsightKunci(data.insight_kunci);
       setImpact((current) => current || data.dampak || '');
       setMessage('Draft case study berhasil dibuat. Review dan edit sebelum menyimpan.');
+      toast({ type: 'success', title: 'Draft AI siap', description: 'Narasi case study berhasil dibuat.' });
     } catch (error) {
-      setAiError(error instanceof Error ? error.message : 'AI gagal membuat narasi.');
+      const errorMessage = error instanceof Error ? error.message : 'AI gagal membuat narasi.';
+      setAiError(errorMessage);
+      toast({ type: 'error', title: 'AI gagal membuat narasi', description: errorMessage });
     } finally {
       setAiGenerating(false);
     }
@@ -924,17 +929,20 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         const { error } = await supabase.from('projects').update(payload).eq('id', savedProjectId);
         if (error) throw error;
         setMessage('Project berhasil diperbarui.');
+        toast({ type: 'success', title: 'Perubahan disimpan', description: 'Project berhasil diperbarui.' });
         router.push(`/admin/projects/${savedProjectId}/edit`);
       } else {
         const { data, error } = await supabase.from('projects').insert(payload).select('id').single();
         if (error) throw error;
         setSavedProjectId(data.id as string);
+        toast({ type: 'success', title: 'Project tersimpan', description: 'Project baru berhasil dibuat.' });
         router.push(`/admin/projects/${data.id}/edit`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Gagal menyimpan project.';
       setFormError(errorMessage);
       setMessage(errorMessage);
+      toast({ type: 'error', title: 'Gagal menyimpan project', description: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -970,12 +978,16 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
       if (data.exists) {
         setRelatedInsight({ id: data.id, slug: data.slug });
         setMessage(data.message || 'Wawasan untuk proyek ini sudah ada.');
+        toast({ type: 'info', title: 'Wawasan sudah tersedia', description: data.message || 'Wawasan untuk project ini sudah ada.' });
         return;
       }
       setRelatedInsight({ id: data.id, slug: data.slug });
+      toast({ type: 'success', title: 'Draft wawasan dibuat', description: 'Lanjutkan penyempurnaan di editor wawasan.' });
       router.push(`/admin/insights/${data.id}/edit`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Gagal membuat draft wawasan. Periksa session admin atau policy Supabase insights.');
+      const errorMessage = error instanceof Error ? error.message : 'Gagal membuat draft wawasan. Periksa session admin atau policy Supabase insights.';
+      setMessage(errorMessage);
+      toast({ type: 'error', title: 'Gagal membuat draft wawasan', description: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -989,9 +1001,12 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
       const supabase = getSupabaseClient();
       const { error } = await supabase.from('projects').delete().eq('id', savedProjectId);
       if (error) throw error;
+      toast({ type: 'success', title: 'Project dihapus', description: 'Project berhasil dihapus.' });
       router.push('/admin/projects');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Gagal menghapus project.');
+      const errorMessage = error instanceof Error ? error.message : 'Gagal menghapus project.';
+      setMessage(errorMessage);
+      toast({ type: 'error', title: 'Gagal menghapus project', description: errorMessage });
     } finally {
       setLoading(false);
     }

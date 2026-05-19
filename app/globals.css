@@ -137,7 +137,8 @@ body {
   }
 
   .reveal-on-scroll,
-  .reveal-on-scroll.is-visible {
+  .reveal-on-scroll.is-visible,
+  .toast-enter {
     opacity: 1;
     transform: none;
     transition: none;
@@ -464,4 +465,20 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.toast-enter {
+  animation: toast-enter 220ms ease-out both;
 }

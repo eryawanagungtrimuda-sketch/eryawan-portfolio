@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useMemo, useRef, useState } from 'react';
+import { useToast } from '@/components/toast-provider';
 
 type FormState = {
   nama: string;
@@ -65,6 +66,7 @@ export default function ProjectBriefForm() {
   const [isFormClosed, setIsFormClosed] = useState(false);
   const isSubmittingRef = useRef(false);
   const waNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '').replace(/[^\d]/g, '');
+  const { toast } = useToast();
 
   const message = useMemo(
     () =>
@@ -101,6 +103,7 @@ export default function ProjectBriefForm() {
     if (!response.ok) {
       setSubmitState('error');
       setSubmitMessage('Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.');
+      toast({ type: 'error', title: 'Pengiriman brief gagal', description: 'Silakan coba lagi atau salin brief secara manual.' });
       isSubmittingRef.current = false;
       return;
     }
@@ -109,11 +112,13 @@ export default function ProjectBriefForm() {
 
     if (!waNumber) {
       setSubmitMessage('Brief berhasil disimpan, tetapi nomor WhatsApp belum dikonfigurasi.');
+      toast({ type: 'info', title: 'Brief tersimpan', description: 'Nomor WhatsApp belum dikonfigurasi.' });
       setIsFormClosed(true);
       return;
     }
 
     setSubmitMessage('Brief berhasil disimpan. WhatsApp sudah dibuka untuk melanjutkan percakapan.');
+    toast({ type: 'success', title: 'Brief berhasil dikirim', description: 'WhatsApp dibuka untuk melanjutkan percakapan.' });
     const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setIsFormClosed(true);
