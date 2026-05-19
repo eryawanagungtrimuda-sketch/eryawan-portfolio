@@ -54,7 +54,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               key={item.id}
               role={isError ? 'alert' : 'status'}
               aria-live={isError ? 'assertive' : 'polite'}
-              className="toast-enter pointer-events-auto relative overflow-hidden rounded-xl border border-white/20 bg-[#11110f]/92 p-4 pr-11 shadow-[0_16px_34px_rgba(0,0,0,0.42)] backdrop-blur-md"
+              className="toast-enter pointer-events-auto relative overflow-hidden rounded-xl border border-white/20 bg-[#11110f]/92 p-4 pr-11 font-sans shadow-[0_16px_34px_rgba(0,0,0,0.42)] backdrop-blur-md"
             >
               <span className={`absolute inset-y-0 left-0 w-1 ${isError ? 'bg-red-400/90' : 'bg-[#D4AF37]'}`} aria-hidden="true" />
               <div className="flex items-start gap-3 pl-1">

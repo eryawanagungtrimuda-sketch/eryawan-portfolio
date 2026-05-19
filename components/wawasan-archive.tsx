@@ -29,14 +29,14 @@ function InsightCard({ item }: { item: Insight }) {
   return (
     <article className="premium-card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
       {item.cover_image ? <img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /> : null}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap gap-2 text-[11px]">
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div className="flex flex-wrap gap-2 text-[11px] leading-none">
           <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-sans font-semibold text-[#D4AF37]">{toLabel(item.category)}</span>
           <span className="rounded-full border border-white/15 px-3 py-1 font-sans text-white/70">{toLabel(item.content_type)}</span>
           <span className="rounded-full border border-white/15 px-3 py-1 font-sans text-white/70">{toLabel(item.source_type, 'source')}</span>
         </div>
-        <h3 className="mt-3 font-sans text-2xl leading-tight text-white">{item.title}</h3>
-        <p className="mt-2 line-clamp-3 font-sans text-sm text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
+        <h3 className="mt-4 font-sans text-xl font-semibold leading-tight text-white sm:text-2xl">{item.title}</h3>
+        <p className="mt-2 line-clamp-3 font-sans text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
         <Link href={`/wawasan/${item.slug}`} className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
           Baca Wawasan <span aria-hidden>→</span>
         </Link>
@@ -150,7 +150,7 @@ export default function WawasanArchive({ insights }: Props) {
             </article>
           ) : null}
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
             {rest.map((item) => <InsightCard key={item.id} item={item} />)}
           </div>
         </>
