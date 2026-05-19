@@ -44,6 +44,36 @@ body {
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
+
+.premium-oval-card {
+  border-radius: 30px;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: inset(0 round 30px);
+}
+
+.premium-oval-card-lg {
+  border-radius: 34px;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: inset(0 round 34px);
+}
+
+.premium-oval-media {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.premium-oval-media-top {
+  overflow: hidden;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.premium-oval-media img {
+  display: block;
+}
+
 .premium-skeleton {
   position: relative;
   overflow: hidden;
@@ -126,6 +156,16 @@ body {
 }
 
 @media (min-width: 768px) {
+  .premium-oval-card {
+    border-radius: 32px;
+    clip-path: inset(0 round 32px);
+  }
+
+  .premium-oval-card-lg {
+    border-radius: 36px;
+    clip-path: inset(0 round 36px);
+  }
+
   .reveal-ready .reveal-on-scroll {
     transform: translate3d(0, 12px, 0);
     filter: none;
