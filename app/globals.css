@@ -172,6 +172,31 @@ body {
     padding-bottom: 5.5rem;
   }
 
+  .mobile-card-breathing {
+    margin-top: 18px;
+    margin-bottom: 18px;
+  }
+
+  .mobile-reveal-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .reveal-ready .mobile-reveal-card.reveal-on-scroll {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.98);
+    filter: none;
+    transition:
+      opacity 500ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 500ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal-ready .mobile-reveal-card.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
   section[id] {
     scroll-margin-top: 76px;
   }
