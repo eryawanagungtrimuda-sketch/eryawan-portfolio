@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Belleza, Great_Vibes, Inter } from 'next/font/google';
 import PortfolioClicks from './portfolio-clicks';
+import { ToastProvider } from '@/components/toast-provider';
 import { SITE_URL } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
@@ -58,8 +59,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Lewati ke konten utama
         </a>
-        {children}
-        <PortfolioClicks />
+        <ToastProvider>
+          {children}
+          <PortfolioClicks />
+        </ToastProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
+import { useToast } from '@/components/toast-provider';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at';
 
@@ -89,6 +90,7 @@ export default function AdminDashboardCMS() {
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
+  const { toast } = useToast();
 
   async function loadProjects() {
     setLoading(true);
@@ -202,8 +204,11 @@ export default function AdminDashboardCMS() {
         throw error;
       }
       setProjects((current) => current.filter((item) => item.id !== project.id));
+      toast({ type: 'success', title: 'Project dihapus', description: `${project.title} berhasil dihapus.` });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Gagal menghapus project.');
+      const errorMessage = error instanceof Error ? error.message : 'Gagal menghapus project.';
+      setMessage(errorMessage);
+      toast({ type: 'error', title: 'Gagal menghapus project', description: errorMessage });
     } finally {
       setDeletingId(null);
     }

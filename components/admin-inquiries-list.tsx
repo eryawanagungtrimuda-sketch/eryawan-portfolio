@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry } from '@/lib/types';
+import { useToast } from '@/components/toast-provider';
 
 type StatusFilter = 'active' | 'all_with_archive' | ProjectInquiry['status'];
 
@@ -30,6 +31,7 @@ export default function AdminInquiriesList() {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('active');
   const [dateFilter, setDateFilter] = useState('');
+  const { toast } = useToast();
 
   const authedFetch = async (url: string, init?: RequestInit) => {
     const supabase = createSupabaseBrowserClient();
@@ -99,7 +101,11 @@ export default function AdminInquiriesList() {
 
     if (!res.ok) {
       const json = await res.json();
-      setError(json.error || 'Gagal memperbarui status inquiry.');
+      const errorMessage = json.error || 'Gagal memperbarui status inquiry.';
+      setError(errorMessage);
+      toast({ type: 'error', title: 'Update status gagal', description: errorMessage });
+    } else {
+      toast({ type: 'success', title: 'Status diperbarui', description: `Inquiry ditandai sebagai ${status}.` });
     }
 
     await load();
