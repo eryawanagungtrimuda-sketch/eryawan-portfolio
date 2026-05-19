@@ -20,6 +20,30 @@ body {
   overflow-x: clip;
 }
 
+
+.premium-interactive {
+  transition: transform 280ms ease, border-color 280ms ease, background-color 280ms ease, color 280ms ease, box-shadow 280ms ease, opacity 280ms ease;
+  will-change: transform;
+}
+
+.premium-interactive:hover {
+  transform: translateY(-2px);
+}
+
+.premium-interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.premium-card-hover {
+  transition: transform 360ms ease, border-color 360ms ease, background-color 360ms ease, box-shadow 360ms ease;
+  will-change: transform;
+}
+
+.premium-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -71,6 +95,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .premium-interactive,
+  .premium-interactive:hover,
+  .premium-interactive:active,
+  .premium-card-hover,
+  .premium-card-hover:hover {
+    transform: none !important;
+    transition-property: border-color, background-color, color, box-shadow, opacity;
+    transition-duration: 160ms;
+    will-change: auto;
+  }
+
   .reveal-on-scroll,
   .reveal-on-scroll.is-visible {
     opacity: 1;

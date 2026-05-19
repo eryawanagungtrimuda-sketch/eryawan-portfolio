@@ -54,7 +54,7 @@ export default function AdminLogoutButton() {
         type="button"
         onClick={handleLogout}
         disabled={loading}
-        className="inline-flex items-center justify-center rounded-[4px] border border-white/12 bg-white/[0.018] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/62 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50"
+        className="premium-interactive inline-flex items-center justify-center rounded-[4px] border border-white/12 bg-white/[0.018] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/62 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50 active:translate-y-0 active:scale-[0.98]"
       >
         {loading ? 'Logging out...' : 'Logout'}
       </button>

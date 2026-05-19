@@ -27,7 +27,7 @@ function toLabel(value?: string | null, kind?: 'source') {
 
 function InsightCard({ item }: { item: Insight }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
+    <article className="premium-card-hover group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition hover:border-[#C8A951]/30 hover:bg-white/[0.04]">
       {item.cover_image ? <img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /> : null}
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-wrap gap-2 text-[11px]">
@@ -37,7 +37,7 @@ function InsightCard({ item }: { item: Insight }) {
         </div>
         <h3 className="mt-3 font-sans text-2xl leading-tight text-white">{item.title}</h3>
         <p className="mt-2 line-clamp-3 font-sans text-sm text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
-        <Link href={`/wawasan/${item.slug}`} className="mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37]">
+        <Link href={`/wawasan/${item.slug}`} className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
           Baca Wawasan <span aria-hidden>→</span>
         </Link>
       </div>
@@ -118,7 +118,7 @@ export default function WawasanArchive({ insights }: Props) {
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari wawasan</label>
         <div className="flex gap-2">
           <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari wawasan..." className="h-11 flex-1 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
-          <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="h-11 rounded-2xl border border-[#C8A951]/40 px-4 font-sans text-sm text-[#D4AF37]">
+          <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="premium-interactive h-11 rounded-2xl border border-[#C8A951]/40 px-4 font-sans text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
             Filter{activeFilterCount > 0 ? ` ${activeFilterCount}` : ''}
           </button>
         </div>
@@ -134,7 +134,7 @@ export default function WawasanArchive({ insights }: Props) {
       {filteredInsights.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center">
           <p className="font-sans text-white/70">Tidak ada wawasan yang sesuai dengan filter ini.</p>
-          <button onClick={resetAll} className="mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37]">Reset Filter</button>
+          <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
         </div>
       ) : (
         <>
@@ -145,7 +145,7 @@ export default function WawasanArchive({ insights }: Props) {
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
                 <p className="mt-3 font-sans text-white/70">{featured.excerpt || 'Wawasan utama pilihan editorial minggu ini.'}</p>
-                <Link href={`/wawasan/${featured.slug}`} className="mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37]">Baca Wawasan</Link>
+                <Link href={`/wawasan/${featured.slug}`} className="premium-interactive mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Baca Wawasan</Link>
               </div>
             </article>
           ) : null}
