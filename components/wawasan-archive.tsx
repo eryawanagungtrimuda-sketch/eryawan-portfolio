@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import type { Insight } from '@/lib/types';
@@ -139,7 +139,7 @@ export default function WawasanArchive({ insights }: Props) {
       ) : (
         <>
           {featured ? (
-            <article className="mt-6 overflow-hidden rounded-3xl border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
+            <article style={{ '--reveal-delay': '0ms' } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-reveal-card mt-6 overflow-hidden rounded-3xl border border-[#C8A951]/25 bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
               {featured.cover_image ? <img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="lazy" decoding="async" /> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
@@ -151,7 +151,7 @@ export default function WawasanArchive({ insights }: Props) {
           ) : null}
 
           <div className="mt-8 grid gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {rest.map((item) => <InsightCard key={item.id} item={item} />)}
+            {rest.map((item, index) => <div key={item.id} style={{ '--reveal-delay': `${(index + 1) * 100}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-reveal-card rounded-2xl"><InsightCard item={item} /></div>)}
           </div>
         </>
       )}
