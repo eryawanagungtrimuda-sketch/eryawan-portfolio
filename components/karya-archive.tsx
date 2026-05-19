@@ -352,7 +352,7 @@ export default function KaryaArchive({ projects }: Props) {
   }
 
   return (
-    <section className="pb-20 md:pb-24">
+    <section className="mobile-scroll-section mobile-section-breathing pb-20 md:pb-24">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] transition motion-safe:duration-700 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.04] md:p-7 lg:p-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
