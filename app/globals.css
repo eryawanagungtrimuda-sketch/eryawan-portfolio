@@ -170,6 +170,16 @@ body {
   filter: blur(0);
 }
 
+@media (max-width: 767px) {
+  .premium-oval-card {
+    border-radius: 30px;
+  }
+
+  .premium-oval-card-lg {
+    border-radius: 34px;
+  }
+}
+
 @media (min-width: 768px) {
   .premium-oval-card {
     border-radius: 32px;
@@ -229,7 +239,6 @@ body {
     margin-top: 18px;
     margin-bottom: 18px;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 8px;
-    border-radius: inherit;
   }
 
   .mobile-card-reveal {
