@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { CSSProperties } from 'react';
 
 import BackButton from '@/components/back-button';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
@@ -99,17 +100,19 @@ export default function TentangPage() {
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] font-sans text-[#F4F1EA]">
       <RevealObserver />
-      <section className="reveal-on-scroll relative overflow-hidden px-4 py-16 sm:px-5 md:px-8 md:py-24 lg:px-12 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden px-4 sm:px-5 md:px-8 md:py-24 lg:px-12 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_8%,rgba(200,169,81,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-10">
             <BackButton fallbackHref="/" />
           </div>
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">TENTANG ERYAWAN AGUNG</p>
-          <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
-            Desainer interior yang membaca ruang sebagai strategi, bukan sekadar tampilan.
-          </h1>
-          <div className="mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl">
+          <div className="reveal-on-scroll" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">TENTANG ERYAWAN AGUNG</p>
+            <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
+              Desainer interior yang membaca ruang sebagai strategi, bukan sekadar tampilan.
+            </h1>
+          </div>
+          <div className="reveal-on-scroll mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl" style={{ '--reveal-delay': '140ms' } as CSSProperties}>
             <p>
               Saya membantu perusahaan, owner, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan desain yang
               jelas, fungsional, dan dapat dipertanggungjawabkan.
@@ -134,7 +137,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="reveal-on-scroll border-y border-white/3 bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing border-y border-white/3 bg-[#090909] px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-4xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Cara Saya Melihat Ruang</h2>
           <div className="mt-7 space-y-5 text-base leading-[1.8] text-white/70 md:text-lg">
@@ -155,7 +158,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="reveal-on-scroll px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] md:text-6xl">Fokus Keahlian</h2>
           <MobileSwipeRow className="mt-12" ariaLabel="Fokus keahlian" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#080807" cardClassName="h-full">
@@ -170,7 +173,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="border-y border-white/3 bg-[#0B0B0A] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing border-y border-white/3 bg-[#0B0B0A] px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Trust Signals</p>
           <h2 className="font-display mt-5 max-w-5xl text-4xl font-normal leading-[1.08] tracking-[-0.03em] md:text-6xl">
@@ -192,7 +195,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="bg-[#2D2D2B] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
             Nilai Profesional yang Saya Bawa
@@ -214,7 +217,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="bg-[#090909] px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing bg-[#090909] px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
           <h2 className="font-display text-4xl font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">Cara Saya Membaca Proyek</h2>
           <MobileSwipeRow
@@ -237,7 +240,7 @@ export default function TentangPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-t border-white/3 px-5 py-16 md:px-10 md:py-24 lg:px-16 lg:py-28">
+      <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden border-t border-white/3 px-5 md:px-10 md:py-24 lg:px-16 lg:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(200,169,81,0.06),transparent_34%)]" />
         <div className="relative mx-auto max-w-5xl text-center">
           <h2 className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] md:text-6xl">
