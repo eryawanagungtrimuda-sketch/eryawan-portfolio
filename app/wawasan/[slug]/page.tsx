@@ -5,6 +5,7 @@ import SmartBackLink from '@/components/smart-back-link';
 import InsightImageGallery from '@/components/insight-image-gallery';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import RevealObserver from '@/components/reveal-observer';
+import ShareLinkButton from '@/components/share-link-button';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 import { absoluteUrl } from '@/lib/site-url';
 
@@ -94,6 +95,10 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
     publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
   };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
+  const insightUrl = absoluteUrl(`/wawasan/${insight.slug}`);
+  const shortDescription = insight.excerpt || description;
+  const whatsappMessage = `Saya menemukan insight desain yang menarik dari Eryawan Agung:\n\n${insight.title}\n\n${shortDescription}\n\nBaca di sini:\n${insightUrl}`;
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
@@ -149,7 +154,8 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/62">{sourceProject.category}</p> : null}
               </div>
             </div>
-            <Link href={sourceProjectHref} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
+            <p className="mt-3 text-sm leading-6 text-white/65">Project ini adalah studi kasus asli yang melahirkan wawasan teknis di halaman ini.</p>
+            <Link href={sourceProjectHref} aria-label={`Lihat studi kasus project ${sourceProject.title}`} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Project
             </Link>
           </section>
@@ -159,6 +165,21 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         <article className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
           {renderMarkdown(insight.content)}
         </article>
+
+        <section className="mt-8 rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:mt-10 sm:p-6 md:p-7">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Bagikan Insight</p>
+          <h2 className="mt-4 text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
+          <div className="mt-6 flex flex-wrap items-start gap-3 sm:gap-4">
+            <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37]/12 px-5 py-2.5 text-center font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/22">
+              Bagikan via WhatsApp
+            </Link>
+            <ShareLinkButton
+              url={insightUrl}
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold text-white/78 transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] hover:text-[#D4AF37]"
+            />
+          </div>
+        </section>
 
         <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
           <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white" />

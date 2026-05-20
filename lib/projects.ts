@@ -2,7 +2,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
 import type { Project } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,project_status,completion_year,is_published,created_at,insights(id,slug,title)';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,project_status,completion_year,is_published,created_at,insights(id,slug,title,is_published)';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -105,5 +105,14 @@ export async function getPublishedProjectBySlug(slug: string) {
     .single();
 
   if (error || !data) return null;
-  return data as Project;
+  const project = data as Project & { insights?: { id: string; slug: string; title: string; is_published?: boolean }[] | null };
+  const relatedInsight = Array.isArray(project.insights)
+    ? project.insights.find((insight) => insight.is_published !== false) || null
+    : null;
+
+  return {
+    ...project,
+    hasWawasan: Boolean(relatedInsight),
+    relatedInsight: relatedInsight ? { id: relatedInsight.id, slug: relatedInsight.slug, title: relatedInsight.title } : null,
+  } as Project;
 }
