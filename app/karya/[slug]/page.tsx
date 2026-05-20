@@ -8,6 +8,7 @@ import SmartBackLink from '@/components/smart-back-link';
 import ProjectImageGallery from '@/components/project-image-gallery';
 import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
 import RevealObserver from '@/components/reveal-observer';
+import ShareLinkButton from '@/components/share-link-button';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 import { absoluteUrl } from '@/lib/site-url';
@@ -83,6 +84,9 @@ export default async function KaryaDetailPage({ params }: Props) {
     crop_zoom: image.crop_zoom,
   }));
   const openingDescription = project.problem?.trim() || null;
+  const projectUrl = absoluteUrl(`/karya/${project.slug}`);
+  const whatsappMessage = `Studi kasus proyek ini menarik untuk dibahas:\n\n${projectUrl}`;
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
   const relatedInsight = project.relatedInsight;
   const areaTags = (project.area_tags || []).filter(Boolean);
   const schemaData = {
@@ -200,6 +204,29 @@ export default async function KaryaDetailPage({ params }: Props) {
           ) : (
             <p className="mt-8 text-base leading-7 text-white/56">Galeri belum tersedia. Dokumentasi visual akan ditambahkan tanpa mengubah narasi studi kasus.</p>
           )}
+        </section>
+
+        <section className="rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 font-sans sm:p-6 md:p-7">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Bagikan Studi Kasus</p>
+          <h2 className="mt-4 text-2xl font-semibold leading-[1.2] text-[#F4F1EA] sm:text-[2rem]">Punya rekan yang sedang membahas ruang serupa?</h2>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/70 sm:text-base">
+            Kirimkan studi kasus ini melalui WhatsApp agar ide, masalah ruang, dan keputusan desainnya lebih mudah didiskusikan bersama owner, kontraktor, atau tim proyek.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start">
+            <Link
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Bagikan studi kasus ${project.title} via WhatsApp`}
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
+            >
+              Bagikan via WhatsApp
+            </Link>
+            <ShareLinkButton
+              url={projectUrl}
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#D4AF37] transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12"
+            />
+          </div>
         </section>
 
         <section className="reveal-on-scroll border-t border-white/10 py-16">
