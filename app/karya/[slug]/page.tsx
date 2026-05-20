@@ -81,6 +81,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     crop_zoom: image.crop_zoom,
   }));
   const openingDescription = project.problem?.trim() || null;
+  const relatedInsight = project.relatedInsight;
   const areaTags = (project.area_tags || []).filter(Boolean);
   const schemaData = {
     '@context': 'http://schema.org',
@@ -162,6 +163,25 @@ export default async function KaryaDetailPage({ params }: Props) {
           <TextBlock label="Dampak" body={project.dampak || project.impact} index={5} fallback="Dampak project belum ditambahkan." />
           <TextBlock label="Insight Kunci" body={project.insight_kunci} index={6} fallback="Insight kunci belum ditambahkan." />
         </section>
+
+        {relatedInsight?.slug ? (
+          <section className="rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:p-6 md:p-7">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
+            <h2 className="font-display mt-4 text-2xl font-normal leading-[1.18] tracking-[-0.02em] sm:text-[2rem]">
+              Ingin tahu alasan teknis di balik project ini?
+            </h2>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-white/70 sm:text-base">
+              Saya membedah salah satu keputusan desain dari project ini agar Anda dapat melihat hubungan antara masalah ruang, strategi, dan hasil akhirnya.
+            </p>
+            <Link
+              href={`/wawasan/${relatedInsight.slug}`}
+              aria-label={`Baca wawasan teknis terkait ${project.title}`}
+              className="mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/12 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20"
+            >
+              Baca Wawasan Teknis
+            </Link>
+          </section>
+        ) : null}
 
         <section className="border-t border-white/10 pt-24 pb-12 md:pt-28 md:pb-16">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
