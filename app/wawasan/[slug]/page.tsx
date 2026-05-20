@@ -194,8 +194,8 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
               </div>
             </div>
             <p className="mt-3 font-sans text-sm leading-7 text-white/56">Proyek ini menjadi studi kasus utama yang melahirkan wawasan teknis di halaman ini.</p>
-            <Link href={sourceProjectHref} aria-label={`Lihat studi kasus project ${sourceProject.title}`} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
-              Lihat Studi Kasus Project
+            <Link href={sourceProjectHref} aria-label={`Lihat studi kasus proyek ${sourceProject.title}`} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
+              Lihat Studi Kasus Proyek
             </Link>
           </section>
         ) : null}
