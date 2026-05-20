@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
+import { ArrowUpRight, Copy, Instagram, Linkedin, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import type { Project } from '@/lib/types';
@@ -106,7 +106,8 @@ function limitedAreaTags(project: Project, max = 2) {
 
 function getProjectTeaser(project: Project) {
   const projectTeaser = project.problem || project.solution || project.impact || project.dampak;
-  return projectTeaser?.trim() ? projectTeaser : null;
+  if (projectTeaser?.trim()) return projectTeaser.trim();
+  return `Dari brief awal sampai detail akhir, ${project.title} memperlihatkan bagaimana desain interior yang terarah mampu membentuk pengalaman ruang yang lebih hangat dan berkarakter.`;
 }
 
 function getProjectStatus(project: Project) {
@@ -143,6 +144,7 @@ function Badge({ children }: { children?: string | null }) {
 
 export default function KaryaArchive({ projects }: Props) {
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@eryawanagung.my.id';
+  const shareBase = 'https://eryawanagung.my.id';
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
   const [designCategory, setDesignCategory] = useState('Semua');
@@ -236,6 +238,13 @@ export default function KaryaArchive({ projects }: Props) {
     setProjectStatus('Semua');
     setSelectedAreaTags([]);
     setSort('newest');
+  };
+
+  const getProjectShareCopy = (project: Project) => {
+    const projectUrl = `${shareBase}/karya/${project.slug}`;
+    const teaser = truncateText(getProjectTeaser(project), 110);
+    // Prefilled social copy combines title + canonical URL + teaser for quick sharing.
+    return `Check this design insight from eryawanagung.my.id: ${project.title} - ${projectUrl}${teaser ? ` | ${teaser}` : ''}`;
   };
 
   const openMobileFilter = () => setIsMobileFilterOpen(true);
@@ -352,7 +361,7 @@ export default function KaryaArchive({ projects }: Props) {
   }
 
   return (
-    <section className="mobile-scroll-section mobile-section-breathing pb-20 md:pb-24">
+    <section className="mobile-scroll-section mobile-section-breathing pb-28 md:pb-24">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] transition motion-safe:duration-700 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.04] md:p-7 lg:p-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
@@ -460,6 +469,7 @@ export default function KaryaArchive({ projects }: Props) {
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
+                <p className="mt-2 line-clamp-2 font-sans text-xs leading-relaxed text-white/52">{truncateText(getProjectShareCopy(project), 160)}</p>
                 <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{localizeAreaLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866] active:translate-y-0 active:scale-[0.98]">Lihat Proses & Hasil <ArrowUpRight size={16} /></Link>
@@ -482,6 +492,16 @@ export default function KaryaArchive({ projects }: Props) {
           </div>
         </div>
       ) : null}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
+        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
+          <a href="https://wa.me/6280000000000" target="_blank" rel="noreferrer" aria-label="Follow via WhatsApp" className="rounded-full border border-white/10 px-2 py-2 text-[11px] font-semibold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">WA</a>
+          <a href="https://instagram.com/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via Instagram" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Instagram className="h-4 w-4" /></a>
+          <a href="https://linkedin.com/in/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via LinkedIn" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Linkedin className="h-4 w-4" /></a>
+          <a href="https://tiktok.com/@eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via TikTok" className="rounded-full border border-white/10 px-2 py-2 font-mono text-[11px] font-bold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">TT</a>
+          <a href={`mailto:${contactEmail}`} aria-label="Email Eryawan Agung" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Mail className="h-4 w-4" /></a>
+          <button type="button" aria-label="Copy social share teaser" onClick={async () => { const first = filteredProjects[0]; if (first) await navigator.clipboard.writeText(getProjectShareCopy(first)); }} className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Copy className="h-4 w-4" /></button>
+        </div>
+      </div>
     </section>
   );
 }

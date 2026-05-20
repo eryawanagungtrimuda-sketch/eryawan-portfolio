@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
+import { Copy, Instagram, Linkedin, Mail } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import type { Insight } from '@/lib/types';
 
@@ -26,6 +27,8 @@ function toLabel(value?: string | null, kind?: 'source') {
 }
 
 function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string }) {
+  const insightUrl = `https://eryawanagung.my.id/wawasan/${item.slug}`;
+  const teaserCopy = `Check this design insight from eryawanagung.my.id: ${item.title} - ${insightUrl}${item.excerpt ? ` | ${item.excerpt}` : ''}`;
   return (
     <article style={{ "--premium-card-border": frameColor || "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-card-hover premium-oval-card premium-oval-frame group flex h-full flex-col border border-transparent bg-white/[0.02] transition hover:bg-white/[0.04]">
       {item.cover_image ? <div className="premium-oval-media-top border-b border-white/10"><img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /></div> : null}
@@ -37,6 +40,8 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
         </div>
         <h3 className="mt-4 font-sans text-xl font-semibold leading-tight text-white sm:text-2xl">{item.title}</h3>
         <p className="mt-2 line-clamp-3 font-sans text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini membahas alasan di balik keputusan desain, dampaknya ke pengguna, dan relevansinya untuk bisnis.'}</p>
+        {/* Social teaser micro-copy for faster share-friendly storytelling without changing core card hierarchy. */}
+        <p className="mt-2 line-clamp-2 font-sans text-xs leading-relaxed text-white/52">{teaserCopy}</p>
         <Link href={`/wawasan/${item.slug}`} className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
           Pelajari Insight <span aria-hidden>→</span>
         </Link>
@@ -46,6 +51,7 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
 }
 
 export default function WawasanArchive({ insights }: Props) {
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@eryawanagung.my.id';
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState(ALL);
   const [contentType, setContentType] = useState(ALL);
@@ -113,7 +119,7 @@ export default function WawasanArchive({ insights }: Props) {
   };
 
   return (
-    <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl sm:mt-10">
+    <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl pb-28 sm:mt-10">
       <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame border border-transparent bg-white/[0.02] p-5 sm:p-5">
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari topik wawasan</label>
         <div className="grid grid-cols-[minmax(0,1fr)_76px] gap-3 sm:grid-cols-[minmax(0,1fr)_92px]">
@@ -185,6 +191,16 @@ export default function WawasanArchive({ insights }: Props) {
             </div>
           </div>
         </div>, document.body)}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
+        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
+          <a href="https://wa.me/6280000000000" target="_blank" rel="noreferrer" aria-label="Follow via WhatsApp" className="rounded-full border border-white/10 px-2 py-2 text-[11px] font-semibold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">WA</a>
+          <a href="https://instagram.com/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via Instagram" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Instagram className="h-4 w-4" /></a>
+          <a href="https://linkedin.com/in/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via LinkedIn" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Linkedin className="h-4 w-4" /></a>
+          <a href="https://tiktok.com/@eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via TikTok" className="rounded-full border border-white/10 px-2 py-2 font-mono text-[11px] font-bold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">TT</a>
+          <a href={`mailto:${contactEmail}`} aria-label="Email Eryawan Agung" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Mail className="h-4 w-4" /></a>
+          <button type="button" aria-label="Copy social share teaser" onClick={async () => { const first = filteredInsights[0]; if (!first) return; await navigator.clipboard.writeText(`Check this design insight from eryawanagung.my.id: ${first.title} - https://eryawanagung.my.id/wawasan/${first.slug}${first.excerpt ? ` | ${first.excerpt}` : ''}`); }} className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Copy className="h-4 w-4" /></button>
+        </div>
+      </div>
     </section>
   );
 }
