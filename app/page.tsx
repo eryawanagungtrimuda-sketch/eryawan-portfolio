@@ -227,7 +227,7 @@ export default async function Home() {
                 Mulai Percakapan Proyek
               </Button>
               <Button href="#framework" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Pelajari Cara Saya Mengambil Keputusan
+                Cara Saya Mendesain
               </Button>
               <Button href="/tentang" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Kenali Latar Belakang Saya
