@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const title = `${insight.title} | Eryawan Agung Design Portfolio`;
   const description = insight.excerpt || 'Bedah singkat tentang keputusan desain, masalah ruang, dan dampaknya terhadap pengalaman pengguna.';
   const url = absoluteUrl(`/wawasan/${insight.slug}`);
-  const ogImageUrl = resolveOgImageUrl(insight.cover_image);
+  const ogImageUrl = absoluteUrl(`/wawasan/${insight.slug}/opengraph-image`);
 
   return {
     title,
@@ -107,13 +107,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: insight.title,
       description,
       url,
-      images: [{ url: ogImageUrl, alt: `${insight.title} insight image` }],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${insight.title} | Eryawan Agung` }],
     },
     twitter: {
       card: 'summary_large_image',
       title: insight.title,
       description,
-      images: [ogImageUrl],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${insight.title} | Eryawan Agung` }],
     },
   };
 }
