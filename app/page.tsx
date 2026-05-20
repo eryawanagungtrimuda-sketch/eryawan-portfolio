@@ -204,10 +204,11 @@ export default async function Home() {
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-6xl text-[2rem] font-normal uppercase leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.4rem] md:text-[clamp(3rem,5.7vw,6.45rem)]">
-              Ruang yang Tepat Membantu Bisnis Bergerak Lebih Cepat.<br />
-              <span className="relative inline-block text-[#C8A951] italic tracking-[-0.055em]">
-                Saya Mendesain dengan Alasan, Bukan Asumsi.
+            <h1 className="font-display max-w-6xl text-[1.9rem] font-normal uppercase leading-[1.06] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.25rem] md:text-[clamp(2.9rem,5.4vw,6.1rem)]">
+              TATA RUANG YANG TEPAT
+              <br />
+              <span className="relative inline-block text-[#C8A951] tracking-[-0.05em]">
+                BISNIS TERGERAK LEBIH CEPAT
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[#C8A951]/8 via-[#C8A951]/55 to-[#C8A951]/8 sm:-bottom-1.5"
@@ -215,11 +216,11 @@ export default async function Home() {
               </span>
             </h1>
 
-            <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 drop-shadow-md md:text-[1.25rem]">
-              Saya membantu HRD, tim desain, dan owner menerjemahkan kebutuhan bisnis menjadi keputusan ruang yang jelas, efisien, dan bisa dipertanggungjawabkan.
+            <p className="mt-5 max-w-3xl pr-1 font-sans text-[0.98rem] leading-[1.58] text-white drop-shadow-md sm:text-[1.05rem] md:mt-6 md:text-[1.15rem]">
+              Saya membantu klien mengambil keputusan desain yang jelas, fungsional, dan berdampak pada cara ruang digunakan.
             </p>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 lg:mt-11 lg:gap-5">
+            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4 lg:mt-10 lg:gap-5">
               <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Mulai Percakapan Proyek
               </Button>
