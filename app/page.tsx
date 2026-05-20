@@ -6,6 +6,7 @@ import { getPublishedProjects } from '@/lib/projects';
 import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
+import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
 
 export const dynamic = 'force-dynamic';
 
@@ -158,6 +159,7 @@ export default async function Home() {
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip overflow-y-visible bg-[#080807] font-sans text-[#F4F1EA]">
       <RevealObserver />
+      <MobileAdminQuickAccess />
       <section
         id="home"
         className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-4 py-6 sm:px-5 md:px-8 lg:px-12 xl:px-24"
