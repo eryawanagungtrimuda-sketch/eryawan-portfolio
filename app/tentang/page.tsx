@@ -109,29 +109,26 @@ export default function TentangPage() {
           <div className="reveal-on-scroll" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">TENTANG ERYAWAN AGUNG</p>
             <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
-              Desainer interior yang membaca ruang sebagai strategi, bukan sekadar tampilan.
+              Saya merancang interior sebagai strategi bisnis dan pengalaman, bukan sekadar tampilan.
             </h1>
           </div>
           <div className="reveal-on-scroll mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl" style={{ '--reveal-delay': '140ms' } as CSSProperties}>
             <p>
-              Saya membantu perusahaan, owner, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan desain yang
-              jelas, fungsional, dan dapat dipertanggungjawabkan.
+              Saya membantu perusahaan, HRD, owner, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan yang jelas, fungsional, dan realistis untuk dieksekusi.
             </p>
             <p>
-              Pendekatan saya menghubungkan estetika, alur aktivitas, material, eksekusi, dan nilai bisnis agar ruang
-              tidak hanya terlihat baik, tetapi juga bekerja dengan tepat.
+              Pendekatan saya menghubungkan estetika, alur aktivitas, material, dan eksekusi supaya ruang bukan hanya menarik dilihat, tetapi benar-benar membantu aktivitas dan citra bisnis.
             </p>
             <p>
-              Saya terbuka untuk peluang profesional di bidang arsitektur dan interior design, serta kolaborasi proyek
-              yang membutuhkan cara berpikir strategis sejak tahap awal.
+              Saya terbuka untuk peluang profesional di bidang arsitektur dan interior, serta kolaborasi sejak tahap awal ketika keputusan strategis paling menentukan hasil akhir.
             </p>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button href="/mulai-project" className="px-8">
-              Diskusikan Peluang Proyek
+              Diskusikan Kebutuhan Anda
             </Button>
             <Button href="/karya" variant="secondary" className="px-8">
-              Lihat Portfolio Karya
+              Lihat Karya dan Prosesnya
             </Button>
           </div>
         </div>

@@ -205,9 +205,9 @@ export default async function Home() {
             </p>
 
             <h1 className="font-display max-w-6xl text-[2rem] font-normal uppercase leading-[1.08] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.4rem] md:text-[clamp(3rem,5.7vw,6.45rem)]">
-              Desain Strategis untuk Kinerja Ruang.<br />
+              Ruang yang Tepat Membantu Bisnis Bergerak Lebih Cepat.<br />
               <span className="relative inline-block text-[#C8A951] italic tracking-[-0.055em]">
-                Bukan Sekadar Visual, tetapi Nilai Bisnis.
+                Saya Mendesain dengan Alasan, Bukan Asumsi.
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-[#C8A951]/8 via-[#C8A951]/55 to-[#C8A951]/8 sm:-bottom-1.5"
@@ -216,18 +216,18 @@ export default async function Home() {
             </h1>
 
             <p className="mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 drop-shadow-md md:text-[1.25rem]">
-              Saya membantu perusahaan dan pemilik bisnis menerjemahkan kebutuhan menjadi keputusan desain yang efisien, terukur, dan berdampak pada performa ruang.
+              Saya membantu HRD, tim desain, dan owner menerjemahkan kebutuhan bisnis menjadi keputusan ruang yang jelas, efisien, dan bisa dipertanggungjawabkan.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 lg:mt-11 lg:gap-5">
               <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Jadwalkan Diskusi Proyek
+                Mulai Percakapan Proyek
               </Button>
               <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Kerangka Berpikir Saya
+                Pelajari Cara Saya Mengambil Keputusan
               </Button>
               <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Profil Profesional
+                Kenali Latar Belakang Saya
               </Button>
             </div>
           </div>
@@ -255,7 +255,7 @@ export default async function Home() {
               </h2>
             </div>
             <p className="max-w-3xl font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
-              Saya tidak hanya menerjemahkan brief menjadi gambar. Saya membantu membaca konteks, mempertanyakan keputusan yang kurang efisien, dan menyusun solusi ruang yang masuk akal secara fungsi, estetika, dan dampak bisnis.
+              Saya tidak berhenti di visual. Saya memetakan konteks, menguji setiap pilihan, lalu menyusun keputusan desain yang seimbang antara fungsi, pengalaman pengguna, dan target bisnis.
             </p>
           </div>
 
@@ -435,7 +435,7 @@ export default async function Home() {
                 Portfolio Berbasis Keputusan
               </h2>
               <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/62 md:text-xl">
-                Setiap proyek ditampilkan bukan hanya sebagai hasil visual, tetapi sebagai proses membaca masalah, mengambil keputusan, dan membangun dampak ruang.
+                Setiap karya saya tampilkan sebagai cerita keputusan: masalah awal, proses berpikir, dan dampak yang dirasakan pengguna maupun bisnis.
               </p>
             </div>
 
@@ -509,7 +509,7 @@ export default async function Home() {
                   href={article.href}
                   className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
                 >
-                  Baca Insight
+                  Baca Wawasan
                   <MoveRight className="transition duration-300 group-hover:translate-x-1" size={14} />
                 </a>
               </article>
@@ -537,7 +537,7 @@ export default async function Home() {
               Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden lg:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
-              Saya terbuka untuk peran profesional maupun kolaborasi proyek dalam merancang ruang yang kuat secara fungsi, pengalaman, dan arah bisnis.
+              Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
             </p>
 
             <Button href="/mulai-project" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">

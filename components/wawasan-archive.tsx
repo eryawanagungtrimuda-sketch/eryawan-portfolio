@@ -36,9 +36,9 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
           <span className="rounded-full border border-white/15 px-3 py-1 font-sans text-white/70">{toLabel(item.source_type, 'source')}</span>
         </div>
         <h3 className="mt-4 font-sans text-xl font-semibold leading-tight text-white sm:text-2xl">{item.title}</h3>
-        <p className="mt-2 line-clamp-3 font-sans text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.'}</p>
+        <p className="mt-2 line-clamp-3 font-sans text-sm leading-relaxed text-white/65">{item.excerpt || 'Wawasan ini membahas alasan di balik keputusan desain, dampaknya ke pengguna, dan relevansinya untuk bisnis.'}</p>
         <Link href={`/wawasan/${item.slug}`} className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
-          Baca Wawasan <span aria-hidden>→</span>
+          Pelajari Insight <span aria-hidden>→</span>
         </Link>
       </div>
     </article>
@@ -115,9 +115,9 @@ export default function WawasanArchive({ insights }: Props) {
   return (
     <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl sm:mt-10">
       <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame border border-transparent bg-white/[0.02] p-5 sm:p-5">
-        <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari wawasan</label>
+        <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari topik wawasan</label>
         <div className="grid grid-cols-[minmax(0,1fr)_76px] gap-3 sm:grid-cols-[minmax(0,1fr)_92px]">
-          <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari wawasan..." className="h-11 min-w-0 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
+          <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari topik wawasan..." className="h-11 min-w-0 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
           <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="premium-interactive flex h-11 w-full items-center justify-center rounded-2xl border border-[#C8A951]/40 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
             Filter{activeFilterCount > 0 ? ` ${activeFilterCount}` : ''}
           </button>
@@ -127,14 +127,14 @@ export default function WawasanArchive({ insights }: Props) {
           {contentType !== ALL && <button onClick={() => setContentType(ALL)} className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80">{toLabel(contentType)} ×</button>}
           {sourceType !== ALL && <button onClick={() => setSourceType(ALL)} className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80">{toLabel(sourceType, 'source')} ×</button>}
           {activeFilterCount > 0 && <button onClick={resetAll} className="text-xs text-[#D4AF37]">Reset semua</button>}
-          <span className="ml-auto text-xs text-white/58">{filteredInsights.length} hasil</span>
+          <span className="ml-auto text-xs text-white/58">{filteredInsights.length} wawasan ditemukan</span>
         </div>
       </div>
 
       {filteredInsights.length === 0 ? (
         <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame mt-6 border border-transparent bg-white/[0.02] p-8 text-center">
-          <p className="font-sans text-white/70">Tidak ada wawasan yang sesuai dengan filter ini.</p>
-          <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
+          <p className="font-sans text-white/70">Belum ada wawasan yang cocok dengan pencarian ini.</p>
+          <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Atur Ulang Filter</button>
         </div>
       ) : (
         <>
@@ -144,8 +144,8 @@ export default function WawasanArchive({ insights }: Props) {
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
-                <p className="mt-3 font-sans text-white/70">{featured.excerpt || 'Wawasan utama pilihan editorial minggu ini.'}</p>
-                <Link href={`/wawasan/${featured.slug}`} className="premium-interactive mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Baca Wawasan</Link>
+                <p className="mt-3 font-sans text-white/70">{featured.excerpt || 'Pilihan wawasan utama untuk membantu Anda mengambil keputusan desain yang lebih tepat.'}</p>
+                <Link href={`/wawasan/${featured.slug}`} className="premium-interactive mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Baca Insight Lengkap</Link>
               </div>
             </article>
           ) : null}
