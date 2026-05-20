@@ -15,6 +15,11 @@ function buildInsightDescription(title: string, excerpt?: string | null) {
   return excerpt || `Explore the detailed design analysis and strategy behind ${title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
 }
 
+function resolveOgImageUrl(imageUrl?: string | null) {
+  if (!imageUrl) return absoluteUrl('/hero.jpg');
+  return /^https?:\/\//i.test(imageUrl) ? imageUrl : absoluteUrl(imageUrl);
+}
+
 function normalizeTextForComparison(text: string) {
   return text
     .normalize('NFKD')
@@ -89,8 +94,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   const title = `${insight.title} | Eryawan Agung Design Portfolio`;
-  const description = buildInsightDescription(insight.title, insight.excerpt);
+  const description = insight.excerpt || 'Bedah singkat tentang keputusan desain, masalah ruang, dan dampaknya terhadap pengalaman pengguna.';
   const url = absoluteUrl(`/wawasan/${insight.slug}`);
+  const ogImageUrl = resolveOgImageUrl(insight.cover_image);
 
   return {
     title,
@@ -98,16 +104,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     alternates: { canonical: url },
     openGraph: {
       type: 'article',
-      title,
+      title: insight.title,
       description,
       url,
-      images: insight.cover_image ? [{ url: insight.cover_image, alt: `${insight.title} insight image` }] : undefined,
+      images: [{ url: ogImageUrl, alt: `${insight.title} insight image` }],
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: insight.title,
       description,
-      images: insight.cover_image ? [insight.cover_image] : undefined,
+      images: [ogImageUrl],
     },
   };
 }
@@ -117,20 +123,20 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   if (!detail) return notFound();
   const { insight, sourceProject, images } = detail;
   const description = buildInsightDescription(insight.title, insight.excerpt);
+  const schemaImageUrl = resolveOgImageUrl(insight.cover_image || images[0]?.image_url);
   const schemaData = {
     '@context': 'http://schema.org',
     '@type': 'Article',
     headline: insight.title,
     description,
-    image: insight.cover_image || images[0]?.image_url || absoluteUrl('/hero.jpg'),
+    image: schemaImageUrl,
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: insight.created_at,
     publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
   };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
   const insightUrl = absoluteUrl(`/wawasan/${insight.slug}`);
-  const shortDescription = insight.excerpt || description;
-  const whatsappMessage = `Saya menemukan insight desain yang menarik dari Eryawan Agung:\n\n${insight.title}\n\n${shortDescription}\n\nBaca di sini:\n${insightUrl}`;
+  const whatsappMessage = `Insight desain ini menarik untuk dibahas:\n\n${insightUrl}`;
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
