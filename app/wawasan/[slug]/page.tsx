@@ -20,7 +20,7 @@ function normalizeTextForComparison(text: string) {
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/['"`]/g, '')
-    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/[^A-Za-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
