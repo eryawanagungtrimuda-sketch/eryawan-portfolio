@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { CheckCircle2, Compass, Instagram, Mail, MessageSquare, MoveRight, Search, Zap } from 'lucide-react';
+import { CheckCircle2, Compass, Instagram, Mail, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
 import { getPublishedInsights } from '@/lib/insights';
 import { getPublishedProjects } from '@/lib/projects';
@@ -222,28 +222,25 @@ export default async function Home() {
               Saya membantu klien mengambil keputusan desain yang jelas, fungsional, dan berdampak pada cara ruang digunakan.
             </p>
 
-            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4 lg:mt-10 lg:gap-5">
-              <Button href="/mulai-project" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+            <div className="mt-7 flex flex-col gap-3 sm:mt-8 lg:mt-10 lg:grid lg:grid-cols-3 lg:gap-4">
+              <Button href="/mulai-project" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Mulai Percakapan Proyek
               </Button>
-              <Button href="#framework" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+              <Button href="#framework" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Pelajari Cara Saya Mengambil Keputusan
               </Button>
-              <Button href="/tentang" variant="secondary" className="w-full sm:w-auto motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+              <Button href="/tentang" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Kenali Latar Belakang Saya
               </Button>
             </div>
           </div>
         </div>
 
-        <div className="relative z-10 hidden items-center justify-between pb-2 md:flex">
+        <div className="relative z-10 hidden items-center pb-2 md:flex">
           <div className="flex items-center gap-5 text-white/62">
             <span className="h-10 w-px bg-white/25" />
             <span className="text-sm font-medium">Scroll untuk eksplorasi</span>
           </div>
-          <Button href="#contact" className="h-14 w-14 px-0 py-0 shadow-[0_16px_36px_rgba(200,169,81,0.14)]" ariaLabel="Hubungi studio">
-            <MessageSquare size={20} strokeWidth={2} />
-          </Button>
         </div>
       </section>
 
