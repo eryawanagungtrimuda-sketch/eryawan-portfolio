@@ -167,9 +167,9 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         </article>
 
         <section className="mt-8 rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:mt-10 sm:p-6 md:p-7">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Bagikan Insight</p>
-          <h2 className="mt-4 text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
+          <p className="font-sans text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Bagikan Insight</p>
+          <h2 className="mt-4 font-sans text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
+          <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
           <div className="mt-6 flex flex-wrap items-start gap-3 sm:gap-4">
             <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37]/12 px-5 py-2.5 text-center font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/22">
               Bagikan via WhatsApp
@@ -184,7 +184,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
           <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white" />
           <Link href="/karya" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/18">Lihat Karya</Link>
-          <Link href="/mulai-project" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white">Diskusikan Project</Link>
+          <Link href="/mulai-project" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white">Diskusikan Proyek Serupa</Link>
           <AdminEditWawasanShortcut insightId={insight.id} />
         </div>
       </div>
