@@ -119,8 +119,8 @@ export default async function KaryaDetailPage({ params }: Props) {
         <section className="border-y border-white/10 py-8 md:py-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Project Snapshot</p>
-              <h2 className="font-display mt-4 text-3xl font-normal leading-[1.1] tracking-[-0.03em] md:text-4xl">Ringkasan Kategori Project</h2>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Ringkasan Proyek</p>
+              <h2 className="font-display mt-4 text-3xl font-normal leading-[1.1] tracking-[-0.03em] md:text-4xl">Ringkasan Kategori Proyek</h2>
             </div>
             <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-3xl">
               {project.category ? (
@@ -206,7 +206,7 @@ export default async function KaryaDetailPage({ params }: Props) {
               href="/mulai-project"
               className="inline-flex items-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-sans text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
-              Diskusikan Project Serupa
+              Diskusikan Proyek Serupa
             </Link>
             <AdminEditProjectShortcut projectId={project.id} />
             <SmartBackLink
