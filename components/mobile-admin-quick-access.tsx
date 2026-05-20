@@ -1,8 +1,42 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { isAllowedAdminEmail } from '@/lib/admin-auth';
+import { createSupabaseBrowserClient, isSupabaseConfigured } from '@/lib/supabase';
+
 const adminPanelLink = process.env.NEXT_PUBLIC_ADMIN_PANEL_URL || '/admin/dashboard';
 
 export default function MobileAdminQuickAccess() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setIsAdmin(false);
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
+
+    // Initial auth check: only show button when current logged-in user email is an allowed admin email.
+    supabase.auth.getSession().then(({ data }) => {
+      const email = data.session?.user?.email;
+      setIsAdmin(isAllowedAdminEmail(email));
+    });
+
+    // Keep visibility in sync after login/logout or token refresh events.
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      const email = session?.user?.email;
+      setIsAdmin(isAllowedAdminEmail(email));
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Hide entire sticky container for guests/non-admin users.
+  if (!isAdmin) return null;
+
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 px-4 md:hidden">
       <a
