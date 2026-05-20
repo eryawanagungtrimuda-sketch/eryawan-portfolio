@@ -16,8 +16,9 @@ type Props = {
   params: { slug: string };
 };
 
-function buildProjectDescription(projectName: string) {
-  return `Explore the detailed design analysis and strategy behind ${projectName}. Read how design decisions were made and their impact on functionality and aesthetics.`;
+function buildProjectDescription(project: { problem?: string | null; konteks?: string | null }) {
+  const conciseDescription = project.problem?.trim() || project.konteks?.trim();
+  return conciseDescription || 'Studi kasus desain yang membaca masalah ruang, keputusan desain, dan dampaknya terhadap pengguna.';
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -30,8 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = `${project.title} | Eryawan Agung Design Portfolio`;
-  const description = buildProjectDescription(project.title);
+  const description = buildProjectDescription(project);
   const url = absoluteUrl(`/karya/${project.slug}`);
+  const ogImageUrl = absoluteUrl(`/karya/${project.slug}/opengraph-image`);
 
   return {
     title,
@@ -39,16 +41,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: url },
     openGraph: {
       type: 'article',
-      title,
+      title: project.title,
       description,
       url,
-      images: project.cover_image ? [{ url: project.cover_image, alt: `${project.title} cover image` }] : undefined,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${project.title} | Eryawan Agung` }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: project.cover_image ? [project.cover_image] : undefined,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${project.title} | Eryawan Agung` }],
     },
   };
 }
@@ -87,7 +89,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     '@context': 'http://schema.org',
     '@type': 'CreativeWork',
     name: project.title,
-    description: buildProjectDescription(project.title),
+    description: buildProjectDescription(project),
     image: project.cover_image || galleryImages[0]?.image_url || absoluteUrl('/hero.jpg'),
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: project.created_at,
