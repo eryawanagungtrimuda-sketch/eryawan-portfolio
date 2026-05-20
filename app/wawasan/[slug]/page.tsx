@@ -15,12 +15,45 @@ function buildInsightDescription(title: string, excerpt?: string | null) {
   return excerpt || `Explore the detailed design analysis and strategy behind ${title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
 }
 
-function renderMarkdown(content?: string | null) {
+function normalizeTextForComparison(text: string) {
+  return text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/['"`]/g, '')
+    .replace(/[^A-Za-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function removeDuplicateLeadingHeading(content: string, title: string) {
+  const lines = content.split('\n');
+  const normalizedTitle = normalizeTextForComparison(title);
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) continue;
+
+    const headingMatch = trimmed.match(/^#{1,3}\s+(.+)$/);
+    if (headingMatch) {
+      const headingText = headingMatch[1].trim();
+      if (normalizeTextForComparison(headingText) === normalizedTitle) {
+        lines.splice(i, 1);
+      }
+    }
+    break;
+  }
+
+  return lines.join('\n');
+}
+
+function renderMarkdown(content: string | null | undefined, insightTitle: string) {
   if (!content) {
     return <p className="font-sans text-base leading-8 text-white/64">Konten wawasan belum tersedia.</p>;
   }
 
-  const lines = content.split('\n');
+  const normalizedContent = removeDuplicateLeadingHeading(content, insightTitle);
+  const lines = normalizedContent.split('\n');
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -138,7 +171,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
 
         {sourceProject && sourceProjectHref ? (
           <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/45 hover:bg-white/[0.04] sm:p-5">
-            <p className="font-sans text-[11px] uppercase tracking-wide text-[#D4AF37]">Berdasarkan Project</p>
+            <p className="font-display text-[11px] uppercase tracking-[0.14em] text-[#D4AF37]">Berdasarkan Proyek</p>
             <div className="mt-3 flex items-center gap-3 sm:gap-4">
               {sourceProject.cover_image ? (
                 <img
@@ -154,7 +187,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/62">{sourceProject.category}</p> : null}
               </div>
             </div>
-            <p className="mt-3 text-sm leading-6 text-white/65">Project ini adalah studi kasus asli yang melahirkan wawasan teknis di halaman ini.</p>
+            <p className="mt-3 font-sans text-sm leading-7 text-white/56">Proyek ini menjadi studi kasus utama yang melahirkan wawasan teknis di halaman ini.</p>
             <Link href={sourceProjectHref} aria-label={`Lihat studi kasus project ${sourceProject.title}`} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Project
             </Link>
@@ -163,7 +196,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
 
 
         <article className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
-          {renderMarkdown(insight.content)}
+          {renderMarkdown(insight.content, insight.title)}
         </article>
 
         <section className="mt-8 rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:mt-10 sm:p-6 md:p-7">
