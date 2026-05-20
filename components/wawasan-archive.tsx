@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
-import { Copy, Instagram, Linkedin, Mail } from 'lucide-react';
+
 import { createPortal } from 'react-dom';
+import ShareLinkButton from '@/components/share-link-button';
 import type { Insight } from '@/lib/types';
 
 type Props = {
@@ -51,7 +52,6 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
 }
 
 export default function WawasanArchive({ insights }: Props) {
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@eryawanagung.my.id';
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState(ALL);
   const [contentType, setContentType] = useState(ALL);
@@ -192,13 +192,9 @@ export default function WawasanArchive({ insights }: Props) {
           </div>
         </div>, document.body)}
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
-        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
-          <a href="https://wa.me/6280000000000" target="_blank" rel="noreferrer" aria-label="Follow via WhatsApp" className="rounded-full border border-white/10 px-2 py-2 text-[11px] font-semibold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">WA</a>
-          <a href="https://instagram.com/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via Instagram" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Instagram className="h-4 w-4" /></a>
-          <a href="https://linkedin.com/in/eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via LinkedIn" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Linkedin className="h-4 w-4" /></a>
-          <a href="https://tiktok.com/@eryawanagung" target="_blank" rel="noreferrer" aria-label="Follow via TikTok" className="rounded-full border border-white/10 px-2 py-2 font-mono text-[11px] font-bold text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">TT</a>
-          <a href={`mailto:${contactEmail}`} aria-label="Email Eryawan Agung" className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Mail className="h-4 w-4" /></a>
-          <button type="button" aria-label="Copy social share teaser" onClick={async () => { const first = filteredInsights[0]; if (!first) return; await navigator.clipboard.writeText(`Check this design insight from eryawanagung.my.id: ${first.title} - https://eryawanagung.my.id/wawasan/${first.slug}${first.excerpt ? ` | ${first.excerpt}` : ''}`); }} className="rounded-full border border-white/10 p-2 text-white/75 transition hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"><Copy className="h-4 w-4" /></button>
+        <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
+          <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa wawasan desain yang menarik untuk dibaca\n\nhttps://eryawanagung.my.id/wawasan')}`} target="_blank" rel="noreferrer" aria-label="Bagikan daftar wawasan via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a>
+          <ShareLinkButton url="https://eryawanagung.my.id/wawasan" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" />
         </div>
       </div>
     </section>
