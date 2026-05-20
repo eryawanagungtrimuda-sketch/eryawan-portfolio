@@ -7,6 +7,7 @@ import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
+import AdminFooterShortcut from '@/components/admin-footer-shortcut';
 
 export const dynamic = 'force-dynamic';
 
@@ -568,13 +569,7 @@ export default async function Home() {
           <div className="mt-14 flex flex-col gap-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/42 md:flex-row md:items-center md:justify-between md:text-[11px]">
             <p>© 2026 Eryawan Agung — Strategic Design & Spatial Logic</p>
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
-              <a
-                href="/admin"
-                aria-label="Panel admin"
-                className="select-none text-[9px] tracking-[0.28em] text-white/[0.05] transition hover:text-[#C8A951]/40 focus-visible:text-[#C8A951]/70 focus-visible:outline-none"
-              >
-                Panel
-              </a>
+              <AdminFooterShortcut />
               <span>Surabaya • Melayani Indonesia</span>
             </div>
           </div>
