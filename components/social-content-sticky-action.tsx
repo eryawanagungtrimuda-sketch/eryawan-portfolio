@@ -48,7 +48,7 @@ type ComposerDraft = {
 
 type Props = { contentType: ContentType; slug: string };
 
-function buildSocialDraft(data: DetailPayload): ComposerDraft {
+function buildSocialDraft(data: DetailPayload, contentType: ContentType): ComposerDraft {
   const tags = data.tags?.length ? data.tags.map((tag) => `#${tag.replace(/\s+/g, '')}`).join(' ') : '#DesainInterior #StudiKasus';
   const core = `${data.title}${data.year ? ` (${data.year})` : ''}`;
   const summary = data.summary || data.context || 'Proyek ini berangkat dari kebutuhan ruang yang spesifik dan terukur.';
@@ -67,7 +67,7 @@ function buildSocialDraft(data: DetailPayload): ComposerDraft {
 
   const linkedInBullets = `• Pembuka masalah: ${conflict}\n• Batasan ruang: ${context}\n• Masalah ke solusi: ${decision}\n• Sudut pandang pengguna: ${impact}`;
 
-  const whatsappMessage = `Halo, saya mau share ${contentTypeLabel(data.category)} yang menurut saya relevan:\n${core}\n\n${summary}\n\nBaca lengkap di sini: ${data.canonicalUrl}`;
+  const whatsappMessage = `Halo, saya mau share ${contentTypeLabel(contentType)} yang menurut saya relevan:\n${core}\n\n${summary}\n\nBaca lengkap di sini: ${data.canonicalUrl}`;
 
   return {
     igCaption,
@@ -82,15 +82,15 @@ function buildSocialDraft(data: DetailPayload): ComposerDraft {
     tiktokCta: `Lanjut baca di website: ${data.canonicalUrl}`,
     linkedInCaption,
     linkedInBullets,
-    linkedInCta: `Baca studi ${contentTypeLabel(data.category)} lengkap: ${data.canonicalUrl}`,
+    linkedInCta: `Baca studi ${contentTypeLabel(contentType)} lengkap: ${data.canonicalUrl}`,
     whatsappMessage,
     whatsappLink: data.canonicalUrl,
     ogImage: data.ogImage,
   };
 }
 
-function contentTypeLabel(category?: string) {
-  return category?.toLowerCase().includes('wawasan') ? 'wawasan' : 'karya';
+function contentTypeLabel(contentType: ContentType) {
+  return contentType === 'wawasan' ? 'wawasan' : 'karya';
 }
 
 export default function SocialContentStickyAction({ contentType, slug }: Props) {
@@ -185,7 +185,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
     }
   }
 
-  const generatedDraft = useMemo(() => (payload ? buildSocialDraft(payload) : null), [payload]);
+  const generatedDraft = useMemo(() => (payload ? buildSocialDraft(payload, contentType) : null), [contentType, payload]);
 
   useEffect(() => {
     if (!generatedDraft || draft) return;
