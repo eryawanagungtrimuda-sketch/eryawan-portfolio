@@ -6,6 +6,7 @@ import InsightImageGallery from '@/components/insight-image-gallery';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import RevealObserver from '@/components/reveal-observer';
 import ShareLinkButton from '@/components/share-link-button';
+import SocialContentStickyAction from '@/components/social-content-sticky-action';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 import { absoluteUrl } from '@/lib/site-url';
 
@@ -225,6 +226,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           <Link href="/karya" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/18">Lihat Karya</Link>
           <Link href="/mulai-project" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white">Diskusikan Proyek Serupa</Link>
           <AdminEditWawasanShortcut insightId={insight.id} />
+          <SocialContentStickyAction contentType="wawasan" slug={insight.slug} />
         </div>
       </div>
     </main>
