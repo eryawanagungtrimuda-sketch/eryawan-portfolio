@@ -9,6 +9,7 @@ import ProjectImageGallery from '@/components/project-image-gallery';
 import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
 import RevealObserver from '@/components/reveal-observer';
 import ShareLinkButton from '@/components/share-link-button';
+import SocialContentStickyAction from '@/components/social-content-sticky-action';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 import { absoluteUrl } from '@/lib/site-url';
@@ -244,6 +245,7 @@ export default async function KaryaDetailPage({ params }: Props) {
             />
           </div>
         </section>
+        <SocialContentStickyAction contentType="karya" slug={project.slug} />
       </div>
     </main>
   );
