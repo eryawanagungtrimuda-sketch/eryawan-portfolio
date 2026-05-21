@@ -33,12 +33,17 @@ export default function AdminFooterShortcut() {
   if (!isAdmin) return null;
 
   return (
-    <a
-      href="/admin"
+    <button
+      type="button"
       aria-label="Panel admin"
-      className="select-none text-[9px] tracking-[0.28em] text-white/[0.05] transition hover:text-[#C8A951]/40 focus-visible:text-[#C8A951]/70 focus-visible:outline-none"
+      // Keep admin-only visibility from `isAdmin`, but force the trigger to render on mobile
+      // with an explicit inline-block display so it no longer disappears in small breakpoints.
+      className="inline-block select-none text-[9px] tracking-[0.28em] text-white/45 transition hover:text-[#C8A951]/55 focus-visible:text-[#C8A951]/75 focus-visible:outline-none"
+      onClick={() => {
+        window.location.href = '/admin';
+      }}
     >
       Panel
-    </a>
+    </button>
   );
 }
