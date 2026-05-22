@@ -5,7 +5,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 type ContentType = 'karya' | 'wawasan';
-type PlatformTab = 'instagram' | 'tiktok' | 'linkedin' | 'whatsapp' | 'canva';
+type PlatformTab = 'canva' | 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp';
 
 type DetailPayload = {
   title: string;
@@ -38,6 +38,10 @@ type ComposerDraft = {
   tiktokCaption: string;
   tiktokHashtag: string;
   tiktokCta: string;
+  youtubeTitle: string;
+  youtubeDescription: string;
+  youtubeHashtags: string;
+  youtubeUploadGuide: string;
   linkedInCaption: string;
   linkedInBullets: string;
   linkedInCta: string;
@@ -48,6 +52,7 @@ type ComposerDraft = {
   canvaOverlayText: string;
   canvaVisualGuide: string;
   canvaExportGuide: string;
+  canvaShareGuide: string;
   ogImage: string;
 };
 
@@ -71,6 +76,10 @@ function buildSocialDraft(data: DetailPayload, contentType: ContentType): Compos
   const igCarousel = `Carousel slide outline\nSlide 1: Hook + judul proyek\nSlide 2: Latar belakang singkat\nSlide 3: Pembuka masalah\nSlide 4: Batasan ruang\nSlide 5: Masalah ke solusi\nSlide 6: Sudut pandang pengguna + hasil\nSlide 7: CTA ke website`;
 
   const linkedInCaption = `Dalam proyek ${core}, kami memulai dari kebutuhan pengguna dan batasan ruang nyata.\n\n${context}\n\nKeputusan desain difokuskan agar fungsi ruang lebih efektif sekaligus tetap memiliki karakter visual yang kuat.\n\nDampak utama: ${impact}`;
+  const youtubeTitle = `${core} | Transformasi Ruang yang Lebih Fungsional #Shorts`;
+  const youtubeDescription = `Proyek ${core} dimulai dari konteks nyata: ${shortText(context, 120)}\n\nSolusi utamanya: ${shortText(decision, 120)}\nDampak: ${shortText(impact, 120)}\n\nLihat studi lengkap di website:\n${data.canonicalUrl}`;
+  const youtubeHashtags = `${tags} #Shorts #YouTubeShorts`;
+  const youtubeUploadGuide = `Upload ke YouTube Shorts menggunakan file MP4 yang sama dari export Canva.\n1) Pastikan rasio 9:16 (1080 x 1920).\n2) Judul tetap singkat, jelas, dan mengandung kata kunci utama.\n3) Tempel deskripsi + hashtag untuk konteks dan jangkauan.\n4) Cek cover frame terbaik sebelum publish.`;
 
   const linkedInBullets = `• Pembuka masalah: ${conflict}\n• Batasan ruang: ${context}\n• Masalah ke solusi: ${decision}\n• Sudut pandang pengguna: ${impact}`;
 
@@ -160,6 +169,13 @@ Best practice:
 - Jaga teks agar tidak terlalu bawah (safe area).
 - Gunakan overlay gelap untuk menjaga keterbacaan.
 - Gunakan teks putih dengan aksen emas agar konsisten dengan brand.`;
+  const canvaShareGuide = `- Setelah desain selesai, klik Share di Canva.
+- Gunakan Instagram untuk posting Reels atau Carousel.
+- Gunakan TikTok untuk upload video vertikal.
+- Gunakan Download jika ingin upload manual ke YouTube Shorts atau LinkedIn.
+- Gunakan Schedule jika akun Canva mendukung penjadwalan.
+- Pastikan video tetap 1080 x 1920 untuk Reels, TikTok, dan Shorts.
+- Pastikan carousel tetap 1080 x 1350 untuk Instagram Feed.`;
 
   return {
     igCaption,
@@ -172,6 +188,10 @@ Best practice:
     tiktokCaption: `${core} — strategi ruang yang fokus pada fungsi dan pengalaman pengguna.\nDetail lengkap: ${data.canonicalUrl}`,
     tiktokHashtag: tags,
     tiktokCta: `Lanjut baca di website: ${data.canonicalUrl}`,
+    youtubeTitle,
+    youtubeDescription,
+    youtubeHashtags,
+    youtubeUploadGuide,
     linkedInCaption,
     linkedInBullets,
     linkedInCta: `Baca studi ${contentTypeLabel(contentType)} lengkap: ${data.canonicalUrl}`,
@@ -182,6 +202,7 @@ Best practice:
     canvaOverlayText,
     canvaVisualGuide,
     canvaExportGuide,
+    canvaShareGuide,
     ogImage: data.ogImage,
   };
 }
@@ -205,7 +226,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
   const [open, setOpen] = useState(false);
   const [payload, setPayload] = useState<DetailPayload | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<PlatformTab>('instagram');
+  const [activeTab, setActiveTab] = useState<PlatformTab>('canva');
   const [draft, setDraft] = useState<ComposerDraft | null>(null);
   const [copied, setCopied] = useState<Record<string, boolean>>({});
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -277,7 +298,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
 
   async function openModal() {
     setOpen(true);
-    setActiveTab('instagram');
+    setActiveTab('canva');
     if (payload || loading) return;
     setLoading(true);
     try {
@@ -344,11 +365,12 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                 <div className="space-y-4">
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {([
+                      ['canva', 'Canva'],
                       ['instagram', 'Instagram'],
                       ['tiktok', 'TikTok'],
+                      ['youtube', 'YouTube Shorts'],
                       ['linkedin', 'LinkedIn'],
                       ['whatsapp', 'WhatsApp'],
-                      ['canva', 'Canva'],
                     ] as [PlatformTab, string][]).map(([key, label]) => (
                       <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                         {label}
@@ -356,8 +378,40 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                     ))}
                   </div>
 
+                  {activeTab === 'canva' && (
+                    <div className="space-y-3">
+                      <p className="rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-3 text-sm text-[#F4F1EA]">
+                        Produksi visual utama di Canva, lalu gunakan fitur Share Canva untuk posting ke Instagram, TikTok, YouTube Shorts, atau download manual.
+                      </p>
+                      <Field label="Reels Timeline 15 Detik" value={draft.canvaReelsTimeline} onChange={(v) => updateDraft('canvaReelsTimeline', v)} rows={16} />
+                      <Field label="Carousel 7 Slide" value={draft.canvaCarouselSlides} onChange={(v) => updateDraft('canvaCarouselSlides', v)} rows={14} />
+                      <Field label="Teks Overlay" value={draft.canvaOverlayText} onChange={(v) => updateDraft('canvaOverlayText', v)} rows={8} />
+                      <Field label="Visual Guide" value={draft.canvaVisualGuide} onChange={(v) => updateDraft('canvaVisualGuide', v)} rows={10} />
+                      <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
+                      <Field label="Canva Share Guide" value={draft.canvaShareGuide} onChange={(v) => updateDraft('canvaShareGuide', v)} rows={9} />
+                      <ButtonRow>
+                        <CopyButton label="Copy Reels Brief" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
+                        <CopyButton label="Copy Carousel Brief" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
+                        <CopyButton label="Copy Overlay Text" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
+                        <CopyButton label="Copy Canva Share Guide" copied={copied.canvaShare} onClick={() => copyText('canvaShare', draft.canvaShareGuide)} />
+                        <CopyButton
+                          label="Copy Semua Canva Brief"
+                          copied={copied.canvaAll}
+                          onClick={() =>
+                            copyText(
+                              'canvaAll',
+                              `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}\n\nCanva Share Guide\n${draft.canvaShareGuide}`,
+                            )
+                          }
+                        />
+                        <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka Canva</a>
+                      </ButtonRow>
+                    </div>
+                  )}
+
                   {activeTab === 'instagram' && (
                     <div className="space-y-3">
+                      <p className="text-sm text-white/75">Asset visual diproduksi dulu di Canva, lalu upload langsung atau share dari Canva ke Instagram.</p>
                       <Field label="Caption Instagram" value={draft.igCaption} onChange={(v) => updateDraft('igCaption', v)} rows={7} />
                       <Field label="Hashtag" value={draft.igHashtag} onChange={(v) => updateDraft('igHashtag', v)} rows={3} />
                       <Field label="Reels storyboard" value={draft.igStoryboard} onChange={(v) => updateDraft('igStoryboard', v)} rows={6} />
@@ -373,6 +427,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
 
                   {activeTab === 'tiktok' && (
                     <div className="space-y-3">
+                      <p className="text-sm text-white/75">Video MP4 bisa dibagikan langsung dari Canva Share atau diupload manual ke TikTok.</p>
                       <Field label="Hook 3 detik" value={draft.tiktokHook} onChange={(v) => updateDraft('tiktokHook', v)} rows={3} />
                       <Field label="Script voice over" value={draft.tiktokScript} onChange={(v) => updateDraft('tiktokScript', v)} rows={7} />
                       <Field label="Caption TikTok" value={draft.tiktokCaption} onChange={(v) => updateDraft('tiktokCaption', v)} rows={4} />
@@ -386,8 +441,24 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                     </div>
                   )}
 
+                  {activeTab === 'youtube' && (
+                    <div className="space-y-3">
+                      <p className="text-sm text-white/75">Gunakan MP4 dari Canva untuk upload ke YouTube Shorts agar alur produksi tetap satu pintu.</p>
+                      <Field label="Judul SEO YouTube Shorts" value={draft.youtubeTitle} onChange={(v) => updateDraft('youtubeTitle', v)} rows={3} />
+                      <Field label="Deskripsi singkat" value={draft.youtubeDescription} onChange={(v) => updateDraft('youtubeDescription', v)} rows={5} />
+                      <Field label="Hashtag (wajib #Shorts)" value={draft.youtubeHashtags} onChange={(v) => updateDraft('youtubeHashtags', v)} rows={3} />
+                      <Field label="Upload guide" value={draft.youtubeUploadGuide} onChange={(v) => updateDraft('youtubeUploadGuide', v)} rows={6} />
+                      <ButtonRow>
+                        <CopyButton label="Copy Caption YouTube Shorts" copied={copied.youtubeCaption} onClick={() => copyText('youtubeCaption', `${draft.youtubeTitle}\n\n${draft.youtubeDescription}\n\n${draft.youtubeHashtags}`)} />
+                        <CopyButton label="Copy Upload Guide" copied={copied.youtubeGuide} onClick={() => copyText('youtubeGuide', draft.youtubeUploadGuide)} />
+                        <a href="https://studio.youtube.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka YouTube Studio</a>
+                      </ButtonRow>
+                    </div>
+                  )}
+
                   {activeTab === 'linkedin' && (
                     <div className="space-y-3">
+                      <p className="text-sm text-white/75">Export carousel atau visual utama dari Canva terlebih dahulu, lalu gunakan narasi profesional saat publish di LinkedIn.</p>
                       <Field label="Professional caption" value={draft.linkedInCaption} onChange={(v) => updateDraft('linkedInCaption', v)} rows={8} />
                       <Field label="Key insight bullet points" value={draft.linkedInBullets} onChange={(v) => updateDraft('linkedInBullets', v)} rows={6} />
                       <Field label="CTA ke halaman" value={draft.linkedInCta} onChange={(v) => updateDraft('linkedInCta', v)} rows={2} />
@@ -409,31 +480,6 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                     </div>
                   )}
 
-                  {activeTab === 'canva' && (
-                    <div className="space-y-3">
-                      <Field label="Reels Timeline 15 Detik" value={draft.canvaReelsTimeline} onChange={(v) => updateDraft('canvaReelsTimeline', v)} rows={16} />
-                      <Field label="Carousel 7 Slide" value={draft.canvaCarouselSlides} onChange={(v) => updateDraft('canvaCarouselSlides', v)} rows={14} />
-                      <Field label="Teks Overlay" value={draft.canvaOverlayText} onChange={(v) => updateDraft('canvaOverlayText', v)} rows={8} />
-                      <Field label="Visual Guide" value={draft.canvaVisualGuide} onChange={(v) => updateDraft('canvaVisualGuide', v)} rows={10} />
-                      <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
-                      <ButtonRow>
-                        <CopyButton label="Copy Reels Brief" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
-                        <CopyButton label="Copy Carousel Brief" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
-                        <CopyButton label="Copy Overlay Text" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
-                        <CopyButton
-                          label="Copy Semua Canva Brief"
-                          copied={copied.canvaAll}
-                          onClick={() =>
-                            copyText(
-                              'canvaAll',
-                              `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}`,
-                            )
-                          }
-                        />
-                        <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka Canva</a>
-                      </ButtonRow>
-                    </div>
-                  )}
                 </div>
 
                 <div className="space-y-3">
