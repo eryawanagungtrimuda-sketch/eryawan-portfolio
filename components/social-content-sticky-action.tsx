@@ -77,7 +77,7 @@ function buildSocialDraft(data: DetailPayload, contentType: ContentType): Compos
   const whatsappMessage = `Halo, saya mau share ${contentTypeLabel(contentType)} yang menurut saya relevan:\n${core}\n\n${summary}\n\nBaca lengkap di sini: ${data.canonicalUrl}`;
   const canvaReelsTimeline = `0-3 detik:
 Visual: Hero shot ${core} dengan framing clean dan gerak zoom-in ringan.
-Teks: "Ruang bagus belum tentu fungsional."
+Teks: "Ruang bagus bukan cuma soal tampilan."
 Narasi: "Sering kali ruang terlihat estetik, tapi belum nyaman dipakai."
 
 3-6 detik:
@@ -102,7 +102,7 @@ Narasi: "Hasilnya: ${impact.toLowerCase()}. Cek studi lengkapnya di website."`;
 
   const canvaCarouselSlides = `Slide 1: Hook
 ${core}
-"Dari ruang yang terlihat biasa, jadi lebih efektif dipakai."
+"Dari ruang yang rapi, menjadi ruang yang lebih bekerja."
 
 Slide 2: Konteks
 ${summary}
