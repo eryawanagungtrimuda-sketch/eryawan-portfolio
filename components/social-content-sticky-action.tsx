@@ -5,7 +5,39 @@ import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 type ContentType = 'karya' | 'wawasan';
-type PlatformTab = 'canva' | 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp';
+type PlatformTab = 'canva' | 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp' | 'checklist';
+
+type PublishChecklist = {
+  canvaDesignDone: boolean;
+  instagramReelsPosted: boolean;
+  instagramCarouselPosted: boolean;
+  tiktokPosted: boolean;
+  youtubeShortsPosted: boolean;
+  linkedinPosted: boolean;
+  whatsappShared: boolean;
+  postingDate: string;
+  postingNotes: string;
+  instagramUrl: string;
+  tiktokUrl: string;
+  youtubeUrl: string;
+  linkedinUrl: string;
+};
+
+const defaultChecklist: PublishChecklist = {
+  canvaDesignDone: false,
+  instagramReelsPosted: false,
+  instagramCarouselPosted: false,
+  tiktokPosted: false,
+  youtubeShortsPosted: false,
+  linkedinPosted: false,
+  whatsappShared: false,
+  postingDate: '',
+  postingNotes: '',
+  instagramUrl: '',
+  tiktokUrl: '',
+  youtubeUrl: '',
+  linkedinUrl: '',
+};
 
 type DetailPayload = {
   title: string;
@@ -228,9 +260,11 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<PlatformTab>('canva');
   const [draft, setDraft] = useState<ComposerDraft | null>(null);
+  const [checklist, setChecklist] = useState<PublishChecklist>(defaultChecklist);
   const [copied, setCopied] = useState<Record<string, boolean>>({});
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
+  const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
 
   useEffect(() => {
     let mounted = true;
@@ -296,6 +330,26 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
     sessionStorage.setItem(storageKey, JSON.stringify(draft));
   }, [draft, storageKey]);
 
+  useEffect(() => {
+    if (!open) return;
+    try {
+      const raw = localStorage.getItem(checklistStorageKey);
+      if (!raw) {
+        setChecklist(defaultChecklist);
+        return;
+      }
+      const parsed = JSON.parse(raw) as Partial<PublishChecklist>;
+      setChecklist({ ...defaultChecklist, ...parsed });
+    } catch {
+      setChecklist(defaultChecklist);
+    }
+  }, [checklistStorageKey, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    localStorage.setItem(checklistStorageKey, JSON.stringify(checklist));
+  }, [checklist, checklistStorageKey, open]);
+
   async function openModal() {
     setOpen(true);
     setActiveTab('canva');
@@ -335,6 +389,29 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
     }
   }
 
+  function updateChecklist<K extends keyof PublishChecklist>(key: K, value: PublishChecklist[K]) {
+    setChecklist((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function resetChecklist() {
+    setChecklist(defaultChecklist);
+    localStorage.removeItem(checklistStorageKey);
+  }
+
+  function buildPublishReport() {
+    return `Judul:\n${contentType} - ${slug}\n\nChecklist:\n- Canva Design: ${checklist.canvaDesignDone ? 'Selesai' : 'Belum'}\n- IG Reels: ${checklist.instagramReelsPosted ? 'Selesai' : 'Belum'}\n- IG Carousel: ${checklist.instagramCarouselPosted ? 'Selesai' : 'Belum'}\n- TikTok: ${checklist.tiktokPosted ? 'Selesai' : 'Belum'}\n- YouTube Shorts: ${checklist.youtubeShortsPosted ? 'Selesai' : 'Belum'}\n- LinkedIn: ${checklist.linkedinPosted ? 'Selesai' : 'Belum'}\n- WhatsApp: ${checklist.whatsappShared ? 'Selesai' : 'Belum'}\n\nLinks:\nInstagram: ${checklist.instagramUrl}\nTikTok: ${checklist.tiktokUrl}\nYouTube: ${checklist.youtubeUrl}\nLinkedIn: ${checklist.linkedinUrl}\n\nCatatan:\nTanggal: ${checklist.postingDate}\nNotes: ${checklist.postingNotes}`;
+  }
+
+  const checklistProgress = [
+    checklist.canvaDesignDone,
+    checklist.instagramReelsPosted,
+    checklist.instagramCarouselPosted,
+    checklist.tiktokPosted,
+    checklist.youtubeShortsPosted,
+    checklist.linkedinPosted,
+    checklist.whatsappShared,
+  ].filter(Boolean).length;
+
   if (!ready || !isAdmin) return null;
 
   return (
@@ -371,6 +448,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                       ['youtube', 'YouTube Shorts'],
                       ['linkedin', 'LinkedIn'],
                       ['whatsapp', 'WhatsApp'],
+                      ['checklist', 'Checklist'],
                     ] as [PlatformTab, string][]).map(([key, label]) => (
                       <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                         {label}
@@ -480,6 +558,45 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                     </div>
                   )}
 
+                  {activeTab === 'checklist' && (
+                    <div className="space-y-4 rounded-xl border border-[#D4AF37]/30 bg-[#11100f] p-4">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-[#E6C676]">Progress: {checklistProgress}/7 selesai</p>
+                        <p className="text-xs text-white/65">Checklist ini tersimpan di browser admin. Belum masuk database.</p>
+                      </div>
+
+                      <ChecklistSection title="Production">
+                        <ChecklistItem label="Canva Design selesai" checked={checklist.canvaDesignDone} onChange={(value) => updateChecklist('canvaDesignDone', value)} />
+                      </ChecklistSection>
+
+                      <ChecklistSection title="Distribution">
+                        <ChecklistItem label="Instagram Reels sudah diposting" checked={checklist.instagramReelsPosted} onChange={(value) => updateChecklist('instagramReelsPosted', value)} />
+                        <ChecklistItem label="Instagram Carousel sudah diposting" checked={checklist.instagramCarouselPosted} onChange={(value) => updateChecklist('instagramCarouselPosted', value)} />
+                        <ChecklistItem label="TikTok sudah diposting" checked={checklist.tiktokPosted} onChange={(value) => updateChecklist('tiktokPosted', value)} />
+                        <ChecklistItem label="YouTube Shorts sudah diposting" checked={checklist.youtubeShortsPosted} onChange={(value) => updateChecklist('youtubeShortsPosted', value)} />
+                        <ChecklistItem label="LinkedIn sudah diposting" checked={checklist.linkedinPosted} onChange={(value) => updateChecklist('linkedinPosted', value)} />
+                        <ChecklistItem label="WhatsApp sudah dibagikan" checked={checklist.whatsappShared} onChange={(value) => updateChecklist('whatsappShared', value)} />
+                      </ChecklistSection>
+
+                      <ChecklistSection title="Posting Links">
+                        <InputField label="Instagram URL" value={checklist.instagramUrl} onChange={(value) => updateChecklist('instagramUrl', value)} />
+                        <InputField label="TikTok URL" value={checklist.tiktokUrl} onChange={(value) => updateChecklist('tiktokUrl', value)} />
+                        <InputField label="YouTube Shorts URL" value={checklist.youtubeUrl} onChange={(value) => updateChecklist('youtubeUrl', value)} />
+                        <InputField label="LinkedIn URL" value={checklist.linkedinUrl} onChange={(value) => updateChecklist('linkedinUrl', value)} />
+                      </ChecklistSection>
+
+                      <ChecklistSection title="Notes">
+                        <InputField label="Tanggal posting" value={checklist.postingDate} onChange={(value) => updateChecklist('postingDate', value)} />
+                        <Field label="Catatan posting" value={checklist.postingNotes} onChange={(value) => updateChecklist('postingNotes', value)} rows={4} />
+                      </ChecklistSection>
+
+                      <ButtonRow>
+                        <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyText('publishReport', buildPublishReport())} />
+                        <button type="button" onClick={resetChecklist} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80">Reset Checklist</button>
+                      </ButtonRow>
+                    </div>
+                  )}
+
                 </div>
 
                 <div className="space-y-3">
@@ -514,5 +631,32 @@ function CopyButton({ label, copied, onClick }: { label: string; copied?: boolea
     <button type="button" onClick={onClick} className="rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676]">
       {copied ? 'Disalin' : label}
     </button>
+  );
+}
+
+function ChecklistSection({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-semibold text-[#E6C676]">{title}</p>
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+function ChecklistItem({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
+  return (
+    <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-sm text-white/90">
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="h-5 w-5 accent-[#D4AF37]" />
+      <span>{label}</span>
+    </label>
+  );
+}
+
+function InputField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label className="block text-sm text-white/90">
+      {label}
+      <input value={value} onChange={(event) => onChange(event.target.value)} className="mt-1 min-h-11 w-full rounded-xl border border-white/15 bg-[#11100f] px-3 py-2 text-sm text-[#F4F1EA] focus:border-[#D4AF37]/70 focus:outline-none" />
+    </label>
   );
 }
