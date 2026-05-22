@@ -5,7 +5,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 type ContentType = 'karya' | 'wawasan';
-type PlatformTab = 'instagram' | 'tiktok' | 'linkedin' | 'whatsapp';
+type PlatformTab = 'instagram' | 'tiktok' | 'linkedin' | 'whatsapp' | 'canva';
 
 type DetailPayload = {
   title: string;
@@ -43,6 +43,11 @@ type ComposerDraft = {
   linkedInCta: string;
   whatsappMessage: string;
   whatsappLink: string;
+  canvaReelsTimeline: string;
+  canvaCarouselSlides: string;
+  canvaOverlayText: string;
+  canvaVisualGuide: string;
+  canvaExportGuide: string;
   ogImage: string;
 };
 
@@ -56,6 +61,8 @@ function buildSocialDraft(data: DetailPayload, contentType: ContentType): Compos
   const conflict = data.conflict || 'Tantangan utamanya adalah menyatukan fungsi, kenyamanan, dan karakter visual.';
   const decision = data.designDecision || data.solution || 'Keputusan desain diarahkan pada alur ruang yang efisien dan mudah dipakai.';
   const impact = data.impact || data.insight || 'Hasilnya terasa lebih nyaman dipakai, lebih rapi, dan relevan untuk aktivitas utama.';
+  const insight = data.insight || 'Ruang yang berhasil adalah ruang yang terasa sederhana dipakai, bukan sekadar terlihat bagus.';
+  const visualUrl = data.ogImage || data.visual;
 
   const igCaption = `Hook singkat: Ruang bagus bukan hanya soal tampilan, tapi soal strategi penggunaan.\n\nProyek: ${core}\n${summary}\n\nInsight: ${decision}\nDampak: ${impact}\n\nLihat studi lengkap di website: ${data.canonicalUrl}`;
 
@@ -68,6 +75,91 @@ function buildSocialDraft(data: DetailPayload, contentType: ContentType): Compos
   const linkedInBullets = `• Pembuka masalah: ${conflict}\n• Batasan ruang: ${context}\n• Masalah ke solusi: ${decision}\n• Sudut pandang pengguna: ${impact}`;
 
   const whatsappMessage = `Halo, saya mau share ${contentTypeLabel(contentType)} yang menurut saya relevan:\n${core}\n\n${summary}\n\nBaca lengkap di sini: ${data.canonicalUrl}`;
+  const canvaReelsTimeline = `0-3 detik:
+Visual: Hero shot ${core} dengan framing clean dan gerak zoom-in ringan.
+Teks: "Ruang bagus bukan cuma soal tampilan."
+Narasi: "Sering kali ruang terlihat estetik, tapi belum nyaman dipakai."
+
+3-6 detik:
+Visual: Potongan area yang menunjukkan konteks ruang dan aktivitas utama.
+Teks: "Konteks: ${context}"
+Narasi: "Di proyek ini, konteks utamanya adalah ${context.toLowerCase()}."
+
+6-10 detik:
+Visual: Detail titik masalah + transisi ke sketsa/hasil solusi.
+Teks: "Masalah: ${conflict}"
+Narasi: "Tantangan utamanya adalah ${conflict.toLowerCase()}."
+
+10-14 detik:
+Visual: Before/after angle atau urutan alur ruang yang sudah diperbaiki.
+Teks: "Solusi: ${decision}"
+Narasi: "Keputusan desain kami: ${decision.toLowerCase()}."
+
+14-15 detik:
+Visual: Closing shot paling kuat + website URL di bawah.
+Teks: "Lihat studi lengkap di website"
+Narasi: "Hasilnya: ${impact.toLowerCase()}. Cek studi lengkapnya di website."`;
+
+  const canvaCarouselSlides = `Slide 1: Hook
+${core}
+"Dari ruang yang rapi, menjadi ruang yang lebih bekerja."
+
+Slide 2: Konteks
+${summary}
+
+Slide 3: Masalah
+${conflict}
+
+Slide 4: Batasan ruang
+${context}
+
+Slide 5: Keputusan desain
+${designLabel(data.designDecision, data.solution)}
+
+Slide 6: Dampak
+${impact}
+Insight tambahan: ${insight}
+
+Slide 7: CTA website
+Lihat studi ${contentTypeLabel(contentType)} lengkap:
+${data.canonicalUrl}`;
+
+  const canvaOverlayText = `"Ruang bagus harus enak dipakai."
+"Masalah utama: ${shortText(conflict)}"
+"Batasan: ${shortText(context)}"
+"Solusi: ${shortText(decision)}"
+"Dampak: ${shortText(impact)}"
+"Lihat studi lengkap di website"`;
+
+  const canvaVisualGuide = `Opening hero image:
+- Gunakan OG/hero image sebagai scene pembuka untuk membangun konteks visual.
+
+Detail material image:
+- Ambil crop detail material, tekstur, atau sambungan yang merepresentasikan kualitas desain.
+
+Activity/user image:
+- Pilih foto dengan interaksi pengguna atau aktivitas utama agar manfaat ruang terasa nyata.
+
+Closing image:
+- Gunakan frame hasil akhir paling kuat, lalu tambahkan URL website sebagai CTA.
+
+Referensi visual utama:
+${visualUrl}`;
+
+  const canvaExportGuide = `Reels:
+- Ukuran: 1080 x 1920 px
+- Format: MP4
+- Durasi: 15 detik
+
+Carousel:
+- Ukuran: 1080 x 1350 px
+- Format: PNG/JPG
+- Jumlah: 7 slide
+
+Best practice:
+- Jaga teks agar tidak terlalu bawah (safe area).
+- Gunakan overlay gelap untuk menjaga keterbacaan.
+- Gunakan teks putih dengan aksen emas agar konsisten dengan brand.`;
 
   return {
     igCaption,
@@ -85,8 +177,22 @@ function buildSocialDraft(data: DetailPayload, contentType: ContentType): Compos
     linkedInCta: `Baca studi ${contentTypeLabel(contentType)} lengkap: ${data.canonicalUrl}`,
     whatsappMessage,
     whatsappLink: data.canonicalUrl,
+    canvaReelsTimeline,
+    canvaCarouselSlides,
+    canvaOverlayText,
+    canvaVisualGuide,
+    canvaExportGuide,
     ogImage: data.ogImage,
   };
+}
+
+function shortText(text: string, max = 90) {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max).trim()}...`;
+}
+
+function designLabel(designDecision: string, solution: string) {
+  return designDecision || solution || 'Keputusan desain diarahkan untuk membuat alur ruang lebih efisien dan nyaman.';
 }
 
 function contentTypeLabel(contentType: ContentType) {
@@ -242,6 +348,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                       ['tiktok', 'TikTok'],
                       ['linkedin', 'LinkedIn'],
                       ['whatsapp', 'WhatsApp'],
+                      ['canva', 'Canva'],
                     ] as [PlatformTab, string][]).map(([key, label]) => (
                       <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                         {label}
@@ -298,6 +405,32 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                       <ButtonRow>
                         <CopyButton label="Copy WhatsApp" copied={copied.whatsapp} onClick={() => copyText('whatsapp', `${draft.whatsappMessage}\n${draft.whatsappLink}`)} />
                         <a href={`https://wa.me/?text=${encodeURIComponent(`${draft.whatsappMessage}\n${draft.whatsappLink}`)}`} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Share via WhatsApp</a>
+                      </ButtonRow>
+                    </div>
+                  )}
+
+                  {activeTab === 'canva' && (
+                    <div className="space-y-3">
+                      <Field label="Reels Timeline 15 Detik" value={draft.canvaReelsTimeline} onChange={(v) => updateDraft('canvaReelsTimeline', v)} rows={16} />
+                      <Field label="Carousel 7 Slide" value={draft.canvaCarouselSlides} onChange={(v) => updateDraft('canvaCarouselSlides', v)} rows={14} />
+                      <Field label="Teks Overlay" value={draft.canvaOverlayText} onChange={(v) => updateDraft('canvaOverlayText', v)} rows={8} />
+                      <Field label="Visual Guide" value={draft.canvaVisualGuide} onChange={(v) => updateDraft('canvaVisualGuide', v)} rows={10} />
+                      <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
+                      <ButtonRow>
+                        <CopyButton label="Copy Reels Brief" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
+                        <CopyButton label="Copy Carousel Brief" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
+                        <CopyButton label="Copy Overlay Text" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
+                        <CopyButton
+                          label="Copy Semua Canva Brief"
+                          copied={copied.canvaAll}
+                          onClick={() =>
+                            copyText(
+                              'canvaAll',
+                              `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}`,
+                            )
+                          }
+                        />
+                        <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka Canva</a>
                       </ButtonRow>
                     </div>
                   )}
