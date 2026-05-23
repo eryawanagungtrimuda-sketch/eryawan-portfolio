@@ -262,6 +262,8 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
   const [draft, setDraft] = useState<ComposerDraft | null>(null);
   const [checklist, setChecklist] = useState<PublishChecklist>(defaultChecklist);
   const [copied, setCopied] = useState<Record<string, boolean>>({});
+  const [dirtyFields, setDirtyFields] = useState<Set<keyof ComposerDraft>>(new Set());
+  const [regenNotes, setRegenNotes] = useState('');
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
@@ -375,6 +377,36 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
 
   function updateDraft<K extends keyof ComposerDraft>(key: K, value: ComposerDraft[K]) {
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setDirtyFields((prev) => {
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  }
+
+  function regenerateCanvaMissingOnly() {
+    if (!draft || !generatedDraft) return;
+    const canvaKeys: (keyof ComposerDraft)[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'];
+    const nextDraft: ComposerDraft = { ...draft };
+
+    for (const key of canvaKeys) {
+      const current = String(draft[key] ?? '').trim();
+      const base = String(generatedDraft[key] ?? '').trim();
+      if (!current || dirtyFields.has(key) || current !== base) {
+        nextDraft[key] = generatedDraft[key];
+      }
+    }
+
+    if (regenNotes.trim()) {
+      nextDraft.canvaOverlayText = `${nextDraft.canvaOverlayText}
+
+Catatan revisi admin:
+${regenNotes.trim()}`;
+    }
+
+    setDraft(nextDraft);
+    setCopied((prev) => ({ ...prev, regen: true }));
+    window.setTimeout(() => setCopied((prev) => ({ ...prev, regen: false })), 2000);
   }
 
   async function copyText(copyKey: string, text: string) {
@@ -428,8 +460,8 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
       </div>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-3 sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label="Social Composer v2">
-          <div ref={modalRef} className="font-sans max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[#D4AF37]/35 bg-[#0E0D0B] p-4 text-[#F4F1EA] sm:p-6">
+        <div className="fixed inset-x-3 top-4 z-50 flex justify-center sm:inset-x-6" role="dialog" aria-modal="true" aria-label="Social Composer v2">
+          <div ref={modalRef} className="font-sans max-h-[86vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[#D4AF37]/35 bg-[#0E0D0B]/95 p-4 text-[#F4F1EA] shadow-2xl backdrop-blur sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-lg font-semibold text-[#E6C676]">Social Composer v2</h2>
               <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-white/20 px-3 py-1 text-sm">Tutup</button>
@@ -465,6 +497,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                       <Field label="Carousel 7 Slide" value={draft.canvaCarouselSlides} onChange={(v) => updateDraft('canvaCarouselSlides', v)} rows={14} />
                       <Field label="Teks Overlay" value={draft.canvaOverlayText} onChange={(v) => updateDraft('canvaOverlayText', v)} rows={8} />
                       <Field label="Visual Guide" value={draft.canvaVisualGuide} onChange={(v) => updateDraft('canvaVisualGuide', v)} rows={10} />
+                      <Field label="Catatan revisi admin (opsional)" value={regenNotes} onChange={setRegenNotes} rows={3} />
                       <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
                       <Field label="Canva Share Guide" value={draft.canvaShareGuide} onChange={(v) => updateDraft('canvaShareGuide', v)} rows={9} />
                       <ButtonRow>
@@ -482,6 +515,7 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
                             )
                           }
                         />
+                        <button type="button" onClick={regenerateCanvaMissingOnly} className="rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676]">{copied.regen ? 'Disalin' : 'Regenerate Missing Canva'}</button>
                         <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka Canva</a>
                       </ButtonRow>
                     </div>
@@ -560,8 +594,9 @@ export default function SocialContentStickyAction({ contentType, slug }: Props) 
 
                   {activeTab === 'checklist' && (
                     <div className="space-y-4 rounded-xl border border-[#D4AF37]/30 bg-[#11100f] p-4">
-                      <div className="space-y-1">
+                      <div className="space-y-2">
                         <p className="text-sm font-medium text-[#E6C676]">Progress: {checklistProgress}/7 selesai</p>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-white/10"><div className="h-full bg-[#D4AF37]" style={{ width: `${(checklistProgress / 7) * 100}%` }} /></div>
                         <p className="text-xs text-white/65">Checklist ini tersimpan di browser admin. Belum masuk database.</p>
                       </div>
 
