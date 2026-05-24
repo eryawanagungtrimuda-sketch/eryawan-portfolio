@@ -1,8 +1,9 @@
 'use client';
 
-import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
+import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
@@ -68,11 +69,37 @@ const areaTypeOptions = [
   'Landscape',
   'Building Renovation',
 ];
-const areaTagOptions = [
+const DEFAULT_AREA_TAGS = [
+  'Lobby',
+  'Resepsionis',
+  'Ruang Tunggu',
+  'Ruang Keluarga',
+  'Ruang Makan',
+  'Dapur',
+  'Pantry',
+  'Koridor',
+  'Kamar Tidur',
+  'Kamar Mandi',
+  'Area Kerja',
+  'Ruang Meeting',
+  'Ruang Konsultasi',
+  'Ruang Treatment',
+  'Area Retail',
+  'Area Display',
+  'Area Cafe',
+  'Area Outdoor',
+  'Area Layanan Publik',
+  'Furniture / Built-in',
+  'Fasad',
+  'Lainnya',
+];
+
+const galleryAreaTagOptions = [
   'Lobby', 'Reception', 'Waiting Area', 'Living Room', 'Dining Area', 'Kitchen', 'Bedroom', 'Bathroom', 'Workspace',
   'Meeting Room', 'Consultation Room', 'Treatment Room', 'Retail Area', 'Display Area', 'Cafe Area', 'Pantry', 'Corridor',
   'Facade', 'Outdoor Area', 'Public Service Area', 'Furniture / Built-in', 'Other',
 ];
+
 const displayRatioOptions = [
   { value: 'landscape', label: 'Landscape' },
   { value: 'wide', label: 'Wide' },
@@ -296,7 +323,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         ? [project.area_type]
         : [],
   );
-  const [customAreaTag, setCustomAreaTag] = useState('');
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
   const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
@@ -1014,27 +1040,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
 
   const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
 
-  function addAreaTag(tag: string) {
-    const normalized = normalizeText(tag);
-    if (!normalized || areaTags.includes(normalized)) return;
-    setAreaTags((current) => [...current, normalized]);
-  }
-
-  function removeAreaTag(tag: string) {
-    setAreaTags((current) => current.filter((item) => item !== tag));
-  }
-
-  function addCustomAreaTag() {
-    addAreaTag(customAreaTag);
-    setCustomAreaTag('');
-  }
-
-  function handleCustomAreaTagEnter(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key !== 'Enter') return;
-    event.preventDefault();
-    addCustomAreaTag();
-  }
-
   function addImageAreaTag(imageId: string, tag: string) {
     const normalized = normalizeText(tag);
     if (!normalized) return;
@@ -1090,47 +1095,9 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         </div>
         <div className="md:col-span-2">
           <label>Area/Ruang Tags</label>
-          <p className="mt-2 text-xs leading-5 text-white/42">Pilih satu atau lebih area/ruang yang termasuk dalam project ini. Tags ini akan dipakai untuk filter referensi visual pada tahap berikutnya.</p>
-          <div className="mt-3 flex flex-col gap-3 rounded-sm border border-white/10 bg-[#0b0b0a] p-4">
-            <div className="flex flex-wrap gap-2">
-              {areaTagOptions.map((option) => {
-                const isSelected = areaTags.includes(option);
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => (isSelected ? removeAreaTag(option) : addAreaTag(option))}
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-4 transition ${
-                      isSelected
-                        ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
-                        : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
-                    }`}
-                  >
-                    {getAreaTagLabel(option)}
-                    {isSelected ? <X size={12} /> : null}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex gap-2">
-              <input
-                value={customAreaTag}
-                onChange={(event) => setCustomAreaTag(event.target.value)}
-                onKeyDown={handleCustomAreaTagEnter}
-                placeholder="Tambah area custom"
-                className="flex-1"
-              />
-              <button type="button" onClick={addCustomAreaTag} className="rounded-sm border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
-            </div>
-            {areaTags.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {areaTags.map((tag) => (
-                  <button key={tag} type="button" onClick={() => removeAreaTag(tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">
-                    {getAreaTagLabel(tag)} <X size={12} />
-                  </button>
-                ))}
-              </div>
-            ) : <p className="text-xs text-white/40">Belum ada tags dipilih.</p>}
+          <p className="mt-2 text-xs leading-5 text-white/42">Pilih area/ruang yang termasuk dalam proyek ini. Tags ini membantu filter visual dan konten sosial.</p>
+          <div className="mt-3">
+            <ProjectTagPicker value={areaTags} onChange={setAreaTags} suggestions={DEFAULT_AREA_TAGS} placeholder="Cari atau tambah area..." maxTags={10} />
           </div>
         </div>
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
@@ -1266,7 +1233,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                           <div className="space-y-2.5 rounded-xl border border-white/10 bg-black/30 p-3">
                             <div className="max-h-56 overflow-y-auto pr-1">
                               <div className="flex flex-wrap gap-1.5">
-                              {areaTagOptions.map((option) => {
+                              {galleryAreaTagOptions.map((option) => {
                                 const isSelected = (image.area_tags || []).includes(option);
                                 return (
                                   <button
