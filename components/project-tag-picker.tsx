@@ -31,7 +31,6 @@ export function ProjectTagPicker({
   className = '',
 }: Props) {
   const [input, setInput] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
 
   const normalizedSuggestions = useMemo(() => {
     const map = new Map<string, string>();
@@ -91,8 +90,6 @@ export function ProjectTagPicker({
       <input
         value={input}
         onChange={(event) => setInput(event.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setTimeout(() => setIsFocused(false), 120)}
         onKeyDown={(event) => {
           if (event.key !== 'Enter') return;
           event.preventDefault();
@@ -105,8 +102,8 @@ export function ProjectTagPicker({
 
       {showHelperText && !canAddMore ? <p className="mt-2 text-xs text-[#D4AF37]/80">Maksimal {maxTags} tags.</p> : null}
 
-      {isFocused && canAddMore ? (
-        <div className={`${suggestionSpacingClassName} flex flex-wrap gap-2`}>
+      {canAddMore ? (
+        <div className={`${suggestionSpacingClassName} flex flex-wrap gap-1.5`}>
           {filteredSuggestions.map(([tag, label]) => {
             const isSelected = value.includes(tag);
             return (
@@ -116,7 +113,7 @@ export function ProjectTagPicker({
                 disabled={isSelected}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => addTag(tag)}
-                className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1 text-xs text-white/72 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-full border border-white/15 bg-white/[0.02] px-2.5 py-1 text-[11px] text-white/72 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {label}
               </button>
@@ -128,7 +125,7 @@ export function ProjectTagPicker({
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => addTag(input)}
-              className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]"
+              className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] text-[#D4AF37]"
             >
               Add "{normalizedInput}"
             </button>
