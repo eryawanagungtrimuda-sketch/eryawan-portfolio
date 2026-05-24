@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { getAreaTagLabel } from '@/lib/area-tags';
+import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
@@ -318,7 +318,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         : [],
   );
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
-  const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
   const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
   const hasRelatedWawasan = Boolean(relatedInsight);
 
@@ -1182,13 +1181,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                     <div className="space-y-2 pt-1">
                       <div className="flex flex-wrap gap-2">
                         <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
-                        <button
-                          type="button"
-                          onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: !current[image.id] }))}
-                          className="inline-flex h-8 items-center gap-2 rounded-full border border-white/15 bg-white/[0.01] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
-                        >
-                          Kelola Tag
-                        </button>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex h-8 items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
@@ -1196,35 +1188,15 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                     </div>
                     <div>
                       <label>Image Area Tags</label>
-                      <div className="mt-2 space-y-2.5">
-                        {(image.area_tags || []).length > 0 ? (
-                          <div className="flex flex-wrap gap-2">
-                            {(image.area_tags || []).map((tag) => (
-                              <span key={`${image.id}-${tag}`} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)}</span>
-                            ))}
-                          </div>
-                        ) : <p className="text-xs text-white/40">Belum ada tag area gambar.</p>}
-                        {expandedImageTagPanels[image.id] ? (
-                          <div className="space-y-2 rounded-xl border border-white/10 bg-black/30 p-3">
-                            <ProjectTagPicker
-                              value={image.area_tags || []}
-                              onChange={(tags) => { void updateGalleryImageAreaTags(image.id, tags); }}
-                              suggestions={[...DEFAULT_AREA_TAGS, ...(image.area_tags || [])]}
-                              variant="compact"
-                              emptyText="Belum ada tag area gambar."
-                              showHelperText={false}
-                              className="bg-[#0b0b0a]/60"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: false }))}
-                              className="rounded-full border border-white/12 px-3 py-1.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/65 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
-                            >
-                              Selesai
-                            </button>
-                          </div>
-                        ) : null}
-                      </div>
+                      <ProjectTagPicker
+                        value={image.area_tags || []}
+                        onChange={(tags) => { void updateGalleryImageAreaTags(image.id, tags); }}
+                        suggestions={[...DEFAULT_AREA_TAGS, ...(image.area_tags || [])]}
+                        variant="compact"
+                        emptyText="Belum ada tag area gambar."
+                        showHelperText={false}
+                        className="mt-2 bg-[#0b0b0a]/60"
+                      />
                     </div>
                     <div className="rounded-xl border border-white/8 bg-black/25 px-3 py-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
