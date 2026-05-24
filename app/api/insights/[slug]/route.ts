@@ -3,6 +3,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase
 import { absoluteUrl } from '@/lib/site-url';
 
 type InsightDetailResponse = {
+  id: string;
   title: string;
   slug: string;
   summary: string;
@@ -36,7 +37,7 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('insights')
-    .select('title,slug,excerpt,category,content,cover_image,created_at,is_published')
+    .select('id,title,slug,excerpt,category,content,cover_image,created_at,is_published')
     .eq('slug', slug)
     .eq('is_published', true)
     .maybeSingle();
@@ -48,6 +49,7 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
   const ogImage = data.cover_image || absoluteUrl('/hero.jpg');
 
   const response: InsightDetailResponse = {
+    id: data.id,
     title: data.title,
     slug: data.slug,
     summary: data.excerpt ?? '',

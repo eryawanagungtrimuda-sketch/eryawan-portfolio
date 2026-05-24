@@ -40,6 +40,7 @@ const defaultChecklist: PublishChecklist = {
 };
 
 type DetailPayload = {
+  id: string;
   title: string;
   slug: string;
   summary: string;
@@ -265,6 +266,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug }: Props
   const [dirtyFields, setDirtyFields] = useState<Set<keyof ComposerDraft>>(new Set());
   const [regenNotes, setRegenNotes] = useState('');
   const [postStatus, setPostStatus] = useState<Partial<Record<'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp', { state: 'idle' | 'posting' | 'success' | 'error'; message: string }>>>({});
+  const [downloadAllLoading, setDownloadAllLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
@@ -449,6 +451,39 @@ ${regenNotes.trim()}`;
     }
   }
 
+  async function downloadAllImages() {
+    if (!payload?.id || downloadAllLoading) return;
+    setDownloadAllLoading(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error('Session admin tidak ditemukan.');
+
+      const response = await fetch(`/api/download-project-images?projectId=${encodeURIComponent(payload.id)}`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Gagal membuat ZIP gambar.');
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      const fallbackName = `${payload.slug}-images.zip`;
+      const disposition = response.headers.get('Content-Disposition') || '';
+      const matched = disposition.match(/filename=\"?([^\";]+)\"?/i);
+      anchor.href = objectUrl;
+      anchor.download = matched?.[1] || fallbackName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error('[SocialComposer] download all images failed', error);
+    } finally {
+      setDownloadAllLoading(false);
+    }
+  }
+
   function updateChecklist<K extends keyof PublishChecklist>(key: K, value: PublishChecklist[K]) {
     setChecklist((prev) => ({ ...prev, [key]: value }));
   }
@@ -529,6 +564,15 @@ ${regenNotes.trim()}`;
                       <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
                       <Field label="Canva Share Guide" value={draft.canvaShareGuide} onChange={(v) => updateDraft('canvaShareGuide', v)} rows={9} />
                       <ButtonRow>
+                        <button
+                          type="button"
+                          onClick={downloadAllImages}
+                          disabled={downloadAllLoading || !payload?.id}
+                          title="Unduh semua gambar proyek untuk produksi konten di Canva"
+                          className="rounded-full border border-[#D4AF37]/60 bg-[#1A1406] px-4 py-2 text-sm text-[#E6C676] disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {downloadAllLoading ? 'Menyiapkan ZIP...' : 'Download Semua Gambar'}
+                        </button>
                         <CopyButton label="Copy Reels Brief" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
                         <CopyButton label="Copy Carousel Brief" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
                         <CopyButton label="Copy Overlay Text" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
