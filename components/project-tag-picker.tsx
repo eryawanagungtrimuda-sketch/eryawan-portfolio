@@ -31,6 +31,7 @@ export function ProjectTagPicker({
   className = '',
 }: Props) {
   const [input, setInput] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const normalizedSuggestions = useMemo(() => {
     const map = new Map<string, string>();
@@ -53,6 +54,7 @@ export function ProjectTagPicker({
 
   const inputExistsInSuggestions = normalizedInput ? normalizedSuggestions.has(normalizedInput) : false;
   const inputAlreadySelected = normalizedInput ? value.includes(normalizedInput) : false;
+  const shouldShowSuggestions = canAddMore && (isFocused || normalizedInput.length > 0);
 
   function addTag(raw: string) {
     const normalized = normalizeTag(raw);
@@ -89,6 +91,10 @@ export function ProjectTagPicker({
 
       <input
         value={input}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => {
+          setTimeout(() => setIsFocused(false), 120);
+        }}
         onChange={(event) => setInput(event.target.value)}
         onKeyDown={(event) => {
           if (event.key !== 'Enter') return;
@@ -102,7 +108,7 @@ export function ProjectTagPicker({
 
       {showHelperText && !canAddMore ? <p className="mt-2 text-xs text-[#D4AF37]/80">Maksimal {maxTags} tags.</p> : null}
 
-      {canAddMore ? (
+      {shouldShowSuggestions ? (
         <div className={`${suggestionSpacingClassName} flex flex-wrap gap-1.5`}>
           {filteredSuggestions.map(([tag, label]) => {
             const isSelected = value.includes(tag);
