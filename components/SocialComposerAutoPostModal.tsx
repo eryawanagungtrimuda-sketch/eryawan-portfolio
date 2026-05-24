@@ -563,33 +563,49 @@ ${regenNotes.trim()}`;
                       <Field label="Catatan revisi admin (opsional)" value={regenNotes} onChange={setRegenNotes} rows={3} />
                       <Field label="Export Guide" value={draft.canvaExportGuide} onChange={(v) => updateDraft('canvaExportGuide', v)} rows={10} />
                       <Field label="Canva Share Guide" value={draft.canvaShareGuide} onChange={(v) => updateDraft('canvaShareGuide', v)} rows={9} />
-                      <ButtonRow>
-                        <button
-                          type="button"
-                          onClick={downloadAllImages}
-                          disabled={downloadAllLoading || !payload?.id}
-                          title="Unduh semua gambar proyek untuk produksi konten di Canva"
-                          className="rounded-full border border-[#D4AF37]/60 bg-[#1A1406] px-4 py-2 text-sm text-[#E6C676] disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          {downloadAllLoading ? 'Menyiapkan ZIP...' : 'Download Semua Gambar'}
-                        </button>
-                        <CopyButton label="Copy Reels Brief" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
-                        <CopyButton label="Copy Carousel Brief" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
-                        <CopyButton label="Copy Overlay Text" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
-                        <CopyButton label="Copy Canva Brief" copied={copied.canvaShare} onClick={() => copyText('canvaShare', draft.canvaShareGuide)} />
-                        <CopyButton
-                          label="Copy Canva Brief Lengkap"
-                          copied={copied.canvaAll}
-                          onClick={() =>
-                            copyText(
-                              'canvaAll',
-                              `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}\n\nCanva Share Guide\n${draft.canvaShareGuide}`,
-                            )
-                          }
-                        />
-                        <button type="button" onClick={regenerateMissingFields} className="rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676]">{copied.regen ? 'Disalin' : 'Regenerate Missing Canva'}</button>
-                        <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/20 px-4 py-2 text-sm">Buka Canva</a>
-                      </ButtonRow>
+                      <div className="space-y-4 pt-2 font-sans">
+                        <div className="space-y-2">
+                          <p className="text-xs text-[#F4F1EA]/80">Alur cepat: unduh gambar, salin brief lengkap, lalu buka Canva.</p>
+                          <p className="text-sm font-semibold text-[#E6C676]">Aksi Utama</p>
+                          <ButtonRow>
+                            <button
+                              type="button"
+                              onClick={downloadAllImages}
+                              disabled={downloadAllLoading || !payload?.id}
+                              title="Unduh semua gambar proyek untuk produksi konten di Canva"
+                              className="rounded-full border border-[#D4AF37]/80 bg-[#1A1406] px-4 py-2 text-sm font-semibold text-[#E6C676] disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              {downloadAllLoading ? 'Menyiapkan ZIP...' : 'Download Semua Gambar'}
+                            </button>
+                            <CopyButton
+                              label="Copy Brief Lengkap"
+                              copied={copied.canvaAll}
+                              className="border-[#D4AF37]/80 bg-[#D4AF37]/15 font-semibold"
+                              onClick={() =>
+                                copyText(
+                                  'canvaAll',
+                                  `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}\n\nCanva Share Guide\n${draft.canvaShareGuide}`,
+                                )
+                              }
+                            />
+                            <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#D4AF37]/70 bg-[#D4AF37]/10 px-4 py-2 text-sm font-semibold text-[#E6C676]">Buka Canva</a>
+                          </ButtonRow>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-white/85">Opsi Detail</p>
+                          <ButtonRow>
+                            <CopyButton label="Copy Reels" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
+                            <CopyButton label="Copy Carousel" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
+                            <CopyButton label="Copy Overlay" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
+                          </ButtonRow>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold text-white/70">Opsi Lanjutan</p>
+                          <ButtonRow>
+                            <button type="button" onClick={regenerateMissingFields} className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm text-white/80">{copied.regen ? 'Disalin' : 'Perbarui Bagian Kosong'}</button>
+                          </ButtonRow>
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -738,9 +754,9 @@ function ButtonRow({ children }: { children: ReactNode }) {
   return <div className="flex flex-wrap items-center gap-3 pt-2">{children}</div>;
 }
 
-function CopyButton({ label, copied, onClick }: { label: string; copied?: boolean; onClick: () => void }) {
+function CopyButton({ label, copied, onClick, className = '' }: { label: string; copied?: boolean; onClick: () => void; className?: string }) {
   return (
-    <button type="button" onClick={onClick} className="rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676]">
+    <button type="button" onClick={onClick} className={`rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676] ${className}`}>
       {copied ? 'Disalin' : label}
     </button>
   );
