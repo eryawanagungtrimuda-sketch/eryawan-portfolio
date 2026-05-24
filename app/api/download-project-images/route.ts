@@ -5,6 +5,7 @@ import { isAllowedAdminEmail } from '@/lib/admin-auth';
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 type ProjectMeta = {
   id: string;
@@ -144,20 +145,20 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'Belum ada gambar untuk diunduh.' }, { status: 404 });
     }
 
-    // Step 8: Build ZIP by downloading each asset and adding binary bytes to JSZip.
+    // Step 8: Build ZIP by downloading each asset and adding ArrayBuffer bytes to JSZip.
     const zip = new JSZip();
     for (const asset of assets) {
-      const response = await fetch(asset.url, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`Gagal mengunduh aset: ${asset.url}`);
+      const imageResponse = await fetch(asset.url, { cache: 'no-store' });
+      if (!imageResponse.ok) throw new Error(`Gagal mengunduh aset: ${asset.url}`);
 
-      const bytes: ArrayBuffer = await response.arrayBuffer();
+      const imageArrayBuffer: ArrayBuffer = await imageResponse.arrayBuffer();
       const extension = getFileExtensionFromUrl(asset.url);
-      zip.file(`${asset.name}.${extension}`, new Uint8Array(bytes), { binary: true });
+      zip.file(`${asset.name}.${extension}`, imageArrayBuffer);
     }
 
-    // Step 9: Generate Uint8Array so body type is valid for NextResponse (no Buffer typing issue).
-    const zipBytes: Uint8Array = await zip.generateAsync({
-      type: 'uint8array',
+    // Step 9: Generate ArrayBuffer so body type is valid for NextResponse on Vercel/Next.js.
+    const zipArrayBuffer: ArrayBuffer = await zip.generateAsync({
+      type: 'arraybuffer',
       compression: 'DEFLATE',
       compressionOptions: { level: 6 },
       streamFiles: true,
@@ -168,7 +169,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const fileName = `${baseName}-${dateStamp}.zip`;
 
     // Step 10: Return downloadable ZIP with required headers.
-    return new NextResponse(zipBytes, {
+    return new NextResponse(zipArrayBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/zip',
