@@ -9,13 +9,27 @@ type Props = {
   suggestions: string[];
   placeholder?: string;
   maxTags?: number;
+  variant?: 'default' | 'compact';
+  emptyText?: string;
+  showHelperText?: boolean;
+  className?: string;
 };
 
 function normalizeTag(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
-export function ProjectTagPicker({ value, onChange, suggestions, placeholder = 'Cari atau tambah area...', maxTags = 10 }: Props) {
+export function ProjectTagPicker({
+  value,
+  onChange,
+  suggestions,
+  placeholder = 'Cari atau tambah area...',
+  maxTags = 10,
+  variant = 'default',
+  emptyText = 'Belum ada tags dipilih.',
+  showHelperText = true,
+  className = '',
+}: Props) {
   const [input, setInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -52,8 +66,14 @@ export function ProjectTagPicker({ value, onChange, suggestions, placeholder = '
     onChange(value.filter((item) => item !== tag));
   }
 
+  const containerClassName = variant === 'compact'
+    ? 'rounded-xl border border-white/10 bg-black/20 p-3 font-sans'
+    : 'rounded-sm border border-white/10 bg-[#0b0b0a] p-4 font-sans';
+  const inputSpacingClassName = variant === 'compact' ? 'mt-2.5' : 'mt-3';
+  const suggestionSpacingClassName = variant === 'compact' ? 'mt-2.5' : 'mt-3';
+
   return (
-    <div className="rounded-sm border border-white/10 bg-[#0b0b0a] p-4 font-sans">
+    <div className={`${containerClassName} ${className}`.trim()}>
       <div className="flex flex-wrap gap-2">
         {value.length > 0 ? value.map((tag) => (
           <button
@@ -65,7 +85,7 @@ export function ProjectTagPicker({ value, onChange, suggestions, placeholder = '
             {normalizedSuggestions.get(tag) || tag}
             <X size={12} />
           </button>
-        )) : <p className="text-xs text-white/40">Belum ada tags dipilih.</p>}
+        )) : <p className="text-xs text-white/40">{emptyText}</p>}
       </div>
 
       <input
@@ -80,13 +100,13 @@ export function ProjectTagPicker({ value, onChange, suggestions, placeholder = '
         }}
         placeholder={placeholder}
         disabled={!canAddMore}
-        className="mt-3 w-full"
+        className={`${inputSpacingClassName} w-full`}
       />
 
-      {!canAddMore ? <p className="mt-2 text-xs text-[#D4AF37]/80">Maksimal 10 tags.</p> : null}
+      {showHelperText && !canAddMore ? <p className="mt-2 text-xs text-[#D4AF37]/80">Maksimal {maxTags} tags.</p> : null}
 
       {isFocused && canAddMore ? (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className={`${suggestionSpacingClassName} flex flex-wrap gap-2`}>
           {filteredSuggestions.map(([tag, label]) => {
             const isSelected = value.includes(tag);
             return (
