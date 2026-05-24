@@ -3,6 +3,7 @@ import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase
 import { absoluteUrl } from '@/lib/site-url';
 
 type ProjectDetailResponse = {
+  id: string;
   title: string;
   slug: string;
   summary: string;
@@ -46,7 +47,7 @@ export async function GET(
   const { data, error } = await supabase
     .from('projects')
     .select(
-      'title,slug,category,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,dampak,insight_kunci,completion_year,is_published',
+      'id,title,slug,category,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,dampak,insight_kunci,completion_year,is_published',
     )
     .eq('slug', slug)
     .eq('is_published', true)
@@ -71,6 +72,7 @@ export async function GET(
   const ogImage = data.cover_image || absoluteUrl('/hero.jpg');
 
   const response: ProjectDetailResponse = {
+    id: data.id,
     title: data.title,
     slug: data.slug,
     summary,
