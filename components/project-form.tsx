@@ -94,12 +94,6 @@ const DEFAULT_AREA_TAGS = [
   'Lainnya',
 ];
 
-const galleryAreaTagOptions = [
-  'Lobby', 'Reception', 'Waiting Area', 'Living Room', 'Dining Area', 'Kitchen', 'Bedroom', 'Bathroom', 'Workspace',
-  'Meeting Room', 'Consultation Room', 'Treatment Room', 'Retail Area', 'Display Area', 'Cafe Area', 'Pantry', 'Corridor',
-  'Facade', 'Outdoor Area', 'Public Service Area', 'Furniture / Built-in', 'Other',
-];
-
 const displayRatioOptions = [
   { value: 'landscape', label: 'Landscape' },
   { value: 'wide', label: 'Wide' },
@@ -324,7 +318,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         : [],
   );
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
-  const [customImageAreaTags, setCustomImageAreaTags] = useState<Record<string, string>>({});
   const [expandedImageTagPanels, setExpandedImageTagPanels] = useState<Record<string, boolean>>({});
   const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
   const hasRelatedWawasan = Boolean(relatedInsight);
@@ -1040,24 +1033,6 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
 
   const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
 
-  function addImageAreaTag(imageId: string, tag: string) {
-    const normalized = normalizeText(tag);
-    if (!normalized) return;
-    const image = galleryImages.find((item) => item.id === imageId);
-    const nextTags = Array.from(new Set([...(image?.area_tags || []), normalized]));
-    void updateGalleryImageAreaTags(imageId, nextTags);
-  }
-
-  function removeImageAreaTag(imageId: string, tag: string) {
-    const image = galleryImages.find((item) => item.id === imageId);
-    const nextTags = (image?.area_tags || []).filter((item) => item !== tag);
-    void updateGalleryImageAreaTags(imageId, nextTags);
-  }
-
-  function addCustomImageAreaTag(imageId: string, value: string) {
-    addImageAreaTag(imageId, value);
-  }
-
   function getUploadStatusLabel(status: UploadQueueStatus) {
     if (status === 'uploading') return 'Mengunggah';
     if (status === 'saved') return 'Tersimpan';
@@ -1225,53 +1200,25 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                         {(image.area_tags || []).length > 0 ? (
                           <div className="flex flex-wrap gap-2">
                             {(image.area_tags || []).map((tag) => (
-                              <button key={`${image.id}-${tag}`} type="button" onClick={() => removeImageAreaTag(image.id, tag)} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)} <X size={12} /></button>
+                              <span key={`${image.id}-${tag}`} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]">{getAreaTagLabel(tag)}</span>
                             ))}
                           </div>
                         ) : <p className="text-xs text-white/40">Belum ada tag area gambar.</p>}
                         {expandedImageTagPanels[image.id] ? (
-                          <div className="space-y-2.5 rounded-xl border border-white/10 bg-black/30 p-3">
-                            <div className="max-h-56 overflow-y-auto pr-1">
-                              <div className="flex flex-wrap gap-1.5">
-                              {galleryAreaTagOptions.map((option) => {
-                                const isSelected = (image.area_tags || []).includes(option);
-                                return (
-                                  <button
-                                    key={`${image.id}-${option}`}
-                                    type="button"
-                                    onClick={() => (isSelected ? removeImageAreaTag(image.id, option) : addImageAreaTag(image.id, option))}
-                                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] leading-4 transition ${
-                                      isSelected
-                                        ? 'border-[#D4AF37]/45 bg-[#D4AF37]/15 text-[#D4AF37]'
-                                        : 'border-white/20 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]'
-                                    }`}
-                                  >
-                                    {getAreaTagLabel(option)}
-                                    {isSelected ? <X size={12} /> : null}
-                                  </button>
-                                );
-                              })}
-                              </div>
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 sm:flex-nowrap">
-                              <input
-                                value={customImageAreaTags[image.id] || ''}
-                                onChange={(event) => setCustomImageAreaTags((current) => ({ ...current, [image.id]: event.target.value }))}
-                                onKeyDown={(event) => {
-                                  if (event.key !== 'Enter') return;
-                                  event.preventDefault();
-                                  addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || '');
-                                  setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' }));
-                                }}
-                                placeholder="Tambah area custom"
-                                className="min-w-[180px] flex-1"
-                              />
-                              <button type="button" onClick={() => { addCustomImageAreaTag(image.id, customImageAreaTags[image.id] || ''); setCustomImageAreaTags((current) => ({ ...current, [image.id]: '' })); }} className="rounded-sm border border-white/10 px-2.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Add</button>
-                            </div>
+                          <div className="space-y-2 rounded-xl border border-white/10 bg-black/30 p-3">
+                            <ProjectTagPicker
+                              value={image.area_tags || []}
+                              onChange={(tags) => { void updateGalleryImageAreaTags(image.id, tags); }}
+                              suggestions={[...DEFAULT_AREA_TAGS, ...(image.area_tags || [])]}
+                              variant="compact"
+                              emptyText="Belum ada tag area gambar."
+                              showHelperText={false}
+                              className="bg-[#0b0b0a]/60"
+                            />
                             <button
                               type="button"
                               onClick={() => setExpandedImageTagPanels((current) => ({ ...current, [image.id]: false }))}
-                              className="rounded-sm border border-white/12 px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+                              className="rounded-full border border-white/12 px-3 py-1.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-white/65 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
                             >
                               Selesai
                             </button>
