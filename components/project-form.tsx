@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ImagePlus, Sparkles, Star, X } from 'lucide-react';
+import { ImagePlus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { getAreaTagLabel } from '@/lib/area-tags';
@@ -1178,12 +1178,10 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                   </button>
                   <div className="flex h-full flex-col gap-3 p-4">
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
-                    <div className="space-y-2 pt-1">
-                      <div className="flex flex-wrap gap-2">
+                    <div className="pt-1">
+                      <div className="flex items-center justify-between gap-2">
                         <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} className="inline-flex h-8 items-center gap-2 rounded-full border border-red-300/25 bg-red-400/[0.04] px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><X size={13} /> {isDeleting ? 'Menghapus...' : 'Hapus Gambar'}</button>
+                        <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} aria-label={isDeleting ? 'Menghapus gambar' : 'Hapus gambar'} className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-red-300/25 bg-red-400/[0.04] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><Trash2 size={14} /></button>
                       </div>
                     </div>
                     <div>
