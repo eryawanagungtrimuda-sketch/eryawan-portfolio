@@ -5,6 +5,7 @@ import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import ShareLinkButton from '@/components/share-link-button';
+import { getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import type { Project, ProjectWithArchiveImages } from '@/lib/types';
 
 type Props = { projects: ProjectWithArchiveImages[] };
@@ -25,9 +26,6 @@ function normalize(value?: string | null) {
   return (value || '').trim().toLowerCase();
 }
 
-function normalizeTag(value?: string | null) {
-  return normalize((value || '').replace(/\s+/g, ' '));
-}
 
 const displayLabelMap: Record<string, string> = {
   'Commercial Interior': 'Interior Komersial',
@@ -39,24 +37,6 @@ const displayLabelMap: Record<string, string> = {
   Modern: 'Modern',
 };
 
-const areaLabelMap: Record<string, string> = {
-  Bedroom: 'Kamar Tidur',
-  'Cafe Area': 'Area Kafe',
-  'Consultation Room': 'Ruang Konsultasi',
-  Corridor: 'Koridor',
-  'Kamar Bermain Anak': 'Kamar Bermain Anak',
-  Kitchen: 'Dapur',
-  'Living Room': 'Ruang Tamu',
-  Lobby: 'Lobi',
-  'Meeting Room': 'Ruang Rapat',
-  Pantry: 'Pantry',
-  Reception: 'Resepsionis',
-  'Ruang Tamu': 'Ruang Tamu',
-  'Treatment Room': 'Ruang Perawatan',
-  'Waiting Area': 'Area Tunggu',
-  'Walk In Closet': 'Walk-in Closet',
-  Workspace: 'Ruang Kerja',
-};
 
 function getDisplayLabel(value?: string | null) {
   const normalized = (value || '').trim();
@@ -71,12 +51,6 @@ function localizeFilterValue(value: string) {
     'Done / Selesai': 'Selesai',
   };
   return map[value] || value;
-}
-
-function localizeAreaLabel(value?: string | null) {
-  const normalized = (value || '').trim();
-  if (!normalized) return '';
-  return areaLabelMap[normalized] || normalized;
 }
 
 function truncateText(value?: string | null, limit = 150) {
@@ -133,20 +107,20 @@ function getProjectArchiveThumbnail(project: ProjectWithArchiveImages, selectedA
   if (selectedAreaTags.length === 0) return coverFallback;
 
   const normalizedSelectedTags = selectedAreaTags
-    .map((tag) => ({ raw: tag, normalized: normalizeTag(tag) }))
+    .map((tag) => ({ raw: getAreaTagLabel(tag), normalized: normalizeAreaTag(tag) }))
     .filter((tag) => tag.normalized.length > 0);
 
   if (normalizedSelectedTags.length === 0) return coverFallback;
 
   const matchedImage = (project.archive_images || []).find((image) => {
     if (!image.image_url) return false;
-    const imageTags = (image.area_tags || []).map((tag) => normalizeTag(tag)).filter(Boolean);
+    const imageTags = (image.area_tags || []).map((tag) => normalizeAreaTag(tag)).filter(Boolean);
     return imageTags.some((imageTag) => normalizedSelectedTags.some((selectedTag) => selectedTag.normalized === imageTag));
   });
 
   if (!matchedImage?.image_url) return coverFallback;
 
-  const imageTags = (matchedImage.area_tags || []).map((tag) => normalizeTag(tag)).filter(Boolean);
+  const imageTags = (matchedImage.area_tags || []).map((tag) => normalizeAreaTag(tag)).filter(Boolean);
   const matchedAreaTag = normalizedSelectedTags.find((selectedTag) => imageTags.includes(selectedTag.normalized))?.raw || null;
 
   return {
@@ -201,7 +175,7 @@ export default function KaryaArchive({ projects }: Props) {
 
   const areaTagOptions = useMemo(() => {
     const set = new Set<string>();
-    projects.forEach((project) => projectAreaTags(project).forEach((tag) => set.add(localizeAreaLabel(tag))));
+    projects.forEach((project) => projectAreaTags(project).forEach((tag) => set.add(getAreaTagLabel(tag))));
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [projects]);
 
@@ -234,7 +208,7 @@ export default function KaryaArchive({ projects }: Props) {
         const matchesCategory = category === 'Semua' || normalize(localizeFilterValue(project.category || '')) === normalize(category);
         const matchesDesignCategory = designCategory === 'Semua' || normalize(localizeFilterValue(project.design_category || '')) === normalize(designCategory);
         const matchesDesignStyle = designStyle === 'Semua' || normalize(localizeFilterValue(project.design_style || '')) === normalize(designStyle);
-        const matchesAreaTags = selectedAreaTags.length === 0 || selectedAreaTags.some((selected) => projectTags.some((tag) => normalize(localizeAreaLabel(tag)) === normalize(selected)));
+        const matchesAreaTags = selectedAreaTags.length === 0 || selectedAreaTags.some((selected) => projectTags.some((tag) => normalizeAreaTag(tag) === normalizeAreaTag(selected)));
         const matchesStatus = projectStatus === 'Semua' || normalize(getProjectStatus(project)) === normalize(projectStatus);
         return matchesSearch && matchesCategory && matchesDesignCategory && matchesDesignStyle && matchesAreaTags && matchesStatus;
       })
@@ -525,7 +499,7 @@ export default function KaryaArchive({ projects }: Props) {
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-5 font-sans text-sm leading-[1.75] text-white/62 md:text-[15px]">{truncateText(getProjectTeaser(project), 130)}</p> : null}
                 <p className="mt-2 line-clamp-2 font-sans text-xs leading-relaxed text-white/52">{truncateText(getProjectShareCopy(project), 160)}</p>
-                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{localizeAreaLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
+                <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{getAreaTagLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex items-center gap-3 rounded-[999px] border border-[#D4AF37]/45 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#D4AF37] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/50 hover:bg-[#D4AF37]/10 hover:text-[#E2C866] active:translate-y-0 active:scale-[0.98]">Lihat Proses & Hasil <ArrowUpRight size={16} /></Link>
                   <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex items-center gap-2 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/70 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">Email <Mail size={14} /></a>
