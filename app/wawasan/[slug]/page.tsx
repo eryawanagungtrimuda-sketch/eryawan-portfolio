@@ -6,6 +6,7 @@ import InsightImageGallery from '@/components/insight-image-gallery';
 import RevealObserver from '@/components/reveal-observer';
 import ShareLinkButton from '@/components/share-link-button';
 import WawasanAdminActions from '@/components/wawasan-admin-actions';
+import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 import { absoluteUrl } from '@/lib/site-url';
 
@@ -143,7 +144,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
     <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
       <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-      <div className="reveal-on-scroll mx-auto max-w-4xl pb-32 md:pb-24">
+      <div className="reveal-on-scroll mx-auto max-w-4xl pb-20 md:pb-24">
         <SmartBackLink
           fallbackHref="/wawasan"
           className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-white/15 px-3 py-2 font-sans text-sm text-white/64 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
@@ -220,14 +221,17 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           </div>
         </section>
 
-        <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
-          <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white">← Kembali ke Sebelumnya</SmartBackLink>
-          <Link href="/karya" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/18">Lihat Karya</Link>
-          <Link href="/mulai-project" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-5 py-2.5 text-center font-sans text-sm leading-none text-white/70 transition motion-safe:duration-300 hover:border-white/25 hover:bg-white/[0.03] hover:text-white">Diskusikan Proyek Serupa</Link>
+        <div className="mt-8 border-t border-white/10 pt-10 sm:mt-10 sm:pt-12">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Link href="/karya" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12">Lihat Karya</Link>
+            <Link href="/mulai-project" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">Diskusikan Proyek Serupa</Link>
+            <AdminEditWawasanShortcut insightId={insight.id} className="premium-interactive inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12" />
+            <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]">← Kembali ke Sebelumnya</SmartBackLink>
+          </div>
         </div>
       </div>
 
-      <WawasanAdminActions insightId={insight.id} slug={insight.slug} />
+      <WawasanAdminActions slug={insight.slug} />
     </main>
   );
 }
