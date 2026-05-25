@@ -121,12 +121,12 @@ function getProjectStatus(project: Project) {
 function FilterChips({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (value: string) => void }) {
   return (
     <div>
-      <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">{label}</p>
+      <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">{label}</p>
       <div className="flex flex-wrap gap-2.5">
         {options.map((item) => {
           const active = item === value;
           return (
-            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
+            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
               active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
             }`}>
               {item}
@@ -311,7 +311,7 @@ export default function KaryaArchive({ projects }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Filter Karya"
-        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
+        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 font-sans shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-white/20" />
@@ -330,7 +330,7 @@ export default function KaryaArchive({ projects }: Props) {
           <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
           <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
           <div>
-            <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Area / Ruang</p>
+            <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Area / Ruang</p>
             <div className="flex flex-wrap gap-2.5">
               {areaTagOptions.map((tag) => {
                 const active = selectedAreaTags.includes(tag);
@@ -339,7 +339,7 @@ export default function KaryaArchive({ projects }: Props) {
                     key={tag}
                     type="button"
                     onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
-                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
                   >
                     {tag}
                   </button>
@@ -348,7 +348,7 @@ export default function KaryaArchive({ projects }: Props) {
             </div>
           </div>
           <div>
-            <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
+            <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
             <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
               <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
               <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
@@ -447,11 +447,11 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
 
         <div className="mt-7 hidden border-t border-white/10 pt-7 lg:block">
-          <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Area / Ruang</p>
+          <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Area / Ruang</p>
           <div className="flex flex-wrap gap-2.5">
             {areaTagOptions.map((tag) => {
               const active = selectedAreaTags.includes(tag);
-              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
+              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
             })}
           </div>
         </div>
