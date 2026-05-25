@@ -59,24 +59,34 @@ function truncateText(value?: string | null, limit = 150) {
   return `${value.slice(0, limit).trim()}...`;
 }
 
-function uniqueOptions(projects: Project[], key: keyof Project) {
+function uniqueOptions(projects: ProjectWithArchiveImages[], key: keyof Project) {
   const values = projects.map((project) => project[key]);
   const unique = Array.from(new Set(values.filter((value): value is string => typeof value === 'string' && value.trim().length > 0).map((value) => value.trim())));
   return ['Semua', ...unique.sort((a, b) => a.localeCompare(b)).map(localizeFilterValue)];
 }
 
-function projectAreaTags(project: Project) {
-  const set = new Set<string>();
-  if (project.area_type?.trim()) set.add(project.area_type.trim());
-  (project.area_tags || []).forEach((tag) => {
-    if (tag?.trim()) set.add(tag.trim());
+function getProjectFilterAreaTags(project: ProjectWithArchiveImages) {
+  const normalizedTagMap = new Map<string, string>();
+  const archiveImageTags = (project.archive_images || []).flatMap((image) => image.area_tags || []);
+  const allTags = [
+    project.area_type,
+    ...(project.area_tags || []),
+    ...archiveImageTags,
+  ];
+
+  allTags.forEach((tag) => {
+    if (!tag) return;
+    const normalizedTag = normalizeAreaTag(tag);
+    if (!normalizedTag) return;
+    normalizedTagMap.set(normalizedTag, getAreaTagLabel(tag));
   });
-  return Array.from(set);
+
+  return Array.from(normalizedTagMap.values());
 }
 
-function limitedAreaTags(project: Project, max = 2) {
+function limitedAreaTags(project: ProjectWithArchiveImages, max = 2) {
   const category = normalize(project.category || project.design_category);
-  const tags = projectAreaTags(project).filter((tag) => normalize(tag) !== category);
+  const tags = getProjectFilterAreaTags(project).filter((tag) => normalize(tag) !== category);
   return {
     visible: tags.slice(0, max),
     overflow: Math.max(tags.length - max, 0),
@@ -175,7 +185,7 @@ export default function KaryaArchive({ projects }: Props) {
 
   const areaTagOptions = useMemo(() => {
     const set = new Set<string>();
-    projects.forEach((project) => projectAreaTags(project).forEach((tag) => set.add(getAreaTagLabel(tag))));
+    projects.forEach((project) => getProjectFilterAreaTags(project).forEach((tag) => set.add(tag)));
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [projects]);
 
@@ -191,7 +201,8 @@ export default function KaryaArchive({ projects }: Props) {
 
     return projects
       .filter((project) => {
-        const projectTags = projectAreaTags(project);
+        const projectTags = getProjectFilterAreaTags(project);
+        const archiveImageTags = (project.archive_images || []).flatMap((image) => image.area_tags || []);
         const searchFields = [
           project.title,
           project.category,
@@ -199,6 +210,7 @@ export default function KaryaArchive({ projects }: Props) {
           project.design_style,
           project.area_type,
           ...(project.area_tags || []),
+          ...archiveImageTags,
           project.problem,
           project.solution,
           project.impact,
