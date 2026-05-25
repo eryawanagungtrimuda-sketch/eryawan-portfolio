@@ -278,9 +278,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const [draft, setDraft] = useState<ComposerDraft | null>(null);
   const [checklist, setChecklist] = useState<PublishChecklist>(defaultChecklist);
   const [copied, setCopied] = useState<Record<string, boolean>>({});
-  const [dirtyFields, setDirtyFields] = useState<Set<keyof ComposerDraft>>(new Set());
   const [regenNotes, setRegenNotes] = useState('');
   const [regenGoal, setRegenGoal] = useState<ContentGoal>('viral-ready');
+  const [isGoalTouched, setIsGoalTouched] = useState(false);
   const [regenLoading, setRegenLoading] = useState(false);
   const [regenFeedback, setRegenFeedback] = useState<{ tone: 'success' | 'warning' | 'error'; message: string } | null>(null);
   const [postStatus, setPostStatus] = useState<Partial<Record<'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp', { state: 'idle' | 'posting' | 'success' | 'error'; message: string }>>>({});
@@ -377,6 +377,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   async function openModal() {
     setOpen(true);
     setActiveTab('canva');
+    setIsGoalTouched(false);
+    setRegenGoal('viral-ready');
+    setRegenFeedback(null);
     if (payload || loading) return;
     setLoading(true);
     try {
@@ -399,6 +402,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   useEffect(() => {
     if (!open) return;
+    if (isGoalTouched) return;
     if (activeTab === 'linkedin') {
       setRegenGoal('profesional');
       return;
@@ -408,15 +412,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       return;
     }
     setRegenGoal('viral-ready');
-  }, [activeTab, open]);
+  }, [activeTab, isGoalTouched, open]);
 
   function updateDraft<K extends keyof ComposerDraft>(key: K, value: ComposerDraft[K]) {
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
-    setDirtyFields((prev) => {
-      const next = new Set(prev);
-      next.add(key);
-      return next;
-    });
   }
 
   async function regenerateMissingFields() {
@@ -428,12 +427,15 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     }
 
     setRegenLoading(true);
-    setRegenFeedback(null);
+    setRegenFeedback({ tone: 'warning', message: 'Membuat ulang bagian kosong...' });
     try {
       const supabase = createSupabaseBrowserClient();
       const { data } = await supabase.auth.getSession();
       const token = data.session?.access_token;
-      if (!token) throw new Error('Session admin tidak ditemukan.');
+      if (!token) {
+        setRegenFeedback({ tone: 'error', message: 'Sesi admin tidak ditemukan. Silakan login ulang.' });
+        return;
+      }
 
       const source = {
         title: payload?.title || '',
@@ -466,9 +468,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
         if (typeof nextValue === 'string' && nextValue.trim()) nextDraft[field] = nextValue;
       }
       setDraft(nextDraft);
-      setDirtyFields(new Set());
       persistDrafts(nextDraft);
-      setRegenFeedback({ tone: result.fallbackUsed ? 'warning' : 'success', message: result.fallbackUsed ? 'AI belum tersedia, memakai template cadangan' : 'Bagian kosong diperbarui' });
+      setRegenFeedback({ tone: result.fallbackUsed ? 'warning' : 'success', message: result.fallbackUsed ? 'AI belum tersedia, memakai template cadangan.' : 'Bagian kosong berhasil diperbarui dengan AI.' });
     } catch {
       const nextDraft = { ...draft };
       for (const field of blankFields) {
@@ -477,7 +478,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       }
       setDraft(nextDraft);
       persistDrafts(nextDraft);
-      setRegenFeedback({ tone: 'warning', message: 'AI belum tersedia, memakai template cadangan' });
+      setRegenFeedback({ tone: 'warning', message: 'AI belum tersedia, memakai template cadangan.' });
     } finally {
       setRegenLoading(false);
     }
@@ -670,7 +671,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                           <p className="text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                             <label className="text-xs text-white/70">Tujuan konten</label>
-                            <select value={regenGoal} onChange={(event) => setRegenGoal(event.target.value as ContentGoal)} className="min-h-11 w-full rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm font-sans text-[#F4F1EA] sm:w-auto">
+                            <select value={regenGoal} onChange={(event) => {
+                              setRegenGoal(event.target.value as ContentGoal);
+                              setIsGoalTouched(true);
+                            }} className="min-h-11 w-full rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm font-sans text-[#F4F1EA] sm:w-auto">
                               <option value="profesional">Profesional</option>
                               <option value="edukatif">Edukatif</option>
                               <option value="viral-ready">Viral-ready</option>
@@ -678,8 +682,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                             </select>
                           </div>
                           <ButtonRow>
-                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="min-h-11 w-full rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-sans text-white/80 sm:w-auto disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang...' : 'Perbarui Bagian Kosong'}</button>
+                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="min-h-11 w-full rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-sans text-white/80 sm:w-auto disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang bagian kosong...' : 'Perbarui Bagian Kosong'}</button>
                           </ButtonRow>
+                          <p className="text-xs text-white/70">Kosongkan kolom tertentu, lalu klik tombol ini. Kolom lain tidak akan ditimpa.</p>
                           {regenFeedback ? <p className={`text-xs ${regenFeedback.tone === 'success' ? 'text-[#E6C676]' : 'text-white/75'}`}>{regenFeedback.message}</p> : null}
                         </div>
                       </div>
