@@ -30,7 +30,7 @@ const AREA_TAG_ALIASES: Record<string, string> = {
   'ruang treatment': 'ruang treatment',
 };
 
-export const DEFAULT_AREA_TAGS = [
+export const DEFAULT_AREA_TAGS: string[] = [
   'Lobby',
   'Resepsionis',
   'Ruang Tunggu',
@@ -53,7 +53,7 @@ export const DEFAULT_AREA_TAGS = [
   'Furniture / Built-in',
   'Fasad',
   'Lainnya',
-] as const;
+];
 
 export function normalizeAreaTag(value?: string | null) {
   const normalized = (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
