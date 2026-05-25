@@ -589,18 +589,18 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       </div>
 
       {open ? (
-        <div className="fixed inset-x-3 top-4 z-50 flex justify-center sm:inset-x-6" role="dialog" aria-modal="true" aria-label="Social Composer v2">
-          <div ref={modalRef} className="font-sans max-h-[86vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[#D4AF37]/35 bg-[#0E0D0B]/95 p-4 text-[#F4F1EA] shadow-2xl backdrop-blur sm:p-6">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold text-[#E6C676]">Social Composer v2</h2>
-              <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
+        <div className="fixed inset-x-3 top-3 z-50 flex justify-center sm:inset-x-6 sm:top-4" role="dialog" aria-modal="true" aria-label="Social Composer v2">
+          <div ref={modalRef} className="font-sans max-h-[90dvh] w-[calc(100vw-24px)] max-w-5xl overflow-x-hidden overflow-y-auto rounded-3xl border border-[#D4AF37]/35 bg-[#0E0D0B]/95 p-3 text-[#F4F1EA] shadow-2xl backdrop-blur sm:max-h-[88vh] sm:p-6">
+            <div className="sticky top-0 z-10 -mx-3 flex items-center justify-between gap-3 border-b border-white/10 bg-[#0E0D0B]/95 px-3 pb-3 pt-1 sm:static sm:mx-0 sm:border-b-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
+              <h2 className="pr-2 text-base font-semibold text-[#E6C676] sm:text-lg">Social Composer v2</h2>
+              <button type="button" onClick={() => setOpen(false)} className="min-h-11 shrink-0 rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
             </div>
 
             {loading || !draft ? (
               <p className="mt-4 text-sm text-white/70">Menyiapkan draft konten berbasis template...</p>
             ) : (
-              <div className="mt-5 grid gap-5 lg:grid-cols-[1.1fr,0.9fr]">
-                <div className="space-y-4">
+              <div className="mt-4 grid gap-4 lg:mt-5 lg:grid-cols-[1.1fr,0.9fr] lg:gap-5">
+                <div className="min-w-0 space-y-4">
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {([
                       ['canva', 'Canva'],
@@ -611,7 +611,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       ['whatsapp', 'WhatsApp'],
                       ['checklist', 'Checklist'],
                     ] as [PlatformTab, string][]).map(([key, label]) => (
-                      <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
+                      <button key={key} type="button" onClick={() => setActiveTab(key)} className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                         {label}
                       </button>
                     ))}
@@ -639,7 +639,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                               onClick={downloadAllImages}
                               disabled={downloadAllLoading || !payload?.id}
                               title="Unduh semua gambar proyek untuk produksi konten di Canva"
-                              className="rounded-full border border-[#D4AF37]/80 bg-[#1A1406] px-4 py-2 text-sm font-semibold text-[#E6C676] disabled:cursor-not-allowed disabled:opacity-60"
+                              className="min-h-11 w-full max-w-full rounded-full border border-[#D4AF37]/80 bg-[#1A1406] px-4 py-2 text-sm font-semibold text-[#E6C676] sm:w-auto disabled:cursor-not-allowed disabled:opacity-60"
                             >
                               {downloadAllLoading ? 'Menyiapkan ZIP...' : 'Download Semua Gambar'}
                             </button>
@@ -654,7 +654,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                                 )
                               }
                             />
-                            <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#D4AF37]/70 bg-[#D4AF37]/10 px-4 py-2 text-sm font-semibold text-[#E6C676]">Buka Canva</a>
+                            <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 w-full max-w-full items-center justify-center whitespace-nowrap rounded-full border border-[#D4AF37]/70 bg-[#D4AF37]/10 px-4 py-2 text-sm font-semibold text-[#E6C676] sm:w-auto">Buka Canva</a>
                           </ButtonRow>
                         </div>
                         <div className="space-y-2">
@@ -668,9 +668,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                         <div className="space-y-2">
                           <p className="text-sm font-semibold text-white/70">Opsi Lanjutan</p>
                           <p className="text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
-                          <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                             <label className="text-xs text-white/70">Tujuan konten</label>
-                            <select value={regenGoal} onChange={(event) => setRegenGoal(event.target.value as ContentGoal)} className="min-h-11 rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm text-[#F4F1EA]">
+                            <select value={regenGoal} onChange={(event) => setRegenGoal(event.target.value as ContentGoal)} className="min-h-11 w-full rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm font-sans text-[#F4F1EA] sm:w-auto">
                               <option value="profesional">Profesional</option>
                               <option value="edukatif">Edukatif</option>
                               <option value="viral-ready">Viral-ready</option>
@@ -678,7 +678,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                             </select>
                           </div>
                           <ButtonRow>
-                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm text-white/80 disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang...' : 'Perbarui Bagian Kosong'}</button>
+                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="min-h-11 w-full rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-sans text-white/80 sm:w-auto disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang...' : 'Perbarui Bagian Kosong'}</button>
                           </ButtonRow>
                           {regenFeedback ? <p className={`text-xs ${regenFeedback.tone === 'success' ? 'text-[#E6C676]' : 'text-white/75'}`}>{regenFeedback.message}</p> : null}
                         </div>
@@ -804,10 +804,12 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
                 </div>
 
-                <div className="space-y-3">
+                <div className="min-w-0 space-y-3">
                   <p className="text-sm text-[#E6C676]">Preview visual (OG image)</p>
-                  <img src={draft.ogImage} alt="Preview OG" className="h-auto w-full rounded-xl border border-white/10 object-cover" />
-                  <a href={draft.ogImage} target="_blank" rel="noopener noreferrer" className="inline-flex rounded-full border border-white/20 px-4 py-2 text-sm">Buka Visual</a>
+                  <div className="w-full max-w-full overflow-hidden rounded-xl border border-white/10">
+                    <img src={draft.ogImage} alt="Preview OG" className="h-auto w-full max-w-full object-cover" />
+                  </div>
+                  <a href={draft.ogImage} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-4 py-2 text-sm font-sans">Buka Visual</a>
                 </div>
               </div>
             )}
@@ -820,20 +822,20 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
 function Field({ label, value, onChange, rows }: { label: string; value: string; onChange: (value: string) => void; rows: number }) {
   return (
-    <label className="block text-sm text-white/90">
+    <label className="block max-w-full text-sm text-white/90">
       {label}
-      <textarea value={value} onChange={(event) => onChange(event.target.value)} rows={rows} className="mt-1 w-full rounded-xl border border-white/15 bg-[#11100f] p-3 text-sm text-[#F4F1EA] focus:border-[#D4AF37]/70 focus:outline-none" />
+      <textarea value={value} onChange={(event) => onChange(event.target.value)} rows={rows} className="mt-1 min-h-11 w-full max-w-full rounded-xl border border-white/15 bg-[#11100f] p-3 text-sm font-sans text-[#F4F1EA] break-words focus:border-[#D4AF37]/70 focus:outline-none" />
     </label>
   );
 }
 
 function ButtonRow({ children }: { children: ReactNode }) {
-  return <div className="flex flex-wrap items-center gap-3 pt-2">{children}</div>;
+  return <div className="flex flex-wrap items-center gap-2 pt-2 sm:gap-3">{children}</div>;
 }
 
 function CopyButton({ label, copied, onClick, className = '' }: { label: string; copied?: boolean; onClick: () => void; className?: string }) {
   return (
-    <button type="button" onClick={onClick} className={`rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm text-[#E6C676] ${className}`}>
+    <button type="button" onClick={onClick} className={`min-h-11 max-w-full whitespace-nowrap rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10 px-4 py-2 text-sm font-sans text-[#E6C676] ${className}`}>
       {copied ? 'Disalin' : label}
     </button>
   );
