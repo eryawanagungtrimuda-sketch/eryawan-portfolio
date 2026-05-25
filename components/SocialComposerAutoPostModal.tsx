@@ -88,6 +88,16 @@ type ComposerDraft = {
   canvaShareGuide: string;
   ogImage: string;
 };
+type RegenerableField =
+  | 'canvaReelsTimeline'
+  | 'canvaCarouselSlides'
+  | 'canvaOverlayText'
+  | 'igCaption'
+  | 'tiktokCaption'
+  | 'youtubeDescription'
+  | 'linkedInCaption'
+  | 'whatsappMessage';
+type ContentGoal = 'profesional' | 'edukatif' | 'viral-ready' | 'soft-selling';
 
 type Props = {
   contentType: ContentType;
@@ -270,11 +280,15 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const [copied, setCopied] = useState<Record<string, boolean>>({});
   const [dirtyFields, setDirtyFields] = useState<Set<keyof ComposerDraft>>(new Set());
   const [regenNotes, setRegenNotes] = useState('');
+  const [regenGoal, setRegenGoal] = useState<ContentGoal>('viral-ready');
+  const [regenLoading, setRegenLoading] = useState(false);
+  const [regenFeedback, setRegenFeedback] = useState<{ tone: 'success' | 'warning' | 'error'; message: string } | null>(null);
   const [postStatus, setPostStatus] = useState<Partial<Record<'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp', { state: 'idle' | 'posting' | 'success' | 'error'; message: string }>>>({});
   const [downloadAllLoading, setDownloadAllLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
+  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokCaption', 'youtubeDescription', 'linkedInCaption', 'whatsappMessage'];
 
   useEffect(() => {
     let mounted = true;
@@ -383,6 +397,19 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     setDraft(generatedDraft);
   }, [generatedDraft, draft]);
 
+  useEffect(() => {
+    if (!open) return;
+    if (activeTab === 'linkedin') {
+      setRegenGoal('profesional');
+      return;
+    }
+    if (activeTab === 'whatsapp') {
+      setRegenGoal('soft-selling');
+      return;
+    }
+    setRegenGoal('viral-ready');
+  }, [activeTab, open]);
+
   function updateDraft<K extends keyof ComposerDraft>(key: K, value: ComposerDraft[K]) {
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
     setDirtyFields((prev) => {
@@ -392,34 +419,68 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     });
   }
 
-  function regenerateMissingFields() {
-    if (!draft || !generatedDraft) return;
-    const keysToEvaluate: (keyof ComposerDraft)[] = [
-      'canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'igHashtag', 'igStoryboard', 'igCarousel', 'igCta',
-      'tiktokHook', 'tiktokScript', 'tiktokCaption', 'tiktokHashtag', 'tiktokCta', 'youtubeTitle', 'youtubeDescription', 'youtubeHashtags',
-      'linkedInCaption', 'linkedInBullets', 'linkedInCta',
-    ];
-    const nextDraft: ComposerDraft = { ...draft };
+  async function regenerateMissingFields() {
+    if (!draft || !generatedDraft || regenLoading) return;
+    const blankFields = regenerableFields.filter((key) => String(draft[key] ?? '').trim().length === 0);
+    if (blankFields.length === 0) {
+      setRegenFeedback({ tone: 'warning', message: 'Tidak ada bagian kosong untuk diperbarui.' });
+      return;
+    }
 
-    for (const key of keysToEvaluate) {
-      const current = String(draft[key] ?? '').trim();
-      const base = String(generatedDraft[key] ?? '').trim();
-      if (!current || dirtyFields.has(key)) {
-        nextDraft[key] = generatedDraft[key];
+    setRegenLoading(true);
+    setRegenFeedback(null);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error('Session admin tidak ditemukan.');
+
+      const source = {
+        title: payload?.title || '',
+        category: payload?.category || null,
+        designCategory: payload?.category || null,
+        style: null,
+        year: payload?.year || null,
+        areaSize: null,
+        summary: payload?.summary || null,
+        problem: payload?.conflict || null,
+        solution: payload?.solution || payload?.designDecision || null,
+        impact: payload?.impact || null,
+        keyInsight: payload?.insight || null,
+        url: payload?.canonicalUrl || '',
+      };
+
+      const response = await fetch('/api/social-composer/regenerate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ contentType, slug, source, blankFields, goal: regenGoal, notes: regenNotes.trim() || null }),
+      });
+      if (!response.ok) throw new Error('Regenerasi gagal.');
+      const result = (await response.json()) as { data: Partial<Record<RegenerableField, string>>; fallbackUsed?: boolean };
+      const regenerated = result.data || {};
+
+      const nextDraft = { ...draft };
+      for (const field of blankFields) {
+        if (String(nextDraft[field] ?? '').trim()) continue;
+        const nextValue = regenerated[field];
+        if (typeof nextValue === 'string' && nextValue.trim()) nextDraft[field] = nextValue;
       }
+      setDraft(nextDraft);
+      setDirtyFields(new Set());
+      persistDrafts(nextDraft);
+      setRegenFeedback({ tone: result.fallbackUsed ? 'warning' : 'success', message: result.fallbackUsed ? 'AI belum tersedia, memakai template cadangan' : 'Bagian kosong diperbarui' });
+    } catch {
+      const nextDraft = { ...draft };
+      for (const field of blankFields) {
+        if (String(nextDraft[field] ?? '').trim()) continue;
+        nextDraft[field] = generatedDraft[field];
+      }
+      setDraft(nextDraft);
+      persistDrafts(nextDraft);
+      setRegenFeedback({ tone: 'warning', message: 'AI belum tersedia, memakai template cadangan' });
+    } finally {
+      setRegenLoading(false);
     }
-
-    if (regenNotes.trim()) {
-      nextDraft.canvaOverlayText = `${nextDraft.canvaOverlayText}
-
-Catatan revisi admin:
-${regenNotes.trim()}`;
-    }
-
-    setDraft(nextDraft);
-    setDirtyFields(new Set());
-    setCopied((prev) => ({ ...prev, regen: true }));
-    window.setTimeout(() => setCopied((prev) => ({ ...prev, regen: false })), 2000);
   }
 
   function persistDrafts(nextDraft?: ComposerDraft) {
@@ -606,9 +667,20 @@ ${regenNotes.trim()}`;
                         </div>
                         <div className="space-y-2">
                           <p className="text-sm font-semibold text-white/70">Opsi Lanjutan</p>
+                          <p className="text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <label className="text-xs text-white/70">Tujuan konten</label>
+                            <select value={regenGoal} onChange={(event) => setRegenGoal(event.target.value as ContentGoal)} className="min-h-11 rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm text-[#F4F1EA]">
+                              <option value="profesional">Profesional</option>
+                              <option value="edukatif">Edukatif</option>
+                              <option value="viral-ready">Viral-ready</option>
+                              <option value="soft-selling">Soft-selling</option>
+                            </select>
+                          </div>
                           <ButtonRow>
-                            <button type="button" onClick={regenerateMissingFields} className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm text-white/80">{copied.regen ? 'Disalin' : 'Perbarui Bagian Kosong'}</button>
+                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm text-white/80 disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang...' : 'Perbarui Bagian Kosong'}</button>
                           </ButtonRow>
+                          {regenFeedback ? <p className={`text-xs ${regenFeedback.tone === 'success' ? 'text-[#E6C676]' : 'text-white/75'}`}>{regenFeedback.message}</p> : null}
                         </div>
                       </div>
                     </div>
