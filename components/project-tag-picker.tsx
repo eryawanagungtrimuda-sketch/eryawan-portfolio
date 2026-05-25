@@ -118,7 +118,7 @@ export function ProjectTagPicker({
       {showHelperText && !canAddMore ? <p className="mt-2 text-xs text-[#D4AF37]/80">Maksimal {maxTags} tags.</p> : null}
 
       {shouldShowSuggestions ? (
-        <div className={`${suggestionSpacingClassName} flex flex-wrap gap-1.5`}>
+        <div className={`${suggestionSpacingClassName} max-w-full overflow-hidden flex flex-wrap gap-1.5`}>
           {filteredSuggestions.map(([tag, label]) => {
             const isSelected = value.includes(tag);
             return (
@@ -128,7 +128,7 @@ export function ProjectTagPicker({
                 disabled={isSelected}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => addTag(tag)}
-                className="rounded-full border border-white/15 bg-white/[0.02] px-2.5 py-1 text-[11px] text-white/72 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40"
+                className="max-w-full truncate rounded-full border border-white/15 bg-white/[0.02] px-2.5 py-1 font-sans text-[11px] text-white/72 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {labelValue(label) || label}
               </button>
@@ -140,7 +140,7 @@ export function ProjectTagPicker({
               type="button"
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => addTag(input)}
-              className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] text-[#D4AF37]"
+              className="max-w-full truncate rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-2.5 py-1 font-sans text-[11px] text-[#D4AF37]"
             >
               Add "{labelValue(normalizedInput) || normalizedInput}"
             </button>

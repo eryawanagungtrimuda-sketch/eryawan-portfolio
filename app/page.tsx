@@ -536,7 +536,7 @@ export default async function Home() {
               Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
             </p>
 
-            <Button href="/mulai-project" className="mt-14 min-w-[300px] px-10 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] md:min-w-[420px]">
+            <Button href="/mulai-project" className="mt-14 w-full px-6 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] sm:w-auto sm:min-w-[300px] md:min-w-[420px]">
               Hubungi untuk Peluang Profesional
             </Button>
 

@@ -1061,14 +1061,14 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
           </div>
           <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/20 p-3.5 md:w-auto">
             <input ref={galleryInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={handleGalleryUpload} disabled={galleryUploading || loading || aiGenerating} className="hidden" />
-            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-10 w-full items-center justify-center gap-2.5 rounded-full border border-white/12 bg-white/[0.02] px-5 text-xs font-semibold uppercase tracking-[0.1em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50 md:w-auto">
+            <button type="button" onClick={openGalleryPicker} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex min-h-11 w-full items-center justify-center gap-2.5 rounded-full border border-white/12 bg-white/[0.02] px-5 font-sans text-sm font-semibold uppercase tracking-[0.08em] text-white/70 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50 md:w-auto">
               <ImagePlus size={16} /> {galleryUploading ? 'Uploading...' : 'Upload Gallery'}
             </button>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <button type="button" onClick={() => { void handleGenerateGalleryAltText('fill-empty'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50">
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('fill-empty'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-3 font-sans text-xs font-semibold uppercase tracking-[0.08em] text-[#D4AF37] transition hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15 disabled:cursor-not-allowed disabled:opacity-50">
                 {bulkAltUpdating ? 'Memproses...' : 'Isi Alt Kosong'}
               </button>
-              <button type="button" onClick={() => { void handleGenerateGalleryAltText('overwrite-all'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/15 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="button" onClick={() => { void handleGenerateGalleryAltText('overwrite-all'); }} disabled={galleryUploading || loading || aiGenerating || bulkAltUpdating} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 px-3 font-sans text-xs font-semibold uppercase tracking-[0.08em] text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50">
                 Timpa Semua Alt
               </button>
             </div>
@@ -1104,7 +1104,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
             <div className="mt-2 space-y-2">
               {uploadQueueItems.map((item) => (
                 <div key={item.key} className="rounded-lg border border-white/10 bg-white/[0.015] px-3 py-2">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center justify-between gap-2">
                     <p className="truncate text-xs text-white/75">{item.name}</p>
                     <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] ${
                       item.status === 'failed'
@@ -1127,7 +1127,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         ) : null}
         {galleryUploading ? <p className="mt-4 text-sm text-[#D4AF37]">Uploading gallery images...</p> : null}
         {galleryImages.length > 0 ? (
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             {galleryImages.map((image, index) => {
               const isCover = normalizeImageUrl(coverImage) === normalizeImageUrl(image.image_url);
               const hasImageUrl = Boolean(image.image_url);
@@ -1155,8 +1155,8 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                     <div><label>Alt Text</label><input value={image.alt_text || ''} onChange={(event) => updateGalleryAltText(image.id, event.target.value)} placeholder="Caption / alt text" className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-white/85 outline-none transition placeholder:text-white/35 focus:border-[#D4AF37]/40" /></div>
                     <div className="pt-1">
                       <div className="flex items-center justify-between gap-2">
-                        <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex h-8 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-[10px] font-bold uppercase tracking-[0.1em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
-                        <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} aria-label={isDeleting ? 'Menghapus gambar' : 'Hapus gambar'} className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-red-300/25 bg-red-400/[0.04] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><Trash2 size={14} /></button>
+                        <button type="button" onClick={() => setActiveCropEditor({ imageId: image.id, display_ratio: (image.display_ratio || 'landscape') as DisplayRatio, crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3.5 font-sans text-xs font-semibold uppercase tracking-[0.08em] text-[#D4AF37] transition duration-300 hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/15">Atur Crop</button>
+                        <button type="button" onClick={() => removeGalleryImage(image)} disabled={isDeleting || Boolean(coverUpdatingId)} aria-label={isDeleting ? 'Menghapus gambar' : 'Hapus gambar'} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-red-300/25 bg-red-400/[0.04] text-red-200/85 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"><Trash2 size={14} /></button>
                       </div>
                     </div>
                     <div>
