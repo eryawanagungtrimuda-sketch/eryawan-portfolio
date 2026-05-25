@@ -1,9 +1,9 @@
 export type ProjectImage = {
   id: string;
   project_id: string;
-  image_url: string;
+  image_url: string | null;
   alt_text: string | null;
-  sort_order: number;
+  sort_order: number | null;
   area_tags: string[] | null;
   display_ratio: 'landscape' | 'wide' | 'square' | 'portrait' | 'tall' | null;
   object_position: 'center' | 'top' | 'bottom' | 'left' | 'right' | null;

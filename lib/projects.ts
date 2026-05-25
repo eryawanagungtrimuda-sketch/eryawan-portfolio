@@ -74,17 +74,36 @@ export async function getPublishedProjects() {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select(`${projectColumns},project_images(${projectArchiveImageColumns})`)
+    .select(projectColumns)
     .eq('is_published', true)
-    .order('sort_order', { referencedTable: 'project_images', ascending: true })
     .order('created_at', { ascending: false });
 
   if (error || !data) return fallbackProjects;
 
-  return (data as (Project & { insights?: { id: string; slug: string; title: string }[] | null })[]).map((project) => {
+  const projects = data as (Project & { insights?: { id: string; slug: string; title: string }[] | null })[];
+  const projectIds = projects.map((project) => project.id);
+
+  let projectImagesByProjectId: Record<string, Project['project_images']> = {};
+  if (projectIds.length > 0) {
+    const { data: projectImagesData } = await supabase
+      .from('project_images')
+      .select(projectArchiveImageColumns)
+      .in('project_id', projectIds)
+      .order('sort_order', { ascending: true });
+
+    projectImagesByProjectId = (projectImagesData || []).reduce<Record<string, Project['project_images']>>((acc, image) => {
+      const projectId = image.project_id;
+      if (!acc[projectId]) acc[projectId] = [];
+      acc[projectId]!.push(image);
+      return acc;
+    }, {});
+  }
+
+  return projects.map((project) => {
     const relatedInsight = Array.isArray(project.insights) ? project.insights[0] : null;
     return {
       ...project,
+      project_images: projectImagesByProjectId[project.id] || [],
       hasWawasan: Boolean(relatedInsight),
       relatedInsight,
     };
