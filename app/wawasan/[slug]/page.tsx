@@ -147,9 +147,9 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
       <div className="reveal-on-scroll mx-auto max-w-4xl pb-28 md:pb-32">
         <SmartBackLink
           fallbackHref="/wawasan"
-          className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-white/15 px-3 py-2 font-sans text-sm text-white/64 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 px-6 py-2.5 font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
         >
-          ← Kembali
+          ← Kembali ke Sebelumnya
         </SmartBackLink>
 
         <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
@@ -211,7 +211,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           <h2 className="mt-4 font-sans text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
           <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
           <div className="mt-6 flex flex-wrap items-start gap-3 sm:gap-4">
-            <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37]/12 px-5 py-2.5 text-center font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/22">
+            <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
               Bagikan via WhatsApp
             </Link>
             <ShareLinkButton

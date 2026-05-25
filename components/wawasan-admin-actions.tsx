@@ -49,7 +49,7 @@ export default function WawasanAdminActions({ slug, placement = 'floating-mobile
           slug={slug}
           buttonClassName={
             isInlineDesktop
-              ? 'inline-flex min-h-11 min-w-fit items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/80 px-8 py-3 font-sans text-sm font-semibold text-[#E2C866] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]'
+              ? 'inline-flex min-h-11 min-w-[200px] items-center justify-center whitespace-nowrap rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/85 px-8 py-3 font-sans text-sm font-semibold text-[#E2C866] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]'
               : 'inline-flex min-w-[210px] max-w-[calc(100vw-48px)] items-center justify-center whitespace-nowrap rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/90 px-7 py-3 font-sans text-sm font-semibold text-[#E2C866] shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]'
           }
         />
