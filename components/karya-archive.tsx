@@ -5,9 +5,9 @@ import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import ShareLinkButton from '@/components/share-link-button';
-import type { Project } from '@/lib/types';
+import type { Project, ProjectWithArchiveImages } from '@/lib/types';
 
-type Props = { projects: Project[] };
+type Props = { projects: ProjectWithArchiveImages[] };
 type SortOption = 'newest' | 'oldest' | 'year_desc' | 'year_asc' | 'status';
 
 function getProjectDate(project: Project) {
@@ -122,7 +122,7 @@ function getProjectStatus(project: Project) {
   return project.impact?.trim() || project.dampak?.trim() ? 'Selesai' : 'Konsep';
 }
 
-function getProjectArchiveThumbnail(project: Project, selectedAreaTags: string[]) {
+function getProjectArchiveThumbnail(project: ProjectWithArchiveImages, selectedAreaTags: string[]) {
   const coverFallback = {
     imageUrl: project.cover_image,
     altText: project.title,
@@ -138,7 +138,8 @@ function getProjectArchiveThumbnail(project: Project, selectedAreaTags: string[]
 
   if (normalizedSelectedTags.length === 0) return coverFallback;
 
-  const matchedImage = (project.project_images || []).find((image) => {
+  const matchedImage = (project.archive_images || []).find((image) => {
+    if (!image.image_url) return false;
     const imageTags = (image.area_tags || []).map((tag) => normalizeTag(tag)).filter(Boolean);
     return imageTags.some((imageTag) => normalizedSelectedTags.some((selectedTag) => selectedTag.normalized === imageTag));
   });

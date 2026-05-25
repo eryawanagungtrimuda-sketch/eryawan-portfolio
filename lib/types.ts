@@ -1,9 +1,9 @@
 export type ProjectImage = {
   id: string;
   project_id: string;
-  image_url: string | null;
+  image_url: string;
   alt_text: string | null;
-  sort_order: number | null;
+  sort_order: number;
   area_tags: string[] | null;
   display_ratio: 'landscape' | 'wide' | 'square' | 'portrait' | 'tall' | null;
   object_position: 'center' | 'top' | 'bottom' | 'left' | 'right' | null;
@@ -11,6 +11,15 @@ export type ProjectImage = {
   crop_y?: number | null;
   crop_zoom?: number | null;
   created_at: string;
+};
+
+export type ProjectArchiveImage = {
+  id: string;
+  project_id: string;
+  image_url: string | null;
+  alt_text: string | null;
+  sort_order: number | null;
+  area_tags: string[] | null;
 };
 
 export type Project = {
@@ -43,6 +52,10 @@ export type Project = {
   hasWawasan?: boolean;
   relatedInsight?: Pick<Insight, 'id' | 'slug' | 'title'> | null;
   project_images?: ProjectImage[];
+};
+
+export type ProjectWithArchiveImages = Project & {
+  archive_images?: ProjectArchiveImage[];
 };
 
 export type ProjectFormState = {
