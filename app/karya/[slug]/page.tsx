@@ -231,7 +231,7 @@ export default async function KaryaDetailPage({ params }: Props) {
         </section>
 
         <section className="reveal-on-scroll border-t border-white/10 py-16">
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center pb-24 md:pb-0">
             <Link
               href="/mulai-project"
               className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center font-sans text-sm font-semibold leading-none text-black transition duration-300 active:scale-[0.98] hover:bg-[#E2C866]"
