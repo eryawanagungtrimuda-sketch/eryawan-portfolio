@@ -59,7 +59,7 @@ function truncateText(value?: string | null, limit = 150) {
   return `${value.slice(0, limit).trim()}...`;
 }
 
-function uniqueOptions(projects: Project[], key: keyof Project) {
+function uniqueOptions(projects: ProjectWithArchiveImages[], key: keyof Project) {
   const values = projects.map((project) => project[key]);
   const unique = Array.from(new Set(values.filter((value): value is string => typeof value === 'string' && value.trim().length > 0).map((value) => value.trim())));
   return ['Semua', ...unique.sort((a, b) => a.localeCompare(b)).map(localizeFilterValue)];
@@ -67,13 +67,15 @@ function uniqueOptions(projects: Project[], key: keyof Project) {
 
 function getProjectFilterAreaTags(project: ProjectWithArchiveImages) {
   const normalizedTagMap = new Map<string, string>();
+  const archiveImageTags = (project.archive_images || []).flatMap((image) => image.area_tags || []);
   const allTags = [
     project.area_type,
     ...(project.area_tags || []),
-    ...(project.archive_images || []).flatMap((image) => image.area_tags || []),
+    ...archiveImageTags,
   ];
 
   allTags.forEach((tag) => {
+    if (!tag) return;
     const normalizedTag = normalizeAreaTag(tag);
     if (!normalizedTag) return;
     normalizedTagMap.set(normalizedTag, getAreaTagLabel(tag));
