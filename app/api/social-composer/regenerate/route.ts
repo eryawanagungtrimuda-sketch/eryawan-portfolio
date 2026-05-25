@@ -131,18 +131,31 @@ Judul: ...
 Teks: ...
 Visual: ...`;
 
-    const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const aiResponse = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: { Authorization: `Bearer ${aiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        response_format: { type: 'json_object' },
-        temperature: 0.6,
-        max_tokens: 900,
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content: JSON.stringify({ contentType: body.contentType, slug: body.slug, goal: safeGoal, blankFields: uniqueFields, source, notes: body.notes || null }) },
+        input: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_text',
+                text: `${prompt}\n\n${JSON.stringify({
+                  contentType: body.contentType,
+                  slug: body.slug,
+                  goal: safeGoal,
+                  blankFields: uniqueFields,
+                  source,
+                  notes: body.notes || null,
+                })}`,
+              },
+            ],
+          },
         ],
+        temperature: 0.6,
+        max_output_tokens: 900,
       }),
     });
 
@@ -152,15 +165,15 @@ Visual: ...`;
       console.error(`${LOG_PREFIX} openai_http_error status=${aiResponse.status} requestId=${requestId || 'n/a'} msg=${errorText}`);
       return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_http_error' });
     }
-    const parsed = (await aiResponse.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const content = parsed.choices?.[0]?.message?.content || '';
-    if (!content.trim()) {
+    const result = await aiResponse.json();
+    const outputText = result.output_text || result.output?.[0]?.content?.[0]?.text || '';
+    if (!outputText.trim()) {
       console.error(`${LOG_PREFIX} openai_empty_response`);
       return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_empty_response' });
     }
     let json: Partial<Record<RegenerableField, string>> = {};
     try {
-      json = JSON.parse(normalizeJsonOutput(content)) as Partial<Record<RegenerableField, string>>;
+      json = JSON.parse(normalizeJsonOutput(outputText)) as Partial<Record<RegenerableField, string>>;
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'invalid_json';
       console.error(`${LOG_PREFIX} openai_invalid_json msg=${errMsg}`);
