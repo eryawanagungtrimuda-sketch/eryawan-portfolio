@@ -129,18 +129,18 @@ export default function WawasanArchive({ insights }: Props) {
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          {category !== ALL && <button onClick={() => setCategory(ALL)} className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80">{toLabel(category)} ×</button>}
-          {contentType !== ALL && <button onClick={() => setContentType(ALL)} className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80">{toLabel(contentType)} ×</button>}
-          {sourceType !== ALL && <button onClick={() => setSourceType(ALL)} className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/80">{toLabel(sourceType, 'source')} ×</button>}
-          {activeFilterCount > 0 && <button onClick={resetAll} className="text-xs text-[#D4AF37]">Reset semua</button>}
-          <span className="ml-auto text-xs text-white/58">{filteredInsights.length} wawasan ditemukan</span>
+          {category !== ALL && <button onClick={() => setCategory(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(category)} ×</button>}
+          {contentType !== ALL && <button onClick={() => setContentType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(contentType)} ×</button>}
+          {sourceType !== ALL && <button onClick={() => setSourceType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(sourceType, 'source')} ×</button>}
+          {activeFilterCount > 0 && <button onClick={resetAll} className="font-sans text-xs text-[#D4AF37]">Reset semua</button>}
+          <span className="ml-auto font-sans text-xs text-white/58">{filteredInsights.length} wawasan ditemukan</span>
         </div>
       </div>
 
       {filteredInsights.length === 0 ? (
         <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame mt-6 border border-transparent bg-white/[0.02] p-8 text-center">
           <p className="font-sans text-white/70">Belum ada wawasan yang cocok dengan pencarian ini.</p>
-          <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Atur Ulang Filter</button>
+          <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 font-sans text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Atur Ulang Filter</button>
         </div>
       ) : (
         <>
