@@ -582,7 +582,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
           type="button"
           aria-label="Buat konten sosial untuk halaman ini"
           onClick={openModal}
-          className={buttonClassName || 'font-sans min-h-11 rounded-2xl border border-[#D4AF37]/60 bg-[#090908]/85 px-5 py-2.5 text-sm font-semibold text-[#E6C676] shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_25px_rgba(0,0,0,0.45)] backdrop-blur'}
+          className={buttonClassName || 'inline-flex min-h-11 min-w-[200px] max-w-[calc(100vw-48px)] items-center justify-center whitespace-nowrap rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/90 px-7 py-3 font-sans text-sm font-semibold text-[#E6C676] shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_25px_rgba(0,0,0,0.45)] backdrop-blur'}
         >
           Buat Konten Sosial
         </button>
@@ -593,7 +593,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
           <div ref={modalRef} className="font-sans max-h-[86vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[#D4AF37]/35 bg-[#0E0D0B]/95 p-4 text-[#F4F1EA] shadow-2xl backdrop-blur sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-lg font-semibold text-[#E6C676]">Social Composer v2</h2>
-              <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-white/20 px-3 py-1 text-sm">Tutup</button>
+              <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
             </div>
 
             {loading || !draft ? (
@@ -611,7 +611,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       ['whatsapp', 'WhatsApp'],
                       ['checklist', 'Checklist'],
                     ] as [PlatformTab, string][]).map(([key, label]) => (
-                      <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
+                      <button key={key} type="button" onClick={() => setActiveTab(key)} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                         {label}
                       </button>
                     ))}
@@ -697,7 +697,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <ButtonRow>
                         <CopyButton label="Copy Caption IG" copied={copied.igCaption} onClick={() => copyText('igCaption', `${draft.igCaption}\n${draft.igCta}\n${draft.igHashtag}`)} />
                         <CopyButton label="Copy Storyboard" copied={copied.igStoryboard} onClick={() => copyText('igStoryboard', draft.igStoryboard)} />
-                        <button type="button" onClick={() => postToPlatform('instagram')} className="rounded-full border border-white/20 px-4 py-2 text-sm">Post to Instagram</button>
+                        <button type="button" onClick={() => postToPlatform('instagram')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to Instagram</button>
                       </ButtonRow>
                       {postStatus.instagram ? <p className="text-xs text-white/75">{postStatus.instagram.message}</p> : null}
                     </div>
@@ -714,7 +714,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <ButtonRow>
                         <CopyButton label="Copy Script TikTok" copied={copied.tiktokScript} onClick={() => copyText('tiktokScript', `${draft.tiktokHook}\n\n${draft.tiktokScript}`)} />
                         <CopyButton label="Copy Caption TikTok" copied={copied.tiktokCaption} onClick={() => copyText('tiktokCaption', `${draft.tiktokCaption}\n${draft.tiktokCta}\n${draft.tiktokHashtag}`)} />
-                        <button type="button" onClick={() => postToPlatform('tiktok')} className="rounded-full border border-white/20 px-4 py-2 text-sm">Post to TikTok</button>
+                        <button type="button" onClick={() => postToPlatform('tiktok')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to TikTok</button>
                       </ButtonRow>
                       {postStatus.tiktok ? <p className="text-xs text-white/75">{postStatus.tiktok.message}</p> : null}
                     </div>
@@ -730,7 +730,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <ButtonRow>
                         <CopyButton label="Copy Caption YouTube Shorts" copied={copied.youtubeCaption} onClick={() => copyText('youtubeCaption', `${draft.youtubeTitle}\n\n${draft.youtubeDescription}\n\n${draft.youtubeHashtags}`)} />
                         <CopyButton label="Copy Upload Guide" copied={copied.youtubeGuide} onClick={() => copyText('youtubeGuide', draft.youtubeUploadGuide)} />
-                        <button type="button" onClick={() => postToPlatform('youtube')} className="rounded-full border border-white/20 px-4 py-2 text-sm">Post to YouTube Shorts</button>
+                        <button type="button" onClick={() => postToPlatform('youtube')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to YouTube Shorts</button>
                       </ButtonRow>
                       {postStatus.youtube ? <p className="text-xs text-white/75">{postStatus.youtube.message}</p> : null}
                     </div>
@@ -744,7 +744,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="CTA ke halaman" value={draft.linkedInCta} onChange={(v) => updateDraft('linkedInCta', v)} rows={2} />
                       <ButtonRow>
                         <CopyButton label="Copy LinkedIn Caption" copied={copied.linkedinCaption} onClick={() => copyText('linkedinCaption', `${draft.linkedInCaption}\n\n${draft.linkedInBullets}\n\n${draft.linkedInCta}`)} />
-                        <button type="button" onClick={() => postToPlatform('linkedin')} className="rounded-full border border-white/20 px-4 py-2 text-sm">Post to LinkedIn</button>
+                        <button type="button" onClick={() => postToPlatform('linkedin')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to LinkedIn</button>
                       </ButtonRow>
                       {postStatus.linkedin ? <p className="text-xs text-white/75">{postStatus.linkedin.message}</p> : null}
                     </div>
@@ -756,7 +756,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="Link website" value={draft.whatsappLink} onChange={(v) => updateDraft('whatsappLink', v)} rows={2} />
                       <ButtonRow>
                         <CopyButton label="Copy WhatsApp" copied={copied.whatsapp} onClick={() => copyText('whatsapp', `${draft.whatsappMessage}\n${draft.whatsappLink}`)} />
-                        <button type="button" onClick={() => postToPlatform('whatsapp')} className="rounded-full border border-white/20 px-4 py-2 text-sm">Share via WhatsApp</button>
+                        <button type="button" onClick={() => postToPlatform('whatsapp')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Share via WhatsApp</button>
                       </ButtonRow>
                       {postStatus.whatsapp ? <p className="text-xs text-white/75">{postStatus.whatsapp.message}</p> : null}
                     </div>

@@ -234,14 +234,14 @@ export default async function KaryaDetailPage({ params }: Props) {
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link
               href="/mulai-project"
-              className="inline-flex items-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 font-sans text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center font-sans text-sm font-semibold leading-none text-black transition duration-300 active:scale-[0.98] hover:bg-[#E2C866]"
             >
               Diskusikan Proyek Serupa
             </Link>
             <AdminEditProjectShortcut projectId={project.id} />
             <SmartBackLink
               fallbackHref="/karya"
-              className="inline-flex items-center rounded-full border border-white/20 px-6 py-3 font-sans text-sm font-semibold text-white/80 transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition duration-300 active:scale-[0.98] hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
             />
           </div>
         </section>

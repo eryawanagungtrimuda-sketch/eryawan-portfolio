@@ -13,7 +13,7 @@ export default function BackButton({ label = '← Kembali ke Sebelumnya', fallba
     <ContextualBackButton
       fallbackHref={fallbackHref}
       label={label}
-      className={`inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/48 transition duration-300 hover:-translate-x-0.5 hover:text-[#C8A951] ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] ${className}`}
     />
   );
 }
