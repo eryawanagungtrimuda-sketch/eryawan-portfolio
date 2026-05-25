@@ -458,7 +458,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
         body: JSON.stringify({ contentType, slug, source, blankFields, goal: regenGoal, notes: regenNotes.trim() || null }),
       });
       if (!response.ok) throw new Error('Regenerasi gagal.');
-      const result = (await response.json()) as { data: Partial<Record<RegenerableField, string>>; fallbackUsed?: boolean };
+      const result = (await response.json()) as { data: Partial<Record<RegenerableField, string>>; fallbackUsed?: boolean; debugReason?: string };
       const regenerated = result.data || {};
 
       const nextDraft = { ...draft };
@@ -469,7 +469,12 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       }
       setDraft(nextDraft);
       persistDrafts(nextDraft);
-      setRegenFeedback({ tone: result.fallbackUsed ? 'warning' : 'success', message: result.fallbackUsed ? 'AI belum tersedia, memakai template cadangan.' : 'Bagian kosong berhasil diperbarui dengan AI.' });
+      setRegenFeedback({
+        tone: result.fallbackUsed ? 'warning' : 'success',
+        message: result.fallbackUsed
+          ? `AI fallback aktif: ${result.debugReason || 'openai_unavailable'}. Cek Vercel Function Logs untuk detail.`
+          : 'Bagian kosong berhasil diperbarui dengan AI.',
+      });
     } catch {
       const nextDraft = { ...draft };
       for (const field of blankFields) {
