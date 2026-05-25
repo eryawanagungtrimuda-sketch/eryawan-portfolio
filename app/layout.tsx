@@ -1,22 +1,9 @@
 import type { Metadata } from 'next';
-import { Belleza, Great_Vibes, Inter } from 'next/font/google';
 import PortfolioClicks from './portfolio-clicks';
 import { ToastProvider } from '@/components/toast-provider';
 import { SITE_URL } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const belleza = Belleza({
-  subsets: ['latin'],
-  variable: '--font-display',
-  weight: '400',
-});
-const greatVibes = Great_Vibes({
-  subsets: ['latin'],
-  variable: '--font-signature',
-  weight: '400',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -52,7 +39,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <body className={`${inter.variable} ${belleza.variable} ${greatVibes.variable} bg-[#080807] text-[#f5f1e8] antialiased`}>
+      <body
+        style={{
+          ['--font-inter' as string]: 'Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+          ['--font-display' as string]: 'Belleza, Inter, ui-sans-serif, system-ui, sans-serif',
+          ['--font-signature' as string]: '"Great Vibes", "Segoe Script", "Brush Script MT", cursive',
+        }}
+        className="bg-[#080807] text-[#f5f1e8] antialiased">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-full focus:border focus:border-[#D4AF37]/50 focus:bg-black focus:px-5 focus:py-3 focus:font-sans focus:text-sm focus:font-semibold focus:text-[#D4AF37] focus:outline-none"
