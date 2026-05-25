@@ -222,15 +222,18 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
         </section>
 
         <div className="mt-8 border-t border-white/10 pt-10 sm:mt-10 sm:pt-12">
-          <div className="flex flex-col gap-3">
-            <Link href="/mulai-project" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866] sm:w-auto sm:px-6">Diskusikan Proyek Serupa</Link>
-            <AdminEditWawasanShortcut insightId={insight.id} className="premium-interactive inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12 sm:w-auto sm:px-6" />
-            <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] sm:w-auto sm:px-6">← Kembali ke Sebelumnya</SmartBackLink>
+          <div className="flex flex-col items-stretch gap-3 md:items-center md:gap-5">
+            <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-3.5">
+              <Link href="/mulai-project" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866] md:w-auto">Diskusikan Proyek Serupa</Link>
+              <AdminEditWawasanShortcut insightId={insight.id} className="premium-interactive inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12 md:w-auto" />
+              <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] md:w-auto">← Kembali ke Sebelumnya</SmartBackLink>
+            </div>
+            <WawasanAdminActions slug={insight.slug} placement="inline-desktop" />
           </div>
         </div>
       </div>
 
-      <WawasanAdminActions slug={insight.slug} />
+      <WawasanAdminActions slug={insight.slug} placement="floating-mobile" />
     </main>
   );
 }

@@ -7,9 +7,10 @@ import SocialComposerModal from '@/components/social-composer-modal';
 
 type Props = {
   slug: string;
+  placement?: 'floating-mobile' | 'inline-desktop';
 };
 
-export default function WawasanAdminActions({ slug }: Props) {
+export default function WawasanAdminActions({ slug, placement = 'floating-mobile' }: Props) {
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -38,13 +39,19 @@ export default function WawasanAdminActions({ slug }: Props) {
 
   if (!ready || !isAdmin) return null;
 
+  const isInlineDesktop = placement === 'inline-desktop';
+
   return (
-    <div className="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2">
-      <div className="pointer-events-auto">
+    <div className={isInlineDesktop ? 'hidden md:block' : 'pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 md:hidden'}>
+      <div className={isInlineDesktop ? '' : 'pointer-events-auto'}>
         <SocialComposerModal
           contentType="wawasan"
           slug={slug}
-          buttonClassName="inline-flex items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/90 px-7 py-3 font-sans text-sm font-semibold text-[#E2C866] shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]"
+          buttonClassName={
+            isInlineDesktop
+              ? 'inline-flex min-h-11 min-w-fit items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/80 px-8 py-3 font-sans text-sm font-semibold text-[#E2C866] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]'
+              : 'inline-flex items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#0B0A08]/90 px-7 py-3 font-sans text-sm font-semibold text-[#E2C866] shadow-[0_16px_40px_rgba(0,0,0,0.45)] backdrop-blur transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#0B0A08]'
+          }
         />
       </div>
     </div>
