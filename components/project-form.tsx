@@ -298,7 +298,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   const [formError, setFormError] = useState('');
   const [pendingGalleryFiles, setPendingGalleryFiles] = useState<File[]>([]);
   const [uploadQueueItems, setUploadQueueItems] = useState<UploadQueueItem[]>([]);
-  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center', crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })).sort((a, b) => a.sort_order - b.sort_order));
+  const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([...(project?.project_images || [])].map((image) => ({ ...image, display_ratio: image.display_ratio || 'landscape', object_position: image.object_position || 'center', crop_x: normalizeCropX(image.crop_x), crop_y: normalizeCropY(image.crop_y), crop_zoom: normalizeCropZoom(image.crop_zoom) })).sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999)));
   const [activeCropEditor, setActiveCropEditor] = useState<GalleryCropDraft | null>(null);
   const [cropSaving, setCropSaving] = useState(false);
   const { toast } = useToast();
@@ -597,7 +597,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
       }
 
       if (uploadedImages.length > 0) {
-        setGalleryImages((current) => [...current, ...uploadedImages].sort((a, b) => a.sort_order - b.sort_order));
+        setGalleryImages((current) => [...current, ...uploadedImages].sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999)));
       }
 
       if (!coverImage && uploadedImages[0]) {

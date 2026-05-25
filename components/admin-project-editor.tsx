@@ -66,7 +66,7 @@ export default function AdminProjectEditor({ id }: Props) {
 
         const sortedImages = [...(data.project_images || [])]
           .map((image) => ({ ...image, display_ratio: normalizeDisplayRatio(image.display_ratio), object_position: normalizeObjectPosition(image.object_position) }))
-          .sort((a, b) => a.sort_order - b.sort_order);
+          .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
         setProject({ ...(data as Project), project_images: sortedImages });
         const { data: insights } = await supabase.from('insights').select('id,slug,source_project_id,ai_prompt_source,title,excerpt,content').order('created_at', { ascending: false });
         const projectSlug = normalizeLegacySlug(data.slug);

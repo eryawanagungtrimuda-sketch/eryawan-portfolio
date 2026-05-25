@@ -22,7 +22,7 @@ function trimText(content?: string | null, max = 190) {
 function resolveProjectImage(project: Awaited<ReturnType<typeof getPublishedProjectBySlug>>) {
   if (!project) return absoluteUrl('/hero.jpg');
   const galleryImage = [...(project.project_images || [])]
-    .sort((a, b) => a.sort_order - b.sort_order)
+    .sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999))
     .find((image) => image.image_url)?.image_url;
 
   return resolveImageUrl(project.cover_image) || resolveImageUrl(galleryImage) || absoluteUrl('/hero.jpg');

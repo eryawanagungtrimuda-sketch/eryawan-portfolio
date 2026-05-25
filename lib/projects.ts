@@ -1,8 +1,9 @@
 import { createSupabaseServerClient, isSupabaseConfigured } from './supabase';
-import type { Project } from './types';
+import type { Project, ProjectArchiveImage, ProjectWithArchiveImages } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,project_status,completion_year,is_published,created_at,insights(id,slug,title,is_published)';
+const projectArchiveImageColumns = 'id,project_id,image_url,alt_text,sort_order,area_tags';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -77,16 +78,36 @@ export async function getPublishedProjects() {
     .eq('is_published', true)
     .order('created_at', { ascending: false });
 
-  if (error || !data) return fallbackProjects;
+  if (error || !data) return fallbackProjects as ProjectWithArchiveImages[];
 
-  return (data as (Project & { insights?: { id: string; slug: string; title: string }[] | null })[]).map((project) => {
+  const projects = data as (Project & { insights?: { id: string; slug: string; title: string }[] | null })[];
+  const projectIds = projects.map((project) => project.id);
+
+  let archiveImagesByProjectId: Record<string, ProjectArchiveImage[]> = {};
+  if (projectIds.length > 0) {
+    const { data: archiveImagesData } = await supabase
+      .from('project_images')
+      .select(projectArchiveImageColumns)
+      .in('project_id', projectIds)
+      .order('sort_order', { ascending: true });
+
+    archiveImagesByProjectId = (archiveImagesData || []).reduce<Record<string, ProjectArchiveImage[]>>((acc, image) => {
+      const projectId = image.project_id;
+      if (!acc[projectId]) acc[projectId] = [];
+      acc[projectId]!.push(image);
+      return acc;
+    }, {});
+  }
+
+  return projects.map((project) => {
     const relatedInsight = Array.isArray(project.insights) ? project.insights[0] : null;
     return {
       ...project,
+      archive_images: archiveImagesByProjectId[project.id] || [],
       hasWawasan: Boolean(relatedInsight),
       relatedInsight,
     };
-  });
+  }) as ProjectWithArchiveImages[];
 }
 
 export async function getPublishedProjectBySlug(slug: string) {

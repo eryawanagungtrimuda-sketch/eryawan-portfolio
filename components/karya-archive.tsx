@@ -5,9 +5,9 @@ import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import ShareLinkButton from '@/components/share-link-button';
-import type { Project } from '@/lib/types';
+import type { Project, ProjectWithArchiveImages } from '@/lib/types';
 
-type Props = { projects: Project[] };
+type Props = { projects: ProjectWithArchiveImages[] };
 type SortOption = 'newest' | 'oldest' | 'year_desc' | 'year_asc' | 'status';
 
 function getProjectDate(project: Project) {
@@ -23,6 +23,10 @@ function getProjectYear(project: Project) {
 
 function normalize(value?: string | null) {
   return (value || '').trim().toLowerCase();
+}
+
+function normalizeTag(value?: string | null) {
+  return normalize((value || '').replace(/\s+/g, ' '));
 }
 
 const displayLabelMap: Record<string, string> = {
@@ -118,6 +122,41 @@ function getProjectStatus(project: Project) {
   return project.impact?.trim() || project.dampak?.trim() ? 'Selesai' : 'Konsep';
 }
 
+function getProjectArchiveThumbnail(project: ProjectWithArchiveImages, selectedAreaTags: string[]) {
+  const coverFallback = {
+    imageUrl: project.cover_image,
+    altText: project.title,
+    matchedAreaTag: null as string | null,
+    isFilterMatchedImage: false,
+  };
+
+  if (selectedAreaTags.length === 0) return coverFallback;
+
+  const normalizedSelectedTags = selectedAreaTags
+    .map((tag) => ({ raw: tag, normalized: normalizeTag(tag) }))
+    .filter((tag) => tag.normalized.length > 0);
+
+  if (normalizedSelectedTags.length === 0) return coverFallback;
+
+  const matchedImage = (project.archive_images || []).find((image) => {
+    if (!image.image_url) return false;
+    const imageTags = (image.area_tags || []).map((tag) => normalizeTag(tag)).filter(Boolean);
+    return imageTags.some((imageTag) => normalizedSelectedTags.some((selectedTag) => selectedTag.normalized === imageTag));
+  });
+
+  if (!matchedImage?.image_url) return coverFallback;
+
+  const imageTags = (matchedImage.area_tags || []).map((tag) => normalizeTag(tag)).filter(Boolean);
+  const matchedAreaTag = normalizedSelectedTags.find((selectedTag) => imageTags.includes(selectedTag.normalized))?.raw || null;
+
+  return {
+    imageUrl: matchedImage.image_url,
+    altText: matchedImage.alt_text?.trim() || project.title,
+    matchedAreaTag,
+    isFilterMatchedImage: true,
+  };
+}
+
 function FilterChips({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (value: string) => void }) {
   return (
     <div>
@@ -200,6 +239,11 @@ export default function KaryaArchive({ projects }: Props) {
         return matchesSearch && matchesCategory && matchesDesignCategory && matchesDesignStyle && matchesAreaTags && matchesStatus;
       })
       .sort((a, b) => {
+        if (selectedAreaTags.length > 0) {
+          const aMatched = getProjectArchiveThumbnail(a, selectedAreaTags).isFilterMatchedImage ? 1 : 0;
+          const bMatched = getProjectArchiveThumbnail(b, selectedAreaTags).isFilterMatchedImage ? 1 : 0;
+          if (aMatched !== bMatched) return bMatched - aMatched;
+        }
         if (sort === 'year_desc') return getProjectYear(b) - getProjectYear(a);
         if (sort === 'year_asc') return getProjectYear(a) - getProjectYear(b);
         if (sort === 'status') return getProjectStatus(a).localeCompare(getProjectStatus(b));
@@ -472,8 +516,10 @@ export default function KaryaArchive({ projects }: Props) {
             const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
             const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain saya.`);
             const { visible: visibleAreaTags, overflow: areaOverflow } = limitedAreaTags(project);
+            const thumbnail = getProjectArchiveThumbnail(project, selectedAreaTags);
+            const visualBadgeLabel = selectedAreaTags.length === 1 && thumbnail.matchedAreaTag ? `Sesuai: ${thumbnail.matchedAreaTag}` : 'Visual sesuai filter';
             return <article key={project.id} style={{ '--reveal-delay': `${index * 90}ms`, '--premium-card-border': index === 0 ? 'rgba(212, 175, 55, 0.55)' : 'rgba(255, 255, 255, 0.12)' } as CSSProperties} className={`reveal-on-scroll mobile-card-breathing mobile-card-reveal premium-card-hover premium-oval-card premium-oval-frame group relative flex h-full flex-col border border-transparent bg-gradient-to-br from-white/[0.035] via-white/[0.02] to-black/25 transition motion-safe:duration-500 motion-safe:ease-out hover:bg-white/[0.04] hover:shadow-[0_26px_58px_rgba(0,0,0,0.36)] ${index === 0 ? 'md:col-span-2 xl:col-span-2' : ''}`}>
-              {project.cover_image ? <button type="button" onClick={() => setLightboxImage({ src: project.cover_image!, alt: project.title })} className="premium-oval-media-top aspect-square border-b border-white/10 bg-white/[0.02]"><img src={project.cover_image} alt={project.title} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" /></button> : <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
+              {thumbnail.imageUrl ? <button type="button" onClick={() => setLightboxImage({ src: thumbnail.imageUrl!, alt: thumbnail.altText })} className="premium-oval-media-top relative aspect-square border-b border-white/10 bg-white/[0.02]"><img src={thumbnail.imageUrl} alt={thumbnail.altText} className="h-full w-full object-cover opacity-88 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100" loading="lazy" decoding="async" />{thumbnail.isFilterMatchedImage ? <span className="absolute left-3 top-3 rounded-full border border-[#D4AF37]/45 bg-[#0B0A08]/85 px-2.5 py-1 font-sans text-[10px] font-semibold text-[#E2C866] shadow-[0_6px_18px_rgba(0,0,0,0.34)]">{visualBadgeLabel}</span> : null}</button> : <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/10 bg-white/[0.025] text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
                 <div className="flex flex-wrap items-start justify-between gap-3"><p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Project {String(index + 1).padStart(2, '0')}</p></div>
                 <h2 className="font-display mt-4 line-clamp-2 max-w-2xl text-[2rem] font-normal leading-[1.07] tracking-[-0.03em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
