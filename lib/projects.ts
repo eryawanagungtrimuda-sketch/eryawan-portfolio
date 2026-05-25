@@ -3,6 +3,7 @@ import type { Project } from './types';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,client_problem_raw,design_reference,area_scope,project_size,project_status,completion_year,is_published,created_at,insights(id,slug,title,is_published)';
+const projectArchiveImageColumns = 'id,project_id,image_url,alt_text,sort_order,area_tags';
 
 const internalBriefFallbackFields = {
   client_problem_raw: null,
@@ -73,8 +74,9 @@ export async function getPublishedProjects() {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from('projects')
-    .select(projectColumns)
+    .select(`${projectColumns},project_images(${projectArchiveImageColumns})`)
     .eq('is_published', true)
+    .order('sort_order', { referencedTable: 'project_images', ascending: true })
     .order('created_at', { ascending: false });
 
   if (error || !data) return fallbackProjects;
