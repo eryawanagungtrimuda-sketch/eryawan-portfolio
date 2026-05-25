@@ -1,88 +1,110 @@
-const AREA_TAG_DISPLAY_LABELS: Record<string, string> = {
+const CANONICAL_AREA_TAG_LABELS = {
   lobby: 'Lobby',
-  resepsionis: 'Resepsionis',
-  'ruang tunggu': 'Ruang Tunggu',
-  'ruang keluarga': 'Ruang Keluarga',
-  'ruang makan': 'Ruang Makan',
-  dapur: 'Dapur',
-  pantry: 'Pantry',
-  koridor: 'Koridor',
-  'kamar tidur': 'Kamar Tidur',
-  'kamar mandi': 'Kamar Mandi',
-  'area kerja': 'Area Kerja',
-  'ruang meeting': 'Ruang Meeting',
+  'area cafe': 'Area Cafe',
   'ruang konsultasi': 'Ruang Konsultasi',
   'ruang treatment': 'Ruang Treatment',
-  'area retail': 'Area Retail',
-  'area display': 'Area Display',
-  'area cafe': 'Area Cafe',
-  'area outdoor': 'Area Outdoor',
-  'area layanan publik': 'Area Layanan Publik',
-  'furniture / built-in': 'Furniture / Built-in',
+  dapur: 'Dapur',
+  'ruang makan': 'Ruang Makan',
+  'ruang keluarga': 'Ruang Keluarga',
+  'kamar tidur': 'Kamar Tidur',
+  'kamar mandi': 'Kamar Mandi',
+  koridor: 'Koridor',
   fasad: 'Fasad',
-  lainnya: 'Lainnya',
-};
+  'area outdoor': 'Area Outdoor',
+  'area komersial': 'Area Komersial',
+  'area privat': 'Area Privat',
+} as const;
 
-const AREA_TAG_ALIASES: Record<string, string> = {
-  reception: 'resepsionis',
-  'waiting area': 'ruang tunggu',
-  'living room': 'ruang keluarga',
-  'dining area': 'ruang makan',
-  kitchen: 'dapur',
-  bedroom: 'kamar tidur',
-  bathroom: 'kamar mandi',
-  workspace: 'area kerja',
-  'meeting room': 'ruang meeting',
-  'consultation room': 'ruang konsultasi',
-  'treatment room': 'ruang treatment',
-  'ruang perawatan': 'ruang treatment',
-  'retail area': 'area retail',
-  'display area': 'area display',
-  'cafe area': 'area cafe',
+type CanonicalAreaTagKey = keyof typeof CANONICAL_AREA_TAG_LABELS;
+
+const AREA_TAG_ALIASES: Record<string, CanonicalAreaTagKey> = {
+  lobby: 'lobby',
+  'area cafe': 'area cafe',
   'area kafe': 'area cafe',
-  corridor: 'koridor',
-  facade: 'fasad',
-  'outdoor area': 'area outdoor',
-  'public service area': 'area layanan publik',
-  other: 'lainnya',
+  'cafe area': 'area cafe',
+  'café area': 'area cafe',
+  'ruang konsultasi': 'ruang konsultasi',
+  consultation: 'ruang konsultasi',
+  'consultation room': 'ruang konsultasi',
+  'ruang treatment': 'ruang treatment',
+  'ruang perawatan': 'ruang treatment',
+  treatment: 'ruang treatment',
+  'treatment room': 'ruang treatment',
+  dapur: 'dapur',
+  'ruang makan': 'ruang makan',
+  'ruang keluarga': 'ruang keluarga',
+  'kamar tidur': 'kamar tidur',
+  'kamar mandi': 'kamar mandi',
+  koridor: 'koridor',
+  'koridor belakang': 'koridor',
+  fasad: 'fasad',
+  'area outdoor': 'area outdoor',
+  'area komersial': 'area komersial',
+  'area privat': 'area privat',
 };
 
-export const DEFAULT_AREA_TAGS: string[] = [
-  'Lobby',
-  'Resepsionis',
-  'Ruang Tunggu',
-  'Ruang Keluarga',
-  'Ruang Makan',
-  'Dapur',
-  'Pantry',
-  'Koridor',
-  'Kamar Tidur',
-  'Kamar Mandi',
-  'Area Kerja',
-  'Ruang Meeting',
-  'Ruang Konsultasi',
-  'Ruang Treatment',
-  'Area Retail',
-  'Area Display',
-  'Area Cafe',
-  'Area Outdoor',
-  'Area Layanan Publik',
-  'Furniture / Built-in',
-  'Fasad',
-  'Lainnya',
-];
+export const DEFAULT_AREA_TAGS: string[] = Object.values(CANONICAL_AREA_TAG_LABELS);
 
-export function normalizeAreaTag(value?: string | null) {
-  const normalized = (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
-  return AREA_TAG_ALIASES[normalized] || normalized;
+function cleanAreaTagValue(value?: string | null): string {
+  if (!value) return '';
+  return value
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[.,/#!$%^&*;:{}=_`~()\[\]\|?+"“”'’]/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
 }
 
-export function getAreaTagLabel(value: string) {
+export function normalizeAreaTag(value?: string | null): string {
+  const cleaned = cleanAreaTagValue(value);
+  if (!cleaned) return '';
+  return AREA_TAG_ALIASES[cleaned] || cleaned;
+}
+
+export function getCanonicalAreaTag(value?: string | null): string {
   const normalized = normalizeAreaTag(value);
-  const canonicalLabel = AREA_TAG_DISPLAY_LABELS[normalized];
-  if (canonicalLabel) return canonicalLabel;
-  return normalized
+  if (!normalized) return '';
+  const canonical = AREA_TAG_ALIASES[normalized] || normalized;
+  return canonical;
+}
+
+export function getAreaTagLabel(value?: string | null): string {
+  const canonical = getCanonicalAreaTag(value);
+  if (!canonical) return '';
+  const label = CANONICAL_AREA_TAG_LABELS[canonical as CanonicalAreaTagKey];
+  if (label) return label;
+  return canonical
     .split(' ')
     .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
     .join(' ');
+}
+
+export function dedupeAreaTags(values: Array<string | null | undefined> = []): string[] {
+  if (!Array.isArray(values) || values.length === 0) return [];
+
+  const orderedKeys: string[] = [];
+  const seen = new Set<string>();
+
+  values.forEach((value) => {
+    const key = getCanonicalAreaTag(value);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    orderedKeys.push(key);
+  });
+
+  const defaultOrderMap = new Map(
+    DEFAULT_AREA_TAGS.map((label, index) => [getCanonicalAreaTag(label), index] as const),
+  );
+
+  orderedKeys.sort((a, b) => {
+    const indexA = defaultOrderMap.get(a);
+    const indexB = defaultOrderMap.get(b);
+    if (indexA === undefined && indexB === undefined) return 0;
+    if (indexA === undefined) return 1;
+    if (indexB === undefined) return -1;
+    return indexA - indexB;
+  });
+
+  return orderedKeys.map((key) => getAreaTagLabel(key)).filter(Boolean);
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import { DEFAULT_AREA_TAGS, getAreaTagLabel } from '@/lib/area-tags';
+import { DEFAULT_AREA_TAGS, dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
@@ -287,11 +287,10 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   const [designStyle, setDesignStyle] = useState<CustomSelectState>(getInitialSelectState(project?.design_style, designStyleOptions));
   const [areaType, setAreaType] = useState<CustomSelectState>(getInitialSelectState(project?.area_type, areaTypeOptions));
   const [areaTags, setAreaTags] = useState<string[]>(
-    project?.area_tags && project.area_tags.length > 0
-      ? project.area_tags
-      : project?.area_type
-        ? [project.area_type]
-        : [],
+    dedupeAreaTags([
+      ...(project?.area_tags || []),
+      project?.area_type || null,
+    ]),
   );
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
@@ -354,7 +353,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
     const selectedDesignCategory = getSelectedValue(designCategory, designCategoryOptions);
     const selectedDesignStyle = getSelectedValue(designStyle, designStyleOptions);
     const selectedAreaType = getSelectedValue(areaType, areaTypeOptions);
-    const normalizedAreaTags = Array.from(new Set(areaTags.map((tag) => normalizeText(tag)).filter(Boolean)));
+    const normalizedAreaTags = dedupeAreaTags(areaTags);
     const nextAreaType = normalizedAreaTags[0] || selectedAreaType || project?.area_type || '';
 
     if (!normalizeText(title)) throw new Error('Title wajib diisi.');
@@ -661,7 +660,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   }
 
   async function updateGalleryImageAreaTags(imageId: string, tags: string[]) {
-    const normalizedTags = Array.from(new Set(tags.map((tag) => normalizeText(tag)).filter(Boolean)));
+    const normalizedTags = dedupeAreaTags(tags);
     setGalleryImages((current) => current.map((image) => (image.id === imageId ? { ...image, area_tags: normalizedTags } : image)));
     await updateGalleryImageMeta(imageId, { area_tags: normalizedTags });
   }
@@ -1047,7 +1046,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
           <label>Area/Ruang Tags</label>
           <p className="mt-2 text-xs leading-5 text-white/42">Pilih area/ruang yang termasuk dalam proyek ini. Tags ini membantu filter visual dan konten sosial.</p>
           <div className="mt-3">
-            <ProjectTagPicker value={areaTags} onChange={setAreaTags} suggestions={DEFAULT_AREA_TAGS} placeholder="Cari atau tambah area..." maxTags={10} />
+            <ProjectTagPicker value={areaTags} onChange={setAreaTags} suggestions={DEFAULT_AREA_TAGS} normalizeTagValue={normalizeAreaTag} getTagLabel={getAreaTagLabel} placeholder="Cari atau tambah area..." maxTags={10} />
           </div>
         </div>
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
@@ -1163,9 +1162,11 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                     <div>
                       <label>Image Area Tags</label>
                       <ProjectTagPicker
-                        value={image.area_tags || []}
+                        value={dedupeAreaTags(image.area_tags || [])}
                         onChange={(tags) => { void updateGalleryImageAreaTags(image.id, tags); }}
-                        suggestions={[...DEFAULT_AREA_TAGS, ...(image.area_tags || [])]}
+                        normalizeTagValue={normalizeAreaTag}
+                        getTagLabel={getAreaTagLabel}
+                        suggestions={dedupeAreaTags([...(DEFAULT_AREA_TAGS || []), ...((image.area_tags || []) as string[])])}
                         variant="compact"
                         emptyText="Belum ada tag area gambar."
                         showHelperText={false}
