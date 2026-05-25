@@ -73,7 +73,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   const project = await getPublishedProjectBySlug(params.slug);
   if (!project) notFound();
 
-  const galleryImages = [...(project.project_images || [])].sort((a, b) => a.sort_order - b.sort_order);
+  const galleryImages = [...(project.project_images || [])].sort((a, b) => (a.sort_order ?? 9999) - (b.sort_order ?? 9999));
   const galleryLightboxImages = galleryImages.map((image, index) => ({
     src: image.image_url,
     alt: image.alt_text || `${project.title} gallery ${index + 1}`,
