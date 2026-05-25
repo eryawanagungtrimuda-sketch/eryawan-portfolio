@@ -1,33 +1,50 @@
-const AREA_TAG_LABEL_MAP: Record<string, string> = {
-  Lobby: 'Lobby',
-  Reception: 'Resepsionis',
-  'Waiting Area': 'Ruang Tunggu',
-  'Living Room': 'Ruang Keluarga',
-  'Dining Area': 'Ruang Makan',
-  Kitchen: 'Dapur',
-  Bedroom: 'Kamar Tidur',
-  Bathroom: 'Kamar Mandi',
-  Workspace: 'Area Kerja',
-  'Meeting Room': 'Ruang Meeting',
-  'Consultation Room': 'Ruang Konsultasi',
-  'Treatment Room': 'Ruang Treatment',
-  'Ruang Perawatan': 'Ruang Treatment',
-  'Ruang Treatment': 'Ruang Treatment',
-  'Retail Area': 'Area Retail',
-  'Display Area': 'Area Display',
-  'Cafe Area': 'Area Cafe',
-  Pantry: 'Pantry',
-  Corridor: 'Koridor',
-  Facade: 'Fasad',
-  'Outdoor Area': 'Area Outdoor',
-  'Public Service Area': 'Area Layanan Publik',
-  'Furniture / Built-in': 'Furniture / Built-in',
-  Other: 'Lainnya',
+const AREA_TAG_DISPLAY_LABELS: Record<string, string> = {
+  lobby: 'Lobby',
+  resepsionis: 'Resepsionis',
+  'ruang tunggu': 'Ruang Tunggu',
+  'ruang keluarga': 'Ruang Keluarga',
+  'ruang makan': 'Ruang Makan',
+  dapur: 'Dapur',
+  pantry: 'Pantry',
+  koridor: 'Koridor',
+  'kamar tidur': 'Kamar Tidur',
+  'kamar mandi': 'Kamar Mandi',
+  'area kerja': 'Area Kerja',
+  'ruang meeting': 'Ruang Meeting',
+  'ruang konsultasi': 'Ruang Konsultasi',
+  'ruang treatment': 'Ruang Treatment',
+  'area retail': 'Area Retail',
+  'area display': 'Area Display',
+  'area cafe': 'Area Cafe',
+  'area outdoor': 'Area Outdoor',
+  'area layanan publik': 'Area Layanan Publik',
+  'furniture / built-in': 'Furniture / Built-in',
+  fasad: 'Fasad',
+  lainnya: 'Lainnya',
 };
 
 const AREA_TAG_ALIASES: Record<string, string> = {
+  reception: 'resepsionis',
+  'waiting area': 'ruang tunggu',
+  'living room': 'ruang keluarga',
+  'dining area': 'ruang makan',
+  kitchen: 'dapur',
+  bedroom: 'kamar tidur',
+  bathroom: 'kamar mandi',
+  workspace: 'area kerja',
+  'meeting room': 'ruang meeting',
+  'consultation room': 'ruang konsultasi',
+  'treatment room': 'ruang treatment',
   'ruang perawatan': 'ruang treatment',
-  'ruang treatment': 'ruang treatment',
+  'retail area': 'area retail',
+  'display area': 'area display',
+  'cafe area': 'area cafe',
+  'area kafe': 'area cafe',
+  corridor: 'koridor',
+  facade: 'fasad',
+  'outdoor area': 'area outdoor',
+  'public service area': 'area layanan publik',
+  other: 'lainnya',
 };
 
 export const DEFAULT_AREA_TAGS: string[] = [
@@ -62,6 +79,10 @@ export function normalizeAreaTag(value?: string | null) {
 
 export function getAreaTagLabel(value: string) {
   const normalized = normalizeAreaTag(value);
-  if (normalized === 'ruang treatment') return 'Ruang Treatment';
-  return AREA_TAG_LABEL_MAP[value] || value;
+  const canonicalLabel = AREA_TAG_DISPLAY_LABELS[normalized];
+  if (canonicalLabel) return canonicalLabel;
+  return normalized
+    .split(' ')
+    .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
+    .join(' ');
 }
