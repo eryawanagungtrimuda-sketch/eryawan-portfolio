@@ -89,7 +89,12 @@ type ComposerDraft = {
   ogImage: string;
 };
 
-type Props = { contentType: ContentType; slug: string };
+type Props = {
+  contentType: ContentType;
+  slug: string;
+  buttonClassName?: string;
+  wrapperClassName?: string;
+};
 
 export function buildSocialDrafts(data: DetailPayload, contentType: ContentType): ComposerDraft {
   const tags = data.tags?.length ? data.tags.map((tag) => `#${tag.replace(/\s+/g, '')}`).join(' ') : '#DesainInterior #StudiKasus';
@@ -253,7 +258,7 @@ function contentTypeLabel(contentType: ContentType) {
   return contentType === 'wawasan' ? 'wawasan' : 'karya';
 }
 
-export default function SocialComposerAutoPostModal({ contentType, slug }: Props) {
+export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: Props) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
@@ -511,12 +516,12 @@ ${regenNotes.trim()}`;
 
   return (
     <>
-      <div className="fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+      <div className={wrapperClassName || 'fixed inset-x-0 bottom-4 z-40 flex justify-center px-4'}>
         <button
           type="button"
           aria-label="Buat konten sosial untuk halaman ini"
           onClick={openModal}
-          className="font-sans min-h-11 rounded-2xl border border-[#D4AF37]/60 bg-[#090908]/85 px-5 py-2.5 text-sm font-semibold text-[#E6C676] shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_25px_rgba(0,0,0,0.45)] backdrop-blur"
+          className={buttonClassName || 'font-sans min-h-11 rounded-2xl border border-[#D4AF37]/60 bg-[#090908]/85 px-5 py-2.5 text-sm font-semibold text-[#E6C676] shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_10px_25px_rgba(0,0,0,0.45)] backdrop-blur'}
         >
           Buat Konten Sosial
         </button>

@@ -8,9 +8,10 @@ import { adminShortcutsEnabled } from '@/lib/admin-shortcuts';
 
 type AdminEditWawasanShortcutProps = {
   insightId?: string | null;
+  className?: string;
 };
 
-export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasanShortcutProps) {
+export default function AdminEditWawasanShortcut({ insightId, className }: AdminEditWawasanShortcutProps) {
   if (!adminShortcutsEnabled || !insightId) return null;
 
   const [ready, setReady] = useState(false);
@@ -48,7 +49,7 @@ export default function AdminEditWawasanShortcut({ insightId }: AdminEditWawasan
     <Link
       href={`/admin/insights/${insightId}/edit`}
       aria-label="Edit wawasan"
-      className="premium-interactive inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/[0.06] px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]"
+      className={className || 'premium-interactive inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/[0.06] px-5 py-2.5 text-center font-sans text-sm leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/[0.14]'}
     >
       Edit
     </Link>
