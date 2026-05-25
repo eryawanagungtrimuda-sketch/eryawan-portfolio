@@ -23,6 +23,20 @@ const allowedFields = new Set<RegenerableField>([
   'linkedInCaption',
   'whatsappMessage',
 ]);
+const LOG_PREFIX = '[social-composer/regenerate]';
+
+function normalizeJsonOutput(value: string) {
+  let normalized = value.trim();
+  if (normalized.startsWith('```json')) normalized = normalized.slice(7).trim();
+  if (normalized.startsWith('```')) normalized = normalized.slice(3).trim();
+  if (normalized.endsWith('```')) normalized = normalized.slice(0, -3).trim();
+  const firstBrace = normalized.indexOf('{');
+  const lastBrace = normalized.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    normalized = normalized.slice(firstBrace, lastBrace + 1);
+  }
+  return normalized;
+}
 
 function fallbackText(field: RegenerableField, source: Record<string, string | null>, goal: ContentGoal) {
   const title = source.title || 'Proyek desain';
@@ -53,7 +67,7 @@ export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('authorization') || '';
     const token = authHeader.replace(/^Bearer\s+/i, '').trim();
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) return NextResponse.json({ error: 'Unauthorized', debugReason: 'auth_failed' }, { status: 401 });
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -61,7 +75,9 @@ export async function POST(request: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const { data: userData, error: userError } = await supabase.auth.getUser(token);
-    if (userError || !userData.user?.email || !isAllowedAdminEmail(userData.user.email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (userError || !userData.user?.email || !isAllowedAdminEmail(userData.user.email)) {
+      return NextResponse.json({ error: 'Forbidden', debugReason: 'auth_failed' }, { status: 403 });
+    }
 
     const body = (await request.json()) as {
       contentType?: string;
@@ -101,9 +117,19 @@ export async function POST(request: Request) {
     for (const field of uniqueFields as RegenerableField[]) fallbackData[field] = fallbackText(field, source, safeGoal);
 
     const aiKey = process.env.OPENAI_API_KEY;
-    if (!aiKey) return NextResponse.json({ data: fallbackData, fallbackUsed: true });
+    console.info(`${LOG_PREFIX} OPENAI_API_KEY detected=${Boolean(aiKey)}`);
+    if (!aiKey) return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'missing_openai_key' });
 
-    const prompt = `Anda copywriter konten arsitektur/interior premium. Keluarkan JSON object valid tanpa markdown dan hanya field diminta. Bahasa Indonesia natural, ringkas, kuat hook, tanpa clickbait, tanpa klaim pasti viral (gunakan 'berpotensi menarik perhatian'). Untuk canvaCarouselSlides wajib tepat 7 slide dengan urutan: Hook, Context, Problem, Design decision, Detail/material/zoning, Result/user benefit, CTA to website; tiap slide wajib title/body/visual direction.`;
+    const prompt = `Anda copywriter konten arsitektur/interior premium.
+Keluarkan JSON object valid tanpa markdown, tanpa teks lain, dan hanya field yang diminta.
+Gunakan nama key persis sama dengan field yang diminta user.
+Bahasa Indonesia natural, ringkas, kuat hook, tanpa clickbait, tanpa klaim pasti viral (gunakan "berpotensi menarik perhatian").
+Untuk canvaCarouselSlides: wajib berupa SATU string ramah textarea (bukan array/object), tepat 7 slide berurutan:
+Slide 1 Hook, Slide 2 Context, Slide 3 Problem, Slide 4 Design decision, Slide 5 Detail/material/zoning, Slide 6 Result/user benefit, Slide 7 CTA to website.
+Setiap slide wajib berisi:
+Judul: ...
+Teks: ...
+Visual: ...`;
 
     const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -120,24 +146,48 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!aiResponse.ok) return NextResponse.json({ data: fallbackData, fallbackUsed: true });
+    if (!aiResponse.ok) {
+      const requestId = aiResponse.headers.get('x-request-id') || aiResponse.headers.get('openai-request-id');
+      const errorText = (await aiResponse.text()).slice(0, 400);
+      console.error(`${LOG_PREFIX} openai_http_error status=${aiResponse.status} requestId=${requestId || 'n/a'} msg=${errorText}`);
+      return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_http_error' });
+    }
     const parsed = (await aiResponse.json()) as { choices?: Array<{ message?: { content?: string } }> };
-    const content = parsed.choices?.[0]?.message?.content || '{}';
+    const content = parsed.choices?.[0]?.message?.content || '';
+    if (!content.trim()) {
+      console.error(`${LOG_PREFIX} openai_empty_response`);
+      return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_empty_response' });
+    }
     let json: Partial<Record<RegenerableField, string>> = {};
     try {
-      json = JSON.parse(content) as Partial<Record<RegenerableField, string>>;
-    } catch {
-      return NextResponse.json({ data: fallbackData, fallbackUsed: true });
+      json = JSON.parse(normalizeJsonOutput(content)) as Partial<Record<RegenerableField, string>>;
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : 'invalid_json';
+      console.error(`${LOG_PREFIX} openai_invalid_json msg=${errMsg}`);
+      return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
     }
 
     const safeResult: Partial<Record<RegenerableField, string>> = {};
+    const missingFields: RegenerableField[] = [];
     for (const field of uniqueFields as RegenerableField[]) {
       const value = json[field];
-      safeResult[field] = typeof value === 'string' && value.trim() ? value.trim() : fallbackData[field] || '';
+      if (typeof value === 'string' && value.trim()) {
+        safeResult[field] = value.trim();
+      } else {
+        missingFields.push(field);
+        safeResult[field] = fallbackData[field] || '';
+      }
+    }
+
+    if (missingFields.length > 0) {
+      console.warn(`${LOG_PREFIX} openai_missing_requested_fields fields=${missingFields.join(',')}`);
+      return NextResponse.json({ data: safeResult, fallbackUsed: true, debugReason: 'openai_missing_requested_fields' });
     }
 
     return NextResponse.json({ data: safeResult, fallbackUsed: false });
-  } catch {
-    return NextResponse.json({ data: {}, fallbackUsed: true });
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : 'unknown_error';
+    console.error(`${LOG_PREFIX} unexpected_error msg=${errMsg}`);
+    return NextResponse.json({ data: {}, fallbackUsed: true, debugReason: 'unexpected_error' });
   }
 }
