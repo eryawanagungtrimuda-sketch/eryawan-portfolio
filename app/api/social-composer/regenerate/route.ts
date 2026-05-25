@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         response_format: { type: 'json_object' },
-        temperature: 0.7,
+        temperature: 0.6,
         max_tokens: 900,
         messages: [
           { role: 'system', content: prompt },
@@ -123,7 +123,12 @@ export async function POST(request: Request) {
     if (!aiResponse.ok) return NextResponse.json({ data: fallbackData, fallbackUsed: true });
     const parsed = (await aiResponse.json()) as { choices?: Array<{ message?: { content?: string } }> };
     const content = parsed.choices?.[0]?.message?.content || '{}';
-    const json = JSON.parse(content) as Partial<Record<RegenerableField, string>>;
+    let json: Partial<Record<RegenerableField, string>> = {};
+    try {
+      json = JSON.parse(content) as Partial<Record<RegenerableField, string>>;
+    } catch {
+      return NextResponse.json({ data: fallbackData, fallbackUsed: true });
+    }
 
     const safeResult: Partial<Record<RegenerableField, string>> = {};
     for (const field of uniqueFields as RegenerableField[]) {
@@ -133,6 +138,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ data: safeResult, fallbackUsed: false });
   } catch {
-    return NextResponse.json({ error: 'Unhandled regenerate error' }, { status: 500 });
+    return NextResponse.json({ data: {}, fallbackUsed: true });
   }
 }
