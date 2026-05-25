@@ -76,9 +76,9 @@ function getProjectFilterAreaTags(project: ProjectWithArchiveImages) {
 
   allTags.forEach((tag) => {
     if (!tag) return;
-    const normalizedTag = normalizeAreaTag(tag);
-    if (!normalizedTag) return;
-    normalizedTagMap.set(normalizedTag, getAreaTagLabel(tag));
+    const normalizedKey = normalizeAreaTag(tag);
+    if (!normalizedKey) return;
+    normalizedTagMap.set(normalizedKey, getAreaTagLabel(normalizedKey));
   });
 
   return Array.from(normalizedTagMap.values());
@@ -184,9 +184,15 @@ export default function KaryaArchive({ projects }: Props) {
   const hasSearchQuery = search.trim().length > 0;
 
   const areaTagOptions = useMemo(() => {
-    const set = new Set<string>();
-    projects.forEach((project) => getProjectFilterAreaTags(project).forEach((tag) => set.add(tag)));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
+    const optionMap = new Map<string, string>();
+    projects.forEach((project) => {
+      getProjectFilterAreaTags(project).forEach((tag) => {
+        const key = normalizeAreaTag(tag);
+        if (!key) return;
+        optionMap.set(key, getAreaTagLabel(tag));
+      });
+    });
+    return Array.from(optionMap.values()).sort((a, b) => a.localeCompare(b));
   }, [projects]);
 
   const filterOptions = useMemo(() => ({
