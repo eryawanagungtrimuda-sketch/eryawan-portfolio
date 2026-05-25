@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import { getAreaTagLabel } from '@/lib/area-tags';
+import { DEFAULT_AREA_TAGS, getAreaTagLabel } from '@/lib/area-tags';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
@@ -68,30 +68,6 @@ const areaTypeOptions = [
   'Facade',
   'Landscape',
   'Building Renovation',
-];
-const DEFAULT_AREA_TAGS = [
-  'Lobby',
-  'Resepsionis',
-  'Ruang Tunggu',
-  'Ruang Keluarga',
-  'Ruang Makan',
-  'Dapur',
-  'Pantry',
-  'Koridor',
-  'Kamar Tidur',
-  'Kamar Mandi',
-  'Area Kerja',
-  'Ruang Meeting',
-  'Ruang Konsultasi',
-  'Ruang Treatment',
-  'Area Retail',
-  'Area Display',
-  'Area Cafe',
-  'Area Outdoor',
-  'Area Layanan Publik',
-  'Furniture / Built-in',
-  'Fasad',
-  'Lainnya',
 ];
 
 const displayRatioOptions = [
