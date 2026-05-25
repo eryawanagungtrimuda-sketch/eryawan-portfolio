@@ -5,7 +5,7 @@ import { ArrowUpRight, Mail, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import ShareLinkButton from '@/components/share-link-button';
-import { getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
+import { dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import type { Project, ProjectWithArchiveImages } from '@/lib/types';
 
 type Props = { projects: ProjectWithArchiveImages[] };
@@ -66,22 +66,8 @@ function uniqueOptions(projects: ProjectWithArchiveImages[], key: keyof Project)
 }
 
 function getProjectFilterAreaTags(project: ProjectWithArchiveImages) {
-  const normalizedTagMap = new Map<string, string>();
   const archiveImageTags = (project.archive_images || []).flatMap((image) => image.area_tags || []);
-  const allTags = [
-    project.area_type,
-    ...(project.area_tags || []),
-    ...archiveImageTags,
-  ];
-
-  allTags.forEach((tag) => {
-    if (!tag) return;
-    const normalizedKey = normalizeAreaTag(tag);
-    if (!normalizedKey) return;
-    normalizedTagMap.set(normalizedKey, getAreaTagLabel(normalizedKey));
-  });
-
-  return Array.from(normalizedTagMap.values());
+  return dedupeAreaTags([project.area_type, ...(project.area_tags || []), ...archiveImageTags]);
 }
 
 function limitedAreaTags(project: ProjectWithArchiveImages, max = 2) {
@@ -184,15 +170,11 @@ export default function KaryaArchive({ projects }: Props) {
   const hasSearchQuery = search.trim().length > 0;
 
   const areaTagOptions = useMemo(() => {
-    const optionMap = new Map<string, string>();
-    projects.forEach((project) => {
-      getProjectFilterAreaTags(project).forEach((tag) => {
-        const key = normalizeAreaTag(tag);
-        if (!key) return;
-        optionMap.set(key, getAreaTagLabel(tag));
-      });
-    });
-    return Array.from(optionMap.values()).sort((a, b) => a.localeCompare(b));
+    return dedupeAreaTags(projects.flatMap((project) => [
+      project.area_type,
+      ...(project.area_tags || []),
+      ...((project.archive_images || []).flatMap((image) => image.area_tags || [])),
+    ]));
   }, [projects]);
 
   const filterOptions = useMemo(() => ({
@@ -209,6 +191,7 @@ export default function KaryaArchive({ projects }: Props) {
       .filter((project) => {
         const projectTags = getProjectFilterAreaTags(project);
         const archiveImageTags = (project.archive_images || []).flatMap((image) => image.area_tags || []);
+        const canonicalArchiveTags = dedupeAreaTags(archiveImageTags);
         const searchFields = [
           project.title,
           project.category,
@@ -217,6 +200,7 @@ export default function KaryaArchive({ projects }: Props) {
           project.area_type,
           ...(project.area_tags || []),
           ...archiveImageTags,
+          ...canonicalArchiveTags,
           project.problem,
           project.solution,
           project.impact,
@@ -226,7 +210,9 @@ export default function KaryaArchive({ projects }: Props) {
         const matchesCategory = category === 'Semua' || normalize(localizeFilterValue(project.category || '')) === normalize(category);
         const matchesDesignCategory = designCategory === 'Semua' || normalize(localizeFilterValue(project.design_category || '')) === normalize(designCategory);
         const matchesDesignStyle = designStyle === 'Semua' || normalize(localizeFilterValue(project.design_style || '')) === normalize(designStyle);
-        const matchesAreaTags = selectedAreaTags.length === 0 || selectedAreaTags.some((selected) => projectTags.some((tag) => normalizeAreaTag(tag) === normalizeAreaTag(selected)));
+        const projectTagKeys = projectTags.map((tag) => normalizeAreaTag(tag)).filter(Boolean);
+        const selectedTagKeys = selectedAreaTags.map((tag) => normalizeAreaTag(tag)).filter(Boolean);
+        const matchesAreaTags = selectedTagKeys.length === 0 || selectedTagKeys.some((selected) => projectTagKeys.includes(selected));
         const matchesStatus = projectStatus === 'Semua' || normalize(getProjectStatus(project)) === normalize(projectStatus);
         return matchesSearch && matchesCategory && matchesDesignCategory && matchesDesignStyle && matchesAreaTags && matchesStatus;
       })

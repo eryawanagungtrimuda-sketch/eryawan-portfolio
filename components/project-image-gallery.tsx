@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getAreaTagLabel } from '@/lib/area-tags';
+import { dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import { getGalleryImageFrameStyle, getGalleryImageStyle } from '@/lib/project-image-display';
 
 type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null; crop_x?: number | null; crop_y?: number | null; crop_zoom?: number | null };
@@ -42,19 +42,20 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
   const availableTags = useMemo(() => {
     const tagMap = new Map<string, string>();
     combinedImages.forEach((image) => {
-      (image.area_tags || []).forEach((tag) => {
-        const normalized = tag.trim();
-        if (!normalized) return;
-        if (!tagMap.has(normalized.toLowerCase())) tagMap.set(normalized.toLowerCase(), normalized);
+      dedupeAreaTags(image.area_tags || []).forEach((tag) => {
+        const normalized = normalizeAreaTag(tag);
+        if (!normalized || tagMap.has(normalized)) return;
+        tagMap.set(normalized, getAreaTagLabel(normalized));
       });
     });
-    return Array.from(tagMap.values()).sort((a, b) => a.localeCompare(b));
+    return Array.from(tagMap.values());
   }, [combinedImages]);
 
   const [activeTag, setActiveTag] = useState('All');
   const filteredImages = useMemo(() => {
     if (activeTag === 'All') return combinedImages;
-    return combinedImages.filter((image) => (image.area_tags || []).includes(activeTag));
+    const selectedKey = normalizeAreaTag(activeTag);
+    return combinedImages.filter((image) => dedupeAreaTags(image.area_tags || []).some((tag) => normalizeAreaTag(tag) === selectedKey));
   }, [activeTag, combinedImages]);
 
   const hasMultiple = filteredImages.length > 1;

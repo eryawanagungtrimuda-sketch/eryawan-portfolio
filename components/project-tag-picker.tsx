@@ -3,6 +3,9 @@
 import { useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 
+type Normalizer = (value?: string | null) => string;
+type Labeler = (value?: string | null) => string;
+
 type Props = {
   value: string[];
   onChange: (tags: string[]) => void;
@@ -13,6 +16,8 @@ type Props = {
   emptyText?: string;
   showHelperText?: boolean;
   className?: string;
+  normalizeTagValue?: Normalizer;
+  getTagLabel?: Labeler;
 };
 
 function normalizeTag(value: string) {
@@ -29,14 +34,18 @@ export function ProjectTagPicker({
   emptyText = 'Belum ada tags dipilih.',
   showHelperText = true,
   className = '',
+  normalizeTagValue,
+  getTagLabel,
 }: Props) {
+  const normalizeValue = (value?: string | null) => normalizeTagValue ? normalizeTagValue(value) : normalizeTag(value || '');
+  const labelValue = (value?: string | null) => getTagLabel ? getTagLabel(value) : (value || '').trim();
   const [input, setInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
   const normalizedSuggestions = useMemo(() => {
     const map = new Map<string, string>();
     suggestions.forEach((item) => {
-      const normalized = normalizeTag(item);
+      const normalized = normalizeValue(item);
       if (!normalized || map.has(normalized)) return;
       map.set(normalized, item);
     });
@@ -44,7 +53,7 @@ export function ProjectTagPicker({
   }, [suggestions]);
 
   const canAddMore = value.length < maxTags;
-  const normalizedInput = normalizeTag(input);
+  const normalizedInput = normalizeValue(input);
 
   const filteredSuggestions = useMemo(() => {
     const entries = Array.from(normalizedSuggestions.entries());
@@ -57,7 +66,7 @@ export function ProjectTagPicker({
   const shouldShowSuggestions = canAddMore && (isFocused || normalizedInput.length > 0);
 
   function addTag(raw: string) {
-    const normalized = normalizeTag(raw);
+    const normalized = normalizeValue(raw);
     if (!normalized || value.includes(normalized) || !canAddMore) return;
     onChange([...value, normalized]);
     setInput('');
@@ -83,7 +92,7 @@ export function ProjectTagPicker({
             onClick={() => removeTag(tag)}
             className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1 text-xs text-[#D4AF37]"
           >
-            {normalizedSuggestions.get(tag) || tag}
+            {labelValue(normalizedSuggestions.get(tag) || tag) || tag}
             <X size={12} />
           </button>
         )) : <p className="text-xs text-white/40">{emptyText}</p>}
@@ -121,7 +130,7 @@ export function ProjectTagPicker({
                 onClick={() => addTag(tag)}
                 className="rounded-full border border-white/15 bg-white/[0.02] px-2.5 py-1 text-[11px] text-white/72 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {label}
+                {labelValue(label) || label}
               </button>
             );
           })}
@@ -133,7 +142,7 @@ export function ProjectTagPicker({
               onClick={() => addTag(input)}
               className="rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-2.5 py-1 text-[11px] text-[#D4AF37]"
             >
-              Add "{normalizedInput}"
+              Add "{labelValue(normalizedInput) || normalizedInput}"
             </button>
           ) : null}
         </div>
