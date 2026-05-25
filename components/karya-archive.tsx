@@ -295,6 +295,14 @@ export default function KaryaArchive({ projects }: Props) {
     return () => window.removeEventListener('keydown', onEsc);
   }, [isMobileFilterOpen]);
 
+  useEffect(() => {
+    const container = resultsRef.current;
+    if (!container) return;
+
+    const revealNodes = container.querySelectorAll<HTMLElement>('.reveal-on-scroll');
+    revealNodes.forEach((node) => node.classList.add('is-visible'));
+  }, [filteredProjects]);
+
   const mobileFilterSheet = isMobileFilterOpen ? (
     <div className="fixed inset-0 z-[9999] lg:hidden" onClick={closeMobileFilter}>
       <div className="absolute inset-0 bg-black/70" />
