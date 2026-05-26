@@ -11,6 +11,7 @@ type RegenerableField =
   | 'tiktokHook'
   | 'tiktokScript'
   | 'tiktokCaption'
+  | 'tiktokHashtag'
   | 'youtubeTitle'
   | 'youtubeDescription'
   | 'linkedInCaption'
@@ -25,6 +26,7 @@ const allowedFields = new Set<RegenerableField>([
   'tiktokHook',
   'tiktokScript',
   'tiktokCaption',
+  'tiktokHashtag',
   'youtubeTitle',
   'youtubeDescription',
   'linkedInCaption',
@@ -203,6 +205,7 @@ Studi lengkapnya ada di website.`,
 Di ${title}, problem utamanya ada di alur dan pembagian zona. Setelah diatur ulang, aktivitas jadi lebih lancar dan hasilnya terasa lebih masuk akal untuk dipakai harian.
 
 Lihat studi lengkapnya${source.url ? `: ${source.url}` : '.'}`,
+    tiktokHashtag: '#DesainInterior #InteriorDesign #TikTokDesign #RuangMakan #Dapur',
     youtubeTitle: `Penataan ${title} agar Alur dan Fungsi Lebih Jelas`,
     youtubeDescription: `Di video singkat ini, Anda akan lihat bagaimana ${title} ditata ulang dari sisi alur, zoning, material, dan pencahayaan kerja.
 
@@ -312,6 +315,41 @@ function postProcessField(field: RegenerableField, value: string) {
       .filter(Boolean)
       .slice(0, 5)
       .join('\n');
+  }
+  if (field === 'tiktokCaption') {
+    cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/^\s*```(?:json)?/i, '')
+      .replace(/```\s*$/i, '')
+      .replace(/\b(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|Visual|Narasi|Overlay|Caption|Text)\s*:\s*/gi, '')
+      .replace(/^[\t ]*\"[^\\"\n]+\"\s*:\s*\"[^\\"\n]*\"\s*,?\s*$/gm, '')
+      .replace(/[{}[\]"]/g, '')
+      .replace(/^\s*[,]+\s*$/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
+    const paragraphs = cleaned
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter((part) => part && !/(canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|Visual:|Narasi:|Overlay:|Caption:|Text:|^[{[])/i.test(part))
+      .slice(0, 3);
+
+    cleaned = paragraphs.join('\n\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+  if (field === 'tiktokHashtag') {
+    const tokens = cleaned
+      .replace(/,/g, ' ')
+      .replace(/\\n/g, ' ')
+      .split(/\s+/)
+      .map((token) => token.trim())
+      .filter(Boolean)
+      .map((token) => token.replace(/^[^#A-Za-z0-9]+|[^#A-Za-z0-9_]+$/g, ''))
+      .filter((token) => token.startsWith('#'))
+      .map((token) => `#${token.replace(/^#+/, '').replace(/[^A-Za-z0-9_]/g, '')}`)
+      .filter((token) => token.length > 1)
+      .slice(0, 6);
+
+    cleaned = tokens.join(' ').trim();
   }
   if (field === 'whatsappMessage') {
     cleaned = cleaned
@@ -448,7 +486,22 @@ Narasi pendek agar tidak kepotong.
   * Satu kalimat hook singkat untuk 3 detik pertama.
   * Maksimum 12 kata.
   * Natural bahasa Indonesia, tidak clickbait.
-- tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
+- tiktokCaption:
+  * Output hanya caption TikTok.
+  * Bahasa Indonesia natural, singkat, conversational, tidak robotik.
+  * 1–3 paragraf pendek.
+  * Sebut konteks proyek secara singkat.
+  * Sertakan link hanya jika source.url tersedia.
+  * Dilarang fragment JSON.
+  * Dilarang menyebut canvaCarouselSlides, canvaReelsTimeline, canvaOverlayText.
+  * Dilarang label seperti Visual:, Narasi:, Overlay:, Caption:, Text:.
+  * Dilarang hashtag berlebihan di dalam caption.
+- tiktokHashtag:
+  * Output hashtag saja.
+  * 4–6 hashtag.
+  * Satu baris.
+  * Tanpa penjelasan.
+  * Tanpa numbering.
 - tiktokScript:
   * Script voice-over untuk TikTok/Reels.
   * Tulis 4–5 baris pendek, conversational, natural.
@@ -552,6 +605,16 @@ Narasi pendek agar tidak kepotong.
           });
         }
         if (
+          field === 'tiktokCaption' &&
+          /(canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|Visual:|Narasi:|Overlay:|[{[])/i.test(outputText)
+        ) {
+          return NextResponse.json({
+            data: { [field]: fallbackData[field] || '' },
+            fallbackUsed: true,
+            debugReason: 'openai_plain_text_salvaged_tiktok_fallback',
+          });
+        }
+        if (
           field === 'canvaOverlayText' &&
           (!salvaged.trim() || salvaged.split('\n').some((line) => line.split(' ').filter(Boolean).length > 8))
         ) {
@@ -593,6 +656,12 @@ Narasi pendek agar tidak kepotong.
       const value = json[field];
       if (typeof value === 'string' && value.trim()) {
         let processed = postProcessField(field, value);
+        if (field === 'tiktokCaption' && source.url && !processed.includes(source.url)) {
+          processed = `${processed}\n\nDetail lengkap:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
+        }
+        if (field === 'tiktokCaption' && /(canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|Visual:|Narasi:|Overlay:|Caption:|Text:|[{[])/i.test(processed)) {
+          processed = fallbackData[field] || '';
+        }
         if (field === 'youtubeDescription' && source.url && !processed.includes(source.url)) {
           processed = `${processed}\n\nLihat studi lengkapnya di website:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
         }
