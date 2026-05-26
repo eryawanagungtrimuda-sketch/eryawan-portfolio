@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import PortfolioClicks from './portfolio-clicks';
 import { ToastProvider } from '@/components/toast-provider';
-import { SITE_URL } from '@/lib/site-url';
+import { SITE_URL, absoluteUrl } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
 
@@ -10,18 +10,18 @@ export const metadata: Metadata = {
   title: 'Eryawan Agung | Portfolio Design Strategy',
   description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
   alternates: {
-    canonical: '/',
+    canonical: absoluteUrl('/'),
   },
   openGraph: {
     title: 'Eryawan Agung | Portfolio Design Strategy',
     description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
-    url: '/',
+    url: absoluteUrl('/'),
     siteName: 'Eryawan Agung',
     locale: 'id_ID',
     type: 'website',
     images: [
       {
-        url: '/opengraph-image',
+        url: absoluteUrl('/opengraph-image'),
         width: 1200,
         height: 630,
         alt: 'Eryawan Agung Portfolio Design Strategy',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Eryawan Agung | Portfolio Design Strategy',
     description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
-    images: ['/opengraph-image'],
+    images: [absoluteUrl('/opengraph-image')],
   },
 };
 

@@ -16,11 +16,13 @@ export const metadata: Metadata = {
     title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
     description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
     url: absoluteUrl('/wawasan'),
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Wawasan Desain Eryawan Agung' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Wawasan Desain | Eryawan Agung Design Portfolio',
     description: 'Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.',
+    images: [absoluteUrl('/opengraph-image')],
   },
 };
 

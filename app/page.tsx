@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import type { Metadata } from 'next';
 import { CheckCircle2, Compass, Instagram, Mail, MoveRight, Search, Zap } from 'lucide-react';
 import Button from '@/components/ui/button';
 import { getPublishedInsights } from '@/lib/insights';
@@ -8,8 +9,27 @@ import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
 import AdminFooterShortcut from '@/components/admin-footer-shortcut';
+import { absoluteUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'Eryawan Agung | Design Strategy Portfolio',
+  description: 'Portfolio Eryawan Agung yang menampilkan strategi desain, studi kasus karya, dan wawasan ruang yang terarah.',
+  alternates: { canonical: absoluteUrl('/') },
+  openGraph: {
+    title: 'Eryawan Agung | Design Strategy Portfolio',
+    description: 'Portfolio Eryawan Agung yang menampilkan strategi desain, studi kasus karya, dan wawasan ruang yang terarah.',
+    url: absoluteUrl('/'),
+    type: 'website',
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Eryawan Agung Design Strategy Portfolio' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Eryawan Agung | Design Strategy Portfolio',
+    description: 'Portfolio Eryawan Agung yang menampilkan strategi desain, studi kasus karya, dan wawasan ruang yang terarah.',
+    images: [absoluteUrl('/opengraph-image')],
+  },
+};
 
 const clientWorkflow = [
   {
@@ -157,8 +177,19 @@ export default async function Home() {
           tag: article.tag,
           href: '/wawasan',
         }));
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Eryawan Agung',
+    url: absoluteUrl('/'),
+    image: absoluteUrl('/hero.jpg'),
+    jobTitle: 'Design Strategist',
+    description: 'Design strategist yang berfokus pada spatial logic, keputusan desain, dan dampak ruang.',
+    sameAs: ['https://www.instagram.com/eryawanagung'],
+  };
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip overflow-y-visible bg-[#080807] font-sans text-[#F4F1EA]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <RevealObserver />
       <MobileAdminQuickAccess />
       <section
