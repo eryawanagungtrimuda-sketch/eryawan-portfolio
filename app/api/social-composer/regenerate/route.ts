@@ -174,13 +174,14 @@ Pada ${title}, kami memulai dari evaluasi sirkulasi, pola aktivitas, dan hubunga
 ${solution} Hasilnya, ${impact}.
 
 Saya tertarik mendengar pendekatan rekan-rekan saat menyeimbangkan performa fungsi dan kualitas spasial dalam proyek serupa${source.url ? `.\n\nStudi lengkap: ${source.url}` : '.'}`,
-    whatsappMessage: `Saya baru publish studi kasus ${title}.
+    whatsappMessage: `Saya baru menulis studi kasus tentang ${title}.
 
-Isinya membahas bagaimana area yang terbatas bisa ditata supaya alurnya lebih jelas dan lebih enak dipakai harian.
+Menariknya, proyek ini membahas bagaimana area terbatas bisa dibuat lebih rapi, terang, dan enak dipakai untuk aktivitas sehari-hari.
 
-Kalau lagi bahas dapur, area makan, atau sirkulasi di rumah, ini mungkin relevan.
+Kalau sedang membahas dapur, ruang makan, atau sirkulasi rumah, ini mungkin bisa jadi referensi.
 
-Baca lengkap di sini${source.url ? `: ${source.url}` : '.'}`,
+Baca lengkapnya di sini:
+${source.url || ''}`.trim(),
   };
 
   return map[field];
@@ -219,6 +220,20 @@ function postProcessField(field: RegenerableField, value: string) {
       .filter(Boolean)
       .slice(0, 6)
       .join('\n');
+  }
+  if (field === 'whatsappMessage') {
+    cleaned = cleaned
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
+    const paragraphs = cleaned
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .slice(0, 4);
+
+    cleaned = paragraphs.join('\n\n');
   }
   return cleaned;
 }
@@ -329,7 +344,19 @@ Narasi pendek agar tidak kepotong.
 - tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
 - youtubeDescription: ringkas, jelaskan apa yang akan dilihat, akhiri CTA ke website.
 - linkedInCaption: profesional dan reflektif, 2–4 paragraf pendek, bahas keputusan perancangan dan pemikiran spasial, akhiri pertanyaan/CTA diskusi.
-- whatsappMessage: hangat, singkat, terasa personal, jelaskan kenapa link relevan, tanpa hashtag.`;
+- whatsappMessage:
+  * Tulis seperti orang nyata yang sedang berbagi referensi bermanfaat.
+  * Harus terasa personal, natural, hangat, tenang, tidak seperti campaign/iklan/sales blast.
+  * Sebutkan judul proyek secara natural.
+  * Sebutkan konteks proyek secara singkat (masalah/kebutuhan/aktivitas).
+  * Jelaskan kenapa link layak dibuka (nilai referensi praktisnya).
+  * Format 3–4 paragraf pendek maksimum.
+  * Dilarang pakai hashtag.
+  * Dilarang klaim berlebihan.
+  * Hindari frasa berikut: "Hai! Saya ingin berbagi...", "solusi terbaik", "jangan sampai ketinggalan", "klik sekarang", "desain impian".
+  * Akhiri dengan format:
+    Baca lengkapnya di sini:
+    [URL]`;
 
     const aiResponse = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
@@ -406,7 +433,11 @@ Narasi pendek agar tidak kepotong.
     for (const field of uniqueFields as RegenerableField[]) {
       const value = json[field];
       if (typeof value === 'string' && value.trim()) {
-        safeResult[field] = postProcessField(field, value);
+        let processed = postProcessField(field, value);
+        if (field === 'whatsappMessage' && source.url && !processed.includes(source.url)) {
+          processed = `${processed}\n\nBaca lengkapnya di sini:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
+        }
+        safeResult[field] = processed;
       } else {
         missingFields.push(field);
         safeResult[field] = fallbackData[field] || '';
