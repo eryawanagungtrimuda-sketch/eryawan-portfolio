@@ -37,6 +37,34 @@ const allowedFields = new Set<RegenerableField>([
 ]);
 const LOG_PREFIX = '[social-composer/regenerate]';
 
+const REGENERABLE_FIELD_KEYS = Array.from(allowedFields);
+
+function looksJsonLikeObject(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return false;
+  if ((normalized.startsWith('{') && normalized.endsWith('}')) || (normalized.startsWith('\{') && normalized.endsWith('\}'))) return true;
+  if (/"\s*:\s*"/.test(normalized) && /[{}]/.test(normalized)) return true;
+  return /\{[\s\S]*"[A-Za-z][A-Za-z0-9]*"\s*:[\s\S]*\}/.test(normalized);
+}
+
+function looksPollutedOutput(field: RegenerableField, value: string) {
+  const normalized = value.replace(/\\n/g, '\n').trim();
+  if (!normalized) return true;
+  if (looksJsonLikeObject(normalized)) return true;
+
+  const unrelatedFieldMention = REGENERABLE_FIELD_KEYS.some((key) => key !== field && new RegExp(`\\b${key}\\b`, 'i').test(normalized));
+  if (unrelatedFieldMention) return true;
+
+  const commonWrongLabels = /^(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|igHashtag|tiktokHook|tiktokScript|tiktokCaption|tiktokHashtag|youtubeTitle|youtubeDescription|linkedInCaption|linkedInBullets|whatsappMessage)\s*:/im;
+  if (commonWrongLabels.test(normalized)) return true;
+
+  if (field === 'canvaOverlayText' && /(visual|narasi|overlay|caption|text|copy)\s*:/i.test(normalized)) return true;
+  if (field === 'canvaReelsTimeline' && /(slide\s*[1-7]|canvaCarouselSlides)/i.test(normalized)) return true;
+  if (field === 'canvaCarouselSlides' && /(narasi\s*:|overlay\s*:|\b0\s*[–-]\s*3\s*detik)/i.test(normalized)) return true;
+  return false;
+}
+
+
 function normalizeJsonOutput(value: string) {
   let normalized = value.trim();
   if (normalized.startsWith('```json')) normalized = normalized.slice(7).trim();
@@ -237,7 +265,23 @@ ${source.url || ''}`.trim(),
 }
 
 function postProcessField(field: RegenerableField, value: string) {
-  let cleaned = value.trim().replace(/\n{3,}/g, '\n\n');
+  let cleaned = value
+    .replace(/\\n/g, '\n')
+    .replace(/^\s*```(?:json)?/i, '')
+    .replace(/```\s*$/i, '')
+    .replace(/^\s*["'`]+/, '')
+    .replace(/["'`]+\s*$/, '')
+    .trim()
+    .replace(/\n{3,}/g, '\n\n');
+
+  if (field === 'canvaReelsTimeline') {
+    const chunks = cleaned
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter((part) => /\b\d+\s*[–-]\s*\d+\s*detik\b/i.test(part))
+      .slice(0, 5);
+    cleaned = chunks.join('\n\n').replace(/\bTeks\s*:/gi, 'Overlay:').trim();
+  }
   if (field === 'youtubeTitle') {
     cleaned = cleaned
       .replace(/[#@][\w-]+/g, '')
@@ -295,6 +339,19 @@ function postProcessField(field: RegenerableField, value: string) {
       .filter(Boolean)
       .slice(0, 6)
       .join('\n');
+  }
+
+  if (field === 'igHashtag') {
+    const tokens = cleaned
+      .replace(/,/g, ' ')
+      .split(/\s+/)
+      .map((token) => token.trim())
+      .filter((token) => token.startsWith('#'))
+      .slice(0, 8);
+    cleaned = tokens.join(' ');
+  }
+  if (field === 'igCaption') {
+    cleaned = cleaned.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean).slice(0, 4).join('\n\n');
   }
   if (field === 'tiktokHook') {
     cleaned = cleaned
@@ -670,6 +727,11 @@ Narasi pendek agar tidak kepotong.
         }
         if (field === 'whatsappMessage' && source.url && !processed.includes(source.url)) {
           processed = `${processed}\n\nBaca lengkapnya di sini:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
+        }
+        if (looksPollutedOutput(field, processed)) {
+          missingFields.push(field);
+          safeResult[field] = fallbackData[field] || '';
+          continue;
         }
         safeResult[field] = processed;
       } else {
