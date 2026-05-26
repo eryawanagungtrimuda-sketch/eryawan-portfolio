@@ -138,7 +138,10 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
   const insightUrl = absoluteUrl(`/wawasan/${insight.slug}`);
-  const whatsappMessage = `Insight desain ini menarik untuk dibahas:\n\n${insightUrl}`;
+  const whatsappMessage = `Halo, saya membaca artikel ${insight.title} di website Eryawan Agung.
+Saya ingin berdiskusi tentang kebutuhan desain/ruang yang relevan dengan topik tersebut.
+
+${insightUrl}`;
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
@@ -215,7 +218,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
           <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
           <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
             <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
-              Bagikan via WhatsApp
+              Mulai Percakapan Proyek via WhatsApp
             </Link>
             <ShareLinkButton
               url={insightUrl}
@@ -233,7 +236,8 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
             </div>
             <WawasanAdminActions slug={insight.slug} placement="inline-desktop" />
           </div>
-        </div>
+            <p className="mt-4 max-w-2xl text-center font-sans text-sm leading-7 text-white/60 md:text-left">Cocok untuk rumah tinggal, interior komersial, ruang kerja, atau area pelayanan.</p>
+          </div>
       </div>
 
       <WawasanAdminActions slug={insight.slug} placement="floating-mobile" />

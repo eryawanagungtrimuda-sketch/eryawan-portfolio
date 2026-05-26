@@ -219,7 +219,7 @@ export default async function Home() {
           </div>
 
           <Button href="/mulai-project" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
-            Ajak Kolaborasi
+            Ajukan Kolaborasi
           </Button>
         </nav>
 
@@ -258,11 +258,11 @@ export default async function Home() {
               <Button href="/mulai-project" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Mulai Percakapan Proyek
               </Button>
-              <Button href="#framework" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Cara Saya Mendesain
+              <Button href="/karya" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                Lihat Karya
               </Button>
-              <Button href="/tentang" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Kenali Latar Belakang Saya
+              <Button href="/karya" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
+                Baca Studi Kasus
               </Button>
             </div>
           </div>
@@ -547,7 +547,7 @@ export default async function Home() {
             href="/wawasan"
             className="group mt-10 inline-flex items-center gap-3 border-b border-white/20 pb-1 font-mono text-xs font-black uppercase tracking-[0.18em] text-white/66 transition duration-300 hover:border-[#C8A951]/55 hover:text-[#C8A951]"
           >
-            Jelajahi Semua Insight
+            Baca Studi Kasus
             <MoveRight className="text-[#C8A951] transition duration-300 group-hover:translate-x-1" size={18} />
           </a>
         </div>
@@ -558,7 +558,7 @@ export default async function Home() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto max-w-6xl text-center">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">
-              Mulai Kolaborasi
+              Ajukan Kolaborasi
             </p>
             <h2 className="font-display mt-8 text-4xl font-normal italic leading-[1.35] tracking-[-0.04em] text-[#F4F1EA] md:text-6xl lg:text-7xl">
               Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden lg:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
@@ -568,11 +568,11 @@ export default async function Home() {
             </p>
 
             <Button href="/mulai-project" className="mt-14 w-full px-6 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] sm:w-auto sm:min-w-[300px] md:min-w-[420px]">
-              Hubungi untuk Peluang Profesional
+              Ajukan Kolaborasi
             </Button>
 
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/32">
-              Respon langsung dari Eryawan Agung.
+              Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
             </p>
 
             <div className="mt-8 flex items-center justify-center gap-8 text-white/50">
