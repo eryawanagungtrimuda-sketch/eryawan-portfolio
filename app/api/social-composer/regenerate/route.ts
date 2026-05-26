@@ -8,6 +8,8 @@ type RegenerableField =
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
   | 'igCaption'
+  | 'tiktokHook'
+  | 'tiktokScript'
   | 'tiktokCaption'
   | 'youtubeTitle'
   | 'youtubeDescription'
@@ -20,6 +22,8 @@ const allowedFields = new Set<RegenerableField>([
   'canvaCarouselSlides',
   'canvaOverlayText',
   'igCaption',
+  'tiktokHook',
+  'tiktokScript',
   'tiktokCaption',
   'youtubeTitle',
   'youtubeDescription',
@@ -161,6 +165,12 @@ Di ${title}, kami mulai dari membaca pola aktivitas harian: siapa bergerak ke ma
 ${solution} Dampaknya, ${impact}.
 
 Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di website${source.url ? `: ${source.url}` : '.'}`,
+    tiktokHook: 'Ruang rapi belum tentu enak dipakai.',
+    tiktokScript: `Ruang ini terlihat sederhana, tapi tantangannya ada di alur pakai.
+Dapur dan ruang makan harus tetap dekat, tanpa membuat sirkulasi terasa penuh.
+Karena itu, zoning dibuat lebih jelas dan pencahayaan diperkuat.
+Hasilnya, area belakang terasa lebih rapi, terang, dan mudah dipakai harian.
+Studi lengkapnya ada di website.`,
     tiktokCaption: `Area rapi belum tentu enak dipakai.
 
 Di ${title}, problem utamanya ada di alur dan pembagian zona. Setelah diatur ulang, aktivitas jadi lebih lancar dan hasilnya terasa lebih masuk akal untuk dipakai harian.
@@ -251,6 +261,29 @@ function postProcessField(field: RegenerableField, value: string) {
       })
       .filter(Boolean)
       .slice(0, 6)
+      .join('\n');
+  }
+  if (field === 'tiktokHook') {
+    cleaned = cleaned
+      .replace(/#\S+/g, '')
+      .replace(/["'`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    cleaned = cleaned.split(' ').filter(Boolean).slice(0, 12).join(' ');
+  }
+  if (field === 'tiktokScript') {
+    cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/^\s*```(?:json)?/i, '')
+      .replace(/```\s*$/i, '')
+      .replace(/^\s*(Visual|Overlay|Caption|Text|Narasi)\s*:\s*/gim, '')
+      .trim();
+
+    cleaned = cleaned
+      .split('\n')
+      .map((line) => line.trim().replace(/\s+/g, ' '))
+      .filter(Boolean)
+      .slice(0, 5)
       .join('\n');
   }
   if (field === 'whatsappMessage') {
@@ -384,7 +417,18 @@ Narasi pendek agar tidak kepotong.
   * Gaya manusia, ringkas, tajam, mudah dibaca cepat.
 
 - igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
+- tiktokHook:
+  * Satu kalimat hook singkat untuk 3 detik pertama.
+  * Maksimum 12 kata.
+  * Natural bahasa Indonesia, tidak clickbait.
 - tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
+- tiktokScript:
+  * Script voice-over untuk TikTok/Reels.
+  * Tulis 4–5 baris pendek, conversational, natural.
+  * Wajib menyebut masalah, keputusan desain, dan hasil.
+  * Dilarang hashtag.
+  * Dilarang fragment JSON.
+  * Dilarang label seperti Visual:, Overlay:, Narasi:, Caption:, Text:.
 - youtubeTitle:
   * Judul SEO YouTube Shorts yang natural dan tidak clickbait.
   * Maksimum 70 karakter.
