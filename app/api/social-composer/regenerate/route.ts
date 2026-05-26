@@ -11,6 +11,7 @@ type RegenerableField =
   | 'tiktokCaption'
   | 'youtubeDescription'
   | 'linkedInCaption'
+  | 'linkedInBullets'
   | 'whatsappMessage';
 
 const allowedFields = new Set<RegenerableField>([
@@ -21,6 +22,7 @@ const allowedFields = new Set<RegenerableField>([
   'tiktokCaption',
   'youtubeDescription',
   'linkedInCaption',
+  'linkedInBullets',
   'whatsappMessage',
 ]);
 const LOG_PREFIX = '[social-composer/regenerate]';
@@ -174,6 +176,7 @@ Pada ${title}, kami memulai dari evaluasi sirkulasi, pola aktivitas, dan hubunga
 ${solution} Hasilnya, ${impact}.
 
 Saya tertarik mendengar pendekatan rekan-rekan saat menyeimbangkan performa fungsi dan kualitas spasial dalam proyek serupa${source.url ? `.\n\nStudi lengkap: ${source.url}` : '.'}`,
+    linkedInBullets: `• Pemikiran spasial dimulai dari kebutuhan pengguna utama.\n• Zoning disusun agar fungsi inti tidak saling bertabrakan.\n• Sirkulasi dipertegas supaya alur harian lebih lancar.\n• Material dipilih untuk ketahanan pakai sekaligus karakter visual.\n• Pencahayaan diatur agar aktivitas lebih nyaman dan berdampak nyata.`,
     whatsappMessage: `Saya baru menulis studi kasus tentang ${title}.
 
 Menariknya, proyek ini membahas bagaimana area terbatas bisa dibuat lebih rapi, terang, dan enak dipakai untuk aktivitas sehari-hari.
@@ -234,6 +237,17 @@ function postProcessField(field: RegenerableField, value: string) {
       .slice(0, 4);
 
     cleaned = paragraphs.join('\n\n');
+  }
+  if (field === 'linkedInBullets') {
+    cleaned = cleaned
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => line.replace(/^(?:[-*•]\s*|\d+[\).:-]?\s*)/, '').trim())
+      .filter(Boolean)
+      .map((line) => `• ${line.replace(/\s+/g, ' ')}`)
+      .slice(0, 5)
+      .join('\n');
   }
   return cleaned;
 }
@@ -344,6 +358,13 @@ Narasi pendek agar tidak kepotong.
 - tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
 - youtubeDescription: ringkas, jelaskan apa yang akan dilihat, akhiri CTA ke website.
 - linkedInCaption: profesional dan reflektif, 2–4 paragraf pendek, bahas keputusan perancangan dan pemikiran spasial, akhiri pertanyaan/CTA diskusi.
+- linkedInBullets:
+  * Output hanya bullet points, tanpa paragraf.
+  * Tulis 3–5 bullet points.
+  * Setiap bullet singkat dan profesional.
+  * Gunakan prefix bullet "•" di setiap baris.
+  * Fokus pada pemikiran spasial, zoning, sirkulasi, material, pencahayaan, dan dampak ke pengguna.
+  * Dilarang hashtag.
 - whatsappMessage:
   * Tulis seperti orang nyata yang sedang berbagi referensi bermanfaat.
   * Harus terasa personal, natural, hangat, tenang, tidak seperti campaign/iklan/sales blast.

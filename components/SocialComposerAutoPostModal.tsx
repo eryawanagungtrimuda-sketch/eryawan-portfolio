@@ -96,6 +96,7 @@ type RegenerableField =
   | 'tiktokCaption'
   | 'youtubeDescription'
   | 'linkedInCaption'
+  | 'linkedInBullets'
   | 'whatsappMessage';
 type ContentGoal = 'profesional' | 'edukatif' | 'viral-ready' | 'soft-selling';
 
@@ -288,7 +289,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
-  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokCaption', 'youtubeDescription', 'linkedInCaption', 'whatsappMessage'];
+  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokCaption', 'youtubeDescription', 'linkedInCaption', 'linkedInBullets', 'whatsappMessage'];
 
   useEffect(() => {
     let mounted = true;
