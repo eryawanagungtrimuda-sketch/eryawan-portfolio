@@ -86,7 +86,10 @@ export default async function KaryaDetailPage({ params }: Props) {
   }));
   const openingDescription = project.problem?.trim() || null;
   const projectUrl = absoluteUrl(`/karya/${project.slug}`);
-  const whatsappMessage = `Studi kasus proyek ini menarik untuk dibahas:\n\n${projectUrl}`;
+  const whatsappMessage = `Halo, saya melihat studi kasus ${project.title} di website Eryawan Agung.
+Saya ingin mendiskusikan kemungkinan proyek dengan kebutuhan ruang yang serupa.
+
+${projectUrl}`;
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
   const relatedInsight = project.relatedInsight;
   const areaTags = (project.area_tags || []).filter(Boolean);
@@ -182,7 +185,7 @@ export default async function KaryaDetailPage({ params }: Props) {
               aria-label={`Baca wawasan teknis terkait ${project.title}`}
               className="mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/12 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20"
             >
-              Baca Wawasan Teknis
+              Baca Studi Kasus
             </Link>
           </section>
         ) : null}
@@ -218,7 +221,7 @@ export default async function KaryaDetailPage({ params }: Props) {
               aria-label={`Bagikan studi kasus ${project.title} via WhatsApp`}
               className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
-              Bagikan via WhatsApp
+              Diskusikan Proyek Serupa via WhatsApp
             </Link>
             <ShareLinkButton
               url={projectUrl}
@@ -241,6 +244,7 @@ export default async function KaryaDetailPage({ params }: Props) {
               className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition duration-300 active:scale-[0.98] hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
             />
           </div>
+          <p className="mt-4 max-w-2xl font-sans text-sm leading-7 text-white/60">Ceritakan kebutuhan ruang Anda, lalu kita lihat pendekatan desain yang paling tepat.</p>
         </section>
         <SocialComposerModal contentType="karya" slug={project.slug} />
       </div>
