@@ -8,6 +8,7 @@ type RegenerableField =
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
   | 'igCaption'
+  | 'igHashtag'
   | 'tiktokHook'
   | 'tiktokScript'
   | 'tiktokCaption'
@@ -23,6 +24,7 @@ const allowedFields = new Set<RegenerableField>([
   'canvaCarouselSlides',
   'canvaOverlayText',
   'igCaption',
+  'igHashtag',
   'tiktokHook',
   'tiktokScript',
   'tiktokCaption',
@@ -194,6 +196,7 @@ Di ${title}, kami mulai dari membaca pola aktivitas harian: siapa bergerak ke ma
 ${solution} Dampaknya, ${impact}.
 
 Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di website${source.url ? `: ${source.url}` : '.'}`,
+    igHashtag: '#DesainInterior #InteriorDesign #StudiKasus #ArsitekturInterior #DesignStrategy',
     tiktokHook: 'Ruang rapi belum tentu enak dipakai.',
     tiktokScript: `Ruang ini terlihat sederhana, tapi tantangannya ada di alur pakai.
 Dapur dan ruang makan harus tetap dekat, tanpa membuat sirkulasi terasa penuh.
