@@ -3,6 +3,7 @@ import ContextualBackButton from '@/components/contextual-back-button';
 import ProjectBriefForm from '@/components/project-brief-form';
 import RevealObserver from '@/components/reveal-observer';
 import { absoluteUrl } from '@/lib/site-url';
+import TrackedLink from '@/components/tracked-link';
 
 export const metadata: Metadata = {
   title: 'Mulai Diskusi Proyek | Eryawan Agung Design Portfolio',
@@ -35,6 +36,7 @@ export default function MulaiProjectPage() {
           <p className="mt-3 text-sm text-[#D9B95D]">
             Susun brief awal agar kebutuhan proyek bisa dibaca dengan lebih jelas sebelum kita berdiskusi.
           </p>
+          <TrackedLink href="/kontak" eventName="contact_click" eventProps={{ source: "mulai_project_page", label: "kontak_email_opsi", href_type: "internal" }} data-cta="mulai-project-contact" className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Butuh opsi email? Buka halaman kontak</TrackedLink>
         </section>
 
         <ProjectBriefForm />
