@@ -93,6 +93,8 @@ type RegenerableField =
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
   | 'igCaption'
+  | 'tiktokHook'
+  | 'tiktokScript'
   | 'tiktokCaption'
   | 'youtubeTitle'
   | 'youtubeDescription'
@@ -290,7 +292,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
-  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokCaption', 'youtubeTitle', 'youtubeDescription', 'linkedInCaption', 'linkedInBullets', 'whatsappMessage'];
+  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokHook', 'tiktokScript', 'tiktokCaption', 'youtubeTitle', 'youtubeDescription', 'linkedInCaption', 'linkedInBullets', 'whatsappMessage'];
 
   useEffect(() => {
     let mounted = true;
