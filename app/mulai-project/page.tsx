@@ -6,7 +6,7 @@ import { absoluteUrl } from '@/lib/site-url';
 import TrackedLink from '@/components/tracked-link';
 
 export const metadata: Metadata = {
-  title: 'Mulai Diskusi Proyek | Eryawan Agung Design Portfolio',
+  title: 'Mulai Percakapan Proyek | Eryawan Agung Design Portfolio',
   description:
     'Susun brief awal untuk diskusi proyek interior, hospitality, workspace, design review, atau kolaborasi strategis bersama Eryawan Agung.',
   alternates: {
@@ -27,16 +27,16 @@ export default function MulaiProjectPage() {
         <section className="reveal-on-scroll mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-[#11100c] via-[#0b0b0a] to-[#090908] p-6 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-8 lg:p-12">
           <p className="font-mono text-[11px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">PROJECT BRIEF</p>
           <h1 className="font-display mt-5 text-4xl leading-[1.08] tracking-[-0.03em] text-[#F6F1E8] md:text-5xl">
-            Mulai Diskusi Proyek
+            Mulai Percakapan Proyek
           </h1>
           <p className="mt-4 max-w-4xl text-sm leading-7 text-white/70 sm:text-base sm:leading-8">
             Isi beberapa informasi dasar agar arah kebutuhan proyek bisa dipahami sejak awal. Brief ini membantu
             percakapan menjadi lebih terarah, efisien, dan relevan dengan tujuan ruang maupun bisnis Anda.
           </p>
           <p className="mt-3 text-sm text-[#D9B95D]">
-            Susun brief awal agar kebutuhan proyek bisa dibaca dengan lebih jelas sebelum kita berdiskusi.
+            Susun brief awal agar kebutuhan proyek terbaca jelas sebelum percakapan dimulai.
           </p>
-          <TrackedLink href="/kontak" eventName="contact_click" eventProps={{ source: "mulai_project_page", label: "kontak_email_opsi", href_type: "internal" }} data-cta="mulai-project-contact" className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Butuh opsi email? Buka halaman kontak</TrackedLink>
+          <TrackedLink href="/kontak" eventName="contact_click" eventProps={{ source: "mulai_project_page", label: "kontak_email_opsi", href_type: "internal" }} data-cta="mulai-project-contact" className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Butuh opsi email? Kunjungi halaman kontak</TrackedLink>
         </section>
 
         <ProjectBriefForm />

@@ -48,7 +48,7 @@ const clientWorkflow = [
   {
     title: 'Proses yang Terbuka dan Menyenangkan',
     description:
-      'Anda akan selalu dilibatkan di setiap tahap, dari konsep hingga hasil akhir. Kepuasan Anda adalah ukuran keberhasilan saya.',
+      'Anda akan selalu dilibatkan di setiap tahap, dari konsep hingga hasil akhir. Kepuasan Anda menjadi tolok ukur keberhasilan proses ini.',
     number: '03',
   },
 ];
@@ -126,16 +126,16 @@ const impacts = [
 
 const differentiations = [
   {
-    title: 'Bukan sekadar visual menarik.',
+    title: 'Bukan sekadar visual yang menarik.',
     description: 'Setiap proyek berbasis analisis mendalam dan struktur keputusan yang terarah.',
   },
   {
     title: 'Bukan sekadar mengikuti tren.',
-    description: 'Pendekatan kami berbasis konteks tapak dan tujuan fungsional jangka panjang.',
+    description: 'Pendekatan saya berbasis konteks tapak dan tujuan fungsional jangka panjang.',
   },
   {
     title: 'Bukan sekadar ruang.',
-    description: 'Kami merancang sistem yang mendukung performa dan kesejahteraan manusia di dalamnya.',
+    description: 'Saya merancang sistem yang mendukung performa dan kesejahteraan pengguna di dalamnya.',
   },
 ];
 
@@ -168,7 +168,7 @@ export default async function Home() {
           title: insight.title,
           excerpt:
             insight.excerpt ||
-            'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang editorial.',
+            'Wawasan ini mengulas strategi desain dan pertimbangan ruang dari sudut pandang praktis.',
           tag: insight.category || 'Wawasan',
           href: `/wawasan/${insight.slug}`,
         }))
@@ -252,7 +252,7 @@ export default async function Home() {
             </h1>
 
             <p className="mt-5 max-w-3xl pr-1 font-sans text-[0.98rem] leading-[1.58] text-white drop-shadow-md sm:text-[1.05rem] md:mt-6 md:text-[1.15rem]">
-              Saya membantu klien mengambil keputusan desain yang jelas, fungsional, dan berdampak pada cara ruang digunakan.
+              Saya membantu klien mengambil keputusan desain yang jelas, fungsional, dan relevan terhadap cara ruang digunakan.
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 lg:mt-10 lg:grid lg:grid-cols-3 lg:gap-4">

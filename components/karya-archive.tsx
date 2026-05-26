@@ -232,7 +232,7 @@ export default function KaryaArchive({ projects }: Props) {
   }, [category, designCategory, designStyle, projectStatus, projects, search, selectedAreaTags, sort]);
 
   const activeFilters = [
-    category !== 'Semua' ? `Kategori Proyek: ${category}` : null,
+    category !== 'Semua' ? `Kategori Karya: ${category}` : null,
     designCategory !== 'Semua' ? `Kategori Desain: ${designCategory}` : null,
     designStyle !== 'Semua' ? `Gaya: ${designStyle}` : null,
     projectStatus !== 'Semua' ? `Status: ${projectStatus}` : null,
@@ -268,7 +268,7 @@ export default function KaryaArchive({ projects }: Props) {
     const projectUrl = `${shareBase}/karya/${project.slug}`;
     const teaser = truncateText(getProjectTeaser(project), 110);
     // Prefilled social copy combines title + canonical URL + teaser for quick sharing.
-    return `Check this design insight from eryawanagung.my.id: ${project.title} - ${projectUrl}${teaser ? ` | ${teaser}` : ''}`;
+    return `Lihat studi kasus ini dari eryawanagung.my.id: ${project.title} - ${projectUrl}${teaser ? ` | ${teaser}` : ''}`;
   };
 
   const openMobileFilter = () => setIsMobileFilterOpen(true);
