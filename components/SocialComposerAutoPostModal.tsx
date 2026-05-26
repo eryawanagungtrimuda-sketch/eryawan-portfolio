@@ -611,9 +611,26 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       {open ? (
         <div className="fixed inset-x-3 top-3 z-50 flex justify-center sm:inset-x-6 sm:top-4" role="dialog" aria-modal="true" aria-label="Social Composer v2">
           <div ref={modalRef} className="font-sans max-h-[90dvh] w-[calc(100vw-24px)] max-w-5xl overflow-x-hidden overflow-y-auto rounded-3xl border border-[#D4AF37]/35 bg-[#0E0D0B]/95 p-3 text-[#F4F1EA] shadow-2xl backdrop-blur sm:max-h-[88vh] sm:p-6">
-            <div className="sticky top-0 z-10 -mx-3 flex items-center justify-between gap-3 border-b border-white/10 bg-[#0E0D0B]/95 px-3 pb-3 pt-1 sm:static sm:mx-0 sm:border-b-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
-              <h2 className="pr-2 text-base font-semibold text-[#E6C676] sm:text-lg">Social Composer v2</h2>
-              <button type="button" onClick={() => setOpen(false)} className="min-h-11 shrink-0 rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
+            <div className="sticky top-0 z-30 -mx-3 space-y-3 border-b border-[#D4AF37]/20 bg-[#090807]/90 px-3 pb-3 pt-1 backdrop-blur sm:-mx-6 sm:px-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="pr-2 text-base font-semibold text-[#E6C676] sm:text-lg">Social Composer v2</h2>
+                <button type="button" onClick={() => setOpen(false)} className="min-h-11 shrink-0 rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
+              </div>
+              <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
+                {([
+                  ['canva', 'Canva'],
+                  ['instagram', 'Instagram'],
+                  ['tiktok', 'TikTok'],
+                  ['youtube', 'YouTube Shorts'],
+                  ['linkedin', 'LinkedIn'],
+                  ['whatsapp', 'WhatsApp'],
+                  ['checklist', 'Checklist'],
+                ] as [PlatformTab, string][]).map(([key, label]) => (
+                  <button key={key} type="button" onClick={() => setActiveTab(key)} className={`min-h-11 shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {loading || !draft ? (
@@ -621,22 +638,6 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
             ) : (
               <div className="mt-4 grid gap-4 lg:mt-5 lg:grid-cols-[1.1fr,0.9fr] lg:gap-5">
                 <div className="min-w-0 space-y-4">
-                  <div className="flex gap-2 overflow-x-auto pb-1">
-                    {([
-                      ['canva', 'Canva'],
-                      ['instagram', 'Instagram'],
-                      ['tiktok', 'TikTok'],
-                      ['youtube', 'YouTube Shorts'],
-                      ['linkedin', 'LinkedIn'],
-                      ['whatsapp', 'WhatsApp'],
-                      ['checklist', 'Checklist'],
-                    ] as [PlatformTab, string][]).map(([key, label]) => (
-                      <button key={key} type="button" onClick={() => setActiveTab(key)} className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-
                   {activeTab === 'canva' && (
                     <div className="space-y-3">
                       <p className="rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-3 text-sm text-[#F4F1EA]">
