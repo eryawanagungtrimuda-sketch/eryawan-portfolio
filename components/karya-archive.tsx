@@ -162,6 +162,7 @@ export default function KaryaArchive({ projects }: Props) {
   const [selectedAreaTags, setSelectedAreaTags] = useState<string[]>([]);
   const [projectStatus, setProjectStatus] = useState('Semua');
   const [sort, setSort] = useState<SortOption>('newest');
+  const [isDesktopAdvancedOpen, setIsDesktopAdvancedOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -461,29 +462,43 @@ export default function KaryaArchive({ projects }: Props) {
           ) : null}
         </div>
 
-        <div className="mt-8 hidden gap-6 border-t border-white/10 pt-7 md:mt-9 md:grid-cols-2 lg:grid lg:grid-cols-3 lg:pt-8">
-          <FilterChips label="Kategori Proyek" options={filterOptions.category} value={category} onChange={setCategory} />
-          <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
-          <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
-          <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
+        <div className="mt-8 hidden border-t border-white/10 pt-8 lg:block">
+          <div className="rounded-[26px] border border-[#D4AF37]/20 bg-[#D4AF37]/[0.05] px-6 py-6">
+            <p className="mb-2 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]">Filter Utama</p>
+            <h3 className="font-sans text-lg font-semibold text-white/92">Area / Ruang</h3>
+            <p className="mt-1 font-sans text-sm text-white/60">Pilih area yang ingin Anda eksplorasi terlebih dahulu.</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {areaTagOptions.map((tag) => {
+                const active = selectedAreaTags.includes(tag);
+                return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="mt-7 hidden border-t border-white/10 pt-7 lg:block">
-          <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-white/38">Area / Ruang</p>
-          <div className="flex flex-wrap gap-2.5">
-            {areaTagOptions.map((tag) => {
-              const active = selectedAreaTags.includes(tag);
-              return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
-            })}
+          <FilterChips label="Gaya Desain" options={filterOptions.designStyle} value={designStyle} onChange={setDesignStyle} />
+        </div>
+
+        <div className="mt-6 hidden border-t border-white/10 pt-6 lg:block">
+          <button type="button" aria-expanded={isDesktopAdvancedOpen} aria-controls="karya-advanced-filters-panel" onClick={() => setIsDesktopAdvancedOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-3 text-left transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus-visible:border-[#D4AF37]/40">
+            <span><span className="block font-sans text-[10px] font-black uppercase tracking-[0.2em] text-[#C8A951]">Filter Lanjutan</span><span className="mt-1 block font-sans text-sm text-white/70">Kategori Proyek, Kategori Desain, dan Status Proyek</span></span>
+            <span aria-hidden className="font-sans text-xl leading-none text-[#D4AF37]">{isDesktopAdvancedOpen ? '−' : '+'}</span>
+          </button>
+          <div id="karya-advanced-filters-panel" className={isDesktopAdvancedOpen ? 'mt-5 grid grid-cols-3 gap-6' : 'hidden'}>
+            <FilterChips label="Kategori Proyek" options={filterOptions.category} value={category} onChange={setCategory} />
+            <FilterChips label="Kategori Desain" options={filterOptions.designCategory} value={designCategory} onChange={setDesignCategory} />
+            <FilterChips label="Status Proyek" options={filterOptions.status} value={projectStatus} onChange={setProjectStatus} />
           </div>
         </div>
 
         <div className="mt-6 hidden flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 lg:flex">
-          <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya yang tersedia</p>
-          <button type="button" onClick={resetFilters} className="premium-interactive min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
+          <div>
+            <p className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya yang tersedia</p>
+            {activeFilters.length > 0 ? <div className="mt-3 flex flex-wrap gap-2">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
+          </div>
+          <button type="button" onClick={resetFilters} className="premium-interactive min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/40 active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
         </div>
-
-        {activeFilters.length > 0 ? <div className="mt-4 hidden flex-wrap gap-2 lg:flex">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
       </div>
       {mounted && mobileFilterSheet ? createPortal(mobileFilterSheet, document.body) : null}
 
