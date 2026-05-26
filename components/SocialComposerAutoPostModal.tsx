@@ -96,6 +96,7 @@ type RegenerableField =
   | 'tiktokHook'
   | 'tiktokScript'
   | 'tiktokCaption'
+  | 'tiktokHashtag'
   | 'youtubeTitle'
   | 'youtubeDescription'
   | 'linkedInCaption'
@@ -295,7 +296,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const regenerableFieldsByTab: Partial<Record<PlatformTab, RegenerableField[]>> = {
     canva: ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'],
     instagram: ['igCaption'],
-    tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption'],
+    tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption', 'tiktokHashtag'],
     youtube: ['youtubeTitle', 'youtubeDescription'],
     linkedin: ['linkedInCaption', 'linkedInBullets'],
     whatsapp: ['whatsappMessage'],
