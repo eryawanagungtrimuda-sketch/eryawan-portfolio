@@ -16,6 +16,13 @@ export const metadata: Metadata = {
     title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
     description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
     url: absoluteUrl('/karya'),
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Portfolio Karya Eryawan Agung' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
+    description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+    images: [absoluteUrl('/opengraph-image')],
   },
 };
 

@@ -105,14 +105,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     alternates: { canonical: url },
     openGraph: {
       type: 'article',
-      title: insight.title,
+      title,
       description,
       url,
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${insight.title} | Eryawan Agung` }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: insight.title,
+      title,
       description,
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${insight.title} | Eryawan Agung` }],
     },
@@ -126,7 +126,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
   const description = buildInsightDescription(insight.title, insight.excerpt);
   const schemaImageUrl = resolveOgImageUrl(insight.cover_image || images[0]?.image_url);
   const schemaData = {
-    '@context': 'http://schema.org',
+    '@context': 'https://schema.org',
     '@type': 'Article',
     headline: insight.title,
     description,

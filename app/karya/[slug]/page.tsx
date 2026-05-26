@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: url },
     openGraph: {
       type: 'article',
-      title: project.title,
+      title,
       description,
       url,
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${project.title} | Eryawan Agung` }],
@@ -91,7 +91,7 @@ export default async function KaryaDetailPage({ params }: Props) {
   const relatedInsight = project.relatedInsight;
   const areaTags = (project.area_tags || []).filter(Boolean);
   const schemaData = {
-    '@context': 'http://schema.org',
+    '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name: project.title,
     description: buildProjectDescription(project),

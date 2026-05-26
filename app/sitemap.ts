@@ -6,7 +6,14 @@ import { absoluteUrl } from '@/lib/site-url';
 const SITE_LAST_MODIFIED = new Date('2026-05-16');
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, insights] = await Promise.all([getPublishedProjects(), getPublishedInsights()]);
+  let projects: Awaited<ReturnType<typeof getPublishedProjects>> = [];
+  let insights: Awaited<ReturnType<typeof getPublishedInsights>> = [];
+
+  try {
+    [projects, insights] = await Promise.all([getPublishedProjects(), getPublishedInsights()]);
+  } catch (error) {
+    console.error('Sitemap data fetch failed, serving static routes only.', error);
+  }
 
   const staticRoutes: MetadataRoute.Sitemap = [
     '/',
