@@ -46,6 +46,33 @@ function normalizeJsonOutput(value: string) {
   return normalized;
 }
 
+async function repairInvalidJsonOutput(params: { aiKey: string; outputText: string; uniqueFields: string[] }) {
+  const { aiKey, outputText, uniqueFields } = params;
+  const repairPrompt = `Ubah output berikut menjadi JSON valid saja dengan key persis ini: ${uniqueFields.join(', ')}.\nAturan: tanpa markdown, tanpa komentar, tanpa key tambahan, semua value harus string.\n\nOutput awal:\n${outputText}`;
+
+  const repairResponse = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${aiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      input: [
+        {
+          role: 'user',
+          content: [{ type: 'input_text', text: repairPrompt }],
+        },
+      ],
+      temperature: 0,
+      max_output_tokens: 500,
+    }),
+  });
+
+  if (!repairResponse.ok) return null;
+  const repairResult = await repairResponse.json();
+  const repairedText = repairResult.output_text || repairResult.output?.[0]?.content?.[0]?.text || '';
+  if (!repairedText.trim()) return null;
+  return JSON.parse(normalizeJsonOutput(repairedText)) as Partial<Record<RegenerableField, string>>;
+}
+
 function fallbackText(field: RegenerableField, source: Record<string, string | null>, goal: ContentGoal) {
   const title = source.title || 'Proyek desain';
   const summary = source.summary || source.problem || 'Konten ini merangkum pendekatan desain yang fungsional dan relevan.';
@@ -429,6 +456,11 @@ Narasi pendek agar tidak kepotong.
   * Dilarang hashtag.
   * Dilarang fragment JSON.
   * Dilarang label seperti Visual:, Overlay:, Narasi:, Caption:, Text:.
+- Jika field yang diminta mencakup tiktokHook dan tiktokScript sekaligus, output WAJIB strict JSON saja dengan bentuk:
+  {
+    "tiktokHook": "...",
+    "tiktokScript": "..."
+  }
 - youtubeTitle:
   * Judul SEO YouTube Shorts yang natural dan tidak clickbait.
   * Maksimum 70 karakter.
@@ -537,7 +569,22 @@ Narasi pendek agar tidak kepotong.
           });
         }
       }
-      return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
+      if (uniqueFields.length > 1) {
+        try {
+          const repairedJson = await repairInvalidJsonOutput({ aiKey, outputText, uniqueFields });
+          if (repairedJson && typeof repairedJson === 'object') {
+            json = repairedJson;
+          } else {
+            return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
+          }
+        } catch (repairError) {
+          const repairErrMsg = repairError instanceof Error ? repairError.message : 'repair_invalid_json';
+          console.error(`${LOG_PREFIX} openai_repair_invalid_json msg=${repairErrMsg}`);
+          return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
+        }
+      } else {
+        return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
+      }
     }
 
     const safeResult: Partial<Record<RegenerableField, string>> = {};

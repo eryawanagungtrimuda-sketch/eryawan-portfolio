@@ -292,7 +292,14 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
-  const regenerableFields: RegenerableField[] = ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText', 'igCaption', 'tiktokHook', 'tiktokScript', 'tiktokCaption', 'youtubeTitle', 'youtubeDescription', 'linkedInCaption', 'linkedInBullets', 'whatsappMessage'];
+  const regenerableFieldsByTab: Partial<Record<PlatformTab, RegenerableField[]>> = {
+    canva: ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'],
+    instagram: ['igCaption'],
+    tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption'],
+    youtube: ['youtubeTitle', 'youtubeDescription'],
+    linkedin: ['linkedInCaption', 'linkedInBullets'],
+    whatsapp: ['whatsappMessage'],
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -424,9 +431,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   async function regenerateMissingFields() {
     if (!draft || !generatedDraft || regenLoading) return;
-    const blankFields = regenerableFields.filter((key) => String(draft[key] ?? '').trim().length === 0);
+    const fieldsForActiveTab = regenerableFieldsByTab[activeTab] || [];
+    const blankFields = fieldsForActiveTab.filter((field) => !String(draft[field] ?? '').trim());
     if (blankFields.length === 0) {
-      setRegenFeedback({ tone: 'warning', message: 'Tidak ada bagian kosong untuk diperbarui.' });
+      setRegenFeedback({ tone: 'warning', message: 'Tidak ada bagian kosong di tab ini untuk diperbarui.' });
       return;
     }
 
