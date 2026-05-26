@@ -37,6 +37,17 @@ Gunakan checklist ini setelah website live di production.
 - Ulangi pengujian utama dari desktop/laptop.
 - Pastikan tombol tetap mudah diklik/tap dan teks tetap terbaca.
 
+
+## Cara memastikan Analytics aktif
+- Buka dashboard Vercel untuk proyek ini.
+- Buka tab **Analytics**.
+- Kunjungi homepage (`/`) di domain production.
+- Klik satu CTA yang sudah ditracking.
+- Tunggu data event/pageview muncul di dashboard.
+- Cek **Speed Insights** setelah traffic production tersedia.
+
 ## Catatan Penting Privasi
 - Tracking hanya untuk event klik CTA.
+- Data analytics bisa tidak muncul instan, tunggu beberapa saat setelah pengujian.
+- Speed Insights membutuhkan kunjungan pengguna nyata agar datanya bermakna.
 - Tidak mengirim isi form, isi pesan, email, nomor telepon, atau data pribadi pengunjung.
