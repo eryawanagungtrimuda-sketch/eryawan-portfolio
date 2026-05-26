@@ -10,6 +10,7 @@ import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
 import AdminFooterShortcut from '@/components/admin-footer-shortcut';
 import { absoluteUrl } from '@/lib/site-url';
+import TrackedLink from '@/components/tracked-link';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -255,12 +256,8 @@ export default async function Home() {
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-8 lg:mt-10 lg:grid lg:grid-cols-3 lg:gap-4">
-              <Button href="/mulai-project" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Mulai Percakapan Proyek
-              </Button>
-              <Button href="/karya" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
-                Lihat Karya
-              </Button>
+              <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_hero", label: "mulai_percakapan_proyek", href_type: "internal" }} data-cta="homepage-hero-primary" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">Mulai Percakapan Proyek</TrackedLink>
+              <TrackedLink href="/karya" eventName="project_view_intent" eventProps={{ source: "homepage_hero", label: "lihat_karya", content_type: "karya", href_type: "internal" }} data-cta="homepage-karya" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full border border-white/10 bg-transparent px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#C8A951] hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">Lihat Karya</TrackedLink>
               <Button href="/karya" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu">
                 Baca Studi Kasus
               </Button>
@@ -567,9 +564,7 @@ export default async function Home() {
               Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
             </p>
 
-            <Button href="/mulai-project" className="mt-14 w-full px-6 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] sm:w-auto sm:min-w-[300px] md:min-w-[420px]">
-              Ajukan Kolaborasi
-            </Button>
+            <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_final", label: "ajukan_kolaborasi", href_type: "internal" }} data-cta="homepage-final-collaboration" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#080807] hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] mt-14 w-full px-6 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] sm:w-auto sm:min-w-[300px] md:min-w-[420px]">Ajukan Kolaborasi</TrackedLink>
 
             <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/32">
               Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.

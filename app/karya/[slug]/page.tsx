@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import TrackedLink from '@/components/tracked-link';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/back-button';
 import SmartBackLink from '@/components/smart-back-link';
@@ -220,15 +221,18 @@ ${projectUrl}`;
             Kirimkan studi kasus ini melalui WhatsApp agar ide, masalah ruang, dan keputusan desainnya lebih mudah didiskusikan bersama owner, kontraktor, atau tim proyek.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start">
-            <Link
+            <TrackedLink
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
+              eventName="whatsapp_click"
+              eventProps={{ source: "karya_detail", label: "diskusikan_proyek_serupa", content_type: "karya", slug: project.slug, href_type: "external" }}
+              data-cta="karya-detail-whatsapp"
               aria-label={`Bagikan studi kasus ${project.title} via WhatsApp`}
               className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-sm font-semibold text-black transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
               Diskusikan Proyek Serupa via WhatsApp
-            </Link>
+            </TrackedLink>
             <ShareLinkButton
               url={projectUrl}
               className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#D4AF37] transition duration-300 active:scale-[0.98] motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12"
