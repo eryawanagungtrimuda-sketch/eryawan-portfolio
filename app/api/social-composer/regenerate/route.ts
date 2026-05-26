@@ -46,21 +46,160 @@ function fallbackText(field: RegenerableField, source: Record<string, string | n
   const styleHint = goal === 'profesional' ? 'profesional' : goal === 'edukatif' ? 'edukatif' : goal === 'soft-selling' ? 'soft-selling' : 'hook-driven';
 
   if (field === 'canvaCarouselSlides') {
-    return `Slide 1: Hook\nJudul: ${title}\nTeks: Strategi desain yang ${styleHint} dan berpotensi menarik perhatian.\nVisual: Hero shot dengan framing bersih.\n\nSlide 2: Context\nJudul: Konteks Ruang\nTeks: ${summary}\nVisual: Potongan ruang utama + aktivitas pengguna.\n\nSlide 3: Problem\nJudul: Tantangan\nTeks: ${source.problem || 'Kebutuhan fungsi dan alur ruang belum optimal.'}\nVisual: Detail area bermasalah.\n\nSlide 4: Design decision\nJudul: Keputusan Desain\nTeks: ${solution}\nVisual: Diagram zoning atau before/after sederhana.\n\nSlide 5: Detail / material / zoning\nJudul: Detail Implementasi\nTeks: Material, zoning, dan komposisi dipilih untuk efisiensi + karakter premium.\nVisual: Close-up material dan sambungan detail.\n\nSlide 6: Result / user benefit\nJudul: Dampak ke Pengguna\nTeks: ${impact}\nVisual: Pengguna berinteraksi di ruang akhir.\n\nSlide 7: CTA to website\nJudul: Lihat Studi Lengkap\nTeks: Detail studi tersedia di website untuk referensi penuh.\nVisual: Closing frame dengan URL website.`;
+    return `Slide 1 — Hook
+Area yang terlihat rapi belum tentu enak dipakai.
+
+Di ${title}, fokus utamanya adalah membuat aktivitas harian tetap lancar tanpa terasa sesak.
+
+Visual:
+Gunakan hero shot yang memperlihatkan hubungan antar area utama.
+
+Slide 2 — Konteks
+Proyek ini berangkat dari kebutuhan keluarga yang aktif.
+
+${summary}
+
+Visual:
+Tampilkan kondisi eksisting atau sudut yang menunjukkan pola aktivitas.
+
+Slide 3 — Masalah
+Tantangan utamanya ada di alur gerak dan titik kerja yang saling bertabrakan.
+
+${source.problem || 'Beberapa zona belum saling mendukung saat dipakai bersamaan.'}
+
+Visual:
+Ambil detail area yang sering memicu hambatan penggunaan.
+
+Slide 4 — Keputusan Desain
+Solusi disusun agar pergerakan lebih jelas dan fungsi tidak saling mengganggu.
+
+${solution}
+
+Visual:
+Gunakan diagram zoning sederhana atau perbandingan before-after.
+
+Slide 5 — Detail Penting
+Detail kecil dipilih untuk mempermudah perawatan sekaligus menjaga kualitas visual.
+
+Material, pencahayaan, dan proporsi elemen diselaraskan agar nyaman dipakai tiap hari.
+
+Visual:
+Close-up sambungan material, permukaan kerja, dan titik lampu.
+
+Slide 6 — Hasil
+Setelah penataan ulang, area terasa lebih terarah dan efisien untuk rutinitas.
+
+${impact}
+
+Visual:
+Tampilkan momen penggunaan nyata setelah implementasi.
+
+Slide 7 — CTA
+Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya bisa jadi referensi awal.
+
+Lihat proses dan pertimbangannya di website.
+
+Visual:
+Closing frame dengan URL website dan foto akhir yang paling kuat.`;
   }
 
   const map: Record<RegenerableField, string> = {
-    canvaReelsTimeline: `0-3 detik: Hook tentang ${title}.\n3-6 detik: Konteks ${summary}.\n6-10 detik: Problem ${source.problem || 'fungsi ruang belum optimal'}.\n10-14 detik: Design decision ${solution}.\n14-15 detik: CTA ke website + benefit ${impact}.`,
+    canvaReelsTimeline: `0–3 detik
+Visual:
+Wide shot area utama sebelum dijelaskan.
+Narasi:
+Rapi itu penting, tapi alurnya harus enak dipakai.
+Overlay:
+Rapi belum tentu efektif
+
+3–7 detik
+Visual:
+Sorot titik yang sering bikin aktivitas terhambat.
+Narasi:
+Di ${title}, masalahnya muncul saat beberapa aktivitas terjadi bersamaan.
+Overlay:
+Masalah ada di sirkulasi
+
+7–12 detik
+Visual:
+Tampilkan perubahan layout dan zoning.
+Narasi:
+Kami atur ulang zonanya supaya gerak, simpan, dan kerja lebih jelas.
+Overlay:
+Zoning dibuat lebih tegas
+
+12–16 detik
+Visual:
+Close-up material dan pencahayaan kerja.
+Narasi:
+Detail material dan lampu dipilih untuk pemakaian harian yang praktis.
+Overlay:
+Detail kecil, dampak besar
+
+16–20 detik
+Visual:
+Final reveal area setelah penataan.
+Narasi:
+Hasilnya lebih tertata, lebih ringan dipakai, dan lebih relevan untuk keluarga.
+Overlay:
+Lihat studi lengkap di website`,
     canvaCarouselSlides: '',
-    canvaOverlayText: `"${title}"\n"Masalah: ${source.problem || 'alur ruang belum efektif'}"\n"Solusi: ${solution}"\n"Dampak: ${impact}"\n"Lihat studi lengkap di website"`,
-    igCaption: `${title}\n\n${summary}\n\nKeputusan desain: ${solution}\nDampak: ${impact}\n\nLihat studi lengkap di website: ${source.url || ''}`,
-    tiktokCaption: `${title} — insight desain yang ${styleHint} untuk audiens arsitektur & interior.\n${source.url || ''}`,
-    youtubeDescription: `${title}\n\nKonteks: ${summary}\nSolusi: ${solution}\nDampak: ${impact}\n\nDetail lengkap: ${source.url || ''}`,
-    linkedInCaption: `${title}\n\n${summary}\n\nKeputusan desain difokuskan pada fungsi ruang dan pengalaman pengguna.\nDampak: ${impact}\n\nLihat studi lengkap: ${source.url || ''}`,
-    whatsappMessage: `Halo, saya mau share studi ${title}.\n\n${summary}\n\nSolusi: ${solution}\nBaca lengkap: ${source.url || ''}`,
+    canvaOverlayText: `Rapi belum tentu enak dipakai
+Alur gerak perlu dibaca ulang
+Zona kerja harus lebih jelas
+Material dipilih untuk pemakaian harian
+Hasil akhir terasa lebih terarah
+Lihat studi lengkap di website`,
+    igCaption: `Bukan semua area yang terlihat rapi itu otomatis nyaman dipakai.
+
+Di ${title}, kami mulai dari membaca pola aktivitas harian: siapa bergerak ke mana, titik mana yang sering macet, dan bagian mana yang perlu prioritas.
+
+${solution} Dampaknya, ${impact}.
+
+Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di website${source.url ? `: ${source.url}` : '.'}`,
+    tiktokCaption: `Area rapi belum tentu enak dipakai.
+
+Di ${title}, problem utamanya ada di alur dan pembagian zona. Setelah diatur ulang, aktivitas jadi lebih lancar dan hasilnya terasa lebih masuk akal untuk dipakai harian.
+
+Lihat studi lengkapnya${source.url ? `: ${source.url}` : '.'}`,
+    youtubeDescription: `Di video singkat ini, Anda akan lihat bagaimana ${title} ditata ulang dari sisi alur, zoning, material, dan pencahayaan kerja.
+
+Kami tunjukkan masalah awal, keputusan yang diambil, dan hasil akhirnya untuk pemakaian harian.
+
+Lihat studi lengkap di website${source.url ? `: ${source.url}` : '.'}`,
+    linkedInCaption: `Banyak proyek interior terlihat baik secara visual, tetapi belum tentu efektif saat dipakai sehari-hari.
+
+Pada ${title}, kami memulai dari evaluasi sirkulasi, pola aktivitas, dan hubungan antar zona agar keputusan perancangan tidak berhenti di tampilan.
+
+${solution} Hasilnya, ${impact}.
+
+Saya tertarik mendengar pendekatan rekan-rekan saat menyeimbangkan performa fungsi dan kualitas spasial dalam proyek serupa${source.url ? `.\n\nStudi lengkap: ${source.url}` : '.'}`,
+    whatsappMessage: `Saya baru publish studi kasus ${title}.
+
+Isinya membahas bagaimana area yang terbatas bisa ditata supaya alurnya lebih jelas dan lebih enak dipakai harian.
+
+Kalau lagi bahas dapur, area makan, atau sirkulasi di rumah, ini mungkin relevan.
+
+Baca lengkap di sini${source.url ? `: ${source.url}` : '.'}`,
   };
 
   return map[field];
+}
+
+function postProcessField(field: RegenerableField, value: string) {
+  let cleaned = value.trim().replace(/\n{3,}/g, '\n\n');
+  if (field === 'canvaCarouselSlides') {
+    cleaned = cleaned.replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1').trim();
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+  }
+  if (field === 'canvaOverlayText') {
+    cleaned = cleaned
+      .split('\n')
+      .map((line) => line.trim().replace(/^["'`]+|["'`]+$/g, ''))
+      .filter(Boolean)
+      .join('\n');
+  }
+  return cleaned;
 }
 
 export async function POST(request: Request) {
@@ -120,16 +259,48 @@ export async function POST(request: Request) {
     console.info(`${LOG_PREFIX} OPENAI_API_KEY detected=${Boolean(aiKey)}`);
     if (!aiKey) return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'missing_openai_key' });
 
-    const prompt = `Anda copywriter konten arsitektur/interior premium.
-Keluarkan JSON object valid tanpa markdown, tanpa teks lain, dan hanya field yang diminta.
-Gunakan nama key persis sama dengan field yang diminta user.
-Bahasa Indonesia natural, ringkas, kuat hook, tanpa clickbait, tanpa klaim pasti viral (gunakan "berpotensi menarik perhatian").
-Untuk canvaCarouselSlides: wajib berupa SATU string ramah textarea (bukan array/object), tepat 7 slide berurutan:
-Slide 1 Hook, Slide 2 Context, Slide 3 Problem, Slide 4 Design decision, Slide 5 Detail/material/zoning, Slide 6 Result/user benefit, Slide 7 CTA to website.
-Setiap slide wajib berisi:
-Judul: ...
-Teks: ...
-Visual: ...`;
+    const prompt = `Anda content strategist arsitektur/interior berbahasa Indonesia.
+Tulis dengan nada premium namun sederhana, natural, editorial, mudah ditempel ke textarea Canva/IG/TikTok/YouTube/LinkedIn/WhatsApp.
+
+ATURAN OUTPUT WAJIB:
+1) Keluarkan JSON object valid saja. Tanpa markdown, tanpa komentar, tanpa teks di luar JSON.
+2) Key JSON harus persis sama dengan field yang diminta.
+3) Jangan keluarkan key tambahan.
+4) Value setiap key harus string polos (bukan object/array).
+5) Jangan pakai gaya robotik.
+6) Hindari kata berulang berlebihan: desain, ruang, nyaman, modern, estetika.
+
+ATURAN GLOBAL KONTEN:
+- Bahasa Indonesia natural.
+- Paragraf pendek, mudah dibaca, tidak padat.
+- Fokus pada masalah pengguna, keputusan perancangan, zoning, sirkulasi, material, pencahayaan, dan pemakaian harian.
+- Hindari klaim berlebihan seperti "pasti viral".
+
+ATURAN PER FIELD:
+- canvaCarouselSlides: tepat 7 slide, format urut:
+Slide 1 — Hook
+Slide 2 — Konteks
+Slide 3 — Masalah
+Slide 4 — Keputusan Desain
+Slide 5 — Detail Penting
+Slide 6 — Hasil
+Slide 7 — CTA
+Setiap slide berisi headline singkat, 1–2 kalimat isi, lalu "Visual:" sebagai catatan praktis. Jangan gunakan label "Judul:" atau "Teks:". Pisahkan antar slide dengan satu baris kosong.
+
+- canvaReelsTimeline: timeline praktis total sekitar 15–20 detik. Tiap segmen gunakan format:
+[rentang detik]
+Visual:
+Narasi:
+Overlay:
+Narasi pendek agar tidak kepotong.
+
+- canvaOverlayText: satu baris per overlay, tiap baris 6–9 kata, singkat, tanpa penjelasan tambahan.
+
+- igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
+- tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
+- youtubeDescription: ringkas, jelaskan apa yang akan dilihat, akhiri CTA ke website.
+- linkedInCaption: profesional dan reflektif, 2–4 paragraf pendek, bahas keputusan perancangan dan pemikiran spasial, akhiri pertanyaan/CTA diskusi.
+- whatsappMessage: hangat, singkat, terasa personal, jelaskan kenapa link relevan, tanpa hashtag.`;
 
     const aiResponse = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
@@ -185,7 +356,7 @@ Visual: ...`;
     for (const field of uniqueFields as RegenerableField[]) {
       const value = json[field];
       if (typeof value === 'string' && value.trim()) {
-        safeResult[field] = value.trim();
+        safeResult[field] = postProcessField(field, value);
       } else {
         missingFields.push(field);
         safeResult[field] = fallbackData[field] || '';
