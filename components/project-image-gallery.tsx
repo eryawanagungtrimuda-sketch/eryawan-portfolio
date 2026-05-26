@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import { getGalleryImageFrameStyle, getGalleryImageStyle } from '@/lib/project-image-display';
@@ -112,12 +113,14 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                 className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/25"
               >
                 <div className="relative w-full overflow-hidden" style={getGalleryImageFrameStyle(featureImage)}>
-                  <img
+                  <Image
                     src={featureImage.src}
                     alt={featureImage.alt || `${projectTitle} 1`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 1200px"
                     className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                     style={getGalleryImageStyle(featureImage)}
-                    decoding="async"
+                    priority
                   />
                 </div>
               </button>
@@ -139,13 +142,14 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                       className="group block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] text-left transition duration-500 hover:border-[#D4AF37]/25"
                     >
                       <div className="relative w-full overflow-hidden" style={getGalleryImageFrameStyle(image)}>
-                        <img
+                        <Image
                           src={image.src}
                           alt={image.alt || `${projectTitle} ${imageIndex + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                           className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                           style={getGalleryImageStyle(image)}
                           loading="lazy"
-                          decoding="async"
                         />
                       </div>
                     </button>
@@ -158,7 +162,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
           {activeImage ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5" role="dialog" aria-modal="true" onClick={closeLightbox}>
               <div className="relative w-full max-w-6xl scale-100 opacity-100 transition duration-200" onClick={(event) => event.stopPropagation()}>
-                <img src={activeImage.src} alt={activeImage.alt || projectTitle} className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" decoding="async" />
+                <Image src={activeImage.src} alt={activeImage.alt || projectTitle} width={1600} height={1000} sizes="100vw" className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" />
                 <button type="button" aria-label="Tutup lightbox" onClick={closeLightbox} className="absolute right-2 top-2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xs text-[#D4AF37] transition hover:bg-black/90">Tutup</button>
                 {hasMultiple ? (
                   <>
