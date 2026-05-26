@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import PortfolioClicks from './portfolio-clicks';
 import { ToastProvider } from '@/components/toast-provider';
 import { SITE_URL, absoluteUrl } from '@/lib/site-url';
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <PortfolioClicks />
         </ToastProvider>
+        <Analytics />
       </body>
     </html>
   );
