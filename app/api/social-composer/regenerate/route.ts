@@ -9,6 +9,7 @@ type RegenerableField =
   | 'canvaOverlayText'
   | 'igCaption'
   | 'tiktokCaption'
+  | 'youtubeTitle'
   | 'youtubeDescription'
   | 'linkedInCaption'
   | 'linkedInBullets'
@@ -20,6 +21,7 @@ const allowedFields = new Set<RegenerableField>([
   'canvaOverlayText',
   'igCaption',
   'tiktokCaption',
+  'youtubeTitle',
   'youtubeDescription',
   'linkedInCaption',
   'linkedInBullets',
@@ -164,6 +166,7 @@ Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di we
 Di ${title}, problem utamanya ada di alur dan pembagian zona. Setelah diatur ulang, aktivitas jadi lebih lancar dan hasilnya terasa lebih masuk akal untuk dipakai harian.
 
 Lihat studi lengkapnya${source.url ? `: ${source.url}` : '.'}`,
+    youtubeTitle: `Penataan ${title} agar Alur dan Fungsi Lebih Jelas`,
     youtubeDescription: `Di video singkat ini, Anda akan lihat bagaimana ${title} ditata ulang dari sisi alur, zoning, material, dan pencahayaan kerja.
 
 Kami tunjukkan masalah awal, keputusan yang diambil, dan hasil akhirnya untuk pemakaian harian.
@@ -192,6 +195,32 @@ ${source.url || ''}`.trim(),
 
 function postProcessField(field: RegenerableField, value: string) {
   let cleaned = value.trim().replace(/\n{3,}/g, '\n\n');
+  if (field === 'youtubeTitle') {
+    cleaned = cleaned
+      .replace(/[#@][\w-]+/g, '')
+      .replace(/["'`{}\[\]]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (cleaned.length > 70) cleaned = cleaned.slice(0, 70).trim();
+  }
+  if (field === 'youtubeDescription') {
+    cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/^\s*```(?:json)?/i, '')
+      .replace(/```\s*$/i, '')
+      .replace(/\b(canvaCarouselSlides|Visual|Narasi|Overlay|Caption|Text)\s*:\s*/gi, '')
+      .replace(/[{}[\]"]/g, '')
+      .replace(/^\s*[\w-]+\s*:\s*\[?.*$/gim, '')
+      .replace(/^\s*[,]+\s*$/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    const paragraphs = cleaned
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter((part) => part && !/[{}[\]]|canvaCarouselSlides/i.test(part))
+      .slice(0, 3);
+    cleaned = paragraphs.join('\n\n');
+  }
   if (field === 'canvaCarouselSlides') {
     cleaned = cleaned.replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1').trim();
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
@@ -356,7 +385,18 @@ Narasi pendek agar tidak kepotong.
 
 - igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
 - tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
-- youtubeDescription: ringkas, jelaskan apa yang akan dilihat, akhiri CTA ke website.
+- youtubeTitle:
+  * Judul SEO YouTube Shorts yang natural dan tidak clickbait.
+  * Maksimum 70 karakter.
+  * Wajib relevan dengan konteks proyek.
+  * Dilarang hashtag.
+- youtubeDescription:
+  * Output hanya deskripsi YouTube Shorts.
+  * Dilarang fragment JSON, dilarang label seperti Visual/Narasi/Overlay/Text/Caption.
+  * Dilarang menyebut canvaCarouselSlides.
+  * Dilarang karakter escaped "\\n" literal.
+  * Tulis 2–3 paragraf pendek, jelaskan apa yang akan penonton lihat.
+  * Wajib sebut konteks proyek dan akhiri CTA ke website.
 - linkedInCaption: profesional dan reflektif, 2–4 paragraf pendek, bahas keputusan perancangan dan pemikiran spasial, akhiri pertanyaan/CTA diskusi.
 - linkedInBullets:
   * Output hanya bullet points, tanpa paragraf.
@@ -428,6 +468,13 @@ Narasi pendek agar tidak kepotong.
       if (uniqueFields.length === 1) {
         const field = uniqueFields[0] as RegenerableField;
         const salvaged = postProcessField(field, outputText);
+        if (field === 'youtubeDescription' && /(canvaCarouselSlides|Visual:|Narasi:|Overlay:|Caption:|Text:|[{[])/i.test(salvaged)) {
+          return NextResponse.json({
+            data: { [field]: fallbackData[field] || '' },
+            fallbackUsed: true,
+            debugReason: 'openai_plain_text_salvaged_youtube_fallback',
+          });
+        }
         if (
           field === 'canvaOverlayText' &&
           (!salvaged.trim() || salvaged.split('\n').some((line) => line.split(' ').filter(Boolean).length > 8))
@@ -455,6 +502,9 @@ Narasi pendek agar tidak kepotong.
       const value = json[field];
       if (typeof value === 'string' && value.trim()) {
         let processed = postProcessField(field, value);
+        if (field === 'youtubeDescription' && source.url && !processed.includes(source.url)) {
+          processed = `${processed}\n\nLihat studi lengkapnya di website:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
+        }
         if (field === 'whatsappMessage' && source.url && !processed.includes(source.url)) {
           processed = `${processed}\n\nBaca lengkapnya di sini:\n${source.url}`.replace(/\n{3,}/g, '\n\n').trim();
         }
