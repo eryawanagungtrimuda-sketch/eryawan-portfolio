@@ -348,6 +348,17 @@ Narasi pendek agar tidak kepotong.
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'invalid_json';
       console.error(`${LOG_PREFIX} openai_invalid_json msg=${errMsg}`);
+      if (uniqueFields.length === 1) {
+        const field = uniqueFields[0] as RegenerableField;
+        const salvaged = postProcessField(field, outputText);
+        if (salvaged.trim()) {
+          return NextResponse.json({
+            data: { [field]: salvaged },
+            fallbackUsed: false,
+            debugReason: 'openai_plain_text_salvaged',
+          });
+        }
+      }
       return NextResponse.json({ data: fallbackData, fallbackUsed: true, debugReason: 'openai_invalid_json' });
     }
 

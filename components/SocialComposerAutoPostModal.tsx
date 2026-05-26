@@ -671,27 +671,6 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                             <CopyButton label="Copy Overlay" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
                           </ButtonRow>
                         </div>
-                        <div className="space-y-2">
-                          <p className="text-sm font-semibold text-white/70">Opsi Lanjutan</p>
-                          <p className="text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
-                          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                            <label className="text-xs text-white/70">Tujuan konten</label>
-                            <select value={regenGoal} onChange={(event) => {
-                              setRegenGoal(event.target.value as ContentGoal);
-                              setIsGoalTouched(true);
-                            }} className="min-h-11 w-full rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm font-sans text-[#F4F1EA] sm:w-auto">
-                              <option value="profesional">Profesional</option>
-                              <option value="edukatif">Edukatif</option>
-                              <option value="viral-ready">Viral-ready</option>
-                              <option value="soft-selling">Soft-selling</option>
-                            </select>
-                          </div>
-                          <ButtonRow>
-                            <button type="button" onClick={regenerateMissingFields} disabled={regenLoading} className="min-h-11 w-full rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-sans text-white/80 sm:w-auto disabled:cursor-not-allowed disabled:opacity-60">{regenLoading ? 'Membuat ulang bagian kosong...' : 'Perbarui Bagian Kosong'}</button>
-                          </ButtonRow>
-                          <p className="text-xs text-white/70">Kosongkan kolom tertentu, lalu klik tombol ini. Kolom lain tidak akan ditimpa.</p>
-                          {regenFeedback ? <p className={`text-xs ${regenFeedback.tone === 'success' ? 'text-[#E6C676]' : 'text-white/75'}`}>{regenFeedback.message}</p> : null}
-                        </div>
                       </div>
                     </div>
                   )}
@@ -822,8 +801,39 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                   <a href={draft.ogImage} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-4 py-2 text-sm font-sans">Buka Visual</a>
                 </div>
               </div>
-            )}
-          </div>
+                  )}
+
+                  <div className="rounded-2xl border border-[#D4AF37]/30 bg-[#13110d]/70 p-3 font-sans sm:p-4">
+                    <p className="text-sm font-semibold text-[#E6C676]">Opsi Lanjutan</p>
+                    <p className="mt-1 text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
+                    <div className="mt-3 flex flex-col gap-2">
+                      <label className="text-xs text-white/70">Tujuan konten</label>
+                      <select
+                        value={regenGoal}
+                        onChange={(event) => {
+                          setRegenGoal(event.target.value as ContentGoal);
+                          setIsGoalTouched(true);
+                        }}
+                        className="min-h-11 w-full rounded-lg border border-white/20 bg-[#11100f] px-3 py-2 text-sm font-sans text-[#F4F1EA]"
+                      >
+                        <option value="profesional">Profesional</option>
+                        <option value="edukatif">Edukatif</option>
+                        <option value="viral-ready">Viral-ready</option>
+                        <option value="soft-selling">Soft-selling</option>
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={regenerateMissingFields}
+                      disabled={regenLoading}
+                      className="mt-3 min-h-11 w-full rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-sans text-white/80 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {regenLoading ? 'Membuat ulang bagian kosong...' : 'Perbarui Bagian Kosong'}
+                    </button>
+                    <p className="mt-2 text-xs text-white/70">Kosongkan kolom tertentu, lalu klik tombol ini. Kolom lain tidak akan ditimpa.</p>
+                    {regenFeedback ? <p className={`mt-2 text-xs ${regenFeedback.tone === 'success' ? 'text-[#E6C676]' : 'text-white/75'}`}>{regenFeedback.message}</p> : null}
+                  </div>
+                </div>
         </div>
       ) : null}
     </>
