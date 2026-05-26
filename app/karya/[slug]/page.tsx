@@ -188,7 +188,13 @@ ${projectUrl}`;
               Baca Studi Kasus
             </Link>
           </section>
-        ) : null}
+        ) : (
+          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-7">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-white/66 sm:text-base">Belum ada wawasan terkait untuk proyek ini saat ini. Anda tetap dapat melanjutkan ke daftar wawasan untuk membaca pembahasan desain lainnya.</p>
+            <Link href="/wawasan" className="mt-5 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37]">Lihat Wawasan</Link>
+          </section>
+        )}
 
         <section className="border-t border-white/10 pt-24 pb-12 md:pt-28 md:pb-16">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">

@@ -205,7 +205,13 @@ ${insightUrl}`;
               Lihat Studi Kasus Proyek
             </Link>
           </section>
-        ) : null}
+        ) : (
+          <section className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
+            <p className="font-display text-[11px] uppercase tracking-[0.14em] text-[#D4AF37]">Sumber Proyek</p>
+            <p className="mt-3 font-sans text-sm leading-7 text-white/60">Artikel ini ditulis sebagai insight mandiri dan tidak terhubung ke satu proyek tertentu. Jelajahi halaman Karya untuk melihat studi kasus lengkap.</p>
+            <Link href="/karya" className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37]">Lihat Karya</Link>
+          </section>
+        )}
 
 
         <article className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.02] p-5 text-base sm:mt-10 sm:p-6 md:p-8">
