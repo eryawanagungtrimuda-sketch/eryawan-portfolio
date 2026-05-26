@@ -93,6 +93,7 @@ type RegenerableField =
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
   | 'igCaption'
+  | 'igHashtag'
   | 'tiktokHook'
   | 'tiktokScript'
   | 'tiktokCaption'
@@ -295,7 +296,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
   const regenerableFieldsByTab: Partial<Record<PlatformTab, RegenerableField[]>> = {
     canva: ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'],
-    instagram: ['igCaption'],
+    instagram: ['igCaption', 'igHashtag'],
     tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption', 'tiktokHashtag'],
     youtube: ['youtubeTitle', 'youtubeDescription'],
     linkedin: ['linkedInCaption', 'linkedInBullets'],
@@ -691,14 +692,12 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                   {activeTab === 'instagram' && (
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Asset visual diproduksi dulu di Canva, lalu upload langsung atau share dari Canva ke Instagram.</p>
+                      <p className="text-xs text-[#E6C676]/90">Untuk Reels dan Carousel, gunakan brief lengkap di tab Canva.</p>
                       <Field label="Caption Instagram" value={draft.igCaption} onChange={(v) => updateDraft('igCaption', v)} rows={7} />
                       <Field label="Hashtag" value={draft.igHashtag} onChange={(v) => updateDraft('igHashtag', v)} rows={3} />
-                      <Field label="Reels storyboard" value={draft.igStoryboard} onChange={(v) => updateDraft('igStoryboard', v)} rows={6} />
-                      <Field label="Carousel slide outline" value={draft.igCarousel} onChange={(v) => updateDraft('igCarousel', v)} rows={6} />
                       <Field label="CTA website" value={draft.igCta} onChange={(v) => updateDraft('igCta', v)} rows={2} />
                       <ButtonRow>
                         <CopyButton label="Copy Caption IG" copied={copied.igCaption} onClick={() => copyText('igCaption', `${draft.igCaption}\n${draft.igCta}\n${draft.igHashtag}`)} />
-                        <CopyButton label="Copy Storyboard" copied={copied.igStoryboard} onClick={() => copyText('igStoryboard', draft.igStoryboard)} />
                         <button type="button" onClick={() => postToPlatform('instagram')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to Instagram</button>
                       </ButtonRow>
                       {postStatus.instagram ? <p className="text-xs text-white/75">{postStatus.instagram.message}</p> : null}
