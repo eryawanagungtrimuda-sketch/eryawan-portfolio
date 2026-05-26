@@ -144,11 +144,11 @@ Hasilnya lebih tertata, lebih ringan dipakai, dan lebih relevan untuk keluarga.
 Overlay:
 Lihat studi lengkap di website`,
     canvaCarouselSlides: '',
-    canvaOverlayText: `Rapi belum tentu enak dipakai
-Alur gerak perlu dibaca ulang
-Zona kerja harus lebih jelas
-Material dipilih untuk pemakaian harian
-Hasil akhir terasa lebih terarah
+    canvaOverlayText: `Ruang rapi belum tentu nyaman
+Masalahnya ada di sirkulasi
+Zoning dibuat lebih jelas
+Material mendukung aktivitas harian
+Detail kecil menentukan pengalaman
 Lihat studi lengkap di website`,
     igCaption: `Bukan semua area yang terlihat rapi itu otomatis nyaman dipakai.
 
@@ -194,9 +194,30 @@ function postProcessField(field: RegenerableField, value: string) {
   }
   if (field === 'canvaOverlayText') {
     cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/^\s*["'`[{(]+/, '')
+      .replace(/["'`\]})]+\s*$/, '')
+      .replace(/\b(canvaOverlayText|overlay|text|caption|visual|narasi|copy)\s*:\s*/gi, '')
+      .replace(/[{},]/g, '\n');
+
+    cleaned = cleaned
       .split('\n')
-      .map((line) => line.trim().replace(/^["'`]+|["'`]+$/g, ''))
+      .map((line) =>
+        line
+          .trim()
+          .replace(/^["'`-]+|["'`-]+$/g, '')
+          .replace(/\b(canvaOverlayText|overlay|text|caption|visual|narasi|copy)\s*:\s*/gi, '')
+          .replace(/^(?:\d+[\])\-.:]?\s*)/, '')
+          .trim()
+      )
+      .map((line) => line.replace(/\s+/g, ' '))
+      .filter((line) => line && !/^[\[\]{}:,]+$/.test(line))
+      .map((line) => {
+        const words = line.split(' ').filter(Boolean);
+        return words.slice(0, 8).join(' ');
+      })
       .filter(Boolean)
+      .slice(0, 6)
       .join('\n');
   }
   return cleaned;
@@ -294,7 +315,15 @@ Narasi:
 Overlay:
 Narasi pendek agar tidak kepotong.
 
-- canvaOverlayText: satu baris per overlay, tiap baris 6–9 kata, singkat, tanpa penjelasan tambahan.
+- canvaOverlayText: output hanya baris overlay pendek siap Canva/Reels.
+  * HANYA baris overlay, tanpa paragraf.
+  * Satu overlay per baris, maksimum 6 baris.
+  * Tiap baris maksimum 6–8 kata.
+  * Jangan tambahkan label apa pun: Overlay:, Text:, Caption:, Visual:, Narasi:, Copy:.
+  * Jangan tulis JSON-like fragment di dalam value.
+  * Jangan tulis karakter escaped "\\n" secara literal.
+  * Jangan beri tanda kutip di setiap baris.
+  * Gaya manusia, ringkas, tajam, mudah dibaca cepat.
 
 - igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
 - tiktokCaption: lebih pendek dan langsung, 1–3 paragraf pendek, conversational tanpa slang berlebihan.
@@ -351,6 +380,16 @@ Narasi pendek agar tidak kepotong.
       if (uniqueFields.length === 1) {
         const field = uniqueFields[0] as RegenerableField;
         const salvaged = postProcessField(field, outputText);
+        if (
+          field === 'canvaOverlayText' &&
+          (!salvaged.trim() || salvaged.split('\n').some((line) => line.split(' ').filter(Boolean).length > 8))
+        ) {
+          return NextResponse.json({
+            data: { [field]: fallbackData[field] || '' },
+            fallbackUsed: true,
+            debugReason: 'openai_plain_text_salvaged_overlay_fallback',
+          });
+        }
         if (salvaged.trim()) {
           return NextResponse.json({
             data: { [field]: salvaged },
