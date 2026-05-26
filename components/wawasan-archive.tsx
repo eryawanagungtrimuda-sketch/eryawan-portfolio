@@ -32,7 +32,7 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
   const teaserCopy = `Check this design insight from eryawanagung.my.id: ${item.title} - ${insightUrl}${item.excerpt ? ` | ${item.excerpt}` : ''}`;
   return (
     <article style={{ "--premium-card-border": frameColor || "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-card-hover premium-oval-card premium-oval-frame group flex h-full flex-col border border-transparent bg-white/[0.02] transition hover:bg-white/[0.04]">
-      {item.cover_image ? <div className="premium-oval-media-top border-b border-white/10"><img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" /></div> : null}
+      {item.cover_image ? <div className="premium-oval-media-top border-b border-white/10"><img src={item.cover_image} alt={item.title} className="aspect-[16/10] w-full object-cover" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = 'none'; }} /></div> : <div className="premium-oval-media-top aspect-[16/10] border-b border-white/10 bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08]" />}
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap gap-2 text-[11px] leading-none">
           <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-sans font-semibold text-[#D4AF37]">{toLabel(item.category)}</span>
@@ -139,7 +139,7 @@ export default function WawasanArchive({ insights }: Props) {
 
       {filteredInsights.length === 0 ? (
         <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame mt-6 border border-transparent bg-white/[0.02] p-8 text-center">
-          <p className="font-sans text-white/70">Belum ada wawasan yang cocok dengan pencarian ini.</p>
+          <p className="font-sans text-white/70">Belum ada wawasan yang cocok dengan pencarian atau filter saat ini. Coba atur ulang filter atau gunakan kata kunci yang lebih umum.</p>
           <button onClick={resetAll} className="premium-interactive mt-4 rounded-xl border border-[#D4AF37]/40 px-4 py-2 font-sans text-sm text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Atur Ulang Filter</button>
         </div>
       ) : (
