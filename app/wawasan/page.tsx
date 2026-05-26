@@ -39,7 +39,7 @@ export default async function WawasanPage() {
         />
       </div>
       <section className="reveal-on-scroll mx-auto max-w-7xl rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-6 sm:p-8 md:p-12">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Insight Hub</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Wawasan & Catatan Desain</p>
         <h1 className="font-sans mt-3 text-[2rem] font-normal leading-[1.02] tracking-[-0.02em] sm:mt-4 sm:text-[2.35rem] md:text-6xl">Wawasan Desain</h1>
         <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/64 sm:text-base sm:leading-relaxed md:mt-5 md:text-lg">
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
@@ -54,7 +54,7 @@ export default async function WawasanPage() {
       {insights.length === 0 ? (
         <section className="mx-auto mt-10 max-w-6xl">
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-8 text-center">
-            <p className="font-sans text-lg text-white/66">Belum ada wawasan dipublikasikan.</p>
+            <p className="font-sans text-lg text-white/66">Belum ada wawasan yang dipublikasikan.</p>
             <div className="mt-6 flex justify-center gap-3">
               <Link className="rounded-2xl border border-[#D4AF37]/40 px-4 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37]/10" href="/mulai-project">Mulai Percakapan Proyek</Link>
               <Link className="rounded-2xl border border-white/15 px-4 py-2 font-sans text-sm text-white/66 hover:border-white/30 hover:text-white" href="/karya">Lihat Karya</Link>

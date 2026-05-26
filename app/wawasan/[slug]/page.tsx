@@ -154,7 +154,7 @@ ${insightUrl}`;
           fallbackHref="/wawasan"
           className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 px-6 py-2.5 font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
         >
-          ← Kembali ke Sebelumnya
+          ← Kembali ke Wawasan
         </SmartBackLink>
 
         <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
@@ -222,7 +222,7 @@ ${insightUrl}`;
         <section className="mt-8 rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:mt-10 sm:p-6 md:p-7">
           <p className="font-sans text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Bagikan Insight</p>
           <h2 className="mt-4 font-sans text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
-          <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim project.</p>
+          <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim proyek.</p>
           <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
             <TrackedLink href={whatsappHref} target="_blank" rel="noopener noreferrer" eventName="whatsapp_click" eventProps={{ source: "wawasan_detail", label: "mulai_percakapan_proyek", content_type: "wawasan", slug: insight.slug, href_type: "external" }} data-cta="wawasan-detail-whatsapp" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
               Mulai Percakapan Proyek via WhatsApp
@@ -239,7 +239,7 @@ ${insightUrl}`;
             <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-3.5">
               <Link href="/mulai-project" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866] md:w-auto">Diskusikan Proyek Serupa</Link>
               <AdminEditWawasanShortcut insightId={insight.id} className="premium-interactive inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12 md:w-auto" />
-              <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] md:w-auto">← Kembali ke Sebelumnya</SmartBackLink>
+              <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] md:w-auto">← Kembali ke Wawasan</SmartBackLink>
             </div>
             <WawasanAdminActions slug={insight.slug} placement="inline-desktop" />
           </div>

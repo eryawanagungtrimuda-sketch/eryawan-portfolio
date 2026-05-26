@@ -21,7 +21,7 @@ function normalize(value?: string | null) {
 
 function toLabel(value?: string | null, kind?: 'source') {
   if (!value) return ALL;
-  if (kind === 'source' && value === 'project') return 'Dari Project';
+  if (kind === 'source' && value === 'project') return 'Dari Proyek';
   return value
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase());
@@ -44,7 +44,7 @@ function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string 
         {/* Social teaser micro-copy for faster share-friendly storytelling without changing core card hierarchy. */}
         <p className="mt-2 line-clamp-2 font-sans text-xs leading-relaxed text-white/52">{teaserCopy}</p>
         <Link href={`/wawasan/${item.slug}`} className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
-          Pelajari Insight <span aria-hidden>→</span>
+          Baca Wawasan <span aria-hidden>→</span>
         </Link>
       </div>
     </article>
@@ -151,7 +151,7 @@ export default function WawasanArchive({ insights }: Props) {
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
                 <p className="mt-3 font-sans text-white/70">{featured.excerpt || 'Pilihan wawasan utama untuk membantu Anda mengambil keputusan desain yang lebih tepat.'}</p>
-                <Link href={`/wawasan/${featured.slug}`} className="premium-interactive mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Baca Insight Lengkap</Link>
+                <Link href={`/wawasan/${featured.slug}`} className="premium-interactive mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/40 px-5 font-mono text-sm uppercase tracking-[0.12em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">Baca Wawasan Lengkap</Link>
               </div>
             </article>
           ) : null}

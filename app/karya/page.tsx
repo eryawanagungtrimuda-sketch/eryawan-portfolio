@@ -43,7 +43,7 @@ export default async function KaryaPage() {
             Karya Berbasis Keputusan
           </h1>
           <p className="mt-9 max-w-2xl font-sans text-base leading-[1.8] text-white/62 md:text-xl md:leading-[1.75]">
-            Setiap project dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga impact yang dihasilkan.
+            Setiap proyek dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga dampak yang dihasilkan.
           </p>
         </section>
 
