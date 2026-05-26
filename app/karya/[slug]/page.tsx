@@ -106,10 +106,7 @@ export default async function KaryaDetailPage({ params }: Props) {
       <RevealObserver />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <Link href="/" className="font-mono text-[11px] font-black uppercase tracking-[0.22em] text-[#D4AF37] transition hover:text-[#E2C866]">
-            Eryawan Studio
-          </Link>
+        <div className="flex items-center justify-start">
           <BackButton fallbackHref="/karya" />
         </div>
 
