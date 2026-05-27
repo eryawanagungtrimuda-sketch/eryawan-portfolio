@@ -30,3 +30,12 @@ npm start
 - Konten utama: `app/page.tsx`
 - Styling global: `app/globals.css`
 - Tema Tailwind: `tailwind.config.ts`
+
+## Owner Documentation
+
+- [Owner Handoff Guide](docs/OWNER_HANDOFF_GUIDE.md)
+- [Content Publishing Workflow](docs/CONTENT_PUBLISHING_WORKFLOW.md)
+- [Maintenance Checklist](docs/MAINTENANCE_CHECKLIST.md)
+- [Launch Monitoring Checklist](docs/LAUNCH_MONITORING_CHECKLIST.md)
+- [Production Launch Checklist](docs/PRODUCTION_LAUNCH_CHECKLIST.md) *(jika file tersedia)*
+
