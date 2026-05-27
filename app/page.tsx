@@ -195,45 +195,13 @@ export default async function Home() {
       <MobileAdminQuickAccess />
       <section
         id="home"
-        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-4 py-6 sm:px-5 md:px-8 lg:px-12 xl:px-24"
+        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-4 py-6 pt-10 sm:px-5 md:px-8 lg:px-12 xl:px-24"
         style={{
           backgroundImage:
             "linear-gradient(90deg, rgba(8,8,7,0.92) 0%, rgba(8,8,7,0.78) 34%, rgba(8,8,7,0.46) 66%, rgba(8,8,7,0.18) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 45%, rgba(8,8,7,0.78) 100%), url('/hero.jpg')",
         }}
       >
-        <nav className="relative z-10 flex items-start justify-between gap-8">
-          <a href="/" className="group inline-flex flex-col gap-2 md:gap-2.5">
-            <span className="font-display text-[1.35rem] font-normal uppercase leading-none tracking-[0.08em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72] sm:text-[1.45rem] md:text-[1.55rem] lg:text-[1.68rem]">
-              Eryawan Agung
-            </span>
-            <span className="font-display text-[0.62rem] font-normal uppercase leading-none tracking-[0.2em] text-white/62 sm:text-[0.68rem] md:text-[0.72rem] lg:text-[0.78rem]">
-              Portfolio · Design Strategy
-            </span>
-          </a>
-
-          <div className="hidden items-start gap-8 font-sans text-sm font-medium text-white/62 lg:flex">
-            <a className="border-b border-[#C8A951]/70 pb-3 text-[#C8A951] transition duration-300" href="/">Beranda</a>
-            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/tentang">Tentang</a>
-            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/karya">Karya</a>
-            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="/wawasan">Wawasan</a>
-            <a className="pb-3 transition motion-safe:duration-500 motion-safe:ease-out hover:text-[#C8A951]" href="#contact">Kontak</a>
-          </div>
-
-          <Button href="/mulai-project" className="hidden shadow-[0_18px_44px_rgba(200,169,81,0.14)] md:inline-flex">
-            Ajukan Kolaborasi
-          </Button>
-        </nav>
-
-
-        <div className="relative z-10 mt-6 flex gap-2 overflow-x-auto pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/62 lg:hidden">
-          <a href="/" className="whitespace-nowrap rounded-2xl border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-2 text-[#C8A951]">Beranda</a>
-          <a href="/tentang" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Tentang</a>
-          <a href="/karya" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Karya</a>
-          <a href="/wawasan" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Wawasan</a>
-          <a href="#contact" className="whitespace-nowrap rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-2 transition hover:border-[#C8A951]/40 hover:text-[#C8A951]">Kontak</a>
-        </div>
-
-        <div className="relative z-10 grid flex-1 items-center pt-16 lg:grid-cols-[1fr_0.5fr] lg:pt-4">
+        <div className="relative z-10 grid flex-1 items-center pt-10 lg:grid-cols-[1fr_0.5fr] lg:pt-6">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
             <p className="mb-7 font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">
               Strategic Design Intelligence
