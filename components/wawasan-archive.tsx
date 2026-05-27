@@ -187,7 +187,89 @@ export default function WawasanArchive({ insights }: Props) {
         </>
       )}
 
-      {isFilterOpen && createPortal(<div className="fixed inset-0 z-[9999] md:hidden"><button aria-label="Tutup filter" className="absolute inset-0 bg-black/70" onClick={() => setIsFilterOpen(false)} /><div id={mobileFilterPanelId} role="dialog" aria-modal="true" aria-label="Filter Wawasan" className="absolute bottom-0 left-0 right-0 mx-auto flex max-h-[78dvh] w-full flex-col rounded-t-[26px] border border-white/10 bg-[#11100d]"><div className="sticky top-0 z-10 rounded-t-[26px] border-b border-white/10 bg-[#11100d] px-4 pb-3 pt-2"><div className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/25" /><div className="flex items-start justify-between gap-3"><div><h3 className="font-sans text-sm font-semibold text-white">Filter Wawasan</h3><p className="mt-1 font-sans text-xs text-white/58">Pilih topik, jenis konten, sumber, dan urutan wawasan.</p></div><button aria-label="Tutup filter wawasan" onClick={() => setIsFilterOpen(false)} className="min-h-10 rounded-full border border-white/20 px-3 font-sans text-xs text-white/80">Tutup</button></div></div><div className="overflow-y-auto px-4 py-4"><div className="space-y-4"><div><p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Topik</p><FilterChips options={categoryOptions} value={draftCategory} onSelect={setDraftCategory} /></div><div><p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Jenis Konten</p><FilterChips options={contentTypeOptions} value={draftContentType} onSelect={setDraftContentType} /></div><div><p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Sumber</p><FilterChips options={sourceTypeOptions} value={draftSourceType} onSelect={setDraftSourceType} kind="source" /></div><div><label htmlFor="sort-mobile" className="mb-2 block font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Urutkan</label><select id="sort-mobile" value={draftSort} onChange={(e) => setDraftSort(e.target.value as SortType)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40"><option value="terbaru">Terbaru</option><option value="terlama">Terlama</option><option value="judul_az">Judul A-Z</option></select></div></div></div><div className="sticky bottom-0 mt-auto flex gap-2 border-t border-white/10 bg-[#11100d] px-4 pb-[calc(env(safe-area-inset-bottom)+0.9rem)] pt-3"><button onClick={() => { setDraftCategory(ALL); setDraftContentType(ALL); setDraftSourceType(ALL); setDraftSort('terbaru'); }} className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80">Reset</button><button onClick={applyDraft} className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37]">Terapkan</button></div></div></div>, document.body)}
+      {isFilterOpen &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] md:hidden">
+            <button
+              aria-label="Tutup filter"
+              className="absolute inset-0 bg-black/70"
+              onClick={() => setIsFilterOpen(false)}
+            />
+            <div
+              id={mobileFilterPanelId}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filter Wawasan"
+              className="absolute bottom-0 left-0 right-0 mx-auto flex max-h-[78dvh] w-full flex-col rounded-t-[26px] border border-white/10 bg-[#11100d]"
+            >
+              <div className="sticky top-0 z-10 rounded-t-[26px] border-b border-white/10 bg-[#11100d] px-4 pb-3 pt-2">
+                <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-white/25" />
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-sans text-sm font-semibold text-white">Filter Wawasan</h3>
+                    <p className="mt-1 font-sans text-xs text-white/58">Pilih topik, jenis konten, sumber, dan urutan wawasan.</p>
+                  </div>
+                  <button
+                    aria-label="Tutup filter wawasan"
+                    onClick={() => setIsFilterOpen(false)}
+                    className="min-h-10 rounded-full border border-white/20 px-3 font-sans text-xs text-white/80"
+                  >
+                    Tutup
+                  </button>
+                </div>
+              </div>
+              <div className="overflow-y-auto px-4 py-4">
+                <div className="space-y-4">
+                  <div>
+                    <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Topik</p>
+                    <FilterChips options={categoryOptions} value={draftCategory} onSelect={setDraftCategory} />
+                  </div>
+                  <div>
+                    <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Jenis Konten</p>
+                    <FilterChips options={contentTypeOptions} value={draftContentType} onSelect={setDraftContentType} />
+                  </div>
+                  <div>
+                    <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Sumber</p>
+                    <FilterChips options={sourceTypeOptions} value={draftSourceType} onSelect={setDraftSourceType} kind="source" />
+                  </div>
+                  <div>
+                    <label htmlFor="sort-mobile" className="mb-2 block font-sans text-xs font-semibold uppercase tracking-[0.13em] text-white/55">Urutkan</label>
+                    <select
+                      id="sort-mobile"
+                      value={draftSort}
+                      onChange={(e) => setDraftSort(e.target.value as SortType)}
+                      className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40"
+                    >
+                      <option value="terbaru">Terbaru</option>
+                      <option value="terlama">Terlama</option>
+                      <option value="judul_az">Judul A-Z</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="sticky bottom-0 mt-auto flex gap-2 border-t border-white/10 bg-[#11100d] px-4 pb-[calc(env(safe-area-inset-bottom)+0.9rem)] pt-3">
+                <button
+                  onClick={() => {
+                    setDraftCategory(ALL);
+                    setDraftContentType(ALL);
+                    setDraftSourceType(ALL);
+                    setDraftSort('terbaru');
+                  }}
+                  className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={applyDraft}
+                  className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37]"
+                >
+                  Terapkan
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end"><div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur"><a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa wawasan desain yang menarik untuk dibaca
 
 https://eryawanagung.my.id/wawasan')}`} target="_blank" rel="noreferrer" aria-label="Bagikan daftar wawasan via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a><ShareLinkButton url="https://eryawanagung.my.id/wawasan" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" /></div></div>
