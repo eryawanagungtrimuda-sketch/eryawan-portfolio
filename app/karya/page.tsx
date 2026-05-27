@@ -5,6 +5,8 @@ import KaryaArchive from '@/components/karya-archive';
 import RevealObserver from '@/components/reveal-observer';
 import { getPublishedProjects } from '@/lib/projects';
 import { absoluteUrl } from '@/lib/site-url';
+import PublicJourneyLinks from '@/components/public-journey-links';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,9 +47,17 @@ export default async function KaryaPage() {
           <p className="mt-9 max-w-2xl font-sans text-base leading-[1.8] text-white/62 md:text-xl md:leading-[1.75]">
             Setiap proyek dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga dampak yang dihasilkan.
           </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/wawasan" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Baca Wawasan</Link>
+            <Link href="/mulai-project" className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2.5 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]">Ajukan Kolaborasi</Link>
+          </div>
         </section>
 
         <KaryaArchive projects={projects} />
+
+        <div className="pb-28 pt-12 md:pb-16">
+          <PublicJourneyLinks />
+        </div>
       </div>
     </main>
   );

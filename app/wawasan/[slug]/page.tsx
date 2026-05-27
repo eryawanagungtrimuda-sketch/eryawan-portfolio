@@ -11,6 +11,7 @@ import WawasanAdminActions from '@/components/wawasan-admin-actions';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 import { absoluteUrl } from '@/lib/site-url';
+import PublicJourneyLinks from '@/components/public-journey-links';
 
 export const dynamic = 'force-dynamic';
 
@@ -234,6 +235,15 @@ ${insightUrl}`;
           </div>
         </section>
 
+        <div className="mt-10">
+          <PublicJourneyLinks
+            links={[
+              { href: sourceProjectHref || '/karya', title: sourceProjectHref ? 'Lihat Karya Terkait' : 'Lihat Karya', description: sourceProjectHref ? 'Masuk ke studi kasus proyek yang menjadi sumber wawasan ini.' : 'Jelajahi studi kasus proyek untuk melihat keputusan desain nyata.' },
+              { href: '/wawasan', title: 'Baca Wawasan Lainnya', description: 'Lanjutkan pembacaan insight strategi dan review desain lainnya.' },
+              { href: '/mulai-project', title: 'Mulai Percakapan Proyek', description: 'Bahas kebutuhan ruang Anda dengan brief awal yang terarah.' },
+            ]}
+          />
+        </div>
         <div className="mt-8 border-t border-white/10 pt-10 sm:mt-10 sm:pt-12">
           <div className="flex flex-col items-stretch gap-3 md:items-center md:gap-5">
             <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-3.5">

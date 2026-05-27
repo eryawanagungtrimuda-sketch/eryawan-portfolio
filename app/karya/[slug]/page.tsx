@@ -14,6 +14,7 @@ import SocialComposerModal from '@/components/social-composer-modal';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 import { absoluteUrl } from '@/lib/site-url';
+import PublicJourneyLinks from '@/components/public-journey-links';
 
 type Props = {
   params: { slug: string };
@@ -240,6 +241,15 @@ ${projectUrl}`;
           </div>
         </section>
 
+        <div className="mt-12 pb-4">
+          <PublicJourneyLinks
+            links={[
+              { href: relatedInsight?.slug ? `/wawasan/${relatedInsight.slug}` : '/wawasan', title: relatedInsight?.slug ? 'Baca Wawasan Terkait' : 'Baca Wawasan', description: relatedInsight?.slug ? 'Lanjutkan ke insight yang membahas keputusan dari proyek ini.' : 'Lanjutkan eksplorasi ke artikel strategi dan studi desain.' },
+              { href: '/karya', title: 'Lihat Karya Lainnya', description: 'Bandingkan pendekatan proyek lain untuk kebutuhan ruang berbeda.' },
+              { href: '/mulai-project', title: 'Mulai Percakapan Proyek', description: 'Susun brief awal dan diskusikan kebutuhan proyek Anda.' },
+            ]}
+          />
+        </div>
         <section className="reveal-on-scroll border-t border-white/10 py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center pb-24 md:pb-0">
             <Link

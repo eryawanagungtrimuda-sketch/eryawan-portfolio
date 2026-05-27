@@ -5,6 +5,7 @@ import RevealObserver from '@/components/reveal-observer';
 import { getPublishedInsights } from '@/lib/insights';
 import WawasanArchive from '@/components/wawasan-archive';
 import { absoluteUrl } from '@/lib/site-url';
+import PublicJourneyLinks from '@/components/public-journey-links';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,15 +40,16 @@ export default async function WawasanPage() {
         />
       </div>
       <section className="reveal-on-scroll mx-auto max-w-7xl rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-transparent p-6 sm:p-8 md:p-12">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Wawasan & Catatan Desain</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#C8A951]">Beranda / Wawasan</p>
         <h1 className="font-sans mt-3 text-[2rem] font-normal leading-[1.02] tracking-[-0.02em] sm:mt-4 sm:text-[2.35rem] md:text-6xl">Wawasan Desain</h1>
         <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/64 sm:text-base sm:leading-relaxed md:mt-5 md:text-lg">
           Catatan strategi, pembacaan ruang, dan pelajaran desain untuk membantu melihat keputusan ruang secara lebih jernih.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 md:mt-8">
-          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.12em] text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
+          <Link href="/karya" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
             Lihat Karya
           </Link>
+          <Link href="/mulai-project" className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2.5 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]">Ajukan Kolaborasi</Link>
         </div>
       </section>
 
@@ -64,6 +66,10 @@ export default async function WawasanPage() {
       ) : (
         <WawasanArchive insights={insights} />
       )}
+
+      <div className="mx-auto mt-12 max-w-7xl pb-28 md:pb-16">
+        <PublicJourneyLinks />
+      </div>
     </main>
   );
 }
