@@ -13,8 +13,29 @@ type Body = {
   excerpt?: string;
 };
 
-const stylePrompt = 'Tulis dalam bahasa Indonesia yang matang, tenang, profesional, edukatif, tidak bombastis, dan relevan untuk arsitek/interior designer senior.';
-const sectionPrompt = 'Gunakan markdown sederhana dengan urutan heading: Pembuka, Apa yang Terbaca dari Ruang Ini, Keputusan Desain yang Menarik, Pelajaran yang Bisa Diambil, Catatan Perbaikan / Pengembangan, Kesimpulan.';
+const stylePrompt = 'Tulis dalam bahasa Indonesia yang natural, profesional, premium, tenang, dan analitis. Hindari bahasa bombastis, template AI generik, terlalu banyak kata sifat, serta nada promosi/sales.';
+const sectionPrompt = `Konten wawasan WAJIB ringkas, rapi, dan mudah dipindai di mobile. Gunakan markdown sederhana dengan urutan heading berikut:
+## Judul Wawasan
+## Konteks
+## Masalah Utama
+## Konflik Desain
+## Solusi
+## Keputusan Desain
+## Pelajaran Desain
+
+Aturan isi per bagian:
+- Judul Wawasan: judul editorial yang jelas, tidak terlalu panjang.
+- Konteks: 2-3 kalimat pendek yang menjelaskan proyek/ruang.
+- Masalah Utama: 1-2 kalimat pendek tentang tantangan inti.
+- Konflik Desain: tepat 2 kalimat tentang ketegangan kebutuhan klien, batas ruang, fungsi, estetika, pencahayaan, sirkulasi, atau material.
+- Solusi: 2-3 kalimat pendek tentang respons desain.
+- Keputusan Desain: 2-3 kalimat pendek tentang keputusan paling penting.
+- Pelajaran Desain: 2-3 kalimat pendek tentang pelajaran bagi pembaca.
+
+Aturan global:
+- Setiap paragraf singkat (maksimal 2 kalimat per paragraf).
+- Utamakan kejelasan dan keterbacaan, bukan panjang teks.
+- Total konten ringkas namun bermakna.`;
 
 const trimTo = (value: unknown, maxLength: number) => (typeof value === 'string' ? value.trim().slice(0, maxLength) : '');
 const isValidHttpUrl = (value: string) => {
