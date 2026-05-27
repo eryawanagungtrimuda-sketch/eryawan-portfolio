@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Analytics } from '@vercel/analytics/next';
 import PortfolioClicks from './portfolio-clicks';
 import { ToastProvider } from '@/components/toast-provider';
 import { SITE_URL, absoluteUrl } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ToastProvider>
           {children}
           <PortfolioClicks />
-          <Analytics />
+          <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
         </ToastProvider>
       </body>
     </html>
