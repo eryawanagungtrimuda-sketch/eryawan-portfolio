@@ -201,6 +201,41 @@ export default async function Home() {
             "linear-gradient(90deg, rgba(8,8,7,0.92) 0%, rgba(8,8,7,0.78) 34%, rgba(8,8,7,0.46) 66%, rgba(8,8,7,0.18) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 45%, rgba(8,8,7,0.78) 100%), url('/hero.jpg')",
         }}
       >
+
+        <header className="relative z-20 mb-6 hidden md:block">
+          <div className="rounded-3xl border border-[#C8A951]/28 bg-[#080807]/68 px-5 py-4 backdrop-blur">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+              <div className="justify-self-start">
+                <p className="font-display text-xl uppercase tracking-[0.08em] text-[#C8A951]">Eryawan Agung</p>
+                <p className="mt-1 font-sans text-[0.68rem] uppercase tracking-[0.2em] text-white/72">Portfolio · Design Strategy</p>
+              </div>
+              <nav aria-label="Navigasi hero desktop" className="justify-self-center">
+                <ul className="flex items-center gap-2">
+                  {[
+                    { href: '#home', label: 'Beranda' },
+                    { href: '#client-workflow', label: 'Tentang' },
+                    { href: '#portfolio', label: 'Karya' },
+                    { href: '#wawasan-design', label: 'Wawasan' },
+                    { href: '#contact', label: 'Kontak' },
+                  ].map((item) => (
+                    <li key={item.href}>
+                      <a
+                        href={item.href}
+                        className="inline-flex min-h-10 items-center rounded-full border border-[#C8A951]/20 bg-white/[0.03] px-4 py-2 font-sans text-xs font-semibold uppercase tracking-[0.08em] text-[#F4F1EA] transition hover:bg-[#C8A951]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className="justify-self-end">
+                <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: 'homepage_header', label: 'ajukan_kolaborasi', href_type: 'internal' }} data-cta="homepage-header-collaboration" className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#C8A951] px-5 py-2 font-sans text-xs font-semibold uppercase tracking-[0.1em] text-[#080807] transition hover:bg-[#D7BD72] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]">Ajukan Kolaborasi</TrackedLink>
+              </div>
+            </div>
+          </div>
+        </header>
+
         <div className="relative z-20 mb-8 block md:hidden">
           <div className="rounded-3xl border border-[#C8A951]/30 bg-[#080807]/72 px-4 py-4 backdrop-blur">
             <div>

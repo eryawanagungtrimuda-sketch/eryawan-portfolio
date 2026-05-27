@@ -3,31 +3,26 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { Compass, Home, Lightbulb, Mail, UserRound } from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: 'Beranda', icon: Home },
-  { href: '/karya', label: 'Karya', icon: Compass },
-  { href: '/wawasan', label: 'Wawasan', icon: Lightbulb },
-  { href: '/tentang', label: 'Tentang', icon: UserRound },
-  { href: '/kontak', label: 'Kontak', icon: Mail },
+  { href: '/', label: 'Beranda' },
+  { href: '/karya', label: 'Karya' },
+  { href: '/wawasan', label: 'Wawasan' },
+  { href: '/tentang', label: 'Tentang' },
+  { href: '/kontak', label: 'Kontak' },
 ];
 
 const hiddenPrefixes = ['/admin', '/editor', '/compose', '/login'];
-
-const hiddenRoutes = ['/', '/mulai-project'];
-const hiddenSlugPrefixes = ['/karya/', '/wawasan/'];
-
-function shouldHideByRoute(pathname: string) {
-  if (hiddenRoutes.includes(pathname)) return true;
-  if (hiddenSlugPrefixes.some((prefix) => pathname.startsWith(prefix) && pathname.split('/').length > 2)) return true;
-  return false;
-}
+const allowedRoutes = ['/karya', '/wawasan', '/kontak'];
 
 function isPublicRoute(pathname: string) {
   if (hiddenPrefixes.some((prefix) => pathname.startsWith(prefix))) return false;
   if (pathname.startsWith('/api')) return false;
   return true;
+}
+
+function isAllowedRoute(pathname: string) {
+  return allowedRoutes.includes(pathname);
 }
 
 function isActive(pathname: string, href: string) {
@@ -39,7 +34,7 @@ export default function MobilePublicNav() {
   const pathname = usePathname() || '/';
   const [hasOpenModal, setHasOpenModal] = useState(false);
 
-  const hiddenByRoute = useMemo(() => shouldHideByRoute(pathname), [pathname]);
+  const shouldHide = useMemo(() => !isPublicRoute(pathname) || !isAllowedRoute(pathname), [pathname]);
 
   useEffect(() => {
     const computeModalOpen = () => {
@@ -53,27 +48,28 @@ export default function MobilePublicNav() {
     return () => observer.disconnect();
   }, []);
 
-  if (!isPublicRoute(pathname) || hiddenByRoute || hasOpenModal) return null;
+  if (shouldHide || hasOpenModal) return null;
 
   return (
-    <nav aria-label="Navigasi cepat mobile" className="fixed bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+5rem))] right-3 z-40 md:hidden">
-      <div className="flex flex-col gap-2 rounded-2xl border border-white/15 bg-[#0d0c0a]/88 p-2 backdrop-blur-xl">
+    <nav
+      aria-label="Navigasi cepat mobile"
+      className="fixed bottom-[max(1rem,calc(env(safe-area-inset-bottom)+0.5rem))] left-1/2 z-40 w-[min(94vw,32rem)] -translate-x-1/2 md:hidden"
+    >
+      <div className="flex items-center justify-between gap-1 rounded-full border border-[#C8A951]/30 bg-[#0d0c0a]/90 p-1.5 shadow-[0_14px_30px_rgba(0,0,0,0.42)] backdrop-blur-xl">
         {navItems.map((item) => {
-          const Icon = item.icon;
           const active = isActive(pathname, item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              aria-label={item.label}
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${
+              className={`inline-flex min-h-9 flex-1 items-center justify-center rounded-full px-2 py-2 text-[0.7rem] font-sans font-semibold uppercase tracking-[0.08em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${
                 active
-                  ? 'border border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]'
-                  : 'border border-transparent text-white/70 hover:border-white/15 hover:text-white'
+                  ? 'bg-[#C8A951]/16 text-[#D4AF37]'
+                  : 'text-white/78 hover:bg-white/5 hover:text-white'
               }`}
             >
-              <Icon className="h-4 w-4" aria-hidden="true" />
+              {item.label}
             </Link>
           );
         })}
