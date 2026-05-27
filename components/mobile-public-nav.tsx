@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import { Compass, Home, Lightbulb, Mail, UserRound } from 'lucide-react';
 
 const navItems = [
@@ -13,6 +14,15 @@ const navItems = [
 ];
 
 const hiddenPrefixes = ['/admin', '/editor', '/compose', '/login'];
+
+const hiddenRoutes = ['/', '/mulai-project'];
+const hiddenSlugPrefixes = ['/karya/', '/wawasan/'];
+
+function shouldHideByRoute(pathname: string) {
+  if (hiddenRoutes.includes(pathname)) return true;
+  if (hiddenSlugPrefixes.some((prefix) => pathname.startsWith(prefix) && pathname.split('/').length > 2)) return true;
+  return false;
+}
 
 function isPublicRoute(pathname: string) {
   if (hiddenPrefixes.some((prefix) => pathname.startsWith(prefix))) return false;
@@ -27,8 +37,23 @@ function isActive(pathname: string, href: string) {
 
 export default function MobilePublicNav() {
   const pathname = usePathname() || '/';
+  const [hasOpenModal, setHasOpenModal] = useState(false);
 
-  if (!isPublicRoute(pathname)) return null;
+  const hiddenByRoute = useMemo(() => shouldHideByRoute(pathname), [pathname]);
+
+  useEffect(() => {
+    const computeModalOpen = () => {
+      setHasOpenModal(Boolean(document.querySelector('[role="dialog"][aria-modal="true"]')));
+    };
+
+    computeModalOpen();
+    const observer = new MutationObserver(computeModalOpen);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-modal', 'role'] });
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (!isPublicRoute(pathname) || hiddenByRoute || hasOpenModal) return null;
 
   return (
     <nav aria-label="Navigasi cepat mobile" className="fixed bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+5rem))] right-3 z-40 md:hidden">

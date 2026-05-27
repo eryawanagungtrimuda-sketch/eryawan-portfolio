@@ -29,8 +29,10 @@ export default function PublicStickyHeader() {
 
   if (!isPublicRoute(pathname)) return null;
 
+  const hideOnMobileHomepage = pathname === '/';
+
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#080807]/88 backdrop-blur-xl">
+    <header className={`sticky top-0 z-50 border-b border-white/10 bg-[#080807]/88 backdrop-blur-xl ${hideOnMobileHomepage ? 'hidden md:block' : ''}`}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="inline-flex min-h-10 items-center font-display text-base uppercase tracking-[0.08em] text-[#C8A951] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] sm:text-lg">
           Eryawan Agung
