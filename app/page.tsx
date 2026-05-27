@@ -201,6 +201,35 @@ export default async function Home() {
             "linear-gradient(90deg, rgba(8,8,7,0.92) 0%, rgba(8,8,7,0.78) 34%, rgba(8,8,7,0.46) 66%, rgba(8,8,7,0.18) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 45%, rgba(8,8,7,0.78) 100%), url('/hero.jpg')",
         }}
       >
+        <div className="relative z-20 mb-8 block md:hidden">
+          <div className="rounded-3xl border border-[#C8A951]/30 bg-[#080807]/72 px-4 py-4 backdrop-blur">
+            <div>
+              <p className="font-display text-lg uppercase tracking-[0.08em] text-[#C8A951]">Eryawan Agung</p>
+              <p className="mt-1 font-sans text-[0.72rem] uppercase tracking-[0.22em] text-white/72">Portfolio · Design Strategy</p>
+            </div>
+            <nav aria-label="Navigasi hero mobile" className="mt-4 overflow-x-auto pb-1">
+              <ul className="flex min-w-max items-center gap-2">
+                {[
+                  { href: '#home', label: 'Beranda' },
+                  { href: '#client-workflow', label: 'Tentang' },
+                  { href: '#portfolio', label: 'Karya' },
+                  { href: '#wawasan-design', label: 'Wawasan' },
+                  { href: '#contact', label: 'Kontak' },
+                ].map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      className="inline-flex min-h-10 items-center rounded-full border border-[#C8A951]/35 bg-[#C8A951]/8 px-4 py-2 font-sans text-xs font-semibold text-[#F4F1EA] transition hover:bg-[#C8A951]/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+
         <div className="relative z-10 grid flex-1 items-center pt-10 lg:grid-cols-[1fr_0.5fr] lg:pt-6">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
             <p className="mb-7 font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">
