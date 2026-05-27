@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import { CheckCircle2, Compass, Instagram, Mail, MoveRight, Search, Zap } from 'lucide-react';
+import Button from '@/components/ui/button';
 import { getPublishedInsights } from '@/lib/insights';
 import { getPublishedProjects } from '@/lib/projects';
 import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
