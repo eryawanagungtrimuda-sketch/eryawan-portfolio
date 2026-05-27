@@ -5,7 +5,6 @@ import { SITE_URL, absoluteUrl } from '@/lib/site-url';
 import './globals.css';
 import './portfolio-teaser.css';
 import Script from 'next/script';
-import MobilePublicNav from '@/components/mobile-public-nav';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -58,7 +57,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <PortfolioClicks />
           <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
-          <MobilePublicNav />
         </ToastProvider>
       </body>
     </html>
