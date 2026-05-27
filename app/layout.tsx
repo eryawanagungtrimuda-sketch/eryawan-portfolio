@@ -6,6 +6,7 @@ import './globals.css';
 import './portfolio-teaser.css';
 import Script from 'next/script';
 import MobilePublicNav from '@/components/mobile-public-nav';
+import PublicStickyHeader from '@/components/public-sticky-header';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Lewati ke konten utama
         </a>
         <ToastProvider>
+          <PublicStickyHeader />
           {children}
           <PortfolioClicks />
           <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />

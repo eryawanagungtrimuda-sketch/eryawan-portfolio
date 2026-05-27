@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Compass, Home, Lightbulb, Mail, UserRound } from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: 'Beranda' },
-  { href: '/karya', label: 'Karya' },
-  { href: '/wawasan', label: 'Wawasan' },
-  { href: '/kontak', label: 'Kontak' },
+  { href: '/', label: 'Beranda', icon: Home },
+  { href: '/karya', label: 'Karya', icon: Compass },
+  { href: '/wawasan', label: 'Wawasan', icon: Lightbulb },
+  { href: '/tentang', label: 'Tentang', icon: UserRound },
+  { href: '/kontak', label: 'Kontak', icon: Mail },
 ];
 
 const hiddenPrefixes = ['/admin', '/editor', '/compose', '/login'];
@@ -29,22 +31,24 @@ export default function MobilePublicNav() {
   if (!isPublicRoute(pathname)) return null;
 
   return (
-    <nav aria-label="Navigasi utama mobile" className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(env(safe-area-inset-bottom)+0.8rem)] pt-2 md:hidden">
-      <div className="mx-auto flex max-w-md items-center justify-between gap-2 rounded-full border border-white/15 bg-[#0d0c0a]/90 px-2 py-2 backdrop-blur">
+    <nav aria-label="Navigasi cepat mobile" className="fixed bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+5rem))] right-3 z-40 md:hidden">
+      <div className="flex flex-col gap-2 rounded-2xl border border-white/15 bg-[#0d0c0a]/88 p-2 backdrop-blur-xl">
         {navItems.map((item) => {
+          const Icon = item.icon;
           const active = isActive(pathname, item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-3 py-2 text-center font-sans text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${
+              aria-label={item.label}
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${
                 active
                   ? 'border border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]'
                   : 'border border-transparent text-white/70 hover:border-white/15 hover:text-white'
               }`}
             >
-              {item.label}
+              <Icon className="h-4 w-4" aria-hidden="true" />
             </Link>
           );
         })}
