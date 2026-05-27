@@ -14,6 +14,8 @@ type Props = {
 type SortType = 'terbaru' | 'terlama' | 'judul_az';
 
 const ALL = 'Semua';
+const DESKTOP_FILTER_PANEL_ID = 'wawasan-filter-panel-desktop';
+const MOBILE_FILTER_SHEET_ID = 'wawasan-filter-sheet-mobile';
 
 function normalize(value?: string | null) {
   return (value || '').toLowerCase().trim();
@@ -110,6 +112,58 @@ export default function WawasanArchive({ insights }: Props) {
   const featured = filteredInsights[0];
   const rest = filteredInsights.slice(1);
 
+  const resetDraftFilters = () => {
+    setDraftCategory(ALL);
+    setDraftContentType(ALL);
+    setDraftSourceType(ALL);
+    setDraftSort('terbaru');
+  };
+
+  const applyDraftFilters = () => {
+    setCategory(draftCategory);
+    setContentType(draftContentType);
+    setSourceType(draftSourceType);
+    setSort(draftSort);
+    setIsFilterOpen(false);
+  };
+
+  const renderActiveFilterChips = () => (
+    <>
+      {category !== ALL && <button onClick={() => setCategory(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(category)} ×</button>}
+      {contentType !== ALL && <button onClick={() => setContentType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(contentType)} ×</button>}
+      {sourceType !== ALL && <button onClick={() => setSourceType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(sourceType, 'source')} ×</button>}
+    </>
+  );
+
+  const renderFilterGroups = () => (
+    <>
+      {[
+        ['Topik', categoryOptions, draftCategory, setDraftCategory, undefined],
+        ['Jenis Konten', contentTypeOptions, draftContentType, setDraftContentType, undefined],
+        ['Sumber', sourceTypeOptions, draftSourceType, setDraftSourceType, 'source'],
+      ].map(([label, options, value, setter, kind]) => (
+        <div key={label as string} className="mb-4 last:mb-0">
+          <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/55">{label as string}</p>
+          <div className="flex flex-wrap gap-2">
+            {(options as string[]).map((opt) => (
+              <button key={opt} type="button" onClick={() => (setter as (v: string) => void)(opt)} className={`rounded-full border px-3 py-1.5 font-sans text-xs font-semibold transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 ${(value as string) === opt ? 'border-[#D4AF37]/60 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/20 bg-[#090907] text-white/75'}`}>
+                {toLabel(opt, kind as 'source')}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="mt-4">
+        <label htmlFor="wawasan-sort" className="mb-2 block font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/55">Urutkan</label>
+        <select id="wawasan-sort" value={draftSort} onChange={(e) => setDraftSort(e.target.value as SortType)} className="min-h-11 w-full rounded-2xl border border-white/15 bg-[#090909] px-4 py-2 font-sans text-sm text-white/80 outline-none focus:border-[#D4AF37]/50">
+          <option value="terbaru">Terbaru</option>
+          <option value="terlama">Terlama</option>
+          <option value="judul_az">Judul A-Z</option>
+        </select>
+      </div>
+    </>
+  );
+
   const resetAll = () => {
     setSearch('');
     setCategory(ALL);
@@ -125,13 +179,11 @@ export default function WawasanArchive({ insights }: Props) {
         <div className="grid grid-cols-[minmax(0,1fr)_76px] gap-3 sm:grid-cols-[minmax(0,1fr)_92px]">
           <input id="wawasan-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari topik wawasan..." className="h-11 min-w-0 rounded-2xl border border-white/15 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/40 focus:border-[#C8A951]/50 focus:outline-none" />
           <button type="button" onClick={() => setIsFilterOpen(true)} aria-expanded={isFilterOpen} className="premium-interactive flex h-11 w-full items-center justify-center rounded-2xl border border-[#C8A951]/40 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]">
-            Filter{activeFilterCount > 0 ? ` ${activeFilterCount}` : ''}
+            Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          {category !== ALL && <button onClick={() => setCategory(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(category)} ×</button>}
-          {contentType !== ALL && <button onClick={() => setContentType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(contentType)} ×</button>}
-          {sourceType !== ALL && <button onClick={() => setSourceType(ALL)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/80">{toLabel(sourceType, 'source')} ×</button>}
+          {renderActiveFilterChips()}
           {activeFilterCount > 0 && <button onClick={resetAll} className="font-sans text-xs text-[#D4AF37]">Reset semua</button>}
           <span className="ml-auto font-sans text-xs text-white/58">{filteredInsights.length} wawasan ditemukan</span>
         </div>
@@ -165,29 +217,30 @@ export default function WawasanArchive({ insights }: Props) {
       {isFilterOpen && createPortal(
         <div className="fixed inset-0 z-[9999]">
           <button aria-label="Tutup filter" className="absolute inset-0 bg-black/70" onClick={() => setIsFilterOpen(false)} />
-          <div role="dialog" aria-modal="true" className="absolute bottom-0 left-0 right-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#11100d] p-5">
-            <button aria-label="Tutup" onClick={() => setIsFilterOpen(false)} className="mb-4 min-h-11 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/70 transition active:scale-[0.98]">Tutup</button>
-            {[
-              ['Topik', categoryOptions, draftCategory, setDraftCategory, undefined],
-              ['Jenis Konten', contentTypeOptions, draftContentType, setDraftContentType, undefined],
-              ['Sumber', sourceTypeOptions, draftSourceType, setDraftSourceType, 'source'],
-            ].map(([label, options, value, setter, kind]) => (
-              <div key={label as string} className="mb-4">
-                <p className="mb-2 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-white/55">{label as string}</p>
-                <div className="flex flex-wrap gap-2">{(options as string[]).map((opt) => <button key={opt} onClick={() => (setter as (v: string) => void)(opt)} className={`rounded-full border px-4 py-2 font-sans text-xs font-semibold transition active:scale-[0.98] ${(value as string) === opt ? 'border-[#D4AF37]/60 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/20 text-white/75'}`}>{toLabel(opt, kind as 'source')}</button>)}</div>
-              </div>
-            ))}
-            <div>
-              <label htmlFor="sort" className="mb-2 block font-mono text-xs uppercase tracking-[0.14em] text-white/55">Urutkan</label>
-              <select id="sort" value={draftSort} onChange={(e) => setDraftSort(e.target.value as SortType)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
-                <option value="terbaru">Terbaru</option>
-                <option value="terlama">Terlama</option>
-                <option value="judul_az">Judul A-Z</option>
-              </select>
+          <div id={DESKTOP_FILTER_PANEL_ID} role="dialog" aria-modal="true" className="absolute right-6 top-[120px] hidden w-[420px] max-w-[calc(100vw-3rem)] overflow-hidden rounded-2xl border border-white/15 bg-[#11100d] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.55)] md:block">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="font-sans text-sm font-semibold text-white">Filter Wawasan</h3>
+              <button type="button" aria-label="Tutup panel filter desktop" onClick={() => setIsFilterOpen(false)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50">Tutup</button>
             </div>
-            <div className="sticky bottom-0 mt-6 flex gap-2 border-t border-white/10 bg-[#11100d] pt-4">
-              <button onClick={() => { setDraftCategory(ALL); setDraftContentType(ALL); setDraftSourceType(ALL); setDraftSort('terbaru'); }} className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80 transition active:scale-[0.98]">Reset</button>
-              <button onClick={() => { setCategory(draftCategory); setContentType(draftContentType); setSourceType(draftSourceType); setSort(draftSort); setIsFilterOpen(false); }} className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition active:scale-[0.98]">Terapkan</button>
+            {renderFilterGroups()}
+            <div className="mt-4 flex gap-2 border-t border-white/10 pt-3">
+              <button type="button" onClick={resetDraftFilters} className="min-h-10 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80">Reset</button>
+              <button type="button" onClick={applyDraftFilters} className="min-h-10 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37]">Terapkan</button>
+            </div>
+          </div>
+          <div id={MOBILE_FILTER_SHEET_ID} role="dialog" aria-modal="true" className="absolute bottom-0 left-0 right-0 flex max-h-[80vh] flex-col overflow-hidden rounded-t-[24px] border border-white/10 bg-[#11100d] p-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] md:hidden">
+            <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-white/30" />
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-sans text-base font-semibold text-white">Filter Wawasan</h3>
+              <button type="button" aria-label="Tutup filter mobile" onClick={() => setIsFilterOpen(false)} className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/70">Tutup</button>
+            </div>
+            <p className="mb-4 font-sans text-xs text-white/60">Pilih topik, jenis konten, sumber, dan urutan wawasan.</p>
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+              {renderFilterGroups()}
+            </div>
+            <div className="mt-4 flex gap-2 border-t border-white/10 bg-[#11100d] pt-3">
+              <button type="button" onClick={resetDraftFilters} className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80 transition active:scale-[0.98]">Reset</button>
+              <button type="button" onClick={applyDraftFilters} className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition active:scale-[0.98]">Terapkan</button>
             </div>
           </div>
         </div>, document.body)}
