@@ -117,6 +117,18 @@ type Props = {
   wrapperClassName?: string;
 };
 
+function ensureThreadsCta(draft: ComposerDraft, canonicalUrl?: string | null): ComposerDraft {
+  const safeUrl = String(canonicalUrl || '').trim();
+  const expected = `Baca studi lengkapnya di website: ${safeUrl}`;
+  const cta = String(draft.threadsCta || '').trim();
+  const hasUrlInCta = safeUrl ? cta.includes(safeUrl) : false;
+  const onlyPrefix = /^Baca studi lengkapnya di website:\s*$/i.test(cta);
+  const missingAfterColon = /^Baca studi lengkapnya di website:\s+$/i.test(draft.threadsCta || '');
+
+  if (cta && hasUrlInCta && !onlyPrefix && !missingAfterColon) return draft;
+  return { ...draft, threadsCta: expected };
+}
+
 export function buildSocialDrafts(data: DetailPayload, contentType: ContentType): ComposerDraft {
   const tags = data.tags?.length ? data.tags.map((tag) => `#${tag.replace(/\s+/g, '')}`).join(' ') : '#DesainInterior #StudiKasus';
   const core = `${data.title}${data.year ? ` (${data.year})` : ''}`;
@@ -218,18 +230,34 @@ Cahaya dan material dibuat selaras
 Ruang kini terasa lebih terarah
 Lihat studi lengkap di website`;
 
-  const threadsPost = `Ruang yang terlihat rapi belum tentu langsung enak dipakai.
+  const bedroomHint = /bedroom|kamar tidur/i.test(`${data.title} ${summary} ${context} ${conflict} ${decision} ${impact} ${insight}`);
+  const threadsPost = bedroomHint
+    ? `Pas lihat ${core}, banyak orang fokus ke visual akhirnya. Padahal yang paling terasa itu justru ritme pakainya dari pagi sampai malam.
 
-Di ${core}, keputusan utama dimulai dari membaca ritme harian, titik friksi, dan cara pengguna berpindah antar area.
+Di proyek ini, titik friksinya ada di kontrol cahaya, area belajar, dan kebutuhan istirahat yang sering saling tabrakan dalam satu ruang.
 
-Saat alur, material, dan pencahayaan diselaraskan, hasilnya terasa lebih siap dipakai, bukan hanya terlihat selesai.
+Karena itu keputusan utamanya bukan soal gaya dulu, tapi urutan aktivitas, storage yang masuk akal, lalu pemilihan warna dan material supaya atmosfernya tetap tenang dipakai harian.
 
-Bagian mana yang biasanya paling sering terlewat saat menata ruang seperti ini?`;
+Kalau di kamar kamu, bagian mana yang paling susah dijaga seimbang: fokus kerja, kualitas istirahat, atau kerapian simpan?`
+    : `${core} kelihatan rapi di foto, tapi prosesnya justru dimulai dari hal yang lebih dasar: gimana ruang ini benar-benar dipakai setiap hari.
 
-  const threadsReplyIdeas = `• Menariknya, masalah kecil di awal sering paling menentukan rasa ruang.
-• Pencahayaan bukan cuma soal terang, tapi soal kontrol suasana.
-• Area simpan yang tepat bikin ritme harian jauh lebih ringan.
-• Keputusan material kecil bisa mengubah pengalaman pakai.`;
+Masalah awalnya cukup jelas: ${shortText(conflict, 160)} Kami pakai itu sebagai titik berangkat, bukan sekadar tempelan narasi.
+
+Keputusan desainnya lalu diarahkan ke ${shortText(decision, 170)} Dampaknya terasa di penggunaan harian: ${shortText(impact, 170)}.
+
+Menurut kamu, detail kecil apa yang paling sering menentukan apakah ruang terasa “jadi” saat dipakai?`;
+
+  const threadsReplyIdeas = bedroomHint
+    ? `• Aku suka bagian saat friksi harian dijadikan dasar keputusan, bukan ditutup sama styling.
+• Kontrol cahaya di jam berbeda biasanya paling cepat ngubah kualitas pakai ruang.
+• Penempatan storage yang tepat sering lebih berdampak daripada nambah furnitur baru.
+• Urutan aktivitas pengguna diurai dulu, jadi keputusan layout-nya terasa lebih masuk akal.
+• Menarik kalau dibandingkan: mana detail yang paling terasa efeknya setelah ruang dipakai seminggu?`
+    : `• Friksi utamanya kebaca jelas, jadi arah keputusan proyeknya terasa konsisten.
+• Ringkasan konteksnya membantu lihat kenapa prioritas aktivitasnya disusun seperti itu.
+• Keputusan kuncinya relevan karena langsung nyambung ke dampak penggunaan harian.
+• Insight akhirnya bukan normatif, tapi bisa dipakai jadi acuan proyek serupa.
+• Menurutku menarik kalau dibandingkan lagi setelah fase pemakaian berjalan beberapa minggu.`;
 
   const threadsCta = `Baca studi lengkapnya di website: ${data.canonicalUrl}`;
 
@@ -399,7 +427,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       const raw = sessionStorage.getItem(storageKey);
       if (!raw) return;
       const parsed = JSON.parse(raw) as ComposerDraft;
-      setDraft(parsed);
+      const normalized = ensureThreadsCta(parsed, payload?.canonicalUrl);
+      setDraft(normalized);
     } catch {
       // ignore invalid session data
     }
@@ -453,8 +482,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   useEffect(() => {
     if (!generatedDraft || draft) return;
-    setDraft(generatedDraft);
-  }, [generatedDraft, draft]);
+    setDraft(ensureThreadsCta(generatedDraft, payload?.canonicalUrl));
+  }, [generatedDraft, draft, payload?.canonicalUrl]);
 
   useEffect(() => {
     if (!open) return;
@@ -471,7 +500,11 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   }, [activeTab, isGoalTouched, open]);
 
   function updateDraft<K extends keyof ComposerDraft>(key: K, value: ComposerDraft[K]) {
-    setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setDraft((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, [key]: value } as ComposerDraft;
+      return ensureThreadsCta(next, payload?.canonicalUrl);
+    });
   }
 
   async function regenerateMissingFields() {
@@ -756,9 +789,12 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <p className="text-sm text-white/75">Format ini dibuat untuk percakapan ringan di Threads: reflektif, natural, tanpa hard selling.</p>
                       <Field label="Threads Post" value={draft.threadsPost} onChange={(v) => updateDraft('threadsPost', v)} rows={9} />
                       <Field label="Reply Ideas" value={draft.threadsReplyIdeas} onChange={(v) => updateDraft('threadsReplyIdeas', v)} rows={6} />
-                      <Field label="CTA" value={draft.threadsCta} onChange={(v) => updateDraft('threadsCta', v)} rows={2} />
+                      <Field label="CTA" value={ensureThreadsCta(draft, payload?.canonicalUrl).threadsCta} onChange={(v) => updateDraft('threadsCta', v)} rows={2} />
                       <ButtonRow>
-                        <CopyButton label="Copy Threads Post" copied={copied.threadsPost} onClick={() => copyText('threadsPost', `${draft.threadsPost}\n\n${draft.threadsCta}`)} />
+                        <CopyButton label="Copy Threads Post" copied={copied.threadsPost} onClick={() => {
+                          const ensured = ensureThreadsCta(draft, payload?.canonicalUrl);
+                          copyText('threadsPost', `${ensured.threadsPost}\n\n${ensured.threadsCta}`);
+                        }} />
                         <CopyButton label="Copy Reply Ideas" copied={copied.threadsReplies} onClick={() => copyText('threadsReplies', draft.threadsReplyIdeas)} />
                       </ButtonRow>
                     </div>
