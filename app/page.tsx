@@ -206,9 +206,9 @@ export default async function Home() {
           <div className="px-1 py-2">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div className="justify-self-start">
-                <div className="inline-flex w-[19.8ch] flex-col items-start">
-                  <p className="font-display text-[1.08rem] uppercase tracking-[0.09em] text-[#C8A951]">ERYAWAN AGUNG</p>
-                  <p className="mt-0.5 w-full font-sans text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-white/68">PORTFOLIO · DESIGN STRATEGY</p>
+                <div className="inline-flex w-[19ch] flex-col items-start">
+                  <p className="font-display text-[1.07rem] uppercase tracking-[0.088em] text-[#C8A951]">ERYAWAN AGUNG</p>
+                  <p className="mt-0.5 w-full font-sans text-[0.62rem] font-semibold uppercase tracking-[0.255em] text-white/68">PORTFOLIO · DESIGN STRATEGY</p>
                 </div>
               </div>
               <nav aria-label="Navigasi hero desktop" className="justify-self-center">
@@ -240,9 +240,9 @@ export default async function Home() {
 
         <div className="relative z-20 mb-4 block md:hidden">
           <div className="rounded-xl bg-[#080807]/28 px-1 py-1.5 backdrop-blur-[2px]">
-            <div className="inline-flex w-[19.4ch] flex-col items-start">
-              <p className="font-display text-[0.98rem] uppercase tracking-[0.09em] text-[#C8A951]">ERYAWAN AGUNG</p>
-              <p className="mt-0.5 w-full font-sans text-[0.61rem] font-semibold uppercase tracking-[0.31em] text-white/70">PORTFOLIO · DESIGN STRATEGY</p>
+            <div className="inline-flex w-[19ch] flex-col items-start">
+              <p className="font-display text-[0.98rem] uppercase tracking-[0.088em] text-[#C8A951]">ERYAWAN AGUNG</p>
+              <p className="mt-0.5 w-full font-sans text-[0.61rem] font-semibold uppercase tracking-[0.24em] text-white/70">PORTFOLIO · DESIGN STRATEGY</p>
             </div>
             <nav aria-label="Navigasi hero mobile" className="mt-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <ul className="flex min-w-max items-center gap-2 pr-4">
