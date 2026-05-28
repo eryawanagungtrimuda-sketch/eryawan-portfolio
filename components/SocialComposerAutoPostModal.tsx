@@ -123,7 +123,7 @@ export function buildSocialDrafts(data: DetailPayload, contentType: ContentType)
   const insight = data.insight || 'Ruang yang berhasil adalah ruang yang terasa sederhana dipakai, bukan sekadar terlihat bagus.';
   const visualUrl = data.ogImage || data.visual;
 
-  const igCaption = `Hook singkat: Ruang bagus bukan hanya soal tampilan, tapi soal strategi penggunaan.\n\nProyek: ${core}\n${summary}\n\nInsight: ${decision}\nDampak: ${impact}\n\nLihat studi lengkap di website: ${data.canonicalUrl}`;
+  const igCaption = `Ruang yang enak dipakai selalu dimulai dari strategi yang tepat, bukan dari tampilan dulu.\n\nDi ${core}, fokus utamanya ada di alur aktivitas, prioritas fungsi, dan keputusan detail yang relevan untuk pemakaian harian.\n\n${shortText(decision, 160)} Hasilnya, ${shortText(impact, 140)}.\n\nLihat studi lengkap di website: ${data.canonicalUrl}`;
 
   const igStoryboard = `Reels storyboard\n1) Pembuka masalah: ${conflict}\n2) Batasan ruang: ${context}\n3) Masalah ke solusi: ${decision}\n4) Sudut pandang pengguna: ${impact}\n5) Penutup + CTA website`;
 
@@ -135,64 +135,75 @@ export function buildSocialDrafts(data: DetailPayload, contentType: ContentType)
   const youtubeHashtags = `${tags} #Shorts #YouTubeShorts`;
   const youtubeUploadGuide = `Upload ke YouTube Shorts menggunakan file MP4 yang sama dari export Canva.\n1) Pastikan rasio 9:16 (1080 x 1920).\n2) Judul tetap singkat, jelas, dan mengandung kata kunci utama.\n3) Tempel deskripsi + hashtag untuk konteks dan jangkauan.\n4) Cek cover frame terbaik sebelum publish.`;
 
-  const linkedInBullets = `• Pembuka masalah: ${conflict}\n• Batasan ruang: ${context}\n• Masalah ke solusi: ${decision}\n• Sudut pandang pengguna: ${impact}`;
+  const linkedInBullets = `• Keputusan desain dimulai dari kebutuhan pengguna utama dan ritme aktivitas harian.\n• Zoning disusun agar fungsi inti berjalan beriringan tanpa saling mengganggu.\n• Sirkulasi dipertegas untuk mengurangi friksi dan menjaga alur tetap efisien.\n• Material dan pencahayaan dipilih untuk performa pakai yang konsisten.\n• Dampaknya terasa langsung: ruang lebih tertata, ringan dipakai, dan relevan.`;
 
-  const whatsappMessage = `Halo, saya mau share ${contentTypeLabel(contentType)} yang menurut saya relevan:\n${core}\n\n${summary}\n\nBaca lengkap di sini: ${data.canonicalUrl}`;
+  const whatsappMessage = `Baru selesai menulis ${contentTypeLabel(contentType)} tentang ${core}.\n\nYang dibahas bukan hanya hasil akhirnya, tapi juga cara membaca kebutuhan pengguna dan kenapa keputusan zoning, alur ruang, serta materialnya diambil seperti itu.\n\nKalau sedang cari referensi praktis untuk strategi ruang yang lebih terarah dan nyaman dipakai, ini bisa membantu.\n\nBaca lengkap di sini:\n${data.canonicalUrl}`;
   const canvaReelsTimeline = `0-3 detik:
-Visual: Hero shot ${core} dengan framing clean dan gerak zoom-in ringan.
-Teks: "Ruang bagus bukan cuma soal tampilan."
-Narasi: "Sering kali ruang terlihat estetik, tapi belum nyaman dipakai."
+Visual: Hero shot ${core} dengan framing tenang dan zoom-in halus.
+Narasi: "Rapi itu penting, tapi alur pakai yang menentukan."
+Overlay: Rapi belum tentu nyaman dipakai
 
 3-6 detik:
-Visual: Potongan area yang menunjukkan konteks ruang dan aktivitas utama.
-Teks: "Konteks: ${context}"
-Narasi: "Di proyek ini, konteks utamanya adalah ${context.toLowerCase()}."
+Visual: Potongan area yang menunjukkan aktivitas utama dan titik sibuk.
+Narasi: "Di proyek ini, tantangannya muncul saat beberapa aktivitas berjalan bersamaan."
+Overlay: Titik friksi ada di sirkulasi
 
 6-10 detik:
-Visual: Detail titik masalah + transisi ke sketsa/hasil solusi.
-Teks: "Masalah: ${conflict}"
-Narasi: "Tantangan utamanya adalah ${conflict.toLowerCase()}."
+Visual: Detail titik masalah, lalu transisi ke zoning baru.
+Narasi: "Zonanya kami atur ulang supaya alur gerak dan fungsi lebih jelas."
+Overlay: Zoning dibuat lebih tegas
 
 10-14 detik:
-Visual: Before/after angle atau urutan alur ruang yang sudah diperbaiki.
-Teks: "Solusi: ${decision}"
-Narasi: "Keputusan desain kami: ${decision.toLowerCase()}."
+Visual: Before-after angle dan detail material kerja.
+Narasi: "Material dan pencahayaan dipilih agar ruangnya nyaman dipakai setiap hari."
+Overlay: Detail kecil, dampak nyata
 
 14-15 detik:
-Visual: Closing shot paling kuat + website URL di bawah.
-Teks: "Lihat studi lengkap di website"
-Narasi: "Hasilnya: ${impact.toLowerCase()}. Cek studi lengkapnya di website."`;
+Visual: Closing shot paling kuat dengan URL website.
+Narasi: "Hasil akhirnya lebih tertata dan terasa ringan dipakai. Detail lengkapnya ada di website."
+Overlay: Lihat studi lengkap di website`;
 
-  const canvaCarouselSlides = `Slide 1: Hook
-${core}
-"Dari ruang yang rapi, menjadi ruang yang lebih bekerja."
+  const canvaCarouselSlides = `Slide 1 — Hook
+Rapi belum tentu nyaman dipakai.
+Di ${core}, fokus awalnya adalah merapikan alur aktivitas harian agar tidak saling bertabrakan.
+Visual: Hero shot yang menunjukkan hubungan area utama.
 
-Slide 2: Konteks
-${summary}
+Slide 2 — Konteks
+Proyek ini berangkat dari kebutuhan ruang yang aktif dipakai tiap hari.
+${shortText(summary, 150)}
+Visual: Sudut eksisting yang memperlihatkan pola aktivitas.
 
-Slide 3: Masalah
-${conflict}
+Slide 3 — Masalah
+Titik friksi muncul di sirkulasi dan pembagian fungsi.
+${shortText(conflict, 150)}
+Visual: Detail area yang paling sering menimbulkan hambatan.
 
-Slide 4: Batasan ruang
-${context}
+Slide 4 — Keputusan Desain
+Zoning disusun ulang supaya alur gerak lebih jelas.
+${shortText(decision, 150)}
+Visual: Diagram zoning sederhana atau perbandingan before-after.
 
-Slide 5: Keputusan desain
-${designLabel(data.designDecision, data.solution)}
+Slide 5 — Detail Penting
+Kenyamanan harian dibangun dari detail kecil yang konsisten.
+Material, pencahayaan, dan proporsi elemen dipilih untuk ritme aktivitas nyata.
+Visual: Close-up material, area kerja, dan titik lampu.
 
-Slide 6: Dampak
-${impact}
-Insight tambahan: ${insight}
+Slide 6 — Hasil
+Setelah penataan ulang, ruang terasa lebih terarah dan efisien.
+${shortText(impact, 150)}
+Visual: Momen penggunaan ruang setelah implementasi.
 
-Slide 7: CTA website
-Lihat studi ${contentTypeLabel(contentType)} lengkap:
-${data.canonicalUrl}`;
+Slide 7 — CTA
+Kalau Anda sedang merencanakan pembaruan ruang serupa, studi ini bisa jadi pijakan awal.
+Lihat proses lengkap dan pertimbangannya di website: ${data.canonicalUrl}
+Visual: Closing frame dengan URL dan foto akhir paling kuat.`;
 
-  const canvaOverlayText = `"Ruang bagus harus enak dipakai."
-"Masalah utama: ${shortText(conflict)}"
-"Batasan: ${shortText(context)}"
-"Solusi: ${shortText(decision)}"
-"Dampak: ${shortText(impact)}"
-"Lihat studi lengkap di website"`;
+  const canvaOverlayText = `Rapi belum tentu nyaman dipakai
+Alur aktivitas perlu dibaca ulang
+Zoning tegas, pergerakan lebih lancar
+Detail material mendukung pemakaian harian
+Hasil akhir terasa lebih ringan dipakai
+Lihat studi lengkap di website`;
 
   const canvaVisualGuide = `Opening hero image:
 - Gunakan OG/hero image sebagai scene pembuka untuk membangun konteks visual.
@@ -237,8 +248,8 @@ Best practice:
     igStoryboard,
     igCarousel,
     igCta: `Kunjungi website untuk studi lengkap: ${data.canonicalUrl}`,
-    tiktokHook: '3 detik pembuka: Kenapa ruang ini jadi jauh lebih enak dipakai?',
-    tiktokScript: `Script voice over\nPembuka masalah: ${conflict}\nBatasan ruang: ${context}\nMasalah ke solusi: ${decision}\nSudut pandang pengguna: ${impact}\nCTA: cek studi lengkap di website.`,
+    tiktokHook: 'Rapi itu mudah dilihat, nyaman dipakai itu tantangannya.',
+    tiktokScript: `Di proyek ${core}, tantangan utamanya ada di alur pakai yang sering saling bertabrakan.\nKami rapikan zonanya supaya perpindahan aktivitas terasa lebih natural.\nMaterial dan pencahayaan juga disesuaikan agar ritme harian lebih nyaman.\nHasilnya bukan cuma terlihat rapi, tapi memang enak dipakai.\nKalau mau lihat detail prosesnya, studi lengkapnya ada di website.`,
     tiktokCaption: `${core} — strategi ruang yang fokus pada fungsi dan pengalaman pengguna.\nDetail lengkap: ${data.canonicalUrl}`,
     tiktokHashtag: tags,
     tiktokCta: `Lanjut baca di website: ${data.canonicalUrl}`,
