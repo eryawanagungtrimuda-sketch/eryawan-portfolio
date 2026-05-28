@@ -227,16 +227,16 @@ Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di we
     igHashtag: '#DesainInterior #InteriorDesign #StudiKasus #ArsitekturInterior #DesignStrategy',
     tiktokHook: 'Ruang rapi belum tentu enak dipakai.',
     tiktokScript: `Kelihatannya rapi, tapi alur pakainya belum enak.
-Dapur dan ruang makan harus tetap dekat, tanpa membuat sirkulasi terasa penuh.
-Kami rapikan zonanya dan perkuat pencahayaan kerja.
-Hasilnya, area belakang terasa lebih rapi, terang, dan mudah dipakai harian.
+Di ${title}, tantangannya ada di hubungan antar fungsi yang perlu berjalan selaras.
+Kami rapikan zonanya, pertegas alur gerak, lalu sesuaikan material dan pencahayaan untuk ritme harian.
+Hasilnya, pengalaman pakai terasa lebih terarah, nyaman, dan relevan untuk kebutuhan pengguna.
 Studi lengkapnya ada di website.`,
     tiktokCaption: `Area rapi belum tentu enak dipakai.
 
 Di ${title}, problem utamanya ada di alur dan pembagian zona. Setelah diatur ulang, aktivitas jadi lebih lancar dan hasilnya terasa lebih masuk akal untuk dipakai harian.
 
 Lihat studi lengkapnya${source.url ? `: ${source.url}` : '.'}`,
-    tiktokHashtag: '#DesainInterior #InteriorDesign #TikTokDesign #RuangMakan #Dapur',
+    tiktokHashtag: '#DesainInterior #InteriorDesign #TikTokDesign #ZoningRuang #UserExperience',
     youtubeTitle: `Penataan ${title} agar Alur dan Fungsi Lebih Jelas`,
     youtubeDescription: `Di video singkat ini, Anda akan lihat bagaimana ${title} ditata ulang dari sisi alur, zoning, material, dan pencahayaan kerja.
 
