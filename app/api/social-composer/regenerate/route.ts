@@ -164,7 +164,7 @@ Tampilkan momen penggunaan nyata setelah implementasi.
 Slide 7 — CTA
 Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya bisa jadi referensi awal.
 
-Lihat proses dan pertimbangannya di website.
+Lihat proses dan pertimbangannya di website${source.url ? `: ${source.url}` : '.'}
 
 Visual:
 Closing frame dengan URL website dan foto akhir yang paling kuat.`;
@@ -255,7 +255,7 @@ Saya tertarik mendengar pendekatan rekan-rekan saat menyeimbangkan performa fung
 
 Intinya bukan soal bikin ruang terlihat rapi, tapi bagaimana alur pakai hariannya benar-benar terasa enak.
 
-Kalau kamu lagi membahas dapur, ruang makan, atau sirkulasi rumah, ini bisa jadi referensi yang cukup praktis.
+Kalau kamu lagi membahas strategi alur ruang, zoning, material, atau pengalaman pengguna, ini bisa jadi referensi yang cukup praktis.
 
 Baca lengkapnya di sini:
 ${source.url || ''}`.trim(),
@@ -316,8 +316,14 @@ function postProcessField(field: RegenerableField, value: string) {
       .replace(/\b(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|tiktokScript)\s*:\s*/gi, '')
       .replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1')
       .trim();
-    const sections = cleaned.split(/\n{2,}/).filter((part) => /^Slide\s*\d+\s*[—-]/i.test(part.trim()));
-    if (sections.length >= 7) cleaned = sections.slice(0, 7).join('\n\n');
+    const slideBlocks: string[] = [];
+    const slideRegex = /(?:^|\n)(Slide\s*([1-7])\s*[—-][\s\S]*?)(?=\nSlide\s*[1-7]\s*[—-]|\s*$)/gi;
+    let match: RegExpExecArray | null = slideRegex.exec(cleaned);
+    while (match) {
+      slideBlocks.push(match[1].trim());
+      match = slideRegex.exec(cleaned);
+    }
+    if (slideBlocks.length >= 7) cleaned = slideBlocks.slice(0, 7).join('\n\n');
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
   }
   if (field === 'canvaOverlayText') {

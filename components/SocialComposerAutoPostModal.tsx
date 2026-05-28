@@ -137,7 +137,7 @@ export function buildSocialDrafts(data: DetailPayload, contentType: ContentType)
 
   const linkedInBullets = `• Keputusan desain dimulai dari kebutuhan pengguna utama dan ritme aktivitas harian.\n• Zoning disusun agar fungsi inti berjalan beriringan tanpa saling mengganggu.\n• Sirkulasi dipertegas untuk mengurangi friksi dan menjaga alur tetap efisien.\n• Material dan pencahayaan dipilih untuk performa pakai yang konsisten.\n• Dampaknya terasa langsung: ruang lebih tertata, ringan dipakai, dan relevan.`;
 
-  const whatsappMessage = `Baru selesai menulis ${contentTypeLabel(contentType)} tentang ${core}.\n\nYang dibahas bukan hanya hasil akhirnya, tapi juga cara membaca masalah ruang dan kenapa keputusan desainnya diambil seperti itu.\n\nKalau sedang cari referensi praktis untuk dapur, ruang makan, atau alur sirkulasi rumah, ini bisa membantu.\n\nBaca lengkap di sini:\n${data.canonicalUrl}`;
+  const whatsappMessage = `Baru selesai menulis ${contentTypeLabel(contentType)} tentang ${core}.\n\nYang dibahas bukan hanya hasil akhirnya, tapi juga cara membaca kebutuhan pengguna dan kenapa keputusan zoning, alur ruang, serta materialnya diambil seperti itu.\n\nKalau sedang cari referensi praktis untuk strategi ruang yang lebih terarah dan nyaman dipakai, ini bisa membantu.\n\nBaca lengkap di sini:\n${data.canonicalUrl}`;
   const canvaReelsTimeline = `0-3 detik:
 Visual: Hero shot ${core} dengan framing tenang dan zoom-in halus.
 Narasi: "Rapi itu penting, tapi alur pakai yang menentukan."
@@ -195,7 +195,7 @@ Visual: Momen penggunaan ruang setelah implementasi.
 
 Slide 7 — CTA
 Kalau Anda sedang merencanakan pembaruan ruang serupa, studi ini bisa jadi pijakan awal.
-Lihat proses lengkap dan pertimbangannya di website.
+Lihat proses lengkap dan pertimbangannya di website: ${data.canonicalUrl}
 Visual: Closing frame dengan URL dan foto akhir paling kuat.`;
 
   const canvaOverlayText = `Rapi belum tentu nyaman dipakai
