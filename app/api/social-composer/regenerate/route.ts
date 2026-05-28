@@ -173,9 +173,9 @@ Closing frame dengan URL website dan foto akhir yang paling kuat.`;
   const map: Record<RegenerableField, string> = {
     canvaReelsTimeline: `0–3 detik
 Visual:
-Wide shot area utama sebelum dijelaskan.
+Ambil wide shot area utama dengan pergerakan kamera halus.
 Narasi:
-Rapi itu penting, tapi alurnya harus enak dipakai.
+Rapi itu penting, tapi alur pakainya harus terasa ringan.
 Overlay:
 Rapi belum tentu efektif
 
@@ -211,11 +211,11 @@ Hasilnya lebih tertata, lebih ringan dipakai, dan lebih relevan untuk keluarga.
 Overlay:
 Lihat studi lengkap di website`,
     canvaCarouselSlides: '',
-    canvaOverlayText: `Ruang rapi belum tentu nyaman
-Masalahnya ada di sirkulasi
-Zoning dibuat lebih jelas
-Material mendukung aktivitas harian
-Detail kecil menentukan pengalaman
+    canvaOverlayText: `Rapi belum tentu nyaman dipakai
+Alur gerak perlu dibaca ulang
+Zoning jelas, aktivitas lebih lancar
+Material dipilih untuk ritme harian
+Detail kecil mengubah pengalaman ruang
 Lihat studi lengkap di website`,
     igCaption: `Bukan semua area yang terlihat rapi itu otomatis nyaman dipakai.
 
@@ -226,9 +226,9 @@ ${solution} Dampaknya, ${impact}.
 Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya ada di website${source.url ? `: ${source.url}` : '.'}`,
     igHashtag: '#DesainInterior #InteriorDesign #StudiKasus #ArsitekturInterior #DesignStrategy',
     tiktokHook: 'Ruang rapi belum tentu enak dipakai.',
-    tiktokScript: `Ruang ini terlihat sederhana, tapi tantangannya ada di alur pakai.
+    tiktokScript: `Kelihatannya rapi, tapi alur pakainya belum enak.
 Dapur dan ruang makan harus tetap dekat, tanpa membuat sirkulasi terasa penuh.
-Karena itu, zoning dibuat lebih jelas dan pencahayaan diperkuat.
+Kami rapikan zonanya dan perkuat pencahayaan kerja.
 Hasilnya, area belakang terasa lebih rapi, terang, dan mudah dipakai harian.
 Studi lengkapnya ada di website.`,
     tiktokCaption: `Area rapi belum tentu enak dipakai.
@@ -250,12 +250,12 @@ Pada ${title}, kami memulai dari evaluasi sirkulasi, pola aktivitas, dan hubunga
 ${solution} Hasilnya, ${impact}.
 
 Saya tertarik mendengar pendekatan rekan-rekan saat menyeimbangkan performa fungsi dan kualitas spasial dalam proyek serupa${source.url ? `.\n\nStudi lengkap: ${source.url}` : '.'}`,
-    linkedInBullets: `• Pemikiran spasial dimulai dari kebutuhan pengguna utama.\n• Zoning disusun agar fungsi inti tidak saling bertabrakan.\n• Sirkulasi dipertegas supaya alur harian lebih lancar.\n• Material dipilih untuk ketahanan pakai sekaligus karakter visual.\n• Pencahayaan diatur agar aktivitas lebih nyaman dan berdampak nyata.`,
-    whatsappMessage: `Saya baru menulis studi kasus tentang ${title}.
+    linkedInBullets: `• Prioritas keputusan dimulai dari kebutuhan pengguna utama, bukan sekadar gaya visual.\n• Zoning dirancang agar fungsi inti berjalan beriringan tanpa friksi.\n• Sirkulasi dipertegas supaya aktivitas harian lebih efisien dan terarah.\n• Material dan pencahayaan dipilih untuk performa pakai jangka panjang.\n• Dampak akhirnya terukur: ruang terasa lebih ringan dipakai dan lebih relevan.`,
+    whatsappMessage: `Baru selesai menulis studi kasus ${title}.
 
-Menariknya, proyek ini membahas bagaimana area terbatas bisa dibuat lebih rapi, terang, dan enak dipakai untuk aktivitas sehari-hari.
+Intinya bukan soal bikin ruang terlihat rapi, tapi bagaimana alur pakai hariannya benar-benar terasa enak.
 
-Kalau sedang membahas dapur, ruang makan, atau sirkulasi rumah, ini mungkin bisa jadi referensi.
+Kalau kamu lagi membahas dapur, ruang makan, atau sirkulasi rumah, ini bisa jadi referensi yang cukup praktis.
 
 Baca lengkapnya di sini:
 ${source.url || ''}`.trim(),
@@ -309,7 +309,15 @@ function postProcessField(field: RegenerableField, value: string) {
     cleaned = paragraphs.join('\n\n');
   }
   if (field === 'canvaCarouselSlides') {
-    cleaned = cleaned.replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1').trim();
+    cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/[{}[\]"]/g, '')
+      .replace(/\b(?:Judul|Teks|Caption)\s*:\s*/gi, '')
+      .replace(/\b(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|tiktokScript)\s*:\s*/gi, '')
+      .replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1')
+      .trim();
+    const sections = cleaned.split(/\n{2,}/).filter((part) => /^Slide\s*\d+\s*[—-]/i.test(part.trim()));
+    if (sections.length >= 7) cleaned = sections.slice(0, 7).join('\n\n');
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
   }
   if (field === 'canvaOverlayText') {
@@ -366,7 +374,8 @@ function postProcessField(field: RegenerableField, value: string) {
       .replace(/\\n/g, '\n')
       .replace(/^\s*```(?:json)?/i, '')
       .replace(/```\s*$/i, '')
-      .replace(/^\s*(Visual|Overlay|Caption|Text|Narasi)\s*:\s*/gim, '')
+      .replace(/^\s*(Visual|Overlay|Caption|Text|Narasi|Script voice over|Pembuka masalah|Batasan ruang)\s*:?\s*/gim, '')
+      .replace(/[{}[\]"]/g, '')
       .trim();
 
     cleaned = cleaned
@@ -413,6 +422,7 @@ function postProcessField(field: RegenerableField, value: string) {
   }
   if (field === 'whatsappMessage') {
     cleaned = cleaned
+      .replace(/\b(?:Halo,?\s*saya\s+mau\s+share|Hai!?\s*Saya\s+ingin\s+berbagi)\b/gi, '')
       .replace(/[ \t]+\n/g, '\n')
       .replace(/\n{3,}/g, '\n\n')
       .trim();
@@ -426,15 +436,20 @@ function postProcessField(field: RegenerableField, value: string) {
     cleaned = paragraphs.join('\n\n');
   }
   if (field === 'linkedInBullets') {
-    cleaned = cleaned
+    const bullets = cleaned
       .split('\n')
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => line.replace(/^(?:[-*•]\s*|\d+[\).:-]?\s*)/, '').trim())
       .filter(Boolean)
       .map((line) => `• ${line.replace(/\s+/g, ' ')}`)
-      .slice(0, 5)
-      .join('\n');
+      .slice(0, 5);
+    if (bullets.length < 3) {
+      bullets.push('• Keputusan desain dikaitkan langsung dengan kebutuhan penggunaan harian.');
+      bullets.push('• Alur ruang disusun agar perpindahan aktivitas lebih efisien.');
+      bullets.push('• Material dan pencahayaan dipilih untuk kualitas pakai yang konsisten.');
+    }
+    cleaned = bullets.slice(0, 5).join('\n');
   }
   return cleaned;
 }
@@ -504,8 +519,11 @@ ATURAN OUTPUT WAJIB:
 2) Key JSON harus persis sama dengan field yang diminta.
 3) Jangan keluarkan key tambahan.
 4) Value setiap key harus string polos (bukan object/array).
-5) Jangan pakai gaya robotik.
+5) Jangan pakai gaya robotik, formula template, atau pola kalimat yang kaku.
 6) Hindari kata berulang berlebihan: desain, ruang, nyaman, modern, estetika.
+7) Dilarang menulis label mekanis seperti "Pembuka masalah:", "Batasan ruang:", "Script voice over".
+8) Dilarang menyisipkan fragment JSON di dalam value.
+9) Dilarang mencampur isi antar field (cross-field pollution).
 
 ATURAN GLOBAL KONTEN:
 - Bahasa Indonesia natural.
@@ -563,7 +581,7 @@ Narasi pendek agar tidak kepotong.
   * Tanpa penjelasan.
   * Tanpa numbering.
 - tiktokScript:
-  * Script voice-over untuk TikTok/Reels.
+  * Script voice-over natural untuk TikTok/Reels.
   * Tulis 4–5 baris pendek, conversational, natural.
   * Wajib menyebut masalah, keputusan desain, dan hasil.
   * Dilarang hashtag.
@@ -632,7 +650,7 @@ Narasi pendek agar tidak kepotong.
           },
         ],
         temperature: 0.6,
-        max_output_tokens: 900,
+        max_output_tokens: 1600,
       }),
     });
 
