@@ -159,6 +159,40 @@ const wawasanPreview = [
 ];
 
 
+function SpreadTextLine({
+  text,
+  className,
+}: {
+  text: string;
+  className: string;
+}) {
+  return (
+    <p aria-label={text} className={`flex w-full items-center justify-between whitespace-nowrap ${className}`}>
+      {Array.from(text).map((char, index) => (
+        <span key={`${char}-${index}`} aria-hidden="true">
+          {char === ' ' ? ' ' : char}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+function BrandWordmark({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className="inline-flex w-[10.8rem] flex-col items-start md:w-[11.8rem]">
+      <SpreadTextLine
+        text="ERYAWAN AGUNG"
+        className={compact ? 'font-display text-[0.98rem] uppercase text-[#C8A951]' : 'font-display text-[1.07rem] uppercase text-[#C8A951]'}
+      />
+      <SpreadTextLine
+        text="PORTFOLIO · DESIGN STRATEGY"
+        className={compact ? 'mt-0.5 font-sans text-[0.56rem] font-semibold uppercase text-white/70' : 'mt-0.5 font-sans text-[0.58rem] font-semibold uppercase text-white/68'}
+      />
+    </div>
+  );
+}
+
+
 export default async function Home() {
   const portfolioWorks = (await getPublishedProjects()).slice(0, 2);
   const publishedInsights = await getPublishedInsights();
@@ -206,10 +240,7 @@ export default async function Home() {
           <div className="px-1 py-2">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div className="justify-self-start">
-                <div className="inline-flex w-[19ch] flex-col items-start">
-                  <p className="font-display text-[1.07rem] uppercase tracking-[0.088em] text-[#C8A951]">ERYAWAN AGUNG</p>
-                  <p className="mt-0.5 w-full font-sans text-[0.62rem] font-semibold uppercase tracking-[0.255em] text-white/68">PORTFOLIO · DESIGN STRATEGY</p>
-                </div>
+                <BrandWordmark />
               </div>
               <nav aria-label="Navigasi hero desktop" className="justify-self-center">
                 <ul className="flex items-center gap-2">
@@ -240,10 +271,7 @@ export default async function Home() {
 
         <div className="relative z-20 mb-4 block md:hidden">
           <div className="rounded-xl bg-[#080807]/28 px-1 py-1.5 backdrop-blur-[2px]">
-            <div className="inline-flex w-[19ch] flex-col items-start">
-              <p className="font-display text-[0.98rem] uppercase tracking-[0.088em] text-[#C8A951]">ERYAWAN AGUNG</p>
-              <p className="mt-0.5 w-full font-sans text-[0.61rem] font-semibold uppercase tracking-[0.24em] text-white/70">PORTFOLIO · DESIGN STRATEGY</p>
-            </div>
+            <BrandWordmark compact />
             <nav aria-label="Navigasi hero mobile" className="mt-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <ul className="flex min-w-max items-center gap-2 pr-4">
                 {[
