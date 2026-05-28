@@ -68,7 +68,14 @@ export default async function WawasanPage() {
       )}
 
       <div className="mx-auto mt-12 max-w-7xl pb-28 md:pb-16">
-        <PublicJourneyLinks />
+        <PublicJourneyLinks
+          links={[
+            { href: '/karya', title: 'Lihat Karya', description: 'Jelajahi studi kasus proyek berbasis keputusan desain.' },
+            { href: '/wawasan', title: 'Baca Wawasan', description: 'Pelajari insight strategi ruang dan logika desain.', current: true, disabled: true, badge: 'Sedang dibuka' },
+            { href: '/mulai-project', title: 'Mulai Percakapan Proyek', description: 'Ajukan brief awal agar diskusi proyek lebih terarah.' },
+          ]}
+        />
+        <Link href="/" className="mt-4 inline-flex font-sans text-sm text-white/62 transition hover:text-[#D4AF37]">← Kembali ke Beranda</Link>
       </div>
     </main>
   );
