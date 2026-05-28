@@ -259,15 +259,16 @@ function postProcessField(field: RegenerableField, value: string) {
       .replace(/(\d+)\s*[–-]\s*(\d+)\s*detik/gi, (_, a, b) => `${a}-${b} detik`)
       .replace(/15-20 detik/gi, '12-15 detik')
       .replace(/16-20 detik/gi, '12-15 detik');
-    const chunks = expectedBlocks
-      .map((block, index) => {
-        const start = normalized.search(new RegExp(`(^|\\n)${block.replace('-', '\\-')}`, 'i'));
-        if (start < 0) return '';
-        const next = index < expectedBlocks.length - 1 ? normalized.search(new RegExp(`(^|\\n)${expectedBlocks[index + 1].replace('-', '\\-')}`, 'i')) : -1;
-        return normalized.slice(start, next > start ? next : undefined).trim();
-      })
-      .filter(Boolean);
-    cleaned = chunks.join('\n\n').trim();
+    const chunks = expectedBlocks.map((block, index) => {
+      const start = normalized.search(new RegExp(`(^|\\n)${block.replace('-', '\\-')}`, 'i'));
+      if (start < 0) return '';
+      const next = index < expectedBlocks.length - 1 ? normalized.search(new RegExp(`(^|\\n)${expectedBlocks[index + 1].replace('-', '\\-')}`, 'i')) : -1;
+      return normalized.slice(start, next > start ? next : undefined).trim();
+    });
+    const hasExactFiveBlocks = chunks.every(Boolean);
+    const hasRequiredLabels =
+      hasExactFiveBlocks && chunks.every((chunk) => /\bVisual\s*:/i.test(chunk) && /\bNarasi\s*:/i.test(chunk) && /\bOverlay\s*:/i.test(chunk));
+    cleaned = hasRequiredLabels ? chunks.join('\n\n').trim() : '';
   }
   if (field === 'youtubeTitle') {
     cleaned = cleaned
@@ -562,7 +563,15 @@ Narasi:
 Overlay:
 Narasi pendek agar tidak kepotong.
 
-- canvaOverlayText: output hanya baris overlay pendek siap Canva/Reels.
+- canvaOverlayText:
+  * Output HANYA baris overlay, tanpa paragraf.
+  * Satu overlay per baris, maksimum 6 baris.
+  * Tiap baris maksimum 6–8 kata.
+  * Jangan tambahkan label apa pun: Overlay:, Text:, Caption:, Visual:, Narasi:, Copy:.
+  * Jangan tulis JSON-like fragment di dalam value.
+  * Jangan tulis karakter escaped "\\n" secara literal.
+  * Jangan beri tanda kutip di setiap baris.
+  * Gaya manusia, ringkas, tajam, mudah dibaca cepat.
 - threadsPost:
   * Output post Threads siap pakai.
   * 2-4 paragraf pendek, reflektif, natural.
@@ -575,15 +584,7 @@ Narasi pendek agar tidak kepotong.
   * Setiap baris wajib diawali "•".
   * Tanpa hashtag.
   * Tanpa numbering.
-  * Tiap baris singkat dan conversational.
-  * HANYA baris overlay, tanpa paragraf.
-  * Satu overlay per baris, maksimum 6 baris.
-  * Tiap baris maksimum 6–8 kata.
-  * Jangan tambahkan label apa pun: Overlay:, Text:, Caption:, Visual:, Narasi:, Copy:.
-  * Jangan tulis JSON-like fragment di dalam value.
-  * Jangan tulis karakter escaped "\\n" secara literal.
-  * Jangan beri tanda kutip di setiap baris.
-  * Gaya manusia, ringkas, tajam, mudah dibaca cepat.
+  * Tiap baris singkat dan discussion-friendly.
 
 - igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
 - tiktokHook:
