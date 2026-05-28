@@ -202,12 +202,14 @@ export default async function Home() {
         }}
       >
 
-        <header className="relative z-20 mb-4 hidden md:block lg:mb-5">
-          <div className="rounded-[1.35rem] border border-[#C8A951]/22 bg-[#080807]/58 px-6 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6">
+        <header className="relative z-20 mb-3 hidden md:block lg:mb-4">
+          <div className="px-1 py-2">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
               <div className="justify-self-start">
-                <p className="font-display text-[1.08rem] uppercase tracking-[0.09em] text-[#C8A951]">Eryawan Agung</p>
-                <p className="mt-0.5 font-sans text-[0.62rem] font-medium uppercase tracking-[0.22em] text-white/66">Portfolio · Design Strategy</p>
+                <div className="inline-flex w-[19.8ch] flex-col items-start">
+                  <p className="font-display text-[1.08rem] uppercase tracking-[0.09em] text-[#C8A951]">ERYAWAN AGUNG</p>
+                  <p className="mt-0.5 w-full font-sans text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-white/68">PORTFOLIO · DESIGN STRATEGY</p>
+                </div>
               </div>
               <nav aria-label="Navigasi hero desktop" className="justify-self-center">
                 <ul className="flex items-center gap-2">
@@ -221,7 +223,7 @@ export default async function Home() {
                     <li key={item.href}>
                       <a
                         href={item.href}
-                        className="inline-flex min-h-9 items-center rounded-full border border-transparent px-3.5 py-1.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-white/78 transition hover:border-[#C8A951]/28 hover:bg-[#C8A951]/10 hover:text-[#F4F1EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+                        className="inline-flex min-h-9 items-center rounded-full border border-transparent px-3.5 py-1.5 font-sans text-[0.7rem] font-semibold uppercase tracking-[0.11em] text-white/78 transition hover:border-[#C8A951]/28 hover:bg-[#C8A951]/10 hover:text-[#F4F1EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
                       >
                         {item.label}
                       </a>
@@ -236,14 +238,14 @@ export default async function Home() {
           </div>
         </header>
 
-        <div className="relative z-20 mb-5 block md:hidden">
-          <div className="rounded-2xl border border-[#C8A951]/24 bg-[#080807]/62 px-3.5 py-3 shadow-[0_8px_26px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-            <div>
-              <p className="font-display text-[1rem] uppercase tracking-[0.09em] text-[#C8A951]">Eryawan Agung</p>
-              <p className="mt-0.5 font-sans text-[0.63rem] font-medium uppercase tracking-[0.2em] text-white/68">Portfolio · Design Strategy</p>
+        <div className="relative z-20 mb-4 block md:hidden">
+          <div className="rounded-xl bg-[#080807]/28 px-1 py-1.5 backdrop-blur-[2px]">
+            <div className="inline-flex w-[19.4ch] flex-col items-start">
+              <p className="font-display text-[0.98rem] uppercase tracking-[0.09em] text-[#C8A951]">ERYAWAN AGUNG</p>
+              <p className="mt-0.5 w-full font-sans text-[0.61rem] font-semibold uppercase tracking-[0.31em] text-white/70">PORTFOLIO · DESIGN STRATEGY</p>
             </div>
-            <nav aria-label="Navigasi hero mobile" className="mt-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <ul className="flex min-w-max items-center gap-2 pr-2">
+            <nav aria-label="Navigasi hero mobile" className="mt-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <ul className="flex min-w-max items-center gap-2 pr-4">
                 {[
                   { href: '/', label: 'Beranda' },
                   { href: '/tentang', label: 'Tentang' },
@@ -265,7 +267,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 grid flex-1 items-center pt-4 lg:grid-cols-[1fr_0.5fr] lg:pt-3">
+        <div className="relative z-10 grid flex-1 items-center pt-2 lg:grid-cols-[1fr_0.5fr] lg:pt-2">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
             <p className="mb-7 font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">
               Strategic Design Intelligence
