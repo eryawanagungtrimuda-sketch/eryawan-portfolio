@@ -7,6 +7,8 @@ type RegenerableField =
   | 'canvaReelsTimeline'
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
+  | 'threadsPost'
+  | 'threadsReplyIdeas'
   | 'igCaption'
   | 'igHashtag'
   | 'tiktokHook'
@@ -23,6 +25,8 @@ const allowedFields = new Set<RegenerableField>([
   'canvaReelsTimeline',
   'canvaCarouselSlides',
   'canvaOverlayText',
+  'threadsPost',
+  'threadsReplyIdeas',
   'igCaption',
   'igHashtag',
   'tiktokHook',
@@ -55,7 +59,7 @@ function looksPollutedOutput(field: RegenerableField, value: string) {
   const unrelatedFieldMention = REGENERABLE_FIELD_KEYS.some((key) => key !== field && new RegExp(`\\b${key}\\b`, 'i').test(normalized));
   if (unrelatedFieldMention) return true;
 
-  const commonWrongLabels = /^(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|igHashtag|tiktokHook|tiktokScript|tiktokCaption|tiktokHashtag|youtubeTitle|youtubeDescription|linkedInCaption|linkedInBullets|whatsappMessage)\s*:/im;
+  const commonWrongLabels = /^(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|igHashtag|tiktokHook|tiktokScript|tiktokCaption|tiktokHashtag|youtubeTitle|youtubeDescription|linkedInCaption|linkedInBullets|whatsappMessage|threadsPost|threadsReplyIdeas)\s*:/im;
   if (commonWrongLabels.test(normalized)) return true;
 
   if (field === 'canvaOverlayText' && /(visual|narasi|overlay|caption|text|copy)\s*:/i.test(normalized)) return true;
@@ -114,109 +118,83 @@ function fallbackText(field: RegenerableField, source: Record<string, string | n
 
   if (field === 'canvaCarouselSlides') {
     return `Slide 1 — Hook
-Area yang terlihat rapi belum tentu enak dipakai.
-
-Di ${title}, fokus utamanya adalah membuat aktivitas harian tetap lancar tanpa terasa sesak.
-
-Visual:
-Gunakan hero shot yang memperlihatkan hubungan antar area utama.
+Rapi belum tentu selesai.
+Di ${title}, kebutuhan harian jadi titik berangkat utama.
 
 Slide 2 — Konteks
-Proyek ini berangkat dari kebutuhan keluarga yang aktif.
-
+Ritme pemakaian jadi acuan.
 ${summary}
 
-Visual:
-Tampilkan kondisi eksisting atau sudut yang menunjukkan pola aktivitas.
-
 Slide 3 — Masalah
-Tantangan utamanya ada di alur gerak dan titik kerja yang saling bertabrakan.
-
-${source.problem || 'Beberapa zona belum saling mendukung saat dipakai bersamaan.'}
-
-Visual:
-Ambil detail area yang sering memicu hambatan penggunaan.
+Titik friksi mulai terasa.
+${source.problem || 'Beberapa area belum saling mendukung saat dipakai bersamaan.'}
 
 Slide 4 — Keputusan Desain
-Solusi disusun agar pergerakan lebih jelas dan fungsi tidak saling mengganggu.
-
+Prioritas area dirapikan.
 ${solution}
 
-Visual:
-Gunakan diagram zoning sederhana atau perbandingan before-after.
-
 Slide 5 — Detail Penting
-Detail kecil dipilih untuk mempermudah perawatan sekaligus menjaga kualitas visual.
-
-Material, pencahayaan, dan proporsi elemen diselaraskan agar nyaman dipakai tiap hari.
-
-Visual:
-Close-up sambungan material, permukaan kerja, dan titik lampu.
+Detail menentukan kualitas pakai.
+Material dan pencahayaan diselaraskan agar aktivitas lebih ringan.
 
 Slide 6 — Hasil
-Setelah penataan ulang, area terasa lebih terarah dan efisien untuk rutinitas.
-
+Ruang terasa lebih terarah.
 ${impact}
 
-Visual:
-Tampilkan momen penggunaan nyata setelah implementasi.
-
 Slide 7 — CTA
-Kalau Anda sedang merencanakan pembaruan area serupa, studi lengkapnya bisa jadi referensi awal.
-
-Lihat proses dan pertimbangannya di website${source.url ? `: ${source.url}` : '.'}
-
-Visual:
-Closing frame dengan URL website dan foto akhir yang paling kuat.`;
+Lanjut lihat proses lengkapnya.
+Baca studi lengkap di website${source.url ? `: ${source.url}` : '.'}`;
   }
 
   const map: Record<RegenerableField, string> = {
-    canvaReelsTimeline: `0–3 detik
+    canvaReelsTimeline: `0-3 detik
 Visual:
 Ambil wide shot area utama dengan pergerakan kamera halus.
 Narasi:
-Rapi itu penting, tapi alur pakainya harus terasa ringan.
+Rapi itu penting, tapi ritme pakainya perlu dibaca ulang.
 Overlay:
-Rapi belum tentu efektif
+Rapi belum tentu selesai
 
-3–7 detik
+3-6 detik
 Visual:
 Sorot titik yang sering bikin aktivitas terhambat.
 Narasi:
-Di ${title}, masalahnya muncul saat beberapa aktivitas terjadi bersamaan.
+Di ${title}, tantangan muncul saat fungsi utama belum seimbang.
 Overlay:
-Masalah ada di sirkulasi
+Fungsi belum berjalan seimbang
 
-7–12 detik
+6-9 detik
 Visual:
-Tampilkan perubahan layout dan zoning.
+Tampilkan perubahan layout dan prioritas area.
 Narasi:
-Kami atur ulang zonanya supaya gerak, simpan, dan kerja lebih jelas.
+Keputusan area dirapikan supaya alur aktivitas lebih jelas.
 Overlay:
-Zoning dibuat lebih tegas
+Alur harian dibuat terarah
 
-12–16 detik
+9-12 detik
 Visual:
-Close-up material dan pencahayaan kerja.
+Close-up material, cahaya, dan storage.
 Narasi:
-Detail material dan lampu dipilih untuk pemakaian harian yang praktis.
+Detail dipilih untuk mendukung pemakaian harian yang konsisten.
 Overlay:
-Detail kecil, dampak besar
+Detail kecil, dampak nyata
 
-16–20 detik
+12-15 detik
 Visual:
 Final reveal area setelah penataan.
 Narasi:
-Hasilnya lebih tertata, lebih ringan dipakai, dan lebih relevan untuk keluarga.
+Hasilnya lebih tertata dan siap dipakai setiap hari.
 Overlay:
 Lihat studi lengkap di website`,
     canvaCarouselSlides: '',
-    canvaOverlayText: `Rapi belum tentu nyaman dipakai
-Alur gerak perlu dibaca ulang
-Zoning jelas, aktivitas lebih lancar
-Material dipilih untuk ritme harian
-Detail kecil mengubah pengalaman ruang
+    canvaOverlayText: `Cahaya terang belum tentu pas
+Ritme ruang perlu dibaca ulang
+Area prioritas dibuat lebih jelas
+Detail halus bantu aktivitas harian
+Hasilnya lebih siap dipakai
 Lihat studi lengkap di website`,
+    threadsPost: `Ruang yang terlihat rapi belum tentu langsung enak dipakai.\n\nDi ${title}, keputusan desain dimulai dari membaca kebutuhan harian, titik friksi, dan urutan aktivitas pengguna.\n\nSaat alur, material, dan pencahayaan diselaraskan, hasilnya terasa lebih siap dipakai, bukan hanya terlihat selesai.\n\nMenurut Anda, detail apa yang paling sering terlewat?`,
+    threadsReplyIdeas: `• Menariknya, keputusan kecil di awal sering paling menentukan.\n• Pencahayaan yang terkontrol bisa mengubah rasa ruang total.\n• Area simpan yang tepat bikin rutinitas lebih ringan.\n• Detail material membantu ruang terasa konsisten dipakai.`,
     igCaption: `Bukan semua area yang terlihat rapi itu otomatis nyaman dipakai.
 
 Di ${title}, kami mulai dari membaca pola aktivitas harian: siapa bergerak ke mana, titik mana yang sering macet, dan bagian mana yang perlu prioritas.
@@ -275,12 +253,21 @@ function postProcessField(field: RegenerableField, value: string) {
     .replace(/\n{3,}/g, '\n\n');
 
   if (field === 'canvaReelsTimeline') {
-    const chunks = cleaned
-      .split(/\n{2,}/)
-      .map((part) => part.trim())
-      .filter((part) => /\b\d+\s*[–-]\s*\d+\s*detik\b/i.test(part))
-      .slice(0, 5);
-    cleaned = chunks.join('\n\n').replace(/\bTeks\s*:/gi, 'Overlay:').trim();
+    cleaned = cleaned.replace(/\bTeks\s*:/gi, 'Overlay:');
+    const expectedBlocks = ['0-3 detik', '3-6 detik', '6-9 detik', '9-12 detik', '12-15 detik'];
+    const normalized = cleaned
+      .replace(/(\d+)\s*[–-]\s*(\d+)\s*detik/gi, (_, a, b) => `${a}-${b} detik`)
+      .replace(/15-20 detik/gi, '12-15 detik')
+      .replace(/16-20 detik/gi, '12-15 detik');
+    const chunks = expectedBlocks
+      .map((block, index) => {
+        const start = normalized.search(new RegExp(`(^|\\n)${block.replace('-', '\\-')}`, 'i'));
+        if (start < 0) return '';
+        const next = index < expectedBlocks.length - 1 ? normalized.search(new RegExp(`(^|\\n)${expectedBlocks[index + 1].replace('-', '\\-')}`, 'i')) : -1;
+        return normalized.slice(start, next > start ? next : undefined).trim();
+      })
+      .filter(Boolean);
+    cleaned = chunks.join('\n\n').trim();
   }
   if (field === 'youtubeTitle') {
     cleaned = cleaned
@@ -312,7 +299,7 @@ function postProcessField(field: RegenerableField, value: string) {
     cleaned = cleaned
       .replace(/\\n/g, '\n')
       .replace(/[{}[\]"]/g, '')
-      .replace(/\b(?:Judul|Teks|Caption)\s*:\s*/gi, '')
+      .replace(/\b(?:Visual|Narasi|Overlay|Judul|Teks|Caption|Text|Notes)\s*:\s*/gi, '')
       .replace(/\b(?:canvaCarouselSlides|canvaReelsTimeline|canvaOverlayText|igCaption|tiktokScript)\s*:\s*/gi, '')
       .replace(/\s*(Slide\s*[1-7]\s*[—-])/g, '\n\n$1')
       .trim();
@@ -323,7 +310,8 @@ function postProcessField(field: RegenerableField, value: string) {
       slideBlocks.push(match[1].trim());
       match = slideRegex.exec(cleaned);
     }
-    if (slideBlocks.length >= 7) cleaned = slideBlocks.slice(0, 7).join('\n\n');
+    if (slideBlocks.length === 7) cleaned = slideBlocks.join('\n\n');
+    else cleaned = '';
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
   }
   if (field === 'canvaOverlayText') {
@@ -350,9 +338,28 @@ function postProcessField(field: RegenerableField, value: string) {
         const words = line.split(' ').filter(Boolean);
         return words.slice(0, 8).join(' ');
       })
+      .filter((line) => !/^(konteks|masalah|tantangan desain|keputusan desain|detail penting|hasil|cta)$/i.test(line))
       .filter(Boolean)
       .slice(0, 6)
       .join('\n');
+  }
+
+  if (field === 'threadsPost') {
+    cleaned = cleaned.replace(/^\s*(?:Threads Post|Post|Caption)\s*:\s*/gim, '').replace(/(?:\s#\w+){4,}/g, '').trim();
+    const paragraphs = cleaned.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean).slice(0, 4);
+    cleaned = paragraphs.join('\n\n');
+  }
+  if (field === 'threadsReplyIdeas') {
+    const bullets = cleaned
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => line.replace(/^\s*(?:[-*•]|\d+[\).:-]?)\s*/, '').replace(/#\S+/g, '').trim())
+      .filter(Boolean)
+      .map((line) => `• ${line.split(/\s+/).slice(0, 18).join(' ')}`)
+      .slice(0, 5);
+    while (bullets.length < 3) bullets.push('• Detail keputusan ruang ini menarik dibahas lebih lanjut.');
+    cleaned = bullets.join('\n');
   }
 
   if (field === 'igHashtag') {
@@ -546,9 +553,9 @@ Slide 4 — Keputusan Desain
 Slide 5 — Detail Penting
 Slide 6 — Hasil
 Slide 7 — CTA
-Setiap slide berisi headline singkat, 1–2 kalimat isi, lalu "Visual:" sebagai catatan praktis. Jangan gunakan label "Judul:" atau "Teks:". Pisahkan antar slide dengan satu baris kosong.
+Setiap slide berisi 1 headline singkat dan 1-2 kalimat isi. Dilarang label Visual/Narasi/Overlay/Caption/Text/Judul/Teks/Notes. Jangan gunakan label "Judul:" atau "Teks:". Pisahkan antar slide dengan satu baris kosong.
 
-- canvaReelsTimeline: timeline praktis total sekitar 15–20 detik. Tiap segmen gunakan format:
+- canvaReelsTimeline: timeline praktis total tepat 15 detik dengan blok: 0-3 detik, 3-6 detik, 6-9 detik, 9-12 detik, 12-15 detik. Tiap segmen gunakan format:
 [rentang detik]
 Visual:
 Narasi:
@@ -556,6 +563,19 @@ Overlay:
 Narasi pendek agar tidak kepotong.
 
 - canvaOverlayText: output hanya baris overlay pendek siap Canva/Reels.
+- threadsPost:
+  * Output post Threads siap pakai.
+  * 2-4 paragraf pendek, reflektif, natural.
+  * Tidak hard selling.
+  * Hindari hashtag berlebihan.
+  * Wajib menyebut konteks proyek, masalah, keputusan, atau hasil.
+  * Boleh diakhiri pertanyaan lembut.
+- threadsReplyIdeas:
+  * Output 3-5 ide balasan diskusi.
+  * Setiap baris wajib diawali "•".
+  * Tanpa hashtag.
+  * Tanpa numbering.
+  * Tiap baris singkat dan conversational.
   * HANYA baris overlay, tanpa paragraf.
   * Satu overlay per baris, maksimum 6 baris.
   * Tiap baris maksimum 6–8 kata.

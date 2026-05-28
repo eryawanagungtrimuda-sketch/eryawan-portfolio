@@ -5,7 +5,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 type ContentType = 'karya' | 'wawasan';
-type PlatformTab = 'canva' | 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp' | 'checklist';
+type PlatformTab = 'canva' | 'instagram' | 'threads' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp' | 'checklist';
 
 type PublishChecklist = {
   canvaDesignDone: boolean;
@@ -86,12 +86,17 @@ type ComposerDraft = {
   canvaVisualGuide: string;
   canvaExportGuide: string;
   canvaShareGuide: string;
+  threadsPost: string;
+  threadsReplyIdeas: string;
+  threadsCta: string;
   ogImage: string;
 };
 type RegenerableField =
   | 'canvaReelsTimeline'
   | 'canvaCarouselSlides'
   | 'canvaOverlayText'
+  | 'threadsPost'
+  | 'threadsReplyIdeas'
   | 'igCaption'
   | 'igHashtag'
   | 'tiktokHook'
@@ -138,72 +143,95 @@ export function buildSocialDrafts(data: DetailPayload, contentType: ContentType)
   const linkedInBullets = `• Keputusan desain dimulai dari kebutuhan pengguna utama dan ritme aktivitas harian.\n• Zoning disusun agar fungsi inti berjalan beriringan tanpa saling mengganggu.\n• Sirkulasi dipertegas untuk mengurangi friksi dan menjaga alur tetap efisien.\n• Material dan pencahayaan dipilih untuk performa pakai yang konsisten.\n• Dampaknya terasa langsung: ruang lebih tertata, ringan dipakai, dan relevan.`;
 
   const whatsappMessage = `Baru selesai menulis ${contentTypeLabel(contentType)} tentang ${core}.\n\nYang dibahas bukan hanya hasil akhirnya, tapi juga cara membaca kebutuhan pengguna dan kenapa keputusan zoning, alur ruang, serta materialnya diambil seperti itu.\n\nKalau sedang cari referensi praktis untuk strategi ruang yang lebih terarah dan nyaman dipakai, ini bisa membantu.\n\nBaca lengkap di sini:\n${data.canonicalUrl}`;
-  const canvaReelsTimeline = `0-3 detik:
-Visual: Hero shot ${core} dengan framing tenang dan zoom-in halus.
-Narasi: "Rapi itu penting, tapi alur pakai yang menentukan."
-Overlay: Rapi belum tentu nyaman dipakai
+  const canvaReelsTimeline = `0-3 detik
+Visual:
+Hero shot area utama dengan gerakan kamera pelan.
+Narasi:
+Ruang ini terlihat rapi, tapi ritme pakainya perlu dibaca ulang.
+Overlay:
+Rapi belum tentu selesai
 
-3-6 detik:
-Visual: Potongan area yang menunjukkan aktivitas utama dan titik sibuk.
-Narasi: "Di proyek ini, tantangannya muncul saat beberapa aktivitas berjalan bersamaan."
-Overlay: Titik friksi ada di sirkulasi
+3-6 detik
+Visual:
+Sorot titik aktivitas utama saat ruang digunakan.
+Narasi:
+Tantangan muncul ketika fungsi istirahat, kerja, dan simpan belum selaras.
+Overlay:
+Fungsi belum berjalan seimbang
 
-6-10 detik:
-Visual: Detail titik masalah, lalu transisi ke zoning baru.
-Narasi: "Zonanya kami atur ulang supaya alur gerak dan fungsi lebih jelas."
-Overlay: Zoning dibuat lebih tegas
+6-9 detik
+Visual:
+Tampilkan perubahan layout dan prioritas area.
+Narasi:
+Kami rapikan keputusan area supaya alur harian terasa lebih jelas.
+Overlay:
+Alur harian dibuat terarah
 
-10-14 detik:
-Visual: Before-after angle dan detail material kerja.
-Narasi: "Material dan pencahayaan dipilih agar ruangnya nyaman dipakai setiap hari."
-Overlay: Detail kecil, dampak nyata
+9-12 detik
+Visual:
+Close-up material, cahaya, dan storage.
+Narasi:
+Detail dipilih agar ruang tetap ringan dipakai dari pagi sampai malam.
+Overlay:
+Detail kecil, dampak nyata
 
-14-15 detik:
-Visual: Closing shot paling kuat dengan URL website.
-Narasi: "Hasil akhirnya lebih tertata dan terasa ringan dipakai. Detail lengkapnya ada di website."
-Overlay: Lihat studi lengkap di website`;
+12-15 detik
+Visual:
+Final reveal dari sudut terbaik.
+Narasi:
+Hasil akhirnya lebih tertata dan siap dipakai setiap hari.
+Overlay:
+Lihat studi lengkap di website`;
 
   const canvaCarouselSlides = `Slide 1 — Hook
-Rapi belum tentu nyaman dipakai.
-Di ${core}, fokus awalnya adalah merapikan alur aktivitas harian agar tidak saling bertabrakan.
-Visual: Hero shot yang menunjukkan hubungan area utama.
+Rapi belum tentu selesai
+Ruang yang terlihat bersih belum tentu enak dipakai setiap hari.
 
 Slide 2 — Konteks
-Proyek ini berangkat dari kebutuhan ruang yang aktif dipakai tiap hari.
-${shortText(summary, 150)}
-Visual: Sudut eksisting yang memperlihatkan pola aktivitas.
+Berangkat dari ritme harian
+${shortText(summary, 140)}
 
 Slide 3 — Masalah
-Titik friksi muncul di sirkulasi dan pembagian fungsi.
-${shortText(conflict, 150)}
-Visual: Detail area yang paling sering menimbulkan hambatan.
+Titik friksi mulai terasa
+${shortText(conflict, 140)}
 
 Slide 4 — Keputusan Desain
-Zoning disusun ulang supaya alur gerak lebih jelas.
-${shortText(decision, 150)}
-Visual: Diagram zoning sederhana atau perbandingan before-after.
+Prioritas area dirapikan
+${shortText(decision, 140)}
 
 Slide 5 — Detail Penting
-Kenyamanan harian dibangun dari detail kecil yang konsisten.
-Material, pencahayaan, dan proporsi elemen dipilih untuk ritme aktivitas nyata.
-Visual: Close-up material, area kerja, dan titik lampu.
+Detail menentukan kualitas pakai
+Material, cahaya, dan penyimpanan dipilih untuk ritme aktivitas nyata.
 
 Slide 6 — Hasil
-Setelah penataan ulang, ruang terasa lebih terarah dan efisien.
-${shortText(impact, 150)}
-Visual: Momen penggunaan ruang setelah implementasi.
+Ruang terasa lebih terarah
+${shortText(impact, 140)}
 
 Slide 7 — CTA
-Kalau Anda sedang merencanakan pembaruan ruang serupa, studi ini bisa jadi pijakan awal.
-Lihat proses lengkap dan pertimbangannya di website: ${data.canonicalUrl}
-Visual: Closing frame dengan URL dan foto akhir paling kuat.`;
+Lanjut lihat proses lengkap
+Baca studi lengkapnya di website: ${data.canonicalUrl}`;
 
-  const canvaOverlayText = `Rapi belum tentu nyaman dipakai
-Alur aktivitas perlu dibaca ulang
-Zoning tegas, pergerakan lebih lancar
-Detail material mendukung pemakaian harian
-Hasil akhir terasa lebih ringan dipakai
+  const canvaOverlayText = `Rapi belum tentu siap dipakai
+Ritme harian perlu dibaca ulang
+Area prioritas dibuat lebih jelas
+Cahaya dan material dibuat selaras
+Ruang kini terasa lebih terarah
 Lihat studi lengkap di website`;
+
+  const threadsPost = `Ruang yang terlihat rapi belum tentu langsung enak dipakai.
+
+Di ${core}, keputusan utama dimulai dari membaca ritme harian, titik friksi, dan cara pengguna berpindah antar area.
+
+Saat alur, material, dan pencahayaan diselaraskan, hasilnya terasa lebih siap dipakai, bukan hanya terlihat selesai.
+
+Bagian mana yang biasanya paling sering terlewat saat menata ruang seperti ini?`;
+
+  const threadsReplyIdeas = `• Menariknya, masalah kecil di awal sering paling menentukan rasa ruang.
+• Pencahayaan bukan cuma soal terang, tapi soal kontrol suasana.
+• Area simpan yang tepat bikin ritme harian jauh lebih ringan.
+• Keputusan material kecil bisa mengubah pengalaman pakai.`;
+
+  const threadsCta = `Baca studi lengkapnya di website: ${data.canonicalUrl}`;
 
   const canvaVisualGuide = `Opening hero image:
 - Gunakan OG/hero image sebagai scene pembuka untuk membangun konteks visual.
@@ -268,6 +296,9 @@ Best practice:
     canvaVisualGuide,
     canvaExportGuide,
     canvaShareGuide,
+    threadsPost,
+    threadsReplyIdeas,
+    threadsCta,
     ogImage: data.ogImage,
   };
 }
@@ -308,6 +339,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const regenerableFieldsByTab: Partial<Record<PlatformTab, RegenerableField[]>> = {
     canva: ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'],
     instagram: ['igCaption', 'igHashtag'],
+    threads: ['threadsPost', 'threadsReplyIdeas'],
     tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption', 'tiktokHashtag'],
     youtube: ['youtubeTitle', 'youtubeDescription'],
     linkedin: ['linkedInCaption', 'linkedInBullets'],
@@ -631,6 +663,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                 {([
                   ['canva', 'Canva'],
                   ['instagram', 'Instagram'],
+                  ['threads', 'Threads'],
                   ['tiktok', 'TikTok'],
                   ['youtube', 'YouTube Shorts'],
                   ['linkedin', 'LinkedIn'],
@@ -716,6 +749,20 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     </div>
                   )}
 
+
+
+                  {activeTab === 'threads' && (
+                    <div className="space-y-3">
+                      <p className="text-sm text-white/75">Format ini dibuat untuk percakapan ringan di Threads: reflektif, natural, tanpa hard selling.</p>
+                      <Field label="Threads Post" value={draft.threadsPost} onChange={(v) => updateDraft('threadsPost', v)} rows={9} />
+                      <Field label="Reply Ideas" value={draft.threadsReplyIdeas} onChange={(v) => updateDraft('threadsReplyIdeas', v)} rows={6} />
+                      <Field label="CTA" value={draft.threadsCta} onChange={(v) => updateDraft('threadsCta', v)} rows={2} />
+                      <ButtonRow>
+                        <CopyButton label="Copy Threads Post" copied={copied.threadsPost} onClick={() => copyText('threadsPost', `${draft.threadsPost}\n\n${draft.threadsCta}`)} />
+                        <CopyButton label="Copy Reply Ideas" copied={copied.threadsReplies} onClick={() => copyText('threadsReplies', draft.threadsReplyIdeas)} />
+                      </ButtonRow>
+                    </div>
+                  )}
                   {activeTab === 'tiktok' && (
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Video MP4 bisa dibagikan langsung dari Canva Share atau diupload manual ke TikTok.</p>
