@@ -193,8 +193,8 @@ Area prioritas dibuat lebih jelas
 Detail halus bantu aktivitas harian
 Hasilnya lebih siap dipakai
 Lihat studi lengkap di website`,
-    threadsPost: `Ruang yang terlihat rapi belum tentu langsung enak dipakai.\n\nDi ${title}, keputusan desain dimulai dari membaca kebutuhan harian, titik friksi, dan urutan aktivitas pengguna.\n\nSaat alur, material, dan pencahayaan diselaraskan, hasilnya terasa lebih siap dipakai, bukan hanya terlihat selesai.\n\nMenurut Anda, detail apa yang paling sering terlewat?`,
-    threadsReplyIdeas: `• Menariknya, keputusan kecil di awal sering paling menentukan.\n• Pencahayaan yang terkontrol bisa mengubah rasa ruang total.\n• Area simpan yang tepat bikin rutinitas lebih ringan.\n• Detail material membantu ruang terasa konsisten dipakai.`,
+    threadsPost: `${title} terlihat rapi di hasil akhir, tapi yang paling menentukan justru cara ruang itu dipakai tiap hari.\n\nMasalah awalnya berangkat dari kebutuhan nyata pengguna: ${summary}\n\nKeputusan desain lalu diarahkan ke prioritas aktivitas, detail material, dan pencahayaan supaya hasilnya bukan cuma enak dilihat, tapi relevan dipakai.\n\nKalau di proyek sejenis, detail mana yang paling sering terlewat menurut Anda?`,
+    threadsReplyIdeas: `• Friksi kecil di aktivitas harian sering jadi akar masalah terbesar.\n• Kontrol cahaya di jam berbeda biasanya langsung terasa efeknya ke kualitas pakai.\n• Storage yang posisinya tepat bisa memangkas banyak gangguan kecil.\n• Menarik kalau alur aktivitas diuji dulu sebelum finalisasi layout.\n• Detail material sering menentukan apakah ruang nyaman dipakai lama.`,
     igCaption: `Bukan semua area yang terlihat rapi itu otomatis nyaman dipakai.
 
 Di ${title}, kami mulai dari membaca pola aktivitas harian: siapa bergerak ke mana, titik mana yang sering macet, dan bagian mana yang perlu prioritas.
@@ -346,20 +346,27 @@ function postProcessField(field: RegenerableField, value: string) {
   }
 
   if (field === 'threadsPost') {
-    cleaned = cleaned.replace(/^\s*(?:Threads Post|Post|Caption)\s*:\s*/gim, '').replace(/(?:\s#\w+){4,}/g, '').trim();
+    cleaned = cleaned
+      .replace(/^\s*(?:threads\s*post|post|caption|judul|title|isi)\s*:\s*/gim, '')
+      .replace(/(?:\s#\w+){3,}/g, '')
+      .replace(/^[-*•]\s*/gm, '')
+      .trim();
     const paragraphs = cleaned.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean).slice(0, 4);
     cleaned = paragraphs.join('\n\n');
   }
   if (field === 'threadsReplyIdeas') {
-    const bullets = cleaned
+    const genericReplyPattern = /(menarik sekali|inspiratif|keren banget|setuju banget|bagus sekali|luar biasa)/i;
+    let bullets = cleaned
       .split('\n')
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => line.replace(/^\s*(?:[-*•]|\d+[\).:-]?)\s*/, '').replace(/#\S+/g, '').trim())
+      .filter((line) => !genericReplyPattern.test(line))
       .filter(Boolean)
       .map((line) => `• ${line.split(/\s+/).slice(0, 18).join(' ')}`)
       .slice(0, 5);
-    while (bullets.length < 3) bullets.push('• Detail keputusan ruang ini menarik dibahas lebih lanjut.');
+    while (bullets.length < 4) bullets.push('• Menarik kalau dibandingkan sebelum-sesudah saat ruang dipakai aktivitas puncak.');
+    bullets = bullets.slice(0, 5);
     cleaned = bullets.join('\n');
   }
 
@@ -573,18 +580,21 @@ Narasi pendek agar tidak kepotong.
   * Jangan beri tanda kutip di setiap baris.
   * Gaya manusia, ringkas, tajam, mudah dibaca cepat.
 - threadsPost:
-  * Output post Threads siap pakai.
-  * 2-4 paragraf pendek, reflektif, natural.
-  * Tidak hard selling.
-  * Hindari hashtag berlebihan.
-  * Wajib menyebut konteks proyek, masalah, keputusan, atau hasil.
-  * Boleh diakhiri pertanyaan lembut.
+  * Output post Threads siap pakai, terasa conversational dan reflektif.
+  * 3-4 paragraf pendek, natural, jangan terasa seperti caption artikel.
+  * Jangan hard sell.
+  * Hindari frasa generik seperti "menjadi contoh bagaimana desain dapat...".
+  * Gunakan konteks spesifik proyek dari judul/ringkasan/konflik/keputusan/solusi/dampak/insight.
+  * Untuk konteks bedroom, adaptasi ke kontrol cahaya, area belajar, istirahat, storage, warna, material, atmosfer.
+  * Jangan berlebihan memakai kata: zonasi, desain interior, nyaman, modern, estetika.
+  * Akhiri dengan pertanyaan lembut untuk membuka diskusi.
 - threadsReplyIdeas:
-  * Output 3-5 ide balasan diskusi.
+  * Output 4-5 ide balasan diskusi.
   * Setiap baris wajib diawali "•".
   * Tanpa hashtag.
   * Tanpa numbering.
-  * Tiap baris singkat dan discussion-friendly.
+  * Dilarang pujian generik seperti "Menarik sekali!" atau "Inspiratif!".
+  * Tiap baris singkat, terasa seperti komentar lanjutan nyata, dan menambah sudut pikir spesifik.
 
 - igCaption: hook tenang, 2–4 paragraf pendek, ada insight arsitektur/interior, soft CTA, gaya manusiawi.
 - tiktokHook:
