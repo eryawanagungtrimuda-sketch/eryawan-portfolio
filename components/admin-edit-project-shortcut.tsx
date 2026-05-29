@@ -11,13 +11,22 @@ type AdminEditProjectShortcutProps = {
 };
 
 export default function AdminEditProjectShortcut({ projectId }: AdminEditProjectShortcutProps) {
-  if (!adminShortcutsEnabled || !projectId) return null;
-
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let mounted = true;
+
+    if (!adminShortcutsEnabled || !projectId) {
+      setIsAdmin(false);
+      setReady(true);
+      return () => {
+        mounted = false;
+      };
+    }
+
+    setReady(false);
+    setIsAdmin(false);
 
     async function checkAdminSession() {
       try {
@@ -40,8 +49,9 @@ export default function AdminEditProjectShortcut({ projectId }: AdminEditProject
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [projectId]);
 
+  if (!adminShortcutsEnabled || !projectId) return null;
   if (!ready || !isAdmin) return null;
 
   return (
