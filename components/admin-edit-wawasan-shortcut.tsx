@@ -12,13 +12,22 @@ type AdminEditWawasanShortcutProps = {
 };
 
 export default function AdminEditWawasanShortcut({ insightId, className }: AdminEditWawasanShortcutProps) {
-  if (!adminShortcutsEnabled || !insightId) return null;
-
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let mounted = true;
+
+    if (!adminShortcutsEnabled || !insightId) {
+      setIsAdmin(false);
+      setReady(true);
+      return () => {
+        mounted = false;
+      };
+    }
+
+    setReady(false);
+    setIsAdmin(false);
 
     async function checkAdminSession() {
       try {
@@ -41,8 +50,9 @@ export default function AdminEditWawasanShortcut({ insightId, className }: Admin
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [insightId]);
 
+  if (!adminShortcutsEnabled || !insightId) return null;
   if (!ready || !isAdmin) return null;
 
   return (
