@@ -1,8 +1,10 @@
 -- Eryawan Studio portfolio CMS schema
 -- Run this file in Supabase SQL Editor.
 
+-- Extensions
 create extension if not exists "pgcrypto";
 
+-- Tables
 create table if not exists public.projects (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -30,6 +32,17 @@ create table if not exists public.projects (
   created_at timestamp with time zone not null default now()
 );
 
+create table if not exists public.project_images (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.projects(id) on delete cascade,
+  image_url text not null,
+  alt_text text,
+  sort_order integer default 0,
+  area_tags text[] not null default '{}',
+  created_at timestamp with time zone default now()
+);
+
+-- Compatibility alters
 alter table public.projects add column if not exists design_category text;
 alter table public.projects add column if not exists design_style text;
 alter table public.projects add column if not exists area_type text;
@@ -47,16 +60,7 @@ alter table public.projects add column if not exists area_scope text;
 alter table public.projects add column if not exists project_size text;
 alter table public.project_images add column if not exists area_tags text[] not null default '{}';
 
-create table if not exists public.project_images (
-  id uuid primary key default gen_random_uuid(),
-  project_id uuid not null references public.projects(id) on delete cascade,
-  image_url text not null,
-  alt_text text,
-  sort_order integer default 0,
-  area_tags text[] not null default '{}',
-  created_at timestamp with time zone default now()
-);
-
+-- Foreign keys
 -- If project_images already existed without FK, add the relationship Supabase needs for embedded selects.
 do $$
 begin
@@ -74,6 +78,7 @@ begin
   end if;
 end $$;
 
+-- Grants
 -- Required grants for Supabase API roles.
 grant usage on schema public to anon, authenticated;
 grant select on public.projects to anon, authenticated;
@@ -81,6 +86,7 @@ grant insert, update, delete on public.projects to authenticated;
 grant select on public.project_images to anon, authenticated;
 grant insert, update, delete on public.project_images to authenticated;
 
+-- RLS policies
 alter table public.projects enable row level security;
 alter table public.project_images enable row level security;
 
@@ -146,11 +152,13 @@ for delete
 to authenticated
 using (true);
 
+-- Storage buckets
 -- Supabase Storage bucket for cover and gallery images.
 insert into storage.buckets (id, name, public)
 values ('project-images', 'project-images', true)
 on conflict (id) do update set public = true;
 
+-- Storage policies
 drop policy if exists "Public read project images" on storage.objects;
 create policy "Public read project images"
 on storage.objects
@@ -180,7 +188,8 @@ for delete
 to authenticated
 using (bucket_id = 'project-images');
 
--- Optional starter data. Run only if you want demo projects.
+-- Optional starter data
+-- Run only if you want demo projects.
 -- insert into public.projects (title, slug, category, design_category, design_style, area_type, problem, solution, impact)
 -- values
 -- ('Project 01 — Residential Interior', 'residential-interior', 'Residential Interior', 'Interior', 'Modern', 'Full House', 'Sirkulasi harian tidak efisien dan area publik belum bekerja sebagai penghubung aktivitas.', 'Flow ruang disusun ulang dengan prioritas pada zoning, titik aktivitas, dan kemudahan bergerak.', 'Ruang menjadi lebih efisien, aktivitas harian lebih lancar, keputusan klien lebih cepat, dan revisi layout dapat dikurangi sejak fase awal.'),
