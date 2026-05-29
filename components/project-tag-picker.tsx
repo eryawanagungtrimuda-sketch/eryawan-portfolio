@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 
 type Normalizer = (value?: string | null) => string;
@@ -37,8 +37,14 @@ export function ProjectTagPicker({
   normalizeTagValue,
   getTagLabel,
 }: Props) {
-  const normalizeValue = (value?: string | null) => normalizeTagValue ? normalizeTagValue(value) : normalizeTag(value || '');
-  const labelValue = (value?: string | null) => getTagLabel ? getTagLabel(value) : (value || '').trim();
+  const normalizeValue = useCallback(
+    (value?: string | null) => normalizeTagValue ? normalizeTagValue(value) : normalizeTag(value || ''),
+    [normalizeTagValue],
+  );
+  const labelValue = useCallback(
+    (value?: string | null) => getTagLabel ? getTagLabel(value) : (value || '').trim(),
+    [getTagLabel],
+  );
   const [input, setInput] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -50,7 +56,7 @@ export function ProjectTagPicker({
       map.set(normalized, item);
     });
     return map;
-  }, [suggestions]);
+  }, [suggestions, normalizeValue]);
 
   const canAddMore = value.length < maxTags;
   const normalizedInput = normalizeValue(input);
@@ -142,7 +148,9 @@ export function ProjectTagPicker({
               onClick={() => addTag(input)}
               className="max-w-full truncate rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-2.5 py-1 font-sans text-[11px] text-[#D4AF37]"
             >
-              Add "{labelValue(normalizedInput) || normalizedInput}"
+              {'Add "'}
+              {labelValue(normalizedInput) || normalizedInput}
+              {'"'}
             </button>
           ) : null}
         </div>
