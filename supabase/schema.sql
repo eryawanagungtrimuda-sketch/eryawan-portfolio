@@ -78,9 +78,23 @@ begin
   end if;
 end $$;
 
+-- Admin helper
+-- Database-side CMS admin check matching the app fallback admin email.
+-- Missing or non-admin JWT emails return false, keeping anon/authenticated calls safe.
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+set search_path = public
+as $$
+  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com';
+$$;
+
 -- Grants
--- Required grants for Supabase API roles.
+-- Required grants for Supabase API roles. Table DML grants remain available to
+-- authenticated users so RLS can decide whether the current user is the admin.
 grant usage on schema public to anon, authenticated;
+grant execute on function public.is_admin() to anon, authenticated;
 grant select on public.projects to anon, authenticated;
 grant insert, update, delete on public.projects to authenticated;
 grant select on public.project_images to anon, authenticated;
@@ -90,67 +104,108 @@ grant insert, update, delete on public.project_images to authenticated;
 alter table public.projects enable row level security;
 alter table public.project_images enable row level security;
 
+-- Projects: public reads only expose published projects; admins can read drafts.
 drop policy if exists "Public read projects" on public.projects;
-create policy "Public read projects"
+drop policy if exists "Read published projects" on public.projects;
+create policy "Read published projects"
 on public.projects
 for select
 to anon, authenticated
-using (true);
+using (is_published = true);
 
+drop policy if exists "Admin read all projects" on public.projects;
+create policy "Admin read all projects"
+on public.projects
+for select
+to authenticated
+using (public.is_admin());
+
+-- Projects: CMS mutations are restricted to the configured admin identity.
 drop policy if exists "Authenticated insert projects" on public.projects;
-create policy "Authenticated insert projects"
+drop policy if exists "Admin insert projects" on public.projects;
+create policy "Admin insert projects"
 on public.projects
 for insert
 to authenticated
-with check (true);
+with check (public.is_admin());
 
 drop policy if exists "Authenticated update projects" on public.projects;
-create policy "Authenticated update projects"
+drop policy if exists "Admin update projects" on public.projects;
+create policy "Admin update projects"
 on public.projects
 for update
 to authenticated
-using (true)
-with check (true);
+using (public.is_admin())
+with check (public.is_admin());
 
 drop policy if exists "Authenticated delete projects" on public.projects;
-create policy "Authenticated delete projects"
+drop policy if exists "Admin delete projects" on public.projects;
+create policy "Admin delete projects"
 on public.projects
 for delete
 to authenticated
-using (true);
+using (public.is_admin());
 
+-- Project images: public reads are limited to images attached to published
+-- projects; admins can read every image row, including draft project images.
 drop policy if exists "Public read project images table" on public.project_images;
 drop policy if exists "Public read project images" on public.project_images;
-create policy "Public read project images"
+drop policy if exists "Read published project images" on public.project_images;
+create policy "Read published project images"
 on public.project_images
 for select
 to anon, authenticated
-using (true);
+using (
+  exists (
+    select 1
+    from public.projects
+    where projects.id = project_images.project_id
+      and projects.is_published = true
+  )
+);
 
+drop policy if exists "Admin read all project images" on public.project_images;
+create policy "Admin read all project images"
+on public.project_images
+for select
+to authenticated
+using (
+  public.is_admin()
+  and exists (
+    select 1
+    from public.projects
+    where projects.id = project_images.project_id
+  )
+);
+
+-- Project images: CMS mutations are restricted to the configured admin identity.
 drop policy if exists "Authenticated insert project images table" on public.project_images;
 drop policy if exists "Authenticated insert project images" on public.project_images;
-create policy "Authenticated insert project images"
+drop policy if exists "Admin insert project images" on public.project_images;
+create policy "Admin insert project images"
 on public.project_images
 for insert
 to authenticated
-with check (true);
+with check (public.is_admin());
 
 drop policy if exists "Authenticated update project images table" on public.project_images;
 drop policy if exists "Authenticated update project images" on public.project_images;
-create policy "Authenticated update project images"
+drop policy if exists "Admin update project images" on public.project_images;
+create policy "Admin update project images"
 on public.project_images
 for update
 to authenticated
-using (true)
-with check (true);
+using (public.is_admin())
+with check (public.is_admin());
 
 drop policy if exists "Authenticated delete project images table" on public.project_images;
 drop policy if exists "Authenticated delete project images" on public.project_images;
-create policy "Authenticated delete project images"
+drop policy if exists "Admin delete project images" on public.project_images;
+create policy "Admin delete project images"
 on public.project_images
 for delete
 to authenticated
-using (true);
+using (public.is_admin());
 
 -- Storage buckets
 -- Supabase Storage bucket for cover and gallery images.
@@ -159,34 +214,40 @@ values ('project-images', 'project-images', true)
 on conflict (id) do update set public = true;
 
 -- Storage policies
+-- Storage objects stay publicly readable for image delivery from the public
+-- project-images bucket, while object mutations require the admin identity.
 drop policy if exists "Public read project images" on storage.objects;
-create policy "Public read project images"
+drop policy if exists "Public read project image objects" on storage.objects;
+create policy "Public read project image objects"
 on storage.objects
 for select
 to anon, authenticated
 using (bucket_id = 'project-images');
 
 drop policy if exists "Authenticated upload project images" on storage.objects;
-create policy "Authenticated upload project images"
+drop policy if exists "Admin upload project image objects" on storage.objects;
+create policy "Admin upload project image objects"
 on storage.objects
 for insert
 to authenticated
-with check (bucket_id = 'project-images');
+with check (bucket_id = 'project-images' and public.is_admin());
 
 drop policy if exists "Authenticated update project images" on storage.objects;
-create policy "Authenticated update project images"
+drop policy if exists "Admin update project image objects" on storage.objects;
+create policy "Admin update project image objects"
 on storage.objects
 for update
 to authenticated
-using (bucket_id = 'project-images')
-with check (bucket_id = 'project-images');
+using (bucket_id = 'project-images' and public.is_admin())
+with check (bucket_id = 'project-images' and public.is_admin());
 
 drop policy if exists "Authenticated delete project images" on storage.objects;
-create policy "Authenticated delete project images"
+drop policy if exists "Admin delete project image objects" on storage.objects;
+create policy "Admin delete project image objects"
 on storage.objects
 for delete
 to authenticated
-using (bucket_id = 'project-images');
+using (bucket_id = 'project-images' and public.is_admin());
 
 -- Optional starter data
 -- Run only if you want demo projects.
