@@ -16,7 +16,7 @@ import type {
 } from './social-composer/types';
 import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social-composer/constants';
 import { buildSocialDrafts } from './social-composer/drafts';
-import { ensureThreadsCta } from './social-composer/post-processing';
+import { ensureThreadsCta, fallbackText } from './social-composer/post-processing';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -233,7 +233,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       const nextDraft = { ...draft };
       for (const field of blankFields) {
         if (String(nextDraft[field] ?? '').trim()) continue;
-        nextDraft[field] = generatedDraft[field];
+        nextDraft[field] = fallbackText(generatedDraft, field);
       }
       setDraft(nextDraft);
       persistDrafts(nextDraft);
