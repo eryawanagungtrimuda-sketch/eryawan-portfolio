@@ -15,18 +15,7 @@ import type {
   SocialComposerAutoPostModalProps,
 } from './social-composer/types';
 import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social-composer/constants';
-
-function ensureThreadsCta(draft: ComposerDraft, canonicalUrl?: string | null): ComposerDraft {
-  const safeUrl = String(canonicalUrl || '').trim();
-  const expected = `Baca studi lengkapnya di website: ${safeUrl}`;
-  const cta = String(draft.threadsCta || '').trim();
-  const hasUrlInCta = safeUrl ? cta.includes(safeUrl) : false;
-  const onlyPrefix = /^Baca studi lengkapnya di website:\s*$/i.test(cta);
-  const missingAfterColon = /^Baca studi lengkapnya di website:\s+$/i.test(draft.threadsCta || '');
-
-  if (cta && hasUrlInCta && !onlyPrefix && !missingAfterColon) return draft;
-  return { ...draft, threadsCta: expected };
-}
+import { contentTypeLabel, designLabel, ensureThreadsCta, shortText } from './social-composer/helpers';
 
 export function buildSocialDrafts(data: DetailPayload, contentType: ContentType): ComposerDraft {
   const tags = data.tags?.length ? data.tags.map((tag) => `#${tag.replace(/\s+/g, '')}`).join(' ') : '#DesainInterior #StudiKasus';
@@ -230,18 +219,6 @@ Best practice:
   };
 }
 
-function shortText(text: string, max = 90) {
-  if (text.length <= max) return text;
-  return `${text.slice(0, max).trim()}...`;
-}
-
-function designLabel(designDecision: string, solution: string) {
-  return designDecision || solution || 'Keputusan desain diarahkan untuk membuat alur ruang lebih efisien dan nyaman.';
-}
-
-function contentTypeLabel(contentType: ContentType) {
-  return contentType === 'wawasan' ? 'wawasan' : 'karya';
-}
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
