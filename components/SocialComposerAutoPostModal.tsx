@@ -17,6 +17,7 @@ import type {
 import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social-composer/constants';
 import { buildSocialDrafts } from './social-composer/drafts';
 import { ensureThreadsCta, fallbackText } from './social-composer/post-processing';
+import { applyRegeneratedFields } from './social-composer/parsers';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -215,12 +216,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       const result = (await response.json()) as { data: Partial<Record<RegenerableField, string>>; fallbackUsed?: boolean; debugReason?: string };
       const regenerated = result.data || {};
 
-      const nextDraft = { ...draft };
-      for (const field of blankFields) {
-        if (String(nextDraft[field] ?? '').trim()) continue;
-        const nextValue = regenerated[field];
-        if (typeof nextValue === 'string' && nextValue.trim()) nextDraft[field] = nextValue;
-      }
+      const nextDraft = applyRegeneratedFields(draft, blankFields, regenerated);
       setDraft(nextDraft);
       persistDrafts(nextDraft);
       setRegenFeedback({
