@@ -19,6 +19,7 @@ import { buildSocialDrafts } from './social-composer/drafts';
 import { ensureThreadsCta, fallbackText } from './social-composer/post-processing';
 import { applyRegeneratedFields } from './social-composer/parsers';
 import { readStoredChecklist, readStoredDraft, removeStoredChecklist, writeStoredChecklist, writeStoredDraft } from './social-composer/persistence';
+import { copyText, triggerBrowserDownload } from './social-composer/actions';
 import { buildPublishReport } from './social-composer/report';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
@@ -159,6 +160,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     });
   }
 
+  function copyDraftText(copyKey: string, text: string) {
+    void copyText(copyKey, text, setCopied);
+  }
+
   async function regenerateMissingFields() {
     if (!draft || !generatedDraft || regenLoading) return;
     const fieldsForActiveTab = regenerableFieldsByTab[activeTab] || [];
@@ -242,18 +247,6 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     }
   }
 
-  async function copyText(copyKey: string, text: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied((prev) => ({ ...prev, [copyKey]: true }));
-      window.setTimeout(() => {
-        setCopied((prev) => ({ ...prev, [copyKey]: false }));
-      }, 2000);
-    } catch {
-      setCopied((prev) => ({ ...prev, [copyKey]: false }));
-    }
-  }
-
   async function downloadAllImages() {
     if (!payload?.id || downloadAllLoading) return;
     setDownloadAllLoading(true);
@@ -269,17 +262,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       });
       if (!response.ok) throw new Error('Gagal membuat ZIP gambar.');
       const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
       const fallbackName = `${payload.slug}-images.zip`;
       const disposition = response.headers.get('Content-Disposition') || '';
       const matched = disposition.match(/filename=\"?([^\";]+)\"?/i);
-      anchor.href = objectUrl;
-      anchor.download = matched?.[1] || fallbackName;
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(objectUrl);
+      triggerBrowserDownload(blob, matched?.[1] || fallbackName);
     } catch (error) {
       console.error('[SocialComposer] download all images failed', error);
     } finally {
@@ -375,7 +361,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                               copied={copied.canvaAll}
                               className="border-[#D4AF37]/80 bg-[#D4AF37]/15 font-semibold"
                               onClick={() =>
-                                copyText(
+                                copyDraftText(
                                   'canvaAll',
                                   `Reels Timeline 15 Detik\n${draft.canvaReelsTimeline}\n\nCarousel 7 Slide\n${draft.canvaCarouselSlides}\n\nTeks Overlay\n${draft.canvaOverlayText}\n\nVisual Guide\n${draft.canvaVisualGuide}\n\nExport Guide\n${draft.canvaExportGuide}\n\nCanva Share Guide\n${draft.canvaShareGuide}`,
                                 )
@@ -387,9 +373,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                         <div className="space-y-2">
                           <p className="text-sm font-semibold text-white/85">Opsi Detail</p>
                           <ButtonRow>
-                            <CopyButton label="Copy Reels" copied={copied.canvaReels} onClick={() => copyText('canvaReels', draft.canvaReelsTimeline)} />
-                            <CopyButton label="Copy Carousel" copied={copied.canvaCarousel} onClick={() => copyText('canvaCarousel', draft.canvaCarouselSlides)} />
-                            <CopyButton label="Copy Overlay" copied={copied.canvaOverlay} onClick={() => copyText('canvaOverlay', draft.canvaOverlayText)} />
+                            <CopyButton label="Copy Reels" copied={copied.canvaReels} onClick={() => copyDraftText('canvaReels', draft.canvaReelsTimeline)} />
+                            <CopyButton label="Copy Carousel" copied={copied.canvaCarousel} onClick={() => copyDraftText('canvaCarousel', draft.canvaCarouselSlides)} />
+                            <CopyButton label="Copy Overlay" copied={copied.canvaOverlay} onClick={() => copyDraftText('canvaOverlay', draft.canvaOverlayText)} />
                           </ButtonRow>
                         </div>
                       </div>
@@ -404,7 +390,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="Hashtag" value={draft.igHashtag} onChange={(v) => updateDraft('igHashtag', v)} rows={3} />
                       <Field label="CTA website" value={draft.igCta} onChange={(v) => updateDraft('igCta', v)} rows={2} />
                       <ButtonRow>
-                        <CopyButton label="Copy Caption IG" copied={copied.igCaption} onClick={() => copyText('igCaption', `${draft.igCaption}\n${draft.igCta}\n${draft.igHashtag}`)} />
+                        <CopyButton label="Copy Caption IG" copied={copied.igCaption} onClick={() => copyDraftText('igCaption', `${draft.igCaption}\n${draft.igCta}\n${draft.igHashtag}`)} />
                         <button type="button" onClick={() => postToPlatform('instagram')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to Instagram</button>
                       </ButtonRow>
                       {postStatus.instagram ? <p className="text-xs text-white/75">{postStatus.instagram.message}</p> : null}
@@ -422,9 +408,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <ButtonRow>
                         <CopyButton label="Copy Threads Post" copied={copied.threadsPost} onClick={() => {
                           const ensured = ensureThreadsCta(draft, payload?.canonicalUrl);
-                          copyText('threadsPost', `${ensured.threadsPost}\n\n${ensured.threadsCta}`);
+                          copyDraftText('threadsPost', `${ensured.threadsPost}\n\n${ensured.threadsCta}`);
                         }} />
-                        <CopyButton label="Copy Reply Ideas" copied={copied.threadsReplies} onClick={() => copyText('threadsReplies', draft.threadsReplyIdeas)} />
+                        <CopyButton label="Copy Reply Ideas" copied={copied.threadsReplies} onClick={() => copyDraftText('threadsReplies', draft.threadsReplyIdeas)} />
                       </ButtonRow>
                     </div>
                   )}
@@ -437,8 +423,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="Hashtag" value={draft.tiktokHashtag} onChange={(v) => updateDraft('tiktokHashtag', v)} rows={3} />
                       <Field label="CTA website" value={draft.tiktokCta} onChange={(v) => updateDraft('tiktokCta', v)} rows={2} />
                       <ButtonRow>
-                        <CopyButton label="Copy Script TikTok" copied={copied.tiktokScript} onClick={() => copyText('tiktokScript', `${draft.tiktokHook}\n\n${draft.tiktokScript}`)} />
-                        <CopyButton label="Copy Caption TikTok" copied={copied.tiktokCaption} onClick={() => copyText('tiktokCaption', `${draft.tiktokCaption}\n${draft.tiktokCta}\n${draft.tiktokHashtag}`)} />
+                        <CopyButton label="Copy Script TikTok" copied={copied.tiktokScript} onClick={() => copyDraftText('tiktokScript', `${draft.tiktokHook}\n\n${draft.tiktokScript}`)} />
+                        <CopyButton label="Copy Caption TikTok" copied={copied.tiktokCaption} onClick={() => copyDraftText('tiktokCaption', `${draft.tiktokCaption}\n${draft.tiktokCta}\n${draft.tiktokHashtag}`)} />
                         <button type="button" onClick={() => postToPlatform('tiktok')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to TikTok</button>
                       </ButtonRow>
                       {postStatus.tiktok ? <p className="text-xs text-white/75">{postStatus.tiktok.message}</p> : null}
@@ -453,8 +439,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="Hashtag (wajib #Shorts)" value={draft.youtubeHashtags} onChange={(v) => updateDraft('youtubeHashtags', v)} rows={3} />
                       <Field label="Upload guide" value={draft.youtubeUploadGuide} onChange={(v) => updateDraft('youtubeUploadGuide', v)} rows={6} />
                       <ButtonRow>
-                        <CopyButton label="Copy Caption YouTube Shorts" copied={copied.youtubeCaption} onClick={() => copyText('youtubeCaption', `${draft.youtubeTitle}\n\n${draft.youtubeDescription}\n\n${draft.youtubeHashtags}`)} />
-                        <CopyButton label="Copy Upload Guide" copied={copied.youtubeGuide} onClick={() => copyText('youtubeGuide', draft.youtubeUploadGuide)} />
+                        <CopyButton label="Copy Caption YouTube Shorts" copied={copied.youtubeCaption} onClick={() => copyDraftText('youtubeCaption', `${draft.youtubeTitle}\n\n${draft.youtubeDescription}\n\n${draft.youtubeHashtags}`)} />
+                        <CopyButton label="Copy Upload Guide" copied={copied.youtubeGuide} onClick={() => copyDraftText('youtubeGuide', draft.youtubeUploadGuide)} />
                         <button type="button" onClick={() => postToPlatform('youtube')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to YouTube Shorts</button>
                       </ButtonRow>
                       {postStatus.youtube ? <p className="text-xs text-white/75">{postStatus.youtube.message}</p> : null}
@@ -468,7 +454,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="Key insight bullet points" value={draft.linkedInBullets} onChange={(v) => updateDraft('linkedInBullets', v)} rows={6} />
                       <Field label="CTA ke halaman" value={draft.linkedInCta} onChange={(v) => updateDraft('linkedInCta', v)} rows={2} />
                       <ButtonRow>
-                        <CopyButton label="Copy LinkedIn Caption" copied={copied.linkedinCaption} onClick={() => copyText('linkedinCaption', `${draft.linkedInCaption}\n\n${draft.linkedInBullets}\n\n${draft.linkedInCta}`)} />
+                        <CopyButton label="Copy LinkedIn Caption" copied={copied.linkedinCaption} onClick={() => copyDraftText('linkedinCaption', `${draft.linkedInCaption}\n\n${draft.linkedInBullets}\n\n${draft.linkedInCta}`)} />
                         <button type="button" onClick={() => postToPlatform('linkedin')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Post to LinkedIn</button>
                       </ButtonRow>
                       {postStatus.linkedin ? <p className="text-xs text-white/75">{postStatus.linkedin.message}</p> : null}
@@ -480,7 +466,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <Field label="WhatsApp message" value={draft.whatsappMessage} onChange={(v) => updateDraft('whatsappMessage', v)} rows={6} />
                       <Field label="Link website" value={draft.whatsappLink} onChange={(v) => updateDraft('whatsappLink', v)} rows={2} />
                       <ButtonRow>
-                        <CopyButton label="Copy WhatsApp" copied={copied.whatsapp} onClick={() => copyText('whatsapp', `${draft.whatsappMessage}\n${draft.whatsappLink}`)} />
+                        <CopyButton label="Copy WhatsApp" copied={copied.whatsapp} onClick={() => copyDraftText('whatsapp', `${draft.whatsappMessage}\n${draft.whatsappLink}`)} />
                         <button type="button" onClick={() => postToPlatform('whatsapp')} className="rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Share via WhatsApp</button>
                       </ButtonRow>
                       {postStatus.whatsapp ? <p className="text-xs text-white/75">{postStatus.whatsapp.message}</p> : null}
@@ -521,7 +507,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       </ChecklistSection>
 
                       <ButtonRow>
-                        <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyText('publishReport', buildPublishReport(contentType, slug, checklist))} />
+                        <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyDraftText('publishReport', buildPublishReport(contentType, slug, checklist))} />
                         <button type="button" onClick={resetChecklist} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80">Reset Checklist</button>
                       </ButtonRow>
                     </div>
