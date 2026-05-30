@@ -19,6 +19,7 @@ import { buildSocialDrafts } from './social-composer/drafts';
 import { ensureThreadsCta, fallbackText } from './social-composer/post-processing';
 import { applyRegeneratedFields } from './social-composer/parsers';
 import { readStoredChecklist, readStoredDraft, removeStoredChecklist, writeStoredChecklist, writeStoredDraft } from './social-composer/persistence';
+import { buildPublishReport } from './social-composer/report';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -295,9 +296,6 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     removeStoredChecklist(checklistStorageKey);
   }
 
-  function buildPublishReport() {
-    return `Judul:\n${contentType} - ${slug}\n\nChecklist:\n- Canva Design: ${checklist.canvaDesignDone ? 'Selesai' : 'Belum'}\n- IG Reels: ${checklist.instagramReelsPosted ? 'Selesai' : 'Belum'}\n- IG Carousel: ${checklist.instagramCarouselPosted ? 'Selesai' : 'Belum'}\n- TikTok: ${checklist.tiktokPosted ? 'Selesai' : 'Belum'}\n- YouTube Shorts: ${checklist.youtubeShortsPosted ? 'Selesai' : 'Belum'}\n- LinkedIn: ${checklist.linkedinPosted ? 'Selesai' : 'Belum'}\n- WhatsApp: ${checklist.whatsappShared ? 'Selesai' : 'Belum'}\n\nLinks:\nInstagram: ${checklist.instagramUrl}\nTikTok: ${checklist.tiktokUrl}\nYouTube: ${checklist.youtubeUrl}\nLinkedIn: ${checklist.linkedinUrl}\n\nCatatan:\nTanggal: ${checklist.postingDate}\nNotes: ${checklist.postingNotes}`;
-  }
 
   const checklistProgress = [
     checklist.canvaDesignDone,
@@ -523,7 +521,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       </ChecklistSection>
 
                       <ButtonRow>
-                        <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyText('publishReport', buildPublishReport())} />
+                        <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyText('publishReport', buildPublishReport(contentType, slug, checklist))} />
                         <button type="button" onClick={resetChecklist} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80">Reset Checklist</button>
                       </ButtonRow>
                     </div>
