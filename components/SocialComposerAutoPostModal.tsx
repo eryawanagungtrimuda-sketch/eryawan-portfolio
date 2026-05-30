@@ -18,6 +18,7 @@ import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social
 import { buildSocialDrafts } from './social-composer/drafts';
 import { ensureThreadsCta, fallbackText } from './social-composer/post-processing';
 import { applyRegeneratedFields } from './social-composer/parsers';
+import { readStoredChecklist, readStoredDraft, removeStoredChecklist, writeStoredChecklist, writeStoredDraft } from './social-composer/persistence';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -88,40 +89,25 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   useEffect(() => {
     if (!open || draft) return;
-    try {
-      const raw = sessionStorage.getItem(storageKey);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as ComposerDraft;
-      const normalized = ensureThreadsCta(parsed, payload?.canonicalUrl);
-      setDraft(normalized);
-    } catch {
-      // ignore invalid session data
-    }
+    const storedDraft = readStoredDraft(storageKey);
+    if (!storedDraft) return;
+    const normalized = ensureThreadsCta(storedDraft, payload?.canonicalUrl);
+    setDraft(normalized);
   }, [open, draft, storageKey]);
 
   useEffect(() => {
     if (!draft) return;
-    persistDrafts(draft);
+    writeStoredDraft(storageKey, draft);
   }, [draft, storageKey]);
 
   useEffect(() => {
     if (!open) return;
-    try {
-      const raw = localStorage.getItem(checklistStorageKey);
-      if (!raw) {
-        setChecklist(defaultChecklist);
-        return;
-      }
-      const parsed = JSON.parse(raw) as Partial<PublishChecklist>;
-      setChecklist({ ...defaultChecklist, ...parsed });
-    } catch {
-      setChecklist(defaultChecklist);
-    }
+    setChecklist(readStoredChecklist(checklistStorageKey));
   }, [checklistStorageKey, open]);
 
   useEffect(() => {
     if (!open) return;
-    localStorage.setItem(checklistStorageKey, JSON.stringify(checklist));
+    writeStoredChecklist(checklistStorageKey, checklist);
   }, [checklist, checklistStorageKey, open]);
 
   async function openModal() {
@@ -218,7 +204,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
       const nextDraft = applyRegeneratedFields(draft, blankFields, regenerated);
       setDraft(nextDraft);
-      persistDrafts(nextDraft);
+      writeStoredDraft(storageKey, nextDraft);
       setRegenFeedback({
         tone: result.fallbackUsed ? 'warning' : 'success',
         message: result.fallbackUsed
@@ -232,17 +218,11 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
         nextDraft[field] = fallbackText(generatedDraft, field);
       }
       setDraft(nextDraft);
-      persistDrafts(nextDraft);
+      writeStoredDraft(storageKey, nextDraft);
       setRegenFeedback({ tone: 'warning', message: 'AI belum tersedia, memakai template cadangan.' });
     } finally {
       setRegenLoading(false);
     }
-  }
-
-  function persistDrafts(nextDraft?: ComposerDraft) {
-    const source = nextDraft ?? draft;
-    if (!source) return;
-    sessionStorage.setItem(storageKey, JSON.stringify(source));
   }
 
   async function postToPlatform(platform: 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp') {
@@ -312,7 +292,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   function resetChecklist() {
     setChecklist(defaultChecklist);
-    localStorage.removeItem(checklistStorageKey);
+    removeStoredChecklist(checklistStorageKey);
   }
 
   function buildPublishReport() {
