@@ -4,118 +4,17 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
-type ContentType = 'karya' | 'wawasan';
-type PlatformTab = 'canva' | 'instagram' | 'threads' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp' | 'checklist';
-
-type PublishChecklist = {
-  canvaDesignDone: boolean;
-  instagramReelsPosted: boolean;
-  instagramCarouselPosted: boolean;
-  tiktokPosted: boolean;
-  youtubeShortsPosted: boolean;
-  linkedinPosted: boolean;
-  whatsappShared: boolean;
-  postingDate: string;
-  postingNotes: string;
-  instagramUrl: string;
-  tiktokUrl: string;
-  youtubeUrl: string;
-  linkedinUrl: string;
-};
-
-const defaultChecklist: PublishChecklist = {
-  canvaDesignDone: false,
-  instagramReelsPosted: false,
-  instagramCarouselPosted: false,
-  tiktokPosted: false,
-  youtubeShortsPosted: false,
-  linkedinPosted: false,
-  whatsappShared: false,
-  postingDate: '',
-  postingNotes: '',
-  instagramUrl: '',
-  tiktokUrl: '',
-  youtubeUrl: '',
-  linkedinUrl: '',
-};
-
-type DetailPayload = {
-  id: string;
-  title: string;
-  slug: string;
-  summary: string;
-  context: string;
-  conflict: string;
-  designDecision: string;
-  solution: string;
-  impact: string;
-  insight: string;
-  visual: string;
-  year: string;
-  category: string;
-  tags: string[];
-  canonicalUrl: string;
-  ogTitle: string;
-  ogDescription: string;
-  ogImage: string;
-};
-
-type ComposerDraft = {
-  igCaption: string;
-  igHashtag: string;
-  igStoryboard: string;
-  igCarousel: string;
-  igCta: string;
-  tiktokHook: string;
-  tiktokScript: string;
-  tiktokCaption: string;
-  tiktokHashtag: string;
-  tiktokCta: string;
-  youtubeTitle: string;
-  youtubeDescription: string;
-  youtubeHashtags: string;
-  youtubeUploadGuide: string;
-  linkedInCaption: string;
-  linkedInBullets: string;
-  linkedInCta: string;
-  whatsappMessage: string;
-  whatsappLink: string;
-  canvaReelsTimeline: string;
-  canvaCarouselSlides: string;
-  canvaOverlayText: string;
-  canvaVisualGuide: string;
-  canvaExportGuide: string;
-  canvaShareGuide: string;
-  threadsPost: string;
-  threadsReplyIdeas: string;
-  threadsCta: string;
-  ogImage: string;
-};
-type RegenerableField =
-  | 'canvaReelsTimeline'
-  | 'canvaCarouselSlides'
-  | 'canvaOverlayText'
-  | 'threadsPost'
-  | 'threadsReplyIdeas'
-  | 'igCaption'
-  | 'igHashtag'
-  | 'tiktokHook'
-  | 'tiktokScript'
-  | 'tiktokCaption'
-  | 'tiktokHashtag'
-  | 'youtubeTitle'
-  | 'youtubeDescription'
-  | 'linkedInCaption'
-  | 'linkedInBullets'
-  | 'whatsappMessage';
-type ContentGoal = 'profesional' | 'edukatif' | 'viral-ready' | 'soft-selling';
-
-type Props = {
-  contentType: ContentType;
-  slug: string;
-  buttonClassName?: string;
-  wrapperClassName?: string;
-};
+import type {
+  ComposerDraft,
+  ContentGoal,
+  ContentType,
+  DetailPayload,
+  PlatformTab,
+  PublishChecklist,
+  RegenerableField,
+  SocialComposerAutoPostModalProps,
+} from './social-composer/types';
+import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social-composer/constants';
 
 function ensureThreadsCta(draft: ComposerDraft, canonicalUrl?: string | null): ComposerDraft {
   const safeUrl = String(canonicalUrl || '').trim();
@@ -344,7 +243,7 @@ function contentTypeLabel(contentType: ContentType) {
   return contentType === 'wawasan' ? 'wawasan' : 'karya';
 }
 
-export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: Props) {
+export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
@@ -364,16 +263,6 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
   const checklistStorageKey = `social-publish-checklist-${contentType}-${slug}`;
-  const regenerableFieldsByTab: Partial<Record<PlatformTab, RegenerableField[]>> = {
-    canva: ['canvaReelsTimeline', 'canvaCarouselSlides', 'canvaOverlayText'],
-    instagram: ['igCaption', 'igHashtag'],
-    threads: ['threadsPost', 'threadsReplyIdeas'],
-    tiktok: ['tiktokHook', 'tiktokScript', 'tiktokCaption', 'tiktokHashtag'],
-    youtube: ['youtubeTitle', 'youtubeDescription'],
-    linkedin: ['linkedInCaption', 'linkedInBullets'],
-    whatsapp: ['whatsappMessage'],
-  };
-
   useEffect(() => {
     let mounted = true;
     async function checkAdmin() {
@@ -693,16 +582,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                 <button type="button" onClick={() => setOpen(false)} className="min-h-11 shrink-0 rounded-full border border-white/20 px-4 py-2 text-sm font-sans text-white/80">Tutup</button>
               </div>
               <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
-                {([
-                  ['canva', 'Canva'],
-                  ['instagram', 'Instagram'],
-                  ['threads', 'Threads'],
-                  ['tiktok', 'TikTok'],
-                  ['youtube', 'YouTube Shorts'],
-                  ['linkedin', 'LinkedIn'],
-                  ['whatsapp', 'WhatsApp'],
-                  ['checklist', 'Checklist'],
-                ] as [PlatformTab, string][]).map(([key, label]) => (
+                {platformTabs.map(([key, label]) => (
                   <button key={key} type="button" onClick={() => setActiveTab(key)} className={`min-h-11 shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-sans font-medium ${activeTab === key ? 'border-[#D4AF37]/80 bg-[#D4AF37]/20 text-[#E6C676]' : 'border-white/20 text-white/80'}`}>
                     {label}
                   </button>
