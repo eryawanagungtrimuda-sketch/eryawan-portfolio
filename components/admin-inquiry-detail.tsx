@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry, ProjectInquiryProposalDraft, ProjectInquiryProposalDraftStatus } from '@/lib/types';
 import { ProposalDraftRenderer } from '@/components/proposal-draft-renderer';
@@ -55,22 +55,22 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
   const [saveMessage, setSaveMessage] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const authedFetch = async (url: string, init?: RequestInit) => {
+  const authedFetch = useCallback(async (url: string, init?: RequestInit) => {
     const supabase = createSupabaseBrowserClient();
     const { data: { session } } = await supabase.auth.getSession();
     return fetch(url, { ...init, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}`, ...(init?.headers || {}) } });
-  };
+  }, []);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setError('');
     const [detailRes, draftsRes] = await Promise.all([authedFetch(`/api/project-inquiries/${id}`), authedFetch(`/api/project-inquiries/${id}/proposal-drafts`)]);
     const detailJson = await detailRes.json();
     const draftsJson = await draftsRes.json();
     if (!detailRes.ok) setError(detailJson.error || 'Gagal memuat detail inquiry.'); else setRow(detailJson.data);
     if (draftsRes.ok) setHistory((draftsJson.data || []) as ProjectInquiryProposalDraft[]);
-  };
+  }, [authedFetch, id]);
 
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => { load(); }, [load]);
 
   const patch = async (status: ProjectInquiry['status']) => {
     setUpdating(true);

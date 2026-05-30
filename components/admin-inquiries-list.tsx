@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
@@ -33,7 +33,7 @@ export default function AdminInquiriesList() {
   const [dateFilter, setDateFilter] = useState('');
   const { toast } = useToast();
 
-  const authedFetch = async (url: string, init?: RequestInit) => {
+  const authedFetch = useCallback(async (url: string, init?: RequestInit) => {
     const supabase = createSupabaseBrowserClient();
     const {
       data: { session },
@@ -47,9 +47,9 @@ export default function AdminInquiriesList() {
         ...(init?.headers || {}),
       },
     });
-  };
+  }, []);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError('');
     const res = await authedFetch('/api/project-inquiries');
@@ -62,11 +62,11 @@ export default function AdminInquiriesList() {
     }
 
     setLoading(false);
-  };
+  }, [authedFetch]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {

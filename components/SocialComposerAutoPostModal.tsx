@@ -97,7 +97,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     if (!storedDraft) return;
     const normalized = ensureThreadsCta(storedDraft, payload?.canonicalUrl);
     setDraft(normalized);
-  }, [open, draft, storageKey]);
+  }, [open, draft, payload?.canonicalUrl, storageKey]);
 
   useEffect(() => {
     if (!draft) return;

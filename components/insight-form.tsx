@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { createUniqueStorageFileName } from '@/lib/storage';
@@ -44,6 +44,7 @@ export default function InsightForm({ insight, projects = [], initialImages = []
     source_project_id: insight?.source_project_id || '', cover_image: insight?.cover_image || '', excerpt: insight?.excerpt || '', content: insight?.content || '', is_published: insight?.is_published || false,
   });
   const [images, setImages] = useState<LocalImage[]>(initialImages.map((img) => ({ id: img.id, image_url: img.image_url, sort_order: img.sort_order })));
+  const imagesRef = useRef(images);
   const categoryOptions = useMemo(() => {
     const currentCategory = insight?.category?.trim();
     if (!currentCategory || CATEGORY_OPTIONS.includes(currentCategory)) return CATEGORY_OPTIONS;
@@ -56,8 +57,12 @@ export default function InsightForm({ insight, projects = [], initialImages = []
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(Boolean(insight?.slug));
   const [isSlugEditable, setIsSlugEditable] = useState(Boolean(insight?.slug));
 
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
+
   useEffect(() => () => {
-    images.forEach((img) => { if (img.isLocal) URL.revokeObjectURL(img.image_url); });
+    imagesRef.current.forEach((img) => { if (img.isLocal) URL.revokeObjectURL(img.image_url); });
   }, []);
 
   useEffect(() => {
