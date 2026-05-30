@@ -21,6 +21,7 @@ import { applyRegeneratedFields } from './social-composer/parsers';
 import { readStoredChecklist, readStoredDraft, removeStoredChecklist, writeStoredChecklist, writeStoredDraft } from './social-composer/persistence';
 import { copyText, triggerBrowserDownload } from './social-composer/actions';
 import { buildPublishReport } from './social-composer/report';
+import { sendPlatformPostRequest, type PostingPlatform } from './social-composer/platform-posting';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -231,11 +232,11 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     }
   }
 
-  async function postToPlatform(platform: 'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp') {
+  async function postToPlatform(platform: PostingPlatform) {
     if (!draft) return;
     setPostStatus((prev) => ({ ...prev, [platform]: { state: 'posting', message: 'Mengirim konten...' } }));
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 850));
+      await sendPlatformPostRequest(platform);
       if (platform === 'instagram') updateChecklist('instagramReelsPosted', true);
       if (platform === 'tiktok') updateChecklist('tiktokPosted', true);
       if (platform === 'youtube') updateChecklist('youtubeShortsPosted', true);
