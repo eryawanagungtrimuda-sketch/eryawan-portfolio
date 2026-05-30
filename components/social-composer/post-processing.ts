@@ -1,4 +1,8 @@
-import type { ComposerDraft } from './types';
+import type { ComposerDraft, RegenerableField } from './types';
+
+export function fallbackText(draft: ComposerDraft, field: RegenerableField) {
+  return draft[field];
+}
 
 export function ensureThreadsCta(draft: ComposerDraft, canonicalUrl?: string | null): ComposerDraft {
   const safeUrl = String(canonicalUrl || '').trim();
