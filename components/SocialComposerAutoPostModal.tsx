@@ -16,7 +16,7 @@ import type {
 } from './social-composer/types';
 import { defaultChecklist, platformTabs, regenerableFieldsByTab } from './social-composer/constants';
 import { buildSocialDrafts } from './social-composer/drafts';
-import { ensureThreadsCta } from './social-composer/helpers';
+import { ensureThreadsCta } from './social-composer/post-processing';
 
 export default function SocialComposerAutoPostModal({ contentType, slug, buttonClassName, wrapperClassName }: SocialComposerAutoPostModalProps) {
   const [isAdmin, setIsAdmin] = useState(false);
