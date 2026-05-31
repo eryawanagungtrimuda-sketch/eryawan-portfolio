@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
@@ -1146,7 +1147,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                     className={`relative block w-full rounded-t-2xl text-left ${!isCover ? 'cursor-pointer' : 'cursor-default'} disabled:cursor-not-allowed`}
                   >
                     <div className="relative w-full overflow-hidden rounded-t-2xl bg-black/30" style={getGalleryImageFrameStyle(image)}>
-                      <img src={image.image_url} alt={image.alt_text || title || 'Project gallery'} className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(image)} />
+                      <Image src={image.image_url} alt={image.alt_text || title || 'Project gallery'} fill sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw" className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(image)} />
                       {isCover ? <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#D4AF37]/95 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#080807]"><Star size={11} /> Cover</div> : null}
                       {!isCover ? <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D4AF37]/30 bg-black/50 px-3 py-1 text-center text-[9px] font-bold uppercase tracking-[0.1em] text-[#D4AF37]">Klik untuk jadikan cover</div> : null}
                     </div>
@@ -1259,7 +1260,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
                       maxHeight: '34vh',
                     }}
                   >
-                    <img src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
+                    <Image src={galleryImages.find((item) => item.id === activeCropEditor.imageId)?.image_url || ''} alt="Preview crop" fill sizes="(min-width: 1024px) 50vw, 100vw" className="absolute inset-0 h-full w-full" style={getGalleryImageStyle(activeCropEditor)} />
                   </div>
                 </div>
                 <div className="space-y-4">
