@@ -286,7 +286,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   const [legacyCategory, setLegacyCategory] = useState<CustomSelectState>(getInitialSelectState(project?.category, legacyCategoryOptions));
   const [designCategory, setDesignCategory] = useState<CustomSelectState>(getInitialSelectState(project?.design_category, designCategoryOptions));
   const [designStyle, setDesignStyle] = useState<CustomSelectState>(getInitialSelectState(project?.design_style, designStyleOptions));
-  const [areaType, setAreaType] = useState<CustomSelectState>(getInitialSelectState(project?.area_type, areaTypeOptions));
+  const [areaType] = useState<CustomSelectState>(getInitialSelectState(project?.area_type, areaTypeOptions));
   const [areaTags, setAreaTags] = useState<string[]>(
     dedupeAreaTags([
       ...(project?.area_tags || []),
@@ -302,7 +302,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
   const [areaScope, setAreaScope] = useState(project?.area_scope || '');
   const [projectSize, setProjectSize] = useState(project?.project_size || '');
   const [problem, setProblem] = useState(project?.problem || '');
-  const [solution, setSolution] = useState(project?.solution || '');
+  const [solution] = useState(project?.solution || '');
   const [impact, setImpact] = useState(project?.impact || '');
   const [konteks, setKonteks] = useState(project?.konteks || '');
   const [konflik, setKonflik] = useState(project?.konflik || '');

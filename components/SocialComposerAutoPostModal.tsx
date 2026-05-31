@@ -7,7 +7,6 @@ import { isAllowedAdminEmail } from '@/lib/admin-auth';
 import type {
   ComposerDraft,
   ContentGoal,
-  ContentType,
   DetailPayload,
   PlatformTab,
   PublishChecklist,
