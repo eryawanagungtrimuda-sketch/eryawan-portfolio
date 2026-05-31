@@ -24,14 +24,21 @@ Buka Supabase Dashboard → SQL Editor, lalu jalankan isi file:
 supabase/schema.sql
 ```
 
-File tersebut membuat dan memperbarui:
+File tersebut adalah snapshot production-ready yang sudah mencakup seluruh migrasi saat ini. Menjalankannya akan membuat dan memperbarui:
 
-- `public.projects`
-- `public.project_images`
-- foreign key `project_images.project_id → projects.id`
+- `public.projects`, termasuk `project_status` dan `completion_year`
+- `public.project_images`, termasuk `display_ratio`, `object_position`, `crop_x`, `crop_y`, dan `crop_zoom`
+- `public.insights`, termasuk `content_type`
+- `public.insight_images`
+- `public.project_inquiries`
+- `public.project_inquiry_proposal_drafts`
+- foreign key `project_images.project_id → projects.id` dan relasi insight/inquiry terkait
+- helper `public.is_admin()` dan trigger `updated_at` yang dibutuhkan tabel insight/inquiry
 - grants untuk `anon` dan `authenticated`
-- RLS policies untuk read public dan CRUD admin
+- RLS policies untuk public read konten published dan mutasi admin-only
 - storage bucket metadata/policies untuk `project-images`
+
+> Untuk setup Supabase baru, jalankan `supabase/schema.sql` penuh. Jangan hanya menjalankan migrasi lama satu per satu karena schema snapshot ini sudah disinkronkan dengan production dan menghapus policy development yang terlalu longgar untuk `insights`/`insight_images`.
 
 ## 3. Storage Bucket: project-images
 
@@ -73,33 +80,37 @@ values ('project-images', 'project-images', true)
 on conflict (id) do update set public = true;
 
 drop policy if exists "Public read project images" on storage.objects;
-create policy "Public read project images"
+drop policy if exists "Public read project image objects" on storage.objects;
+create policy "Public read project image objects"
 on storage.objects
 for select
 to anon, authenticated
 using (bucket_id = 'project-images');
 
 drop policy if exists "Authenticated upload project images" on storage.objects;
-create policy "Authenticated upload project images"
+drop policy if exists "Admin upload project image objects" on storage.objects;
+create policy "Admin upload project image objects"
 on storage.objects
 for insert
 to authenticated
-with check (bucket_id = 'project-images');
+with check (bucket_id = 'project-images' and public.is_admin());
 
 drop policy if exists "Authenticated update project images" on storage.objects;
-create policy "Authenticated update project images"
+drop policy if exists "Admin update project image objects" on storage.objects;
+create policy "Admin update project image objects"
 on storage.objects
 for update
 to authenticated
-using (bucket_id = 'project-images')
-with check (bucket_id = 'project-images');
+using (bucket_id = 'project-images' and public.is_admin())
+with check (bucket_id = 'project-images' and public.is_admin());
 
 drop policy if exists "Authenticated delete project images" on storage.objects;
-create policy "Authenticated delete project images"
+drop policy if exists "Admin delete project image objects" on storage.objects;
+create policy "Admin delete project image objects"
 on storage.objects
 for delete
 to authenticated
-using (bucket_id = 'project-images');
+using (bucket_id = 'project-images' and public.is_admin());
 ```
 
 ## 5. Buat User Admin
@@ -146,8 +157,9 @@ CMS akan tetap menyimpan gambar yang berhasil, menampilkan pesan file yang gagal
 
 ## 8. Security Notes
 
-- RLS aktif di table `projects` dan `project_images`.
-- Public hanya memiliki akses read.
-- Insert/update/delete hanya untuk authenticated user.
-- Admin panel membatasi akses UI ke email `eryawanagungtrimuda@gmail.com`.
+- RLS aktif di table `projects`, `project_images`, `insights`, `insight_images`, `project_inquiries`, dan `project_inquiry_proposal_drafts`.
+- Public hanya bisa membaca project/insight yang `is_published = true` beserta gambar terkait.
+- Form inquiry publik hanya bisa insert ke `project_inquiries`; data inquiry dan proposal draft hanya bisa dibaca/diubah admin.
+- Insert/update/delete konten CMS dan object storage hanya untuk user authenticated yang lolos `public.is_admin()` (`eryawanagungtrimuda@gmail.com`).
+- Admin panel tetap membatasi akses UI ke email `eryawanagungtrimuda@gmail.com`, dan database RLS menjadi lapisan proteksi tambahan.
 - Jangan expose service role key.

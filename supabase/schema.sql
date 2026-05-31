@@ -28,6 +28,8 @@ create table if not exists public.projects (
   design_reference text,
   area_scope text,
   project_size text,
+  project_status text check (project_status is null or project_status in ('konsep', 'berjalan', 'selesai')),
+  completion_year integer,
   is_published boolean not null default true,
   created_at timestamp with time zone not null default now()
 );
@@ -39,7 +41,73 @@ create table if not exists public.project_images (
   alt_text text,
   sort_order integer default 0,
   area_tags text[] not null default '{}',
+  display_ratio text default 'landscape',
+  object_position text default 'center',
+  crop_x numeric default 50,
+  crop_y numeric default 50,
+  crop_zoom numeric default 1,
   created_at timestamp with time zone default now()
+);
+
+create table if not exists public.insights (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text not null unique,
+  category text,
+  content_type text not null default 'artikel' check (content_type in ('artikel', 'review_karya')),
+  source_type text not null default 'manual' check (source_type in ('project', 'image_review', 'manual')),
+  source_project_id uuid references public.projects(id) on delete set null,
+  cover_image text,
+  excerpt text,
+  content text,
+  ai_prompt_source text,
+  is_published boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.insight_images (
+  id uuid primary key default gen_random_uuid(),
+  insight_id uuid not null references public.insights(id) on delete cascade,
+  image_url text not null,
+  alt_text text,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.project_inquiries (
+  id uuid primary key default gen_random_uuid(),
+  nama text not null,
+  perusahaan text,
+  email text,
+  whatsapp text,
+  jenis_kebutuhan text not null,
+  lokasi_project text,
+  estimasi_luas text,
+  tahap_project text,
+  timeline text,
+  budget_range text,
+  kebutuhan_utama text not null,
+  status_file text,
+  message_preview text not null,
+  status text not null default 'baru' check (status in ('baru', 'ditinjau', 'dihubungi', 'selesai', 'arsip')),
+  source text not null default 'mulai_project',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.project_inquiry_proposal_drafts (
+  id uuid primary key default gen_random_uuid(),
+  inquiry_id uuid not null references public.project_inquiries(id) on delete cascade,
+  title text not null,
+  draft_content text not null,
+  follow_up_message text,
+  status text not null default 'draft' check (status in ('draft', 'used', 'archived')),
+  version integer not null default 1,
+  model text,
+  created_by text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
 -- Compatibility alters
@@ -58,7 +126,41 @@ alter table public.projects add column if not exists client_problem_raw text;
 alter table public.projects add column if not exists design_reference text;
 alter table public.projects add column if not exists area_scope text;
 alter table public.projects add column if not exists project_size text;
+alter table public.projects add column if not exists project_status text;
+alter table public.projects add column if not exists completion_year integer;
 alter table public.project_images add column if not exists area_tags text[] not null default '{}';
+alter table public.project_images add column if not exists display_ratio text default 'landscape';
+alter table public.project_images add column if not exists object_position text default 'center';
+alter table public.project_images add column if not exists crop_x numeric default 50;
+alter table public.project_images add column if not exists crop_y numeric default 50;
+alter table public.project_images add column if not exists crop_zoom numeric default 1;
+alter table public.insights add column if not exists content_type text not null default 'artikel';
+
+
+-- Compatibility constraints
+-- Add named constraints for databases upgraded from older schema snapshots.
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'projects_project_status_check'
+      and conrelid = 'public.projects'::regclass
+  ) then
+    alter table public.projects
+      add constraint projects_project_status_check
+      check (project_status is null or project_status in ('konsep', 'berjalan', 'selesai'));
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'insights_content_type_check'
+      and conrelid = 'public.insights'::regclass
+  ) then
+    alter table public.insights
+      add constraint insights_content_type_check
+      check (content_type in ('artikel', 'review_karya'));
+  end if;
+end $$;
 
 -- Foreign keys
 -- If project_images already existed without FK, add the relationship Supabase needs for embedded selects.
@@ -77,6 +179,36 @@ begin
     on delete cascade;
   end if;
 end $$;
+
+
+-- Timestamp helpers
+create or replace function public.update_updated_at_column()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists update_insights_updated_at on public.insights;
+create trigger update_insights_updated_at
+before update on public.insights
+for each row execute function public.update_updated_at_column();
+
+drop trigger if exists update_project_inquiries_updated_at on public.project_inquiries;
+create trigger update_project_inquiries_updated_at
+before update on public.project_inquiries
+for each row execute function public.update_updated_at_column();
+
+drop trigger if exists update_project_inquiry_proposal_drafts_updated_at on public.project_inquiry_proposal_drafts;
+create trigger update_project_inquiry_proposal_drafts_updated_at
+before update on public.project_inquiry_proposal_drafts
+for each row execute function public.update_updated_at_column();
+
+-- Indexes
+create index if not exists idx_project_inquiry_proposal_drafts_inquiry_id on public.project_inquiry_proposal_drafts(inquiry_id);
+create index if not exists idx_project_inquiry_proposal_drafts_status on public.project_inquiry_proposal_drafts(status);
+create index if not exists idx_project_inquiry_proposal_drafts_created_at_desc on public.project_inquiry_proposal_drafts(created_at desc);
 
 -- Admin helper
 -- Database-side CMS admin check matching the app fallback admin email.
@@ -99,10 +231,23 @@ grant select on public.projects to anon, authenticated;
 grant insert, update, delete on public.projects to authenticated;
 grant select on public.project_images to anon, authenticated;
 grant insert, update, delete on public.project_images to authenticated;
+grant select on public.insights to anon, authenticated;
+grant insert, update, delete on public.insights to authenticated;
+grant select on public.insight_images to anon, authenticated;
+grant insert, update, delete on public.insight_images to authenticated;
+revoke all on public.project_inquiries from anon, authenticated;
+grant insert on public.project_inquiries to anon;
+grant select, update on public.project_inquiries to authenticated;
+revoke all on public.project_inquiry_proposal_drafts from anon, authenticated;
+grant select, insert, update on public.project_inquiry_proposal_drafts to authenticated;
 
 -- RLS policies
 alter table public.projects enable row level security;
 alter table public.project_images enable row level security;
+alter table public.insights enable row level security;
+alter table public.insight_images enable row level security;
+alter table public.project_inquiries enable row level security;
+alter table public.project_inquiry_proposal_drafts enable row level security;
 
 -- Projects: public reads only expose published projects; admins can read drafts.
 drop policy if exists "Public read projects" on public.projects;
@@ -206,6 +351,137 @@ on public.project_images
 for delete
 to authenticated
 using (public.is_admin());
+
+
+-- Insights: public reads only expose published rows; admins can read drafts.
+drop policy if exists insights_public_read on public.insights;
+drop policy if exists insights_authenticated_crud on public.insights;
+drop policy if exists "Read published insights" on public.insights;
+create policy "Read published insights"
+on public.insights
+for select
+to anon, authenticated
+using (is_published = true);
+
+drop policy if exists "Admin read all insights" on public.insights;
+create policy "Admin read all insights"
+on public.insights
+for select
+to authenticated
+using (public.is_admin());
+
+-- Insights: CMS mutations are restricted to the configured admin identity.
+drop policy if exists "Admin insert insights" on public.insights;
+create policy "Admin insert insights"
+on public.insights
+for insert
+to authenticated
+with check (public.is_admin());
+
+drop policy if exists "Admin update insights" on public.insights;
+create policy "Admin update insights"
+on public.insights
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admin delete insights" on public.insights;
+create policy "Admin delete insights"
+on public.insights
+for delete
+to authenticated
+using (public.is_admin());
+
+-- Insight images: public reads are limited to images attached to published
+-- insights; admins can read every insight image row.
+drop policy if exists insight_images_public_read on public.insight_images;
+drop policy if exists insight_images_authenticated_crud on public.insight_images;
+drop policy if exists "Read published insight images" on public.insight_images;
+create policy "Read published insight images"
+on public.insight_images
+for select
+to anon, authenticated
+using (
+  exists (
+    select 1
+    from public.insights
+    where insights.id = insight_images.insight_id
+      and insights.is_published = true
+  )
+);
+
+drop policy if exists "Admin read all insight images" on public.insight_images;
+create policy "Admin read all insight images"
+on public.insight_images
+for select
+to authenticated
+using (public.is_admin());
+
+-- Insight image mutations are admin-only.
+drop policy if exists "Admin insert insight images" on public.insight_images;
+create policy "Admin insert insight images"
+on public.insight_images
+for insert
+to authenticated
+with check (public.is_admin());
+
+drop policy if exists "Admin update insight images" on public.insight_images;
+create policy "Admin update insight images"
+on public.insight_images
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admin delete insight images" on public.insight_images;
+create policy "Admin delete insight images"
+on public.insight_images
+for delete
+to authenticated
+using (public.is_admin());
+
+-- Project inquiry submissions are public inserts; review/update is admin-only.
+drop policy if exists project_inquiries_anon_insert on public.project_inquiries;
+create policy project_inquiries_anon_insert on public.project_inquiries
+for insert to anon
+with check (true);
+
+drop policy if exists project_inquiries_authenticated_select on public.project_inquiries;
+drop policy if exists project_inquiries_admin_select on public.project_inquiries;
+create policy project_inquiries_admin_select on public.project_inquiries
+for select to authenticated
+using (public.is_admin());
+
+drop policy if exists project_inquiries_authenticated_update on public.project_inquiries;
+drop policy if exists project_inquiries_admin_update on public.project_inquiries;
+create policy project_inquiries_admin_update on public.project_inquiries
+for update to authenticated
+using (public.is_admin())
+with check (
+  public.is_admin()
+  and status in ('baru', 'ditinjau', 'dihubungi', 'selesai', 'arsip')
+);
+
+-- Proposal drafts are admin-only and intentionally unavailable to anon users.
+drop policy if exists project_inquiry_proposal_drafts_admin_select on public.project_inquiry_proposal_drafts;
+create policy project_inquiry_proposal_drafts_admin_select on public.project_inquiry_proposal_drafts
+for select to authenticated
+using (public.is_admin());
+
+drop policy if exists project_inquiry_proposal_drafts_admin_insert on public.project_inquiry_proposal_drafts;
+create policy project_inquiry_proposal_drafts_admin_insert on public.project_inquiry_proposal_drafts
+for insert to authenticated
+with check (public.is_admin());
+
+drop policy if exists project_inquiry_proposal_drafts_admin_update on public.project_inquiry_proposal_drafts;
+create policy project_inquiry_proposal_drafts_admin_update on public.project_inquiry_proposal_drafts
+for update to authenticated
+using (public.is_admin())
+with check (
+  public.is_admin()
+  and status in ('draft', 'used', 'archived')
+);
 
 -- Storage buckets
 -- Supabase Storage bucket for cover and gallery images.

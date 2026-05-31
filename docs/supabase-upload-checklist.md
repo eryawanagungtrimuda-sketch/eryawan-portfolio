@@ -22,13 +22,19 @@ Panduan ini untuk memastikan upload gambar project berjalan normal di halaman ad
 4. Paste ke SQL Editor dan klik **Run**.
 5. Tunggu sampai status sukses (tanpa error).
 
+File ini adalah snapshot production schema terbaru. Ia sudah mencakup tabel project, gallery image, insight, insight image, inquiry, proposal draft, kolom crop/display gallery, kolom status/tahun project, serta RLS production-safe. Jangan mengganti langkah ini dengan instruksi schema lama atau migrasi parsial.
+
 ## 3) Pastikan Tabel Database Sudah Ada
 
 1. Di Supabase, buka menu **Table Editor**.
 2. Pastikan tabel ini terlihat:
    - `projects`
    - `project_images`
-3. Klik masing-masing tabel dan pastikan data bisa dibaca.
+   - `insights`
+   - `insight_images`
+   - `project_inquiries`
+   - `project_inquiry_proposal_drafts`
+3. Klik `projects` dan `project_images` untuk kebutuhan upload gallery. Untuk tabel admin seperti `project_inquiries` dan proposal draft, pastikan akses dilakukan memakai user admin.
 
 ## 4) Pastikan Bucket Storage Sudah Ada dan Public
 
@@ -44,6 +50,10 @@ Jika bucket tidak ada, upload akan gagal dengan error **bucket not found**.
 2. Pastikan policy untuk:
    - tabel `projects`
    - tabel `project_images`
+   - tabel `insights`
+   - tabel `insight_images`
+   - tabel `project_inquiries`
+   - tabel `project_inquiry_proposal_drafts`
    - `storage.objects` untuk bucket `project-images`
    sudah aktif.
 3. Cara paling aman: jalankan ulang `supabase/schema.sql` supaya policy dibuat ulang.
@@ -69,7 +79,7 @@ Langkah test:
   - Artinya bucket `project-images` belum ada (atau nama bucket berbeda).
 
 - **permission denied**
-  - Artinya user tidak punya izin ke storage/database. Biasanya policy belum aktif atau login admin bermasalah.
+  - Artinya user tidak punya izin ke storage/database. Biasanya policy belum aktif, login admin bermasalah, atau email login bukan `eryawanagungtrimuda@gmail.com` sehingga `public.is_admin()` bernilai false.
 
 - **row-level security (RLS)**
   - Artinya aturan RLS menolak operasi. Jalankan ulang `supabase/schema.sql` dan cek policy.
