@@ -114,8 +114,6 @@ function fallbackText(field: RegenerableField, source: Record<string, string | n
   const summary = source.summary || source.problem || 'Konten ini merangkum pendekatan desain yang fungsional dan relevan.';
   const solution = source.solution || 'solusi yang menyeimbangkan fungsi, kenyamanan, dan karakter visual';
   const impact = source.impact || 'hasil ruang yang lebih nyaman dipakai dan terukur manfaatnya';
-  const styleHint = goal === 'profesional' ? 'profesional' : goal === 'edukatif' ? 'edukatif' : goal === 'soft-selling' ? 'soft-selling' : 'hook-driven';
-
   if (field === 'canvaCarouselSlides') {
     return `Slide 1 — Hook
 Rapi belum tentu selesai.

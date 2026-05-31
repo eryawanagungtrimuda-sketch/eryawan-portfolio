@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry, ProjectInquiryProposalDraft } from '@/lib/types';
 import { ProposalDraftRenderer } from '@/components/proposal-draft-renderer';
-import { downloadProposalText, sanitizeFilenamePart } from '@/lib/proposal-export';
+import { downloadProposalText } from '@/lib/proposal-export';
 
 const fallbackText = 'Belum diisi';
 const formatDate = (value: string) =>
