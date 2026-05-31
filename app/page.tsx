@@ -619,7 +619,7 @@ export default async function Home() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">
               Ajukan Kolaborasi
             </p>
-            <h2 className="font-display mt-8 text-4xl font-normal italic leading-[1.35] tracking-[-0.04em] text-[#F4F1EA] md:text-6xl lg:text-7xl">
+            <h2 className="font-display mx-auto mt-8 max-w-5xl text-4xl font-normal italic leading-[1.22] tracking-[-0.025em] text-[#F4F1EA] md:text-5xl md:leading-[1.18] lg:text-6xl xl:text-[4.6rem]">
               Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden lg:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
