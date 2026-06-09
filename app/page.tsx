@@ -619,8 +619,8 @@ export default async function Home() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">
               Ajukan Kolaborasi
             </p>
-            <h2 className="font-display mx-auto mt-8 max-w-5xl text-4xl font-normal italic leading-[1.22] tracking-[-0.025em] text-[#F4F1EA] md:text-5xl md:leading-[1.18] lg:text-6xl xl:text-[4.6rem]">
-              Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden lg:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
+            <h2 className="font-display mx-auto mt-8 max-w-5xl text-balance text-4xl font-normal italic leading-[1.22] tracking-[-0.025em] text-[#F4F1EA] md:text-5xl md:leading-[1.18] lg:text-6xl xl:text-[4.6rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[min(100%,68rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.6rem,4vw,3.35rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:leading-[1.14]">
+              Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden [@media_(min-width:1281px)]:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
             </h2>
             <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
               Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
