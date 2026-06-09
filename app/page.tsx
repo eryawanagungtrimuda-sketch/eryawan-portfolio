@@ -335,13 +335,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="client-workflow" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#090909] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '0ms' } as CSSProperties}>
+      <section id="client-workflow" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#090909] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '0ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(200,169,81,0.055),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="reveal-on-scroll grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+          <div className="reveal-on-scroll grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-8" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Client Collaboration</p>
-              <h2 className="font-display mt-5 max-w-3xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+              <h2 className="font-display mt-5 max-w-3xl text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Cara Saya Bekerja dengan Klien
               </h2>
             </div>
@@ -351,10 +351,10 @@ export default async function Home() {
           </div>
 
           <div className="reveal-on-scroll" style={{ '--reveal-delay': '140ms' } as CSSProperties}>
-            <MobileSwipeRow className="mt-16" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
+            <MobileSwipeRow className="mt-16 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
-                <div className="mb-14 flex shrink-0 items-center justify-between">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
+                <div className="mb-14 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
                 </div>
@@ -371,13 +371,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="framework" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="framework" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.08),transparent_27%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_58%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+          <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Framework</p>
-              <h2 className="font-display mt-5 max-w-2xl text-[2.1rem] font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.45rem] md:text-[3rem] lg:text-[3.6rem]">
+              <h2 className="font-display mt-5 max-w-2xl text-balance text-[2.1rem] font-normal leading-[1.1] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.45rem] md:text-[3rem] lg:text-[3.6rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3rem,4.4vw,3.45rem)]">
                 Cara saya berpikir tentang desain
               </h2>
             </div>
@@ -386,12 +386,12 @@ export default async function Home() {
             </p>
           </div>
 
-          <MobileSwipeRow className="mt-20" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
+          <MobileSwipeRow className="mt-20 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10">
-                  <div className="mb-16 flex shrink-0 items-center justify-between">
+                <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
+                  <div className="mb-16 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.title}</span>
@@ -413,22 +413,22 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="design-decisions" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#070707] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+      <section id="design-decisions" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#070707] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-14">
           <div className="min-w-0 max-w-full lg:sticky lg:top-28 lg:self-start">
             <div className="max-w-xl">
               <p className="mb-6 font-sans text-[1rem] leading-[1.75] text-white/70 sm:text-[1.05rem] md:text-[1.1rem]">
                 Setiap ruang menyimpan cerita dan kebutuhan penggunanya. Saya merancang dengan memahami ritme, kebiasaan, dan tujuan Anda, sehingga setiap keputusan desain terasa alami dan tepat sasaran.
               </p>
-              <h2 className="font-display mt-6 text-[2.5rem] font-normal leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-[2.75rem] md:text-[3rem] lg:text-[3.5rem]">
+              <h2 className="font-display mt-6 text-balance text-[2.5rem] font-normal leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-[2.75rem] md:text-[3rem] lg:text-[3.5rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3rem,4.3vw,3.35rem)]">
                 Setiap Ruang Adalah Keputusan
               </h2>
             </div>
           </div>
 
           <MobileSwipeRow
-            className="relative mt-8 lg:mt-0 lg:pt-3"
+            className="relative mt-8 lg:mt-0 lg:pt-3 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:pt-1"
             ariaLabel="Kartu keputusan dapat digeser horizontal"
             desktopGridClassName="lg:grid-cols-1 lg:gap-5"
             backgroundTone="#070707"
@@ -456,13 +456,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="impact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
+      <section id="impact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_10%,rgba(200,169,81,0.1),transparent_34%),radial-gradient(circle_at_82%_82%,rgba(200,169,81,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14">
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div className="max-w-3xl motion-safe:animate-[fade-up_700ms_ease-out]">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Impact</p>
-              <h2 className="font-display mt-5 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+              <h2 className="font-display mt-5 text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Dampak yang Terukur
               </h2>
               <p className="mt-6 max-w-xl font-sans text-base leading-[1.7] text-white/62 md:text-lg">
@@ -475,24 +475,24 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="differentiation" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="differentiation" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#C8A951]/14" />
         <div className="relative mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">Differentiation</p>
-            <h2 className="font-display mt-6 text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+            <h2 className="font-display mt-6 text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
               Apa yang Membedakan
             </h2>
           </div>
 
           <MobileSwipeRow
-            className="mt-16"
+            className="mt-16 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12"
             ariaLabel="Kartu diferensiasi dapat digeser horizontal"
             desktopGridClassName="lg:grid-cols-3 lg:gap-0"
             backgroundTone="#2D2D2B"
           >
             {differentiations.map((item, index) => (
-              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-7 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] lg:rounded-none lg:border-y-0 lg:border-r-0 lg:border-l lg:border-white/10 lg:bg-transparent lg:px-12 lg:py-0 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-7 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] lg:rounded-none lg:border-y-0 lg:border-r-0 lg:border-l lg:border-white/10 lg:bg-transparent lg:px-12 lg:py-0 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-8 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 shrink-0 text-[#C8A951]/78 transition duration-300 group-hover:text-[#C8A951]" size={18} strokeWidth={2.1} />
                   <div className="flex min-h-full flex-1 flex-col">
@@ -511,13 +511,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="portfolio" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+      <section id="portfolio" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center">
+          <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Decision-Based Portfolio</p>
-              <h2 className="font-display mt-6 max-w-4xl text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+              <h2 className="font-display mt-6 max-w-4xl text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Portfolio Berbasis Keputusan
               </h2>
               <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/62 md:text-xl">
@@ -531,7 +531,7 @@ export default async function Home() {
             </a>
           </div>
 
-          <div className="mt-20 grid gap-8 lg:grid-cols-2">
+          <div className="mt-20 grid gap-8 lg:grid-cols-2 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-6">
             {portfolioWorks.map((project, index) => {
               const meta = project.category || project.design_category;
               const teaser = project.problem || project.solution || project.impact;
@@ -557,8 +557,8 @@ export default async function Home() {
                       {meta ? <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64">{meta}</span> : null}
                     </div>
                   </div>
-                  <div className="p-7 md:p-8">
-                    <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl">{project.title}</h3>
+                  <div className="p-7 md:p-8 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-7">
+                    <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.25rem,4vw,3rem)]">{project.title}</h3>
                     {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
                     <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
                   </div>
@@ -570,12 +570,12 @@ export default async function Home() {
       </section>
 
 
-      <section id="wawasan-design" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#0B0B0A] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
+      <section id="wawasan-design" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#0B0B0A] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-col gap-5 md:max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Wawasan</p>
-            <h2 className="font-display text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl">
+            <h2 className="font-display text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
               Wawasan Desain
             </h2>
             <p className="font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
@@ -583,7 +583,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-10">
             {wawasanCards.map((article) => (
               <article key={article.title} className="group rounded-[24px] border border-white/5 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/24 hover:bg-white/[0.045]">
                 <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
@@ -612,7 +612,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="contact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#050505] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="contact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#050505] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(200,169,81,0.042),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto max-w-6xl text-center">
