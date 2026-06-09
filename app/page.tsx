@@ -229,7 +229,7 @@ export default async function Home() {
       <MobileAdminQuickAccess />
       <section
         id="home"
-        className="relative flex min-h-screen flex-col overflow-hidden bg-cover bg-center px-4 py-5 pt-6 sm:px-5 sm:pt-7 md:px-8 md:pt-8 lg:px-12 xl:px-24"
+        className="relative flex min-h-[100svh] flex-col overflow-hidden bg-cover bg-center px-4 py-4 pt-5 sm:px-5 sm:pt-6 md:min-h-screen md:px-8 md:py-5 md:pt-8 lg:px-12 xl:px-24"
         style={{
           backgroundImage:
             "linear-gradient(90deg, rgba(8,8,7,0.92) 0%, rgba(8,8,7,0.78) 34%, rgba(8,8,7,0.46) 66%, rgba(8,8,7,0.18) 100%), linear-gradient(180deg, rgba(8,8,7,0.38) 0%, rgba(8,8,7,0.08) 45%, rgba(8,8,7,0.78) 100%), url('/hero.jpg')",
@@ -269,11 +269,11 @@ export default async function Home() {
           </div>
         </header>
 
-        <div className="relative z-20 mb-4 block md:hidden">
-          <div className="rounded-xl bg-[#080807]/28 px-1 py-1.5 backdrop-blur-[2px]">
+        <div className="relative z-20 mb-3 block md:hidden">
+          <div className="rounded-xl bg-[#080807]/28 px-1 py-1 backdrop-blur-[2px]">
             <BrandWordmark compact />
-            <nav aria-label="Navigasi hero mobile" className="mt-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <ul className="flex min-w-max items-center gap-2 pr-4">
+            <nav aria-label="Navigasi hero mobile" className="mt-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <ul className="flex min-w-max items-center gap-1.5 pr-4">
                 {[
                   { href: '/', label: 'Beranda' },
                   { href: '/tentang', label: 'Tentang' },
@@ -284,7 +284,7 @@ export default async function Home() {
                   <li key={item.href}>
                     <a
                       href={item.href}
-                      className="inline-flex min-h-9 shrink-0 items-center rounded-full border border-[#C8A951]/30 bg-[#C8A951]/8 px-3.5 py-1.5 font-sans text-[0.69rem] font-semibold uppercase tracking-[0.09em] text-[#F4F1EA] transition hover:bg-[#C8A951]/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+                      className="inline-flex min-h-8 shrink-0 items-center rounded-full border border-[#C8A951]/30 bg-[#C8A951]/8 px-3 py-1.5 font-sans text-[0.66rem] font-semibold uppercase tracking-[0.08em] text-[#F4F1EA] transition hover:bg-[#C8A951]/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] sm:min-h-9 sm:px-3.5 sm:text-[0.69rem] sm:tracking-[0.09em]"
                     >
                       {item.label}
                     </a>
@@ -295,13 +295,13 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 grid flex-1 items-center pt-2 lg:grid-cols-[1fr_0.5fr] lg:pt-2">
+        <div className="relative z-10 grid flex-1 items-center pt-1 lg:grid-cols-[1fr_0.5fr] lg:pt-2">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
-            <p className="mb-7 font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">
+            <p className="mb-5 font-mono text-[9px] font-black uppercase tracking-[0.42em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.5em] md:mb-7 md:text-[11px] md:tracking-[0.56em]">
               Strategic Design Intelligence
             </p>
 
-            <h1 className="font-display max-w-6xl text-[1.9rem] font-normal uppercase leading-[1.06] tracking-[-0.04em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] sm:text-[2.25rem] md:text-[clamp(2.9rem,5.4vw,6.1rem)]">
+            <h1 className="font-display max-w-6xl text-balance text-[1.74rem] font-normal uppercase leading-[1.08] tracking-[-0.035em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] min-[375px]:text-[1.85rem] min-[390px]:text-[1.95rem] sm:text-[2.25rem] sm:leading-[1.06] sm:tracking-[-0.04em] md:text-[clamp(2.9rem,5.4vw,6.1rem)]">
               TATA RUANG YANG TEPAT
               <br />
               <span className="relative inline-block text-[#C8A951] tracking-[-0.05em]">
@@ -313,14 +313,14 @@ export default async function Home() {
               </span>
             </h1>
 
-            <p className="mt-5 max-w-3xl pr-1 font-sans text-[0.98rem] leading-[1.58] text-white drop-shadow-md sm:text-[1.05rem] md:mt-6 md:text-[1.15rem]">
+            <p className="mt-4 max-w-3xl pr-1 font-sans text-[0.95rem] leading-[1.62] text-white drop-shadow-md sm:mt-5 sm:text-[1.05rem] md:mt-6 md:text-[1.15rem]">
               Saya membantu klien mengambil keputusan desain yang jelas, fungsional, dan relevan terhadap cara ruang digunakan.
             </p>
 
-            <div className="mt-7 flex flex-col gap-3 sm:mt-8 lg:mt-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[760px] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-row [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-wrap [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-[clamp(0.75rem,1.5vw,1.25rem)] [@media_(min-width:1281px)]:grid [@media_(min-width:1281px)]:grid-cols-3 [@media_(min-width:1281px)]:gap-4">
-              <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_hero", label: "mulai_percakapan_proyek", href_type: "internal" }} data-cta="homepage-hero-primary" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_20rem]">Mulai Percakapan Proyek</TrackedLink>
-              <TrackedLink href="/karya" eventName="project_view_intent" eventProps={{ source: "homepage_hero", label: "lihat_karya", content_type: "karya", href_type: "internal" }} data-cta="homepage-karya" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full border border-white/10 bg-transparent px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#C8A951] hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_13.75rem]">Lihat Karya</TrackedLink>
-              <Button href="/karya" variant="secondary" className="w-full text-center motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_13.75rem]">
+            <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:gap-3 lg:mt-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[760px] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-row [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-wrap [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-[clamp(0.75rem,1.5vw,1.25rem)] [@media_(min-width:1281px)]:grid [@media_(min-width:1281px)]:grid-cols-3 [@media_(min-width:1281px)]:gap-4">
+              <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_hero", label: "mulai_percakapan_proyek", href_type: "internal" }} data-cta="homepage-hero-primary" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-5 py-2.5 text-center font-mono text-[0.76rem] font-semibold uppercase tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_20rem]">Mulai Percakapan Proyek</TrackedLink>
+              <TrackedLink href="/karya" eventName="project_view_intent" eventProps={{ source: "homepage_hero", label: "lihat_karya", content_type: "karya", href_type: "internal" }} data-cta="homepage-karya" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full border border-white/10 bg-transparent px-5 py-2.5 text-center font-mono text-[0.76rem] font-semibold uppercase tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#C8A951] hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_13.75rem]">Lihat Karya</TrackedLink>
+              <Button href="/karya" variant="secondary" className="w-full min-h-10 px-5 py-2.5 text-center text-[0.76rem] tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_13.75rem]">
                 Baca Studi Kasus
               </Button>
             </div>
@@ -335,33 +335,33 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="client-workflow" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#090909] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '0ms' } as CSSProperties}>
+      <section id="client-workflow" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#090909] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '0ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(200,169,81,0.055),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="reveal-on-scroll grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-8" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Client Collaboration</p>
-              <h2 className="font-display mt-5 max-w-3xl text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
+              <h2 className="font-display mt-5 max-w-3xl text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Cara Saya Bekerja dengan Klien
               </h2>
             </div>
-            <p className="max-w-3xl font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
+            <p className="max-w-3xl font-sans text-base leading-[1.7] text-white/62 sm:text-lg md:text-xl">
               Saya tidak berhenti di visual. Saya memetakan konteks, menguji setiap pilihan, lalu menyusun keputusan desain yang seimbang antara fungsi, pengalaman pengguna, dan target bisnis.
             </p>
           </div>
 
           <div className="reveal-on-scroll" style={{ '--reveal-delay': '140ms' } as CSSProperties}>
-            <MobileSwipeRow className="mt-16 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
+            <MobileSwipeRow className="mt-10 sm:mt-12 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12" ariaLabel="Client collaboration cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#090909">
             {clientWorkflow.map((item) => (
-              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
-                <div className="mb-14 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:ease-out md:rounded-[28px] motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
+                <div className="mb-10 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
                   <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/48">{item.number}</span>
                   <CheckCircle2 className="text-[#C8A951]/70 transition duration-300 group-hover:text-[#C8A951]" size={22} strokeWidth={1.9} />
                 </div>
-                <h3 className="shrink-0 font-display text-3xl font-normal leading-[1.08] tracking-[-0.028em] text-white/90 md:text-4xl">
+                <h3 className="shrink-0 font-display text-[1.7rem] font-normal leading-[1.1] tracking-[-0.028em] text-white/90 md:text-4xl">
                   {item.title}
                 </h3>
-                <p className="mt-6 flex-1 font-sans text-base leading-[1.7] text-white/66">
+                <p className="mt-5 flex-1 font-sans text-[0.95rem] leading-[1.68] text-white/66">
                   {item.description}
                 </p>
               </article>
@@ -371,7 +371,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="framework" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="framework" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.08),transparent_27%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_58%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
@@ -386,12 +386,12 @@ export default async function Home() {
             </p>
           </div>
 
-          <MobileSwipeRow className="mt-20 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
+          <MobileSwipeRow className="mt-10 sm:mt-12 md:mt-20 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14" ariaLabel="Framework cards" desktopGridClassName="lg:grid-cols-3 lg:gap-6" backgroundTone="#2D2D2B">
             {framework.map((item) => {
               const Icon = item.icon;
               return (
-                <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-8 transition duration-300 motion-safe:ease-out motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
-                  <div className="mb-16 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
+                <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:ease-out md:rounded-[28px] motion-safe:active:scale-[0.985] motion-safe:hover:-translate-y-1 motion-safe:hover:transform-gpu hover:border-[#C8A951]/25 hover:bg-white/[0.04] hover:shadow-[0_18px_38px_rgba(0,0,0,0.24)] md:p-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-8">
+                  <div className="mb-10 flex shrink-0 items-center justify-between [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mb-10">
                     <div className="flex items-baseline gap-3">
                       <span className="font-mono text-xs font-black uppercase tracking-[0.28em] text-white/50">{item.number}</span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#C8A951]/70">{item.title}</span>
@@ -400,10 +400,10 @@ export default async function Home() {
                       <Icon size={21} strokeWidth={1.8} />
                     </span>
                   </div>
-                  <h3 className="shrink-0 font-display text-3xl font-normal uppercase leading-none tracking-[-0.02em] text-white/90 md:text-4xl">
+                  <h3 className="shrink-0 font-display text-[1.7rem] font-normal uppercase leading-[1.05] tracking-[-0.02em] text-white/90 md:text-4xl">
                     {item.code}
                   </h3>
-                  <p className="mt-6 max-w-sm flex-1 whitespace-pre-line font-sans text-base leading-[1.7] text-white/66">
+                  <p className="mt-5 max-w-sm flex-1 whitespace-pre-line font-sans text-[0.95rem] leading-[1.68] text-white/66">
                     {item.description}
                   </p>
                 </article>
@@ -413,7 +413,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="design-decisions" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#070707] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+      <section id="design-decisions" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#070707] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(200,169,81,0.07),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.014),transparent_42%)]" />
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-14">
           <div className="min-w-0 max-w-full lg:sticky lg:top-28 lg:self-start">
@@ -456,13 +456,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="impact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
+      <section id="impact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_10%,rgba(200,169,81,0.1),transparent_34%),radial-gradient(circle_at_82%_82%,rgba(200,169,81,0.08),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_52%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div className="max-w-3xl motion-safe:animate-[fade-up_700ms_ease-out]">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Impact</p>
-              <h2 className="font-display mt-5 text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
+              <h2 className="font-display mt-5 text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Dampak yang Terukur
               </h2>
               <p className="mt-6 max-w-xl font-sans text-base leading-[1.7] text-white/62 md:text-lg">
@@ -475,24 +475,24 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="differentiation" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="differentiation" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#2D2D2B] px-5 md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#C8A951]/14" />
         <div className="relative mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.56em] text-[#C8A951] md:text-[11px]">Differentiation</p>
-            <h2 className="font-display mt-6 text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
+            <h2 className="font-display mt-6 text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
               Apa yang Membedakan
             </h2>
           </div>
 
           <MobileSwipeRow
-            className="mt-16 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12"
+            className="mt-10 sm:mt-12 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-12"
             ariaLabel="Kartu diferensiasi dapat digeser horizontal"
             desktopGridClassName="lg:grid-cols-3 lg:gap-0"
             backgroundTone="#2D2D2B"
           >
             {differentiations.map((item, index) => (
-              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[28px] border border-white/5 bg-white/[0.02] p-7 transition duration-300 motion-safe:active:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] lg:rounded-none lg:border-y-0 lg:border-r-0 lg:border-l lg:border-white/10 lg:bg-transparent lg:px-12 lg:py-0 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-8 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
+              <article key={item.title} className="group flex h-full min-h-full flex-col rounded-[24px] border border-white/5 bg-white/[0.02] p-6 transition duration-300 motion-safe:active md:rounded-[28px]:scale-[0.985] hover:border-[#C8A951]/25 hover:bg-white/[0.04] lg:rounded-none lg:border-y-0 lg:border-r-0 lg:border-l lg:border-white/10 lg:bg-transparent lg:px-12 lg:py-0 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-8 first:lg:border-l-0 first:lg:pl-0 last:lg:pr-0">
                 <div className="flex items-start gap-4">
                   <CheckCircle2 className="mt-1 shrink-0 text-[#C8A951]/78 transition duration-300 group-hover:text-[#C8A951]" size={18} strokeWidth={2.1} />
                   <div className="flex min-h-full flex-1 flex-col">
@@ -500,7 +500,7 @@ export default async function Home() {
                     <h3 className="shrink-0 text-lg font-semibold uppercase leading-snug tracking-[-0.018em] text-white/90 md:text-xl">
                       {item.title}
                     </h3>
-                    <p className="mt-5 max-w-sm flex-1 font-sans text-base leading-[1.7] text-white/66">
+                    <p className="mt-4 max-w-sm flex-1 font-sans text-[0.95rem] leading-[1.68] text-white/66">
                       {item.description}
                     </p>
                   </div>
@@ -511,16 +511,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="portfolio" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
+      <section id="portfolio" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Decision-Based Portfolio</p>
-              <h2 className="font-display mt-6 max-w-4xl text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
+              <h2 className="font-display mt-6 max-w-4xl text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
                 Portfolio Berbasis Keputusan
               </h2>
-              <p className="mt-8 max-w-4xl font-sans text-lg leading-[1.65] text-white/62 md:text-xl">
+              <p className="mt-6 max-w-4xl font-sans text-base leading-[1.68] text-white/62 sm:text-lg md:mt-8 md:text-xl">
                 Setiap karya saya tampilkan sebagai cerita keputusan: masalah awal, proses berpikir, dan dampak yang dirasakan pengguna maupun bisnis.
               </p>
             </div>
@@ -531,15 +531,15 @@ export default async function Home() {
             </a>
           </div>
 
-          <div className="mt-20 grid gap-8 lg:grid-cols-2 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-6">
+          <div className="mt-10 grid gap-5 sm:mt-12 sm:gap-6 md:mt-20 lg:grid-cols-2 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-6">
             {portfolioWorks.map((project, index) => {
               const meta = project.category || project.design_category;
               const teaser = project.problem || project.solution || project.impact;
               const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
 
               return (
-                <article key={project.id} className="group relative overflow-hidden rounded-[30px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/22 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
-                  <div className="relative aspect-[16/9] overflow-hidden border-b border-white/5 bg-[#0f1925]">
+                <article key={project.id} className="group relative overflow-hidden rounded-[24px] md:rounded-[30px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/22 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
+                  <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9] border-b border-white/5 bg-[#0f1925]">
                     {project.cover_image ? (
                       <>
                         <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover" loading="lazy" decoding="async" />
@@ -552,15 +552,15 @@ export default async function Home() {
                         </div>
                       </div>
                     )}
-                    <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
-                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.36em] text-[#C8A951]">Project {String(index + 1).padStart(2, '0')}</p>
-                      {meta ? <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64">{meta}</span> : null}
+                    <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 sm:bottom-5 sm:left-5 sm:right-5 sm:gap-3">
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951] sm:tracking-[0.36em]">Project {String(index + 1).padStart(2, '0')}</p>
+                      {meta ? <span className="max-w-full rounded-full border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[9px] font-black uppercase tracking-[0.1em] text-white/64 sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">{meta}</span> : null}
                     </div>
                   </div>
-                  <div className="p-7 md:p-8 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-7">
-                    <h3 className="font-display max-w-2xl text-4xl font-normal leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.25rem,4vw,3rem)]">{project.title}</h3>
-                    {teaser ? <p className="mt-5 text-base leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
-                    <a href={detailHref} className="mt-7 inline-flex items-center gap-3 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
+                  <div className="p-5 sm:p-6 md:p-8 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-7">
+                    <h3 className="font-display max-w-2xl text-[2rem] font-normal leading-[1.05] sm:text-4xl sm:leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.25rem,4vw,3rem)]">{project.title}</h3>
+                    {teaser ? <p className="mt-4 text-[0.95rem] leading-[1.7] sm:mt-5 sm:text-base sm:leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
+                    <a href={detailHref} className="mt-5 inline-flex items-center gap-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] sm:mt-7 sm:gap-3 sm:text-[11px] sm:tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
                   </div>
                 </article>
               );
@@ -570,30 +570,30 @@ export default async function Home() {
       </section>
 
 
-      <section id="wawasan-design" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#0B0B0A] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
+      <section id="wawasan-design" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#0B0B0A] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-col gap-5 md:max-w-3xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Wawasan</p>
-            <h2 className="font-display text-balance text-5xl font-normal leading-[1.08] tracking-[-0.038em] text-[#F4F1EA] md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
+            <h2 className="font-display text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
               Wawasan Desain
             </h2>
-            <p className="font-sans text-lg leading-[1.7] text-white/62 md:text-xl">
+            <p className="font-sans text-base leading-[1.7] text-white/62 sm:text-lg md:text-xl">
               Insight singkat tentang cara saya membaca ruang, menilai tren, dan menyusun keputusan desain berbasis tujuan bisnis.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-10">
+          <div className="mt-9 grid gap-3.5 sm:mt-10 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-10">
             {wawasanCards.map((article) => (
-              <article key={article.title} className="group rounded-[24px] border border-white/5 bg-white/[0.02] p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/24 hover:bg-white/[0.045]">
-                <p className="inline-flex rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
+              <article key={article.title} className="group rounded-[22px] border border-white/5 bg-white/[0.02] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[#C8A951]/24 hover:bg-white/[0.045]">
+                <p className="inline-flex max-w-full rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-2.5 py-1 font-mono text-[9px] font-black uppercase tracking-[0.14em] sm:text-[10px] sm:tracking-[0.18em] text-[#D2B364]">{article.tag}</p>
                 <h3 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-[-0.02em] text-white/92">
                   {article.title}
                 </h3>
-                <p className="mt-3 font-sans text-sm leading-[1.75] text-white/66">{article.excerpt}</p>
+                <p className="mt-3 font-sans text-sm leading-[1.68] text-white/66">{article.excerpt}</p>
                 <a
                   href={article.href}
-                  className="mt-5 inline-flex items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
+                  className="mt-4 inline-flex items-center gap-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] sm:mt-5 sm:text-[11px] sm:tracking-[0.16em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]"
                 >
                   Baca Wawasan
                   <MoveRight className="transition duration-300 group-hover:translate-x-1" size={14} />
@@ -612,23 +612,23 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="contact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden bg-[#050505] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
+      <section id="contact" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#050505] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '60ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(200,169,81,0.042),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto max-w-6xl text-center">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">
               Ajukan Kolaborasi
             </p>
-            <h2 className="font-display mx-auto mt-8 max-w-5xl text-balance text-4xl font-normal italic leading-[1.22] tracking-[-0.025em] text-[#F4F1EA] md:text-5xl md:leading-[1.18] lg:text-6xl xl:text-[4.6rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[min(100%,68rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.6rem,4vw,3.35rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:leading-[1.14]">
+            <h2 className="font-display mx-auto mt-6 max-w-5xl text-balance text-[2.05rem] font-normal italic leading-[1.22] sm:mt-8 sm:text-4xl tracking-[-0.025em] text-[#F4F1EA] md:text-5xl md:leading-[1.18] lg:text-6xl xl:text-[4.6rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[min(100%,68rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.6rem,4vw,3.35rem)] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:leading-[1.14]">
               Jika Anda membutuhkan desainer, opsinya banyak.<br className="hidden [@media_(min-width:1281px)]:block" /> Jika Anda membutuhkan mitra strategis, mari berdiskusi.
             </h2>
-            <p className="mx-auto mt-8 max-w-3xl font-sans text-lg leading-[1.65] text-white/62 md:text-2xl">
+            <p className="mx-auto mt-6 max-w-3xl font-sans text-base leading-[1.68] text-white/62 sm:mt-8 sm:text-lg md:text-2xl">
               Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
             </p>
 
-            <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_final", label: "ajukan_kolaborasi", href_type: "internal" }} data-cta="homepage-final-collaboration" className="inline-flex min-h-11 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#080807] hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] mt-14 w-full px-6 py-5 tracking-[0.14em] shadow-[0_22px_50px_rgba(200,169,81,0.14)] sm:w-auto sm:min-w-[300px] md:min-w-[420px]">Ajukan Kolaborasi</TrackedLink>
+            <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_final", label: "ajukan_kolaborasi", href_type: "internal" }} data-cta="homepage-final-collaboration" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-5 py-3.5 text-center font-mono text-[0.78rem] font-semibold uppercase tracking-[0.1em] premium-interactive transition-all duration-300 ease-out text-[#080807] shadow-[0_18px_42px_rgba(200,169,81,0.12)] hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] mt-10 w-full sm:mt-14 sm:w-auto sm:min-w-[300px] sm:px-6 sm:py-5 sm:text-sm sm:tracking-[0.14em] md:min-w-[420px]">Ajukan Kolaborasi</TrackedLink>
 
-            <p className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/32">
+            <p className="mx-auto mt-5 max-w-sm font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/32 sm:mt-6 sm:max-w-none sm:text-[10px] sm:tracking-[0.18em]">
               Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
             </p>
 
@@ -652,9 +652,9 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="mt-20 h-px w-full bg-white/8" />
+          <div className="mt-14 h-px w-full bg-white/8 sm:mt-20" />
 
-          <div className="mt-14 flex flex-col gap-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-white/42 md:flex-row md:items-center md:justify-between md:text-[11px]">
+          <div className="mt-10 flex flex-col gap-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/42 sm:mt-14 sm:gap-6 sm:text-[10px] sm:tracking-[0.22em] md:flex-row md:items-center md:justify-between md:text-[11px]">
             <p>© 2026 Eryawan Agung — Strategic Design & Spatial Logic</p>
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
               <AdminFooterShortcut />
