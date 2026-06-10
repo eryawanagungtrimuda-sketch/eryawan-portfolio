@@ -636,7 +636,7 @@ export default async function Home() {
               <a
                 href="https://instagram.com/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="transition duration-300 hover:-translate-y-0.5 hover:text-[#C8A951]"
                 aria-label="Instagram"
               >

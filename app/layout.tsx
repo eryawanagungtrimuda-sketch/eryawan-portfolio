@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import PortfolioClicks from './portfolio-clicks';
 import { ToastProvider } from '@/components/toast-provider';
 import { SITE_URL, absoluteUrl } from '@/lib/site-url';
@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Eryawan Agung | Portfolio Design Strategy',
   description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+  authors: [{ name: 'Eryawan Agung', url: SITE_URL }],
+  creator: 'Eryawan Agung',
+  publisher: 'Eryawan Agung',
+  keywords: ['Eryawan Agung', 'design strategy', 'spatial logic', 'portfolio desain', 'interior strategy'],
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: {
     canonical: absoluteUrl('/'),
   },
@@ -37,9 +45,20 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#080807',
+  colorScheme: 'dark',
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
+      <head>
+        <link rel="preload" as="image" href="/hero.jpg" />
+        <link rel="preload" as="font" href="/fonts/Belleza-Regular.ttf" type="font/ttf" crossOrigin="anonymous" />
+      </head>
       <body
         style={{
           ['--font-inter' as string]: 'Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
