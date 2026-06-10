@@ -173,7 +173,7 @@ export default function WawasanArchive({ insights }: Props) {
   };
 
   return (
-    <section className="reveal-on-scroll mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl pb-28 sm:mt-10">
+    <section className="mobile-scroll-section mobile-section-breathing mx-auto mt-8 max-w-7xl pb-28 sm:mt-10">
       <div style={{ "--premium-card-border": "rgba(255, 255, 255, 0.10)" } as CSSProperties} className="premium-oval-card premium-oval-frame border border-transparent bg-white/[0.02] p-5 sm:p-5">
         <label htmlFor="wawasan-search" className="mb-2 block font-sans text-xs text-white/70">Cari topik wawasan</label>
         <div className="grid grid-cols-[minmax(0,1fr)_76px] gap-3 sm:grid-cols-[minmax(0,1fr)_92px]">
@@ -197,8 +197,8 @@ export default function WawasanArchive({ insights }: Props) {
       ) : (
         <>
           {featured ? (
-            <article style={{ "--reveal-delay": "0ms", "--premium-card-border": "rgba(200, 169, 81, 0.25)" } as CSSProperties} className="reveal-on-scroll mobile-card-breathing mobile-card-reveal premium-oval-card-lg premium-oval-frame mt-6 border border-transparent bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
-              {featured.cover_image ? <div className="premium-oval-media"><img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="lazy" decoding="async" /></div> : null}
+            <article style={{ "--premium-card-border": "rgba(200, 169, 81, 0.25)" } as CSSProperties} className="mobile-card-breathing premium-oval-card-lg premium-oval-frame mt-6 border border-transparent bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
+              {featured.cover_image ? <div className="premium-oval-media"><img src={featured.cover_image} alt={featured.title} className="h-full w-full object-cover" loading="eager" fetchPriority="high" decoding="async" /></div> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
