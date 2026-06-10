@@ -55,10 +55,6 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id">
-      <head>
-        <link rel="preload" as="image" href="/hero.jpg" />
-        <link rel="preload" as="font" href="/fonts/Belleza-Regular.ttf" type="font/ttf" crossOrigin="anonymous" />
-      </head>
       <body
         style={{
           ['--font-inter' as string]: 'Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
