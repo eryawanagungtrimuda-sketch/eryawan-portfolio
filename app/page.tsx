@@ -9,6 +9,7 @@ import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
 import AdminFooterShortcut from '@/components/admin-footer-shortcut';
+import HomePreloadResources from '@/components/home-preload-resources';
 import { absoluteUrl } from '@/lib/site-url';
 import TrackedLink from '@/components/tracked-link';
 
@@ -224,6 +225,7 @@ export default async function Home() {
   };
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip overflow-y-visible bg-[#080807] font-sans text-[#F4F1EA]">
+      <HomePreloadResources />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <RevealObserver />
       <MobileAdminQuickAccess />
@@ -636,7 +638,7 @@ export default async function Home() {
               <a
                 href="https://instagram.com/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="transition duration-300 hover:-translate-y-0.5 hover:text-[#C8A951]"
                 aria-label="Instagram"
               >

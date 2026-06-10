@@ -246,7 +246,7 @@ export default function WawasanArchive({ insights }: Props) {
         </div>, document.body)}
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
         <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
-          <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa wawasan desain yang menarik untuk dibaca\n\nhttps://eryawanagung.my.id/wawasan')}`} target="_blank" rel="noreferrer" aria-label="Bagikan daftar wawasan via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a>
+          <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa wawasan desain yang menarik untuk dibaca\n\nhttps://eryawanagung.my.id/wawasan')}`} target="_blank" rel="noopener noreferrer" aria-label="Bagikan daftar wawasan via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a>
           <ShareLinkButton url="https://eryawanagung.my.id/wawasan" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" />
         </div>
       </div>
