@@ -23,44 +23,6 @@ function normalize(value?: string | null) {
 
 const FEATURED_IMAGE_WIDTH = 1600;
 const FEATURED_IMAGE_HEIGHT = 1000;
-const FEATURED_IMAGE_SIZES = '(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) calc((100vw - 64px) / 2), 608px';
-const SUPABASE_PUBLIC_OBJECT_PATH = '/storage/v1/object/public/';
-const SUPABASE_PUBLIC_RENDER_PATH = '/storage/v1/render/image/public/';
-
-type FeaturedImageSources = {
-  src: string;
-  srcSet?: string;
-};
-
-function getSupabaseTransformedImageUrl(src: string, width: number, quality = 75) {
-  try {
-    const url = new URL(src);
-
-    if (!url.pathname.includes(SUPABASE_PUBLIC_OBJECT_PATH)) return null;
-
-    url.pathname = url.pathname.replace(SUPABASE_PUBLIC_OBJECT_PATH, SUPABASE_PUBLIC_RENDER_PATH);
-    url.searchParams.set('width', String(width));
-    url.searchParams.set('quality', String(quality));
-    url.searchParams.set('resize', 'cover');
-
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
-
-function getFeaturedImageSources(src: string): FeaturedImageSources {
-  const mobileSource = getSupabaseTransformedImageUrl(src, 960);
-
-  if (!mobileSource) return { src };
-
-  const desktopSource = getSupabaseTransformedImageUrl(src, FEATURED_IMAGE_WIDTH) || src;
-
-  return {
-    src: mobileSource,
-    srcSet: `${mobileSource} 960w, ${desktopSource} ${FEATURED_IMAGE_WIDTH}w`,
-  };
-}
 
 function toLabel(value?: string | null, kind?: 'source') {
   if (!value) return ALL;
@@ -239,7 +201,7 @@ export default function WawasanArchive({ insights }: Props) {
         <>
           {featured ? (
             <article style={{ "--premium-card-border": "rgba(200, 169, 81, 0.25)" } as CSSProperties} className="mobile-card-breathing premium-oval-card-lg premium-oval-frame mt-6 border border-transparent bg-gradient-to-b from-[#1a160a] to-[#0c0b08] md:grid md:grid-cols-2">
-              {featured.cover_image ? <div className="premium-oval-media aspect-[16/10] md:aspect-auto"><img src={getFeaturedImageSources(featured.cover_image).src} srcSet={getFeaturedImageSources(featured.cover_image).srcSet} sizes={FEATURED_IMAGE_SIZES} alt={featured.title} width={FEATURED_IMAGE_WIDTH} height={FEATURED_IMAGE_HEIGHT} className="h-full w-full object-cover" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { if (event.currentTarget.src === featured.cover_image) return; event.currentTarget.srcset = ''; event.currentTarget.src = featured.cover_image || ''; }} /></div> : null}
+              {featured.cover_image ? <div className="premium-oval-media aspect-[16/10] md:aspect-auto"><img src={featured.cover_image} alt={featured.title} width={FEATURED_IMAGE_WIDTH} height={FEATURED_IMAGE_HEIGHT} className="h-full w-full object-cover" loading="eager" fetchPriority="high" decoding="async" /></div> : null}
               <div className="p-6 md:p-8">
                 <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4AF37]">{toLabel(featured.category)}</span>
                 <h2 className="mt-4 font-sans text-3xl leading-tight">{featured.title}</h2>
