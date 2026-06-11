@@ -108,6 +108,7 @@ export default async function KaryaDetailPage({ params }: Props) {
     crop_zoom: image.crop_zoom,
   }));
   const openingDescription = project.problem?.trim() || null;
+  const projectCoverImage = project.cover_image || galleryImages[0]?.image_url || null;
   const projectUrl = absoluteUrl(`/karya/${project.slug}`);
   const whatsappMessage = `Halo, saya melihat studi kasus ${project.title} di website Eryawan Agung.
 Saya ingin mendiskusikan kemungkinan proyek dengan kebutuhan ruang yang serupa.
@@ -151,31 +152,49 @@ ${projectUrl}`;
           <BackButton fallbackHref="/karya" />
         </div>
 
-        <section className="reveal-on-scroll pt-12 pb-8 md:pt-16 md:pb-10 lg:pt-20 lg:pb-12">
+        <section className="reveal-on-scroll pt-12 pb-8 md:pt-16 md:pb-10 lg:pt-20 lg:pb-16">
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
-          <div className="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10">
-            <div>
-              <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Studi Kasus Interior</p>
-              <h1 className="font-display mt-5 max-w-5xl text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
-              {openingDescription ? (
-                <p className="mt-6 max-w-3xl text-base leading-[1.75] text-white/68 sm:text-lg md:text-[1.35rem] md:leading-[1.6]">{openingDescription}</p>
-              ) : null}
-            </div>
-
-            {metaItems.length > 0 ? (
-              <aside className="h-fit self-start rounded-[1.75rem] border border-[#D4AF37]/20 bg-[#C8A951]/[0.06] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] lg:sticky lg:top-8 lg:mt-9">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Catatan Proyek</p>
-                <dl className="mt-5 divide-y divide-white/10">
-                  {metaItems.map((item) => (
-                    <div key={`${item.label}-${item.value}`} className="grid grid-cols-[0.78fr_1.22fr] gap-3 py-3 first:pt-0 last:pb-0">
-                      <dt className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/38">{item.label}</dt>
-                      <dd className="text-right text-sm leading-6 text-white/82">{item.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </aside>
+          <div className="mt-7 max-w-5xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Studi Kasus Interior</p>
+            <h1 className="font-display mt-5 max-w-5xl text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
+            {openingDescription ? (
+              <p className="mt-6 max-w-3xl text-base leading-[1.75] text-white/68 sm:text-lg md:text-[1.35rem] md:leading-[1.6]">{openingDescription}</p>
             ) : null}
           </div>
+
+          {projectCoverImage || metaItems.length > 0 ? (
+            <div className="mt-8 lg:mt-12">
+              <div className={projectCoverImage ? "lg:relative lg:pb-10" : "max-w-sm"}>
+                {projectCoverImage ? (
+                  <div className="relative hidden overflow-hidden rounded-[2rem] border border-white/10 bg-[#11100d] shadow-[0_34px_120px_rgba(0,0,0,0.45)] lg:block lg:aspect-video lg:w-[78%] xl:rounded-[2.35rem]">
+                    <img
+                      src={projectCoverImage}
+                      alt={`${project.title} cover`}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-[linear-gradient(90deg,rgba(8,8,7,0.04)_0%,rgba(8,8,7,0.08)_48%,rgba(8,8,7,0.62)_100%)] xl:rounded-[2.35rem]" />
+                    <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-[#D4AF37]/18 xl:rounded-[2.35rem]" />
+                  </div>
+                ) : null}
+
+                {metaItems.length > 0 ? (
+                  <aside className="h-fit rounded-[1.75rem] border border-[#D4AF37]/20 bg-[#C8A951]/[0.06] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] lg:absolute lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[22rem] lg:-translate-y-1/2 lg:bg-[#11100d]/95 lg:shadow-[0_30px_90px_rgba(0,0,0,0.42)] xl:w-[23rem]">
+                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Catatan Proyek</p>
+                    <dl className="mt-5 divide-y divide-white/10">
+                      {metaItems.map((item) => (
+                        <div key={`${item.label}-${item.value}`} className="grid grid-cols-[0.78fr_1.22fr] gap-3 py-3 first:pt-0 last:pb-0">
+                          <dt className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/38">{item.label}</dt>
+                          <dd className="text-right text-sm leading-6 text-white/82">{item.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </aside>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </section>
 
         {caseSummaryItems.length > 0 || areaTags.length > 0 ? (
