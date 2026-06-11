@@ -692,10 +692,14 @@ export default async function Home() {
               Saya terbuka untuk peluang profesional dan kolaborasi proyek yang membutuhkan desain terarah, komunikasi jelas, dan hasil yang memberi dampak nyata.
             </p>
 
-            <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_final", label: "ajukan_kolaborasi", href_type: "internal" }} data-cta="homepage-final-collaboration" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-5 py-3.5 text-center font-mono text-[0.78rem] font-semibold uppercase tracking-[0.1em] premium-interactive transition-all duration-300 ease-out text-[#080807] shadow-[0_18px_42px_rgba(200,169,81,0.12)] hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] mt-10 w-full sm:mt-14 sm:w-auto sm:min-w-[300px] sm:px-6 sm:py-5 sm:text-sm sm:tracking-[0.14em] md:min-w-[420px]">Ajukan Kolaborasi</TrackedLink>
+            <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:mt-14 sm:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)_minmax(0,0.85fr)]">
+              <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_final", label: "ajukan_kolaborasi", href_type: "internal" }} data-cta="homepage-final-collaboration" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-5 py-3.5 text-center font-mono text-[0.78rem] font-semibold uppercase tracking-[0.1em] premium-interactive transition-all duration-300 ease-out text-[#080807] shadow-[0_18px_42px_rgba(200,169,81,0.12)] hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full sm:px-6 sm:py-5 sm:text-sm sm:tracking-[0.14em]">Mulai Percakapan</TrackedLink>
+              <a href="/karya" className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/16 px-5 py-3.5 text-center font-mono text-[0.72rem] font-bold uppercase tracking-[0.12em] text-white/68 transition hover:border-[#C8A951]/45 hover:bg-[#C8A951]/10 hover:text-[#C8A951] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] sm:py-5">Lihat Karya</a>
+              <a href="/wawasan" className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/16 px-5 py-3.5 text-center font-mono text-[0.72rem] font-bold uppercase tracking-[0.12em] text-white/68 transition hover:border-[#C8A951]/45 hover:bg-[#C8A951]/10 hover:text-[#C8A951] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] sm:py-5">Baca Wawasan</a>
+            </div>
 
-            <p className="mx-auto mt-5 max-w-sm font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/32 sm:mt-6 sm:max-w-none sm:text-[10px] sm:tracking-[0.18em]">
-              Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
+            <p className="mx-auto mt-5 max-w-2xl font-sans text-sm leading-7 text-white/50 sm:mt-6">
+              Portfolio desain interior yang menampilkan karya, wawasan, dan proses berpikir desain berbasis keputusan. Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
             </p>
 
             <div className="mt-8 flex items-center justify-center gap-8 text-white/50">
@@ -720,11 +724,22 @@ export default async function Home() {
 
           <div className="mt-14 h-px w-full bg-white/8 sm:mt-20" />
 
-          <div className="mt-10 flex flex-col gap-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/42 sm:mt-14 sm:gap-6 sm:text-[10px] sm:tracking-[0.22em] md:flex-row md:items-center md:justify-between md:text-[11px]">
-            <p>© 2026 Eryawan Agung — Strategic Design & Spatial Logic</p>
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
-              <AdminFooterShortcut />
-              <span>Surabaya • Melayani Indonesia</span>
+          <div className="mt-10 grid gap-7 sm:mt-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end">
+            <div>
+              <p className="font-display text-3xl leading-none tracking-[-0.03em] text-[#F4F1EA] sm:text-4xl">Eryawan Agung</p>
+              <p className="mt-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.22em]">Interior Designer / Decision-Based Interior Design</p>
+              <p className="mt-4 max-w-xl font-sans text-sm leading-7 text-white/50 sm:text-base">
+                Karya, wawasan, dan proses desain interior berbasis keputusan — terbuka untuk peluang kerja, kolaborasi proyek, dan diskusi desain interior.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/42 sm:text-[10px] sm:tracking-[0.22em] md:items-end md:text-right md:text-[11px]">
+              <p>© 2026 Eryawan Agung — Portfolio Desain Interior</p>
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
+                <AdminFooterShortcut />
+                <span>Surabaya • Melayani Indonesia</span>
+              </div>
+              <p className="text-white/30">Designed as a personal portfolio by Eryawan Agung.</p>
             </div>
           </div>
         </div>

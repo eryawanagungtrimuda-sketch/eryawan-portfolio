@@ -37,10 +37,25 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
   const uniqueLinks = links.filter((link, index, arr) => arr.findIndex((item) => item.href === link.href) === index);
 
   return (
-    <section className={`rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-7 ${className}`.trim()} aria-label="Lanjutkan eksplorasi halaman publik">
-      <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Journey Navigation</p>
-      <h2 className="mt-4 font-display text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">{title}</h2>
-      <div className="mt-5 grid gap-3 md:grid-cols-3">
+    <section
+      className={`rounded-[26px] border border-white/10 bg-[linear-gradient(140deg,rgba(255,255,255,0.045),rgba(255,255,255,0.018)_52%,rgba(212,175,55,0.055))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.18)] sm:p-6 md:p-7 ${className}`.trim()}
+      aria-label="Lanjutkan eksplorasi portfolio Eryawan Agung"
+    >
+      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-2xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Eryawan Agung</p>
+          <p className="mt-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/42 sm:text-[10px]">Interior Designer / Decision-Based Interior Design</p>
+          <h2 className="mt-4 font-display text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">{title}</h2>
+          <p className="mt-3 max-w-xl text-sm leading-7 text-white/58">
+            Portfolio desain interior yang menampilkan karya, wawasan, dan proses berpikir desain berbasis keputusan.
+          </p>
+        </div>
+        <p className="max-w-sm text-sm leading-7 text-white/56 md:text-right">
+          Terbuka untuk peluang kerja, kolaborasi proyek, dan diskusi desain interior.
+        </p>
+      </div>
+
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
         {uniqueLinks.map((link) => {
           const isCurrent = Boolean(link.current || link.disabled);
           const badgeText = link.badge || (isCurrent ? 'Sedang dibuka' : null);
@@ -77,6 +92,12 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
           );
         })}
       </div>
+
+      <div className="mt-6 flex flex-col gap-2 border-t border-white/10 pt-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/38 sm:flex-row sm:items-center sm:justify-between sm:text-[10px]">
+        <span>© Eryawan Agung</span>
+        <span>Portfolio Desain Interior Berbasis Keputusan</span>
+      </div>
     </section>
   );
 }
+
