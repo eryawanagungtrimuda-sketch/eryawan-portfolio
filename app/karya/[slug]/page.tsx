@@ -140,7 +140,7 @@ ${projectUrl}`;
     image: project.cover_image || galleryImages[0]?.image_url || absoluteUrl('/hero.jpg'),
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: project.created_at,
-    publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
+    publisher: { '@type': 'Person', name: 'Eryawan Agung' },
   };
 
   return (
