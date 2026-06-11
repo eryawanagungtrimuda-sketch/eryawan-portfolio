@@ -195,7 +195,7 @@ function BrandWordmark({ compact = false }: { compact?: boolean }) {
 
 
 export default async function Home() {
-  const portfolioWorks = (await getPublishedProjects()).slice(0, 2);
+  const portfolioWorks = (await getPublishedProjects()).slice(0, 3);
   const publishedInsights = await getPublishedInsights();
   const wawasanCards =
     publishedInsights.length > 0
@@ -213,6 +213,8 @@ export default async function Home() {
           tag: article.tag,
           href: '/wawasan',
         }));
+  const featuredWork = portfolioWorks[0];
+  const supportingWorks = portfolioWorks.slice(1, 3);
   const schemaData = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -514,16 +516,16 @@ export default async function Home() {
       </section>
 
       <section id="portfolio" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#142030] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.018),transparent_40%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(200,169,81,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_42%)]" />
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
+          <div className="grid gap-12 lg:grid-cols-[1fr_0.42fr] lg:items-end [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-10">
             <div>
-              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Decision-Based Portfolio</p>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">Karya Terpilih</p>
               <h2 className="font-display mt-6 max-w-4xl text-balance text-[2.45rem] font-normal leading-[1.1] tracking-[-0.034em] text-[#F4F1EA] sm:text-5xl md:text-7xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(3.25rem,5vw,4.1rem)]">
-                Portfolio Berbasis Keputusan
+                Studi Kasus Pilihan
               </h2>
-              <p className="mt-6 max-w-4xl font-sans text-base leading-[1.68] text-white/62 sm:text-lg md:mt-8 md:text-xl">
-                Setiap karya saya tampilkan sebagai cerita keputusan: masalah awal, proses berpikir, dan dampak yang dirasakan pengguna maupun bisnis.
+              <p className="mt-6 max-w-3xl font-sans text-base leading-[1.72] text-white/62 sm:text-lg md:mt-8 md:text-xl">
+                Beberapa karya dipilih sebagai pembuka untuk membaca kualitas keputusan desain: dari konteks masalah, struktur ruang, hingga dampak yang terasa setelah ruang digunakan.
               </p>
             </div>
 
@@ -533,44 +535,106 @@ export default async function Home() {
             </a>
           </div>
 
-          <div className="mt-10 grid gap-5 sm:mt-12 sm:gap-6 md:mt-20 lg:grid-cols-2 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-6">
-            {portfolioWorks.map((project, index) => {
-              const meta = project.category || project.design_category;
-              const teaser = project.problem || project.solution || project.impact;
-              const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
+          {featuredWork ? (
+            <div className="mt-10 grid gap-5 sm:mt-12 sm:gap-6 md:mt-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-stretch [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-14 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-6">
+              {(() => {
+                const meta = featuredWork.category || featuredWork.design_category;
+                const teaser = featuredWork.problem || featuredWork.solution || featuredWork.impact;
+                const detailHref = featuredWork.slug ? `/karya/${featuredWork.slug}` : '/karya';
 
-              return (
-                <article key={project.id} className="group relative overflow-hidden rounded-[24px] md:rounded-[30px] border border-white/5 bg-gradient-to-br from-white/[0.03] to-white/[0.01] transition duration-300 hover:-translate-y-1 hover:border-[#C8A951]/22 hover:shadow-[0_26px_58px_rgba(0,0,0,0.35)]">
-                  <div className="relative aspect-[4/3] overflow-hidden sm:aspect-[16/9] border-b border-white/5 bg-[#0f1925]">
-                    {project.cover_image ? (
-                      <>
-                        <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover" loading="lazy" decoding="async" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
-                        <div className="rounded-2xl border border-white/10 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
-                          Visual proyek belum tersedia
+                return (
+                  <article className="group relative overflow-hidden rounded-[26px] border border-[#C8A951]/20 bg-[#0e1824] shadow-[0_28px_80px_rgba(0,0,0,0.28)] transition duration-300 md:rounded-[34px] md:hover:-translate-y-1 md:hover:border-[#C8A951]/35 md:hover:shadow-[0_34px_92px_rgba(0,0,0,0.42)]">
+                    <a href={detailHref} className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#142030]">
+                      <div className="relative aspect-[4/3] overflow-hidden border-b border-white/8 bg-[#0f1925] sm:aspect-[16/10] lg:aspect-[16/11]">
+                        {featuredWork.cover_image ? (
+                          <>
+                            <img src={featuredWork.cover_image} alt={featuredWork.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover transition duration-700 md:group-hover:scale-[1.015]" loading="lazy" decoding="async" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/12 to-transparent" />
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-5">
+                            <div className="rounded-2xl border border-white/10 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
+                              Visual proyek belum tersedia
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute left-4 right-4 top-4 flex flex-wrap items-center justify-between gap-2 sm:left-6 sm:right-6 sm:top-6">
+                          <p className="rounded-full border border-[#C8A951]/25 bg-black/30 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.18em] text-[#D7BD72] sm:text-[10px] sm:tracking-[0.24em]">Studi Pilihan</p>
+                          {meta ? <span className="max-w-full rounded-full border border-white/10 bg-black/30 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.1em] text-white/68 sm:text-[10px] sm:tracking-[0.14em]">{meta}</span> : null}
                         </div>
                       </div>
-                    )}
-                    <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 sm:bottom-5 sm:left-5 sm:right-5 sm:gap-3">
-                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951] sm:tracking-[0.36em]">Project {String(index + 1).padStart(2, '0')}</p>
-                      {meta ? <span className="max-w-full rounded-full border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[9px] font-black uppercase tracking-[0.1em] text-white/64 sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">{meta}</span> : null}
-                    </div>
-                  </div>
-                  <div className="p-5 sm:p-6 md:p-8 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-7">
-                    <h3 className="font-display max-w-2xl text-[2rem] font-normal leading-[1.05] sm:text-4xl sm:leading-[1.02] tracking-[-0.03em] text-white/92 md:text-5xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.25rem,4vw,3rem)]">{project.title}</h3>
-                    {teaser ? <p className="mt-4 text-[0.95rem] leading-[1.7] sm:mt-5 sm:text-base sm:leading-[1.75] text-white/62 md:text-lg">{teaser}</p> : null}
-                    <a href={detailHref} className="mt-5 inline-flex items-center gap-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] sm:mt-7 sm:gap-3 sm:text-[11px] sm:tracking-[0.2em] text-[#C8A951] transition duration-300 hover:text-[#D7BD72]">Eksplor Studi Kasus <MoveRight className="transition duration-300 group-hover:translate-x-1" size={16} /></a>
-                  </div>
-                </article>
-              );
-            })}
+                      <div className="p-5 sm:p-7 md:p-9 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-7">
+                        <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#C8A951] sm:tracking-[0.34em]">Studi Kasus Utama</p>
+                        <h3 className="font-display mt-4 max-w-3xl text-[2.25rem] font-normal leading-[1.02] tracking-[-0.035em] text-white/94 sm:text-5xl md:text-6xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[clamp(2.65rem,4.3vw,3.35rem)]">{featuredWork.title}</h3>
+                        {teaser ? <p className="mt-5 max-w-2xl text-[0.98rem] leading-[1.74] text-white/64 sm:text-base md:text-lg md:leading-[1.78]">{teaser}</p> : null}
+                        <span className="mt-7 inline-flex items-center gap-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72] sm:text-[11px] sm:tracking-[0.22em]">
+                          Eksplor Studi Kasus
+                          <MoveRight className="transition duration-300 md:group-hover:translate-x-1" size={16} />
+                        </span>
+                      </div>
+                    </a>
+                  </article>
+                );
+              })()}
+
+              {supportingWorks.length > 0 ? (
+                <div className="grid gap-5 sm:gap-6">
+                  {supportingWorks.map((project, index) => {
+                    const meta = project.category || project.design_category;
+                    const teaser = project.problem || project.solution || project.impact;
+                    const detailHref = project.slug ? `/karya/${project.slug}` : '/karya';
+
+                    return (
+                      <article key={project.id} className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.025] transition duration-300 md:rounded-[30px] md:hover:-translate-y-0.5 md:hover:border-[#C8A951]/25 md:hover:bg-white/[0.04]">
+                        <a href={detailHref} className="grid h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#142030] sm:grid-cols-[0.42fr_0.58fr] lg:grid-cols-1">
+                          <div className="relative aspect-[4/3] overflow-hidden border-b border-white/5 bg-[#0f1925] sm:aspect-auto sm:min-h-[14rem] sm:border-b-0 sm:border-r sm:border-white/5 lg:aspect-[16/9] lg:min-h-0 lg:border-b lg:border-r-0">
+                            {project.cover_image ? (
+                              <>
+                                <img src={project.cover_image} alt={project.title || 'Gambar project Eryawan Agung'} className="h-full w-full object-cover transition duration-700 md:group-hover:scale-[1.012]" loading="lazy" decoding="async" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+                              </>
+                            ) : (
+                              <div className="absolute inset-0 flex items-end bg-[linear-gradient(150deg,#1a2a3d_0%,#132130_55%,#0d161f_100%)] p-4">
+                                <div className="rounded-2xl border border-white/10 bg-black/35 px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/64">
+                                  Visual proyek belum tersedia
+                                </div>
+                              </div>
+                            )}
+                            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2">
+                              <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#C8A951]">Pilihan {String(index + 2).padStart(2, '0')}</p>
+                              {meta ? <span className="max-w-full rounded-full border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[9px] font-black uppercase tracking-[0.1em] text-white/64">{meta}</span> : null}
+                            </div>
+                          </div>
+                          <div className="flex flex-col justify-between p-5 sm:p-6 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:p-5">
+                            <div>
+                              <h3 className="font-display max-w-xl text-[1.95rem] font-normal leading-[1.04] tracking-[-0.032em] text-white/92 sm:text-4xl lg:text-[2.4rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[2.15rem]">{project.title}</h3>
+                              {teaser ? <p className="mt-4 line-clamp-3 text-[0.94rem] leading-[1.68] text-white/60 sm:text-[0.96rem]">{teaser}</p> : null}
+                            </div>
+                            <span className="mt-5 inline-flex items-center gap-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#C8A951] transition duration-300 group-hover:text-[#D7BD72]">
+                              Baca Studi Kasus
+                              <MoveRight className="transition duration-300 md:group-hover:translate-x-1" size={14} />
+                            </span>
+                          </div>
+                        </a>
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          <div className="mt-9 flex flex-col items-start gap-4 border-t border-white/10 pt-6 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:pt-8">
+            <p className="max-w-2xl font-sans text-sm leading-[1.7] text-white/52 sm:text-base">
+              Arsip lengkap menyimpan konteks proyek, urutan keputusan, dan detail visual yang lebih menyeluruh.
+            </p>
+            <a href="/karya" className="group inline-flex min-h-11 items-center justify-center rounded-full border border-[#C8A951]/45 bg-[#C8A951]/10 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D7BD72] transition duration-300 hover:border-[#C8A951]/70 hover:bg-[#C8A951]/20 hover:text-[#F4F1EA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#142030] sm:text-[11px] sm:tracking-[0.18em]">
+              Jelajahi Studi Kasus
+              <MoveRight className="ml-2.5 transition duration-300 group-hover:translate-x-1" size={16} />
+            </a>
           </div>
         </div>
       </section>
-
 
       <section id="wawasan-design" className="reveal-on-scroll mobile-scroll-section mobile-section-breathing relative overflow-hidden max-md:!py-20 bg-[#0B0B0A] px-5 text-white md:px-10 md:py-24 lg:px-16 lg:py-32 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:py-24" style={{ '--reveal-delay': '100ms' } as CSSProperties}>
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(200,169,81,0.07),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent_42%)]" />
