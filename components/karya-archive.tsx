@@ -521,9 +521,9 @@ export default function KaryaArchive({ projects }: Props) {
               ) : <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/[0.08] bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] px-6 text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex flex-1 flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Case Study / {String(index + 1).padStart(2, '0')}</p>
+                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Studi Kasus / {String(index + 1).padStart(2, '0')}</p>
                   <span className="h-px min-w-12 flex-1 bg-gradient-to-r from-[#D4AF37]/28 to-transparent" aria-hidden="true" />
-                  <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Selected Work</p>
+                  <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Karya Terpilih</p>
                 </div>
                 <h2 className="font-display mt-5 line-clamp-2 max-w-2xl text-[1.9rem] font-normal leading-[1.06] tracking-[-0.035em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-4 font-sans text-sm leading-[1.78] text-white/64 md:text-[15px]">{truncateText(getProjectTeaser(project), 132)}</p> : null}

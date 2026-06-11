@@ -7,7 +7,7 @@
 
 ## Summary of visual polish
 
-- Refined the archive project cards with a more editorial case-study header, quieter index treatment, and a restrained “Selected Work” label.
+- Refined the archive project cards with a more editorial Indonesian “Studi Kasus / XX” header, quieter index treatment, and a restrained “Karya Terpilih” label.
 - Rebalanced title, teaser, share-copy excerpt, metadata, and CTA spacing so each card reads more like a curated interior design archive entry.
 - Softened metadata badges with lower-contrast borders, tighter uppercase tracking, and quieter surfaces.
 - Reduced desktop hover intensity to a subtle lift with a softer shadow and border treatment.
