@@ -4,6 +4,9 @@ import type { Insight, InsightSourceProject, InsightSourceType } from './types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 const insightColumns = 'id,title,slug,category,content_type,source_type,source_project_id,cover_image,excerpt,content,ai_prompt_source,is_published,created_at,updated_at';
+const publicInsightListColumns = 'id,title,slug,category,content_type,source_type,cover_image,excerpt,is_published,created_at,updated_at';
+
+export type PublicInsightListItem = Omit<Insight, 'source_project_id' | 'content' | 'ai_prompt_source'>;
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
@@ -57,17 +60,17 @@ export async function findRelatedInsightForProject(
   return null;
 }
 
-export async function getPublishedInsights() {
+export async function getPublishedInsights(): Promise<PublicInsightListItem[]> {
   noStore();
-  if (!isSupabaseConfigured) return [] as Insight[];
+  if (!isSupabaseConfigured) return [] as PublicInsightListItem[];
   const supabase = createSupabaseServerClient();
   const { data } = await supabase
     .from('insights')
-    .select(`${insightColumns},insight_images(image_url,sort_order)`)
+    .select(`${publicInsightListColumns},insight_images(image_url,sort_order)`)
     .eq('is_published', true)
     .order('created_at', { ascending: false });
 
-  const insights = ((data || []) as Insight[]).map((insight) => {
+  const insights = ((data || []) as PublicInsightListItem[]).map((insight) => {
     if (insight.cover_image || insight.content_type !== 'review_karya') return insight;
     const fallbackImage = insight.insight_images?.slice().sort((a, b) => a.sort_order - b.sort_order)[0]?.image_url || null;
     return { ...insight, cover_image: fallbackImage };

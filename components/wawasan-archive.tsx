@@ -5,10 +5,10 @@ import Link from 'next/link';
 
 import { createPortal } from 'react-dom';
 import ShareLinkButton from '@/components/share-link-button';
-import type { Insight } from '@/lib/types';
+import type { PublicInsightListItem } from '@/lib/insights';
 
 type Props = {
-  insights: Insight[];
+  insights: PublicInsightListItem[];
 };
 
 type SortType = 'terbaru' | 'terlama' | 'judul_az';
@@ -32,7 +32,7 @@ function toLabel(value?: string | null, kind?: 'source') {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function InsightCard({ item, frameColor }: { item: Insight; frameColor?: string }) {
+function InsightCard({ item, frameColor }: { item: PublicInsightListItem; frameColor?: string }) {
   const insightUrl = `https://eryawanagung.my.id/wawasan/${item.slug}`;
   const teaserCopy = `Check this design insight from eryawanagung.my.id: ${item.title} - ${insightUrl}${item.excerpt ? ` | ${item.excerpt}` : ''}`;
   return (
