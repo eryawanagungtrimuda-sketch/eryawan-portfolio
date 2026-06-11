@@ -136,7 +136,7 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
     image: schemaImageUrl,
     author: { '@type': 'Person', name: 'Eryawan Agung' },
     datePublished: insight.created_at,
-    publisher: { '@type': 'Organization', name: 'Eryawan Studio' },
+    publisher: { '@type': 'Person', name: 'Eryawan Agung' },
   };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
   const insightUrl = absoluteUrl(`/wawasan/${insight.slug}`);
