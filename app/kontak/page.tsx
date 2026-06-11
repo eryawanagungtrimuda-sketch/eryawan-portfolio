@@ -41,10 +41,13 @@ export default function KontakPage() {
                 href_type: "email",
               }}
               data-cta="contact-email"
-              className="mt-4 inline-flex min-h-11 max-w-full break-all rounded-full border border-[#D4AF37] bg-[#D4AF37] px-4 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866] sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+              className="mt-4 inline-flex min-h-11 max-w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866] sm:px-6 sm:text-xs sm:tracking-[0.16em]"
             >
-              eryawanagungtrimuda@gmail.com
+              Kirim Email
             </TrackedLink>
+            <p className="mt-3 max-w-full select-text font-mono text-xs leading-6 text-white/64 [overflow-wrap:anywhere] sm:text-sm md:whitespace-nowrap md:[overflow-wrap:normal]">
+              eryawanagungtrimuda@gmail.com
+            </p>
             <p className="mt-4 text-sm leading-6 text-white/62">
               Ceritakan konteks singkatnya agar arah pembicaraan lebih jelas
               sejak awal.
