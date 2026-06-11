@@ -151,19 +151,19 @@ ${projectUrl}`;
           <BackButton fallbackHref="/karya" />
         </div>
 
-        <section className="reveal-on-scroll py-14 md:py-20 lg:py-24">
+        <section className="reveal-on-scroll pt-12 pb-8 md:pt-16 md:pb-10 lg:pt-20 lg:pb-12">
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
-          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
+          <div className="mt-7 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Studi Kasus Interior</p>
-              <h1 className="font-display mt-6 max-w-5xl text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
+              <h1 className="font-display mt-5 max-w-5xl text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
               {openingDescription ? (
-                <p className="mt-8 max-w-3xl text-base leading-[1.8] text-white/68 sm:text-lg md:text-[1.45rem] md:leading-[1.65]">{openingDescription}</p>
+                <p className="mt-6 max-w-3xl text-base leading-[1.75] text-white/68 sm:text-lg md:text-[1.35rem] md:leading-[1.6]">{openingDescription}</p>
               ) : null}
             </div>
 
             {metaItems.length > 0 ? (
-              <aside className="h-fit rounded-[1.75rem] border border-[#D4AF37]/20 bg-[#C8A951]/[0.06] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] lg:sticky lg:top-8">
+              <aside className="h-fit self-start rounded-[1.75rem] border border-[#D4AF37]/20 bg-[#C8A951]/[0.06] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] lg:sticky lg:top-8 lg:mt-9">
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Catatan Proyek</p>
                 <dl className="mt-5 divide-y divide-white/10">
                   {metaItems.map((item) => (
@@ -179,12 +179,12 @@ ${projectUrl}`;
         </section>
 
         {caseSummaryItems.length > 0 || areaTags.length > 0 ? (
-          <section className="border-y border-white/10 py-8 md:py-11">
-            <div className="grid gap-8 lg:grid-cols-[0.54fr_1fr] lg:gap-12">
+          <section className="border-y border-white/10 py-7 md:py-9">
+            <div className="grid gap-7 lg:grid-cols-[0.5fr_1fr] lg:gap-11">
               <div>
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Ringkasan Proyek</p>
-                <h2 className="font-display mt-4 max-w-xl text-3xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Narasi singkat sebelum membaca detail keputusan desain.</h2>
-                <p className="mt-5 max-w-md text-sm leading-7 text-white/56 sm:text-base">Ringkasan ini hanya menggunakan data proyek yang tersedia agar pembacaan studi kasus tetap akurat dan mudah dipindai.</p>
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Ringkasan Proyek</p>
+                <h2 className="font-display mt-3 max-w-lg text-2xl font-normal leading-[1.12] tracking-[-0.025em] md:text-4xl">Narasi singkat sebelum membaca detail keputusan desain.</h2>
+                <p className="mt-4 max-w-md text-sm leading-7 text-white/54">Ringkasan ini hanya menggunakan data proyek yang tersedia agar pembacaan studi kasus tetap akurat dan mudah dipindai.</p>
               </div>
               <div className="grid gap-4">
                 {caseSummaryItems.map((item) => (
