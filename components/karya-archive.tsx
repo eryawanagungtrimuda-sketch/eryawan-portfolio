@@ -135,7 +135,7 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
         {options.map((item) => {
           const active = item === value;
           return (
-            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
+            <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out ${
               active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
             }`}>
               {item}
@@ -334,7 +334,7 @@ export default function KaryaArchive({ projects }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Filter Karya"
-        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 font-sans shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
+        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-x-hidden overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 font-sans shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-white/20" />
@@ -362,7 +362,7 @@ export default function KaryaArchive({ projects }: Props) {
                     key={tag}
                     type="button"
                     onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
-                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                    className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
                   >
                     {tag}
                   </button>
@@ -408,7 +408,7 @@ export default function KaryaArchive({ projects }: Props) {
                   if (event.key === 'Enter') handleMobilePrimaryAction();
                 }}
                 placeholder="Contoh: lobby hotel, workspace, material hangat, efisiensi alur"
-                className="w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45"
+                className="min-w-0 w-full bg-transparent text-sm text-white/66 outline-none placeholder:text-white/45"
               />
               {hasSearchQuery ? (
                 <button
@@ -453,7 +453,7 @@ export default function KaryaArchive({ projects }: Props) {
             <div className="flex flex-wrap items-center gap-2">
               {mobileActiveChips.map((chip) => (
                 <button key={chip.key} type="button" onClick={chip.onRemove} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1.5 font-sans text-xs font-semibold text-[#E2C866]">
-                  <span className="truncate">{chip.label}</span>
+                  <span className="min-w-0 break-words">{chip.label}</span>
                   <span aria-hidden>×</span>
                 </button>
               ))}
@@ -470,7 +470,7 @@ export default function KaryaArchive({ projects }: Props) {
             <div className="mt-5 flex flex-wrap gap-3">
               {areaTagOptions.map((tag) => {
                 const active = selectedAreaTags.includes(tag);
-                return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase tracking-[0.14em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
+                return <button key={tag} type="button" onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
               })}
             </div>
           </div>
@@ -481,8 +481,8 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
 
         <div className="mt-6 hidden border-t border-white/10 pt-6 lg:block">
-          <button type="button" aria-expanded={isDesktopAdvancedOpen} aria-controls="karya-advanced-filters-panel" onClick={() => setIsDesktopAdvancedOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-3 text-left transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus-visible:border-[#D4AF37]/40">
-            <span><span className="block font-sans text-[10px] font-black uppercase tracking-[0.2em] text-[#C8A951]">Filter Lanjutan</span><span className="mt-1 block font-sans text-sm text-white/70">Kategori Proyek, Kategori Desain, dan Status Proyek</span></span>
+          <button type="button" aria-expanded={isDesktopAdvancedOpen} aria-controls="karya-advanced-filters-panel" onClick={() => setIsDesktopAdvancedOpen((prev) => !prev)} className="flex w-full min-w-0 items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-3 text-left transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus-visible:border-[#D4AF37]/40">
+            <span className="min-w-0"><span className="block font-sans text-[10px] font-black uppercase tracking-[0.2em] text-[#C8A951]">Filter Lanjutan</span><span className="mt-1 block break-words font-sans text-sm text-white/70">Kategori Proyek, Kategori Desain, dan Status Proyek</span></span>
             <span aria-hidden className="font-sans text-xl leading-none text-[#D4AF37]">{isDesktopAdvancedOpen ? '−' : '+'}</span>
           </button>
           <div id="karya-advanced-filters-panel" className={isDesktopAdvancedOpen ? 'mt-5 grid grid-cols-3 gap-6' : 'hidden'}>
@@ -521,18 +521,18 @@ export default function KaryaArchive({ projects }: Props) {
               ) : <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/[0.08] bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] px-6 text-center text-sm text-white/46">Cover image belum tersedia</div>}
               <div className="flex flex-1 flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                  <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Studi Kasus / {String(index + 1).padStart(2, '0')}</p>
+                  <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/90">Studi Kasus / {String(index + 1).padStart(2, '0')}</p>
                   <span className="h-px min-w-12 flex-1 bg-gradient-to-r from-[#D4AF37]/28 to-transparent" aria-hidden="true" />
                   <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Karya Terpilih</p>
                 </div>
                 <h2 className="font-display mt-5 line-clamp-2 max-w-2xl text-[1.9rem] font-normal leading-[1.06] tracking-[-0.035em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
                 {getProjectTeaser(project) ? <p className="mt-4 font-sans text-sm leading-[1.78] text-white/64 md:text-[15px]">{truncateText(getProjectTeaser(project), 132)}</p> : null}
                 <p className="mt-3 line-clamp-2 border-l border-[#D4AF37]/22 pl-3 font-sans text-xs leading-relaxed text-white/45">{truncateText(getProjectShareCopy(project), 150)}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-white/[0.075] pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{getAreaTagLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
+                <div className="mt-6 flex flex-wrap items-center gap-2 overflow-hidden border-t border-white/[0.075] pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{getAreaTagLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
                 <div className="mt-auto flex flex-wrap gap-2.5 pt-7">
-                  <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex min-h-11 items-center gap-3 rounded-[999px] border border-[#D4AF37]/42 bg-[#D4AF37]/[0.055] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#E2C866] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/55 hover:bg-[#D4AF37]/10 hover:text-[#F0D980] active:translate-y-0 active:scale-[0.98]">Lihat Proses & Hasil <ArrowUpRight size={16} /></Link>
-                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex min-h-11 items-center gap-2 rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">Email <Mail size={14} /></a>
-                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik membahas karya "${project.title}" dan peluang kolaborasinya.`)}`} target="_blank" rel="noopener noreferrer" className="premium-interactive inline-flex min-h-11 items-center gap-2 rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">WhatsApp</a>
+                  <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-3 whitespace-normal break-words text-center rounded-[999px] border border-[#D4AF37]/42 bg-[#D4AF37]/[0.055] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#E2C866] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/55 hover:bg-[#D4AF37]/10 hover:text-[#F0D980] active:translate-y-0 active:scale-[0.98]">Lihat Proses & Hasil <ArrowUpRight size={16} /></Link>
+                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal break-words text-center rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">Email <Mail size={14} /></a>
+                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik membahas karya "${project.title}" dan peluang kolaborasinya.`)}`} target="_blank" rel="noopener noreferrer" className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal break-words text-center rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">WhatsApp</a>
                 </div>
               </div>
             </article>;
@@ -551,7 +551,7 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
       ) : null}
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
-        <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
+        <div className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
           <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa studi kasus desain yang menarik untuk dilihat\n\nhttps://eryawanagung.my.id/karya')}`} target="_blank" rel="noopener noreferrer" aria-label="Bagikan daftar karya via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a>
           <ShareLinkButton url="https://eryawanagung.my.id/karya" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" />
         </div>
