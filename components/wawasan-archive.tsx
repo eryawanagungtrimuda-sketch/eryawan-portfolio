@@ -91,7 +91,7 @@ function InsightCard({
         </p>
         <Link
           href={`/wawasan/${item.slug}`}
-          className="premium-interactive mt-5 inline-flex max-w-full items-center justify-center whitespace-normal break-words text-center gap-2 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+          className="premium-interactive mt-5 inline-flex max-w-full items-center justify-center gap-2 whitespace-normal break-words text-center font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] active:translate-y-0 active:scale-[0.98]"
         >
           Lanjut Membaca <span aria-hidden>→</span>
         </Link>
@@ -224,24 +224,30 @@ export default function WawasanArchive({ insights }: Props) {
     <>
       {category !== ALL && (
         <button
+          type="button"
+          aria-label={`Hapus filter topik ${toLabel(category)}`}
           onClick={() => setCategory(ALL)}
-          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
+          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
         >
           {toLabel(category)} ×
         </button>
       )}
       {contentType !== ALL && (
         <button
+          type="button"
+          aria-label={`Hapus filter jenis konten ${toLabel(contentType)}`}
           onClick={() => setContentType(ALL)}
-          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
+          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
         >
           {toLabel(contentType)} ×
         </button>
       )}
       {sourceType !== ALL && (
         <button
+          type="button"
+          aria-label={`Hapus filter sumber ${toLabel(sourceType, "source")}`}
           onClick={() => setSourceType(ALL)}
-          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]"
+          className="rounded-full border border-white/15 bg-white/[0.02] px-3 py-1.5 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
         >
           {toLabel(sourceType, "source")} ×
         </button>
@@ -249,7 +255,7 @@ export default function WawasanArchive({ insights }: Props) {
     </>
   );
 
-  const renderFilterGroups = () => (
+  const renderFilterGroups = (panelId: "desktop" | "mobile") => (
     <>
       {[
         ["Topik", categoryOptions, draftCategory, setDraftCategory, undefined],
@@ -269,16 +275,29 @@ export default function WawasanArchive({ insights }: Props) {
         ],
       ].map(([label, options, value, setter, kind]) => (
         <div key={label as string} className="mb-4 last:mb-0">
-          <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#D4AF37]/85">
+          <p
+            id={`wawasan-${panelId}-${String(label)
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")}-label`}
+            className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#D4AF37]/85"
+          >
             {label as string}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div
+            role="group"
+            aria-labelledby={`wawasan-${panelId}-${String(label)
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")}-label`}
+            className="flex flex-wrap gap-2"
+          >
             {(options as string[]).map((opt) => (
               <button
                 key={opt}
                 type="button"
+                aria-pressed={(value as string) === opt}
+                aria-label={`${label as string}: ${toLabel(opt, kind as "source")}${(value as string) === opt ? " dipilih" : ""}`}
                 onClick={() => (setter as (v: string) => void)(opt)}
-                className={`min-h-10 rounded-full border px-3.5 py-2 font-sans text-xs font-semibold transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 ${(value as string) === opt ? "border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37]" : "border-white/15 bg-white/[0.02] text-white/62 hover:border-white/25 hover:text-white/78"}`}
+                className={`min-h-10 rounded-full border px-3.5 py-2 font-sans text-xs font-semibold transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${(value as string) === opt ? "border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37]" : "border-white/15 bg-white/[0.02] text-white/62 hover:border-white/25 hover:text-white/78"}`}
               >
                 {toLabel(opt, kind as "source")}
               </button>
@@ -288,16 +307,16 @@ export default function WawasanArchive({ insights }: Props) {
       ))}
       <div className="mt-4">
         <label
-          htmlFor="wawasan-sort"
+          htmlFor={`wawasan-sort-${panelId}`}
           className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#D4AF37]/85"
         >
           Urutkan
         </label>
         <select
-          id="wawasan-sort"
+          id={`wawasan-sort-${panelId}`}
           value={draftSort}
           onChange={(e) => setDraftSort(e.target.value as SortType)}
-          className="min-h-11 w-full rounded-2xl border border-white/15 bg-[#090909] px-4 py-2 font-sans text-sm text-white/74 outline-none focus:border-[#D4AF37]/50"
+          className="min-h-11 w-full rounded-2xl border border-white/15 bg-[#090909] px-4 py-2 font-sans text-sm text-white/74 outline-none focus:border-[#D4AF37]/50 focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
         >
           <option value="terbaru">Terbaru</option>
           <option value="terlama">Terlama</option>
@@ -337,23 +356,34 @@ export default function WawasanArchive({ insights }: Props) {
               Temukan catatan desain
             </label>
           </div>
-          <span className="font-sans text-xs text-white/50">
+          <span
+            id="wawasan-result-summary"
+            aria-live="polite"
+            className="font-sans text-xs text-white/50"
+          >
             {filteredInsights.length} wawasan ditemukan
           </span>
         </div>
+        <p id="wawasan-search-helper" className="sr-only">
+          Hasil arsip wawasan diperbarui saat kata kunci dan filter berubah.
+        </p>
         <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-[minmax(0,1fr)_84px] sm:grid-cols-[minmax(0,1fr)_112px]">
           <input
             id="wawasan-search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari topik, sumber, atau keputusan desain..."
+            aria-describedby="wawasan-search-helper wawasan-result-summary"
+            aria-label="Cari wawasan berdasarkan topik, sumber, atau keputusan desain"
             className="h-12 min-w-0 rounded-2xl border border-white/10 bg-[#080807] px-4 font-sans text-sm text-white placeholder:text-white/35 focus:border-[#C8A951]/50 focus:outline-none"
           />
           <button
             type="button"
             onClick={() => setIsFilterOpen(true)}
             aria-expanded={isFilterOpen}
-            className="premium-interactive flex h-12 w-full min-w-0 items-center justify-center rounded-2xl border border-[#C8A951]/35 bg-[#C8A951]/5 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+            aria-controls={`${DESKTOP_FILTER_PANEL_ID} ${MOBILE_FILTER_SHEET_ID}`}
+            aria-label={`Buka filter wawasan${activeFilterCount > 0 ? `, ${activeFilterCount} filter aktif` : ""}`}
+            className="premium-interactive flex h-12 w-full min-w-0 items-center justify-center rounded-2xl border border-[#C8A951]/35 bg-[#C8A951]/5 px-0 font-sans text-sm font-semibold text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] active:translate-y-0 active:scale-[0.98]"
           >
             Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </button>
@@ -362,8 +392,10 @@ export default function WawasanArchive({ insights }: Props) {
           {renderActiveFilterChips()}
           {activeFilterCount > 0 && (
             <button
+              type="button"
+              aria-label="Reset semua filter wawasan"
               onClick={resetAll}
-              className="font-sans text-xs font-semibold text-[#D4AF37] transition hover:text-[#F4D987]"
+              className="font-sans text-xs font-semibold text-[#D4AF37] transition hover:text-[#F4D987] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
             >
               Reset semua
             </button>
@@ -392,8 +424,10 @@ export default function WawasanArchive({ insights }: Props) {
             kunci yang lebih umum.
           </p>
           <button
+            type="button"
+            aria-label="Reset semua filter wawasan"
             onClick={resetAll}
-            className="premium-interactive mt-5 rounded-full border border-[#D4AF37]/40 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+            className="premium-interactive mt-5 rounded-full border border-[#D4AF37]/40 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] active:translate-y-0 active:scale-[0.98]"
           >
             Atur Ulang Filter
           </button>
@@ -441,7 +475,7 @@ export default function WawasanArchive({ insights }: Props) {
                 </p>
                 <Link
                   href={`/wawasan/${featured.slug}`}
-                  className="premium-interactive mt-7 inline-flex min-h-11 max-w-full items-center rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/5 px-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+                  className="premium-interactive mt-7 inline-flex min-h-11 max-w-full items-center rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/5 px-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] active:translate-y-0 active:scale-[0.98]"
                 >
                   Baca Catatan Lengkap
                 </Link>
@@ -454,7 +488,9 @@ export default function WawasanArchive({ insights }: Props) {
               <div
                 key={item.id}
                 style={
-                  { "--reveal-delay": `${Math.min((index + 1) * 90, 450)}ms` } as CSSProperties
+                  {
+                    "--reveal-delay": `${Math.min((index + 1) * 90, 450)}ms`,
+                  } as CSSProperties
                 }
                 className="reveal-on-scroll mobile-card-breathing mobile-card-reveal"
               >
@@ -472,7 +508,8 @@ export default function WawasanArchive({ insights }: Props) {
         createPortal(
           <div className="fixed inset-0 z-[9999]">
             <button
-              aria-label="Tutup filter"
+              type="button"
+              aria-label="Tutup panel filter wawasan"
               className="absolute inset-0 bg-black/72 backdrop-blur-sm"
               onClick={() => setIsFilterOpen(false)}
             />
@@ -480,6 +517,7 @@ export default function WawasanArchive({ insights }: Props) {
               id={DESKTOP_FILTER_PANEL_ID}
               role="dialog"
               aria-modal="true"
+              aria-label="Panel filter arsip wawasan desktop"
               className="absolute right-6 top-[120px] hidden w-[420px] max-w-[calc(100vw-3rem)] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#11100d]/95 p-5 shadow-[0_24px_64px_rgba(0,0,0,0.55)] backdrop-blur md:block"
             >
               <div className="mb-3 flex items-center justify-between">
@@ -495,19 +533,20 @@ export default function WawasanArchive({ insights }: Props) {
                   Tutup
                 </button>
               </div>
-              {renderFilterGroups()}
+              {renderFilterGroups("desktop")}
               <div className="mt-4 flex gap-2 border-t border-white/10 pt-3">
                 <button
                   type="button"
+                  aria-label="Reset pilihan filter wawasan"
                   onClick={resetDraftFilters}
-                  className="min-h-10 flex-1 rounded-full border border-white/15 px-4 py-2 font-sans text-sm font-semibold text-white/72 transition hover:border-white/28 hover:text-white"
+                  className="min-h-10 flex-1 rounded-full border border-white/15 px-4 py-2 font-sans text-sm font-semibold text-white/72 transition hover:border-white/28 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
                 >
                   Reset
                 </button>
                 <button
                   type="button"
                   onClick={applyDraftFilters}
-                  className="min-h-10 flex-1 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37]/16"
+                  className="min-h-10 flex-1 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37]/16 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
                 >
                   Terapkan
                 </button>
@@ -517,6 +556,7 @@ export default function WawasanArchive({ insights }: Props) {
               id={MOBILE_FILTER_SHEET_ID}
               role="dialog"
               aria-modal="true"
+              aria-label="Panel filter arsip wawasan mobile"
               className="absolute bottom-0 left-0 right-0 flex max-h-[80vh] flex-col overflow-hidden overflow-x-clip rounded-t-[28px] border border-white/10 bg-[#11100d]/98 p-5 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-24px_80px_rgba(0,0,0,0.45)] md:hidden"
             >
               <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-white/30" />
@@ -528,7 +568,7 @@ export default function WawasanArchive({ insights }: Props) {
                   type="button"
                   aria-label="Tutup filter mobile"
                   onClick={() => setIsFilterOpen(false)}
-                  className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/70"
+                  className="rounded-full border border-white/20 px-3 py-1 font-sans text-xs text-white/70 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#11100d]"
                 >
                   Tutup
                 </button>
@@ -538,20 +578,21 @@ export default function WawasanArchive({ insights }: Props) {
                 lebih mudah dibaca.
               </p>
               <div className="min-h-0 flex-1 overflow-y-auto pr-1">
-                {renderFilterGroups()}
+                {renderFilterGroups("mobile")}
               </div>
               <div className="mt-4 flex gap-2 border-t border-white/10 bg-[#11100d] pt-3">
                 <button
                   type="button"
+                  aria-label="Reset pilihan filter wawasan"
                   onClick={resetDraftFilters}
-                  className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80 transition active:scale-[0.98]"
+                  className="min-h-11 flex-1 rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/80 transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#11100d]"
                 >
                   Reset
                 </button>
                 <button
                   type="button"
                   onClick={applyDraftFilters}
-                  className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition active:scale-[0.98]"
+                  className="min-h-11 flex-1 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#11100d]"
                 >
                   Terapkan
                 </button>
