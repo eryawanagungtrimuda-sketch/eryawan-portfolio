@@ -74,7 +74,8 @@ export default function KontakPage() {
                 href_type: "email",
               }}
               data-cta="contact-email"
-              className="mt-4 inline-flex min-h-11 max-w-full whitespace-normal break-words text-center items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866] sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+              className="mt-4 inline-flex min-h-11 max-w-full whitespace-normal break-words text-center items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-black transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866] sm:px-6 sm:text-xs sm:tracking-[0.16em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Kirim email ke Eryawan Agung"
             >
               Kirim Email
             </TrackedLink>
@@ -118,7 +119,8 @@ export default function KontakPage() {
                 href_type: "internal",
               }}
               data-cta="contact-collaboration"
-              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20"
+              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/10 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:bg-[#D4AF37]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Mulai percakapan terstruktur"
             >
               Mulai Percakapan
             </TrackedLink>
@@ -132,7 +134,8 @@ export default function KontakPage() {
                 href_type: "internal",
               }}
               data-cta="contact-karya"
-              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Lihat halaman karya"
             >
               Lihat Karya
             </TrackedLink>
@@ -145,13 +148,15 @@ export default function KontakPage() {
                 href_type: "internal",
               }}
               data-cta="contact-wawasan"
-              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Baca halaman wawasan"
             >
               Baca Wawasan
             </TrackedLink>
             <ContextualBackButton
               fallbackHref="/"
-              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
+              className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/14 px-6 py-3 font-mono text-xs font-black uppercase tracking-[0.16em] text-white/66 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              ariaLabel="Kembali dari halaman kontak"
             />
           </div>
         </div>

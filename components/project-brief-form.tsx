@@ -71,6 +71,9 @@ const statusFileOptions = [
   "Ada referensi moodboard",
   "Ada brief tertulis",
 ];
+const focusRingClass =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0d0c]";
+
 const initialState: FormState = {
   nama: "",
   perusahaan: "",
@@ -200,11 +203,15 @@ export default function ProjectBriefForm() {
   }
 
   const inputClass =
-    "mt-2 w-full rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition placeholder:text-white/35 hover:border-[#D4AF37]/35 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30";
+    `mt-2 w-full rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition placeholder:text-white/35 hover:border-[#D4AF37]/35 focus:border-[#D4AF37] ${focusRingClass}`;
 
   if (isFormClosed) {
     return (
-      <section className="mt-8 rounded-2xl border border-emerald-300/25 bg-emerald-400/[0.06] p-5 text-sm text-emerald-100 sm:p-6">
+      <section
+        className="mt-8 rounded-2xl border border-emerald-300/25 bg-emerald-400/[0.06] p-5 text-sm text-emerald-100 sm:p-6"
+        role="status"
+        aria-live="polite"
+      >
         <p className="font-semibold">Brief sudah dikirim.</p>
         <p className="mt-2 text-emerald-100/85">
           {submitMessage || "WhatsApp sudah dibuka dan form ditutup otomatis."}
@@ -212,7 +219,8 @@ export default function ProjectBriefForm() {
         <button
           type="button"
           onClick={handleReopenForm}
-          className="mt-4 rounded-xl border border-emerald-200/35 px-4 py-2 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-100/10"
+          className={`mt-4 rounded-xl border border-emerald-200/35 px-4 py-2 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-100/10 ${focusRingClass}`}
+          aria-label="Kirim brief baru"
         >
           Kirim Brief Baru
         </button>
@@ -243,17 +251,24 @@ export default function ProjectBriefForm() {
             id="brief-nama"
             className={inputClass}
             value={form.nama}
+            aria-invalid={Boolean(errors.nama)}
+            aria-describedby={errors.nama ? "brief-nama-error" : undefined}
             onChange={(e) => setForm({ ...form, nama: e.target.value })}
           />
           {errors.nama ? (
-            <p className="mt-2 text-xs text-amber-300">{errors.nama}</p>
+            <p id="brief-nama-error" className="mt-2 text-xs text-amber-300">
+              {errors.nama}
+            </p>
           ) : null}
         </div>
         <div>
           <label htmlFor="brief-perusahaan" className="text-sm text-white/80">
             Perusahaan / brand / instansi
           </label>
-          <p className="mt-1 text-xs leading-5 text-white/45">
+          <p
+            id="brief-perusahaan-helper"
+            className="mt-1 text-xs leading-5 text-white/45"
+          >
             Opsional, untuk membantu memahami konteks organisasi atau
             kolaborasi.
           </p>
@@ -261,6 +276,7 @@ export default function ProjectBriefForm() {
             id="brief-perusahaan"
             className={inputClass}
             value={form.perusahaan}
+            aria-describedby="brief-perusahaan-helper"
             onChange={(e) => setForm({ ...form, perusahaan: e.target.value })}
           />
         </div>
@@ -274,6 +290,8 @@ export default function ProjectBriefForm() {
               type="email"
               className={inputClass}
               value={form.email}
+              aria-invalid={Boolean(errors.kontak)}
+              aria-describedby={errors.kontak ? "brief-kontak-error" : undefined}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
@@ -285,23 +303,35 @@ export default function ProjectBriefForm() {
               id="brief-whatsapp"
               className={inputClass}
               value={form.whatsapp}
+              aria-invalid={Boolean(errors.kontak)}
+              aria-describedby={errors.kontak ? "brief-kontak-error" : undefined}
               onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
             />
           </div>
         </div>
         {errors.kontak ? (
-          <p className="text-xs text-amber-300">{errors.kontak}</p>
+          <p id="brief-kontak-error" className="text-xs text-amber-300">
+            {errors.kontak}
+          </p>
         ) : null}
         <div>
           <p id="brief-jenis-kebutuhan-label" className="text-sm text-white/80">
             Peluang kerja, kolaborasi, atau proyek *
           </p>
-          <p className="mt-1 text-xs leading-5 text-white/45">
+          <p
+            id="brief-jenis-kebutuhan-helper"
+            className="mt-1 text-xs leading-5 text-white/45"
+          >
             Pilih satu arah utama agar brief terbaca lebih jelas.
           </p>
           <div
             role="group"
             aria-labelledby="brief-jenis-kebutuhan-label"
+            aria-describedby={
+              errors.jenisKebutuhan
+                ? "brief-jenis-kebutuhan-error"
+                : "brief-jenis-kebutuhan-helper"
+            }
             className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
           >
             {kebutuhanOptions.map((item) => (
@@ -309,7 +339,8 @@ export default function ProjectBriefForm() {
                 type="button"
                 key={item}
                 onClick={() => setForm({ ...form, jenisKebutuhan: item })}
-                className={`min-h-11 max-w-full break-words rounded-xl border px-3 py-2 text-left text-sm leading-6 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35 ${
+                aria-pressed={form.jenisKebutuhan === item}
+                className={`min-h-11 max-w-full break-words rounded-xl border px-3 py-2 text-left text-sm leading-6 transition ${focusRingClass} ${
                   form.jenisKebutuhan === item
                     ? "border-[#D4AF37] bg-[#D4AF37]/12 text-[#F3DF9C]"
                     : "border-white/12 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/35"
@@ -320,7 +351,10 @@ export default function ProjectBriefForm() {
             ))}
           </div>
           {errors.jenisKebutuhan ? (
-            <p className="mt-2 text-xs text-amber-300">
+            <p
+              id="brief-jenis-kebutuhan-error"
+              className="mt-2 text-xs text-amber-300"
+            >
               {errors.jenisKebutuhan}
             </p>
           ) : null}
@@ -370,7 +404,10 @@ export default function ProjectBriefForm() {
           <label htmlFor="brief-kebutuhan" className="text-sm text-white/80">
             Konteks kebutuhan utama *
           </label>
-          <p className="mt-1 text-xs leading-5 text-white/45">
+          <p
+            id="brief-kebutuhan-helper"
+            className="mt-1 text-xs leading-5 text-white/45"
+          >
             Tuliskan tujuan, kendala, ruang yang ingin dibahas, atau bentuk
             peluang yang ingin didiskusikan.
           </p>
@@ -378,12 +415,18 @@ export default function ProjectBriefForm() {
             id="brief-kebutuhan"
             className={`${inputClass} min-h-36`}
             value={form.kebutuhanUtama}
+            aria-invalid={Boolean(errors.kebutuhanUtama)}
+            aria-describedby={
+              errors.kebutuhanUtama
+                ? "brief-kebutuhan-error"
+                : "brief-kebutuhan-helper"
+            }
             onChange={(e) =>
               setForm({ ...form, kebutuhanUtama: e.target.value })
             }
           />
           {errors.kebutuhanUtama ? (
-            <p className="mt-2 text-xs text-amber-300">
+            <p id="brief-kebutuhan-error" className="mt-2 text-xs text-amber-300">
               {errors.kebutuhanUtama}
             </p>
           ) : null}
@@ -399,7 +442,8 @@ export default function ProjectBriefForm() {
           <button
             type="submit"
             disabled={submitState === "saving" || submitState === "success"}
-            className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center gap-2 rounded-xl border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#E1C25F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0d0c] disabled:cursor-not-allowed disabled:opacity-70"
+            className={`inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center gap-2 rounded-xl border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#E1C25F] disabled:cursor-not-allowed disabled:opacity-70 ${focusRingClass}`}
+            aria-label="Kirim brief awal"
           >
             {submitState === "saving" ? (
               <>
@@ -416,7 +460,8 @@ export default function ProjectBriefForm() {
           <button
             type="button"
             onClick={handleCopy}
-            className="min-h-11 max-w-full rounded-xl border border-white/20 bg-white/[0.02] px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35"
+            className={`min-h-11 max-w-full rounded-xl border border-white/20 bg-white/[0.02] px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] ${focusRingClass}`}
+            aria-label="Salin brief ke clipboard"
           >
             Salin Brief
           </button>
@@ -424,12 +469,16 @@ export default function ProjectBriefForm() {
         {submitMessage ? (
           <p
             className={`text-xs ${submitState === "error" ? "text-amber-300" : "text-emerald-300"}`}
+            role={submitState === "error" ? "alert" : "status"}
+            aria-live="polite"
           >
             {submitMessage}
           </p>
         ) : null}
         {copyState ? (
-          <p className="text-xs text-emerald-300">{copyState}</p>
+          <p className="text-xs text-emerald-300" role="status" aria-live="polite">
+            {copyState}
+          </p>
         ) : null}
       </section>
       <section style={{ "--reveal-delay": "160ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal min-w-0 h-fit rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-b from-[#12100b] to-[#0b0b0a] p-5 sm:p-6 lg:sticky lg:top-8">
@@ -473,7 +522,7 @@ function SelectField({
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full min-w-0 rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30"
+        className={`mt-2 w-full min-w-0 rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] ${focusRingClass}`}
       >
         <option value="">Pilih opsi</option>
         {options.map((option) => (

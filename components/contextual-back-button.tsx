@@ -8,12 +8,14 @@ type ContextualBackButtonProps = {
   fallbackHref: string;
   label?: string;
   className?: string;
+  ariaLabel?: string;
 };
 
 export default function ContextualBackButton({
   fallbackHref,
   label = '← Kembali ke Sebelumnya',
   className,
+  ariaLabel = 'Kembali ke halaman sebelumnya',
 }: ContextualBackButtonProps) {
   const router = useRouter();
 
@@ -31,8 +33,15 @@ export default function ContextualBackButton({
     router.push(fallbackHref);
   };
 
+  const linkClassName = `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${className ?? ''}`.trim();
+
   return (
-    <Link href={fallbackHref} onClick={handleClick} className={className}>
+    <Link
+      href={fallbackHref}
+      onClick={handleClick}
+      className={linkClassName}
+      aria-label={ariaLabel}
+    >
       {label}
     </Link>
   );

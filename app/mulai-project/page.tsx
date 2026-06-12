@@ -52,7 +52,8 @@ export default function MulaiProjectPage() {
       <div className="mx-auto max-w-6xl">
         <ContextualBackButton
           fallbackHref="/"
-          className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.02] px-4 py-2 text-xs font-semibold tracking-[0.12em] text-white/72 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
+          className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.02] px-4 py-2 text-xs font-semibold tracking-[0.12em] text-white/72 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+          ariaLabel="Kembali dari halaman mulai percakapan"
         />
 
         <section className="reveal-on-scroll mt-8 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#11100c] via-[#0b0b0a] to-[#090908] p-6 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:p-8 lg:p-12">
@@ -99,7 +100,8 @@ export default function MulaiProjectPage() {
                 href_type: "internal",
               }}
               data-cta="mulai-project-contact"
-              className="inline-flex min-h-11 max-w-full whitespace-normal break-words text-center items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20"
+              className="inline-flex min-h-11 max-w-full whitespace-normal break-words text-center items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Kunjungi halaman kontak untuk opsi email"
             >
               Butuh opsi email? Kunjungi halaman kontak
             </TrackedLink>
