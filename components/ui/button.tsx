@@ -11,7 +11,7 @@ type ButtonProps = {
   ariaLabel?: string;
 };
 
-const baseStyles = 'inline-flex min-h-11 max-w-full items-center justify-center rounded-full px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-white/5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985] motion-safe:active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
+const baseStyles = 'inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words rounded-full px-7 py-3 text-center font-mono text-sm font-semibold uppercase tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-white/5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.985] motion-safe:active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-[#C8A951] text-[#080807] hover:bg-[#D7BD72]',

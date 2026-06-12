@@ -159,7 +159,7 @@ ${projectUrl}`;
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <div className="mt-7 max-w-5xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Studi Kasus Interior</p>
-            <h1 className="font-display mt-5 max-w-5xl text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
+            <h1 className="font-display mt-5 max-w-5xl break-words text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
             {openingDescription ? (
               <p className="mt-6 max-w-3xl text-base leading-[1.75] text-white/68 sm:text-lg md:text-[1.35rem] md:leading-[1.6]">{openingDescription}</p>
             ) : null}
@@ -187,9 +187,9 @@ ${projectUrl}`;
                     <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Catatan Proyek</p>
                     <dl className="mt-5 divide-y divide-white/10">
                       {metaItems.map((item) => (
-                        <div key={`${item.label}-${item.value}`} className="grid grid-cols-[0.78fr_1.22fr] gap-3 py-3 first:pt-0 last:pb-0">
+                        <div key={`${item.label}-${item.value}`} className="grid grid-cols-1 gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-[0.78fr_1.22fr] sm:gap-3">
                           <dt className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/38">{item.label}</dt>
-                          <dd className="text-right text-sm leading-6 text-white/82">{item.value}</dd>
+                          <dd className="break-words text-left text-sm leading-6 sm:text-right text-white/82">{item.value}</dd>
                         </div>
                       ))}
                     </dl>
@@ -300,13 +300,13 @@ ${projectUrl}`;
               eventProps={{ source: "karya_detail", label: "diskusikan_proyek_serupa", content_type: "karya", slug: project.slug, href_type: "external" }}
               data-cta="karya-detail-whatsapp"
               aria-label={`Bagikan studi kasus ${project.title} via WhatsApp`}
-              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-sm font-semibold text-black transition duration-300 motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
+              className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 text-sm font-semibold text-black transition duration-300 motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#E2C866]"
             >
               Konsultasikan Arah Desain via WhatsApp
             </TrackedLink>
             <ShareLinkButton
               url={projectUrl}
-              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#D4AF37] transition duration-300 motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12"
+              className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37]/55 bg-transparent px-5 py-2.5 text-sm font-semibold text-[#D4AF37] transition duration-300 motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12"
             />
           </div>
         </section>
@@ -329,14 +329,14 @@ ${projectUrl}`;
           <div className="mt-7 flex flex-col gap-3 pb-24 sm:flex-row sm:flex-wrap sm:items-center md:pb-0">
             <Link
               href="/mulai-project"
-              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center font-sans text-sm font-semibold leading-none text-black transition duration-300 hover:bg-[#E2C866]"
+              className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center font-sans text-sm font-semibold leading-none text-black transition duration-300 hover:bg-[#E2C866]"
             >
               Diskusikan Brief Proyek
             </Link>
             <AdminEditProjectShortcut projectId={project.id} />
             <SmartBackLink
               fallbackHref="/karya"
-              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
+              className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37]"
             />
           </div>
 

@@ -307,9 +307,9 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-1 items-center pt-1 lg:pt-2">
-          <div className="max-w-6xl lg:pl-8 xl:pl-14">
-            <p className="mb-5 font-mono text-[9px] font-black uppercase tracking-[0.42em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.5em] md:mb-7 md:text-[11px] md:tracking-[0.56em]">
+        <div className="relative z-10 flex min-w-0 flex-1 items-center pt-1 lg:pt-2">
+          <div className="min-w-0 max-w-6xl lg:pl-8 xl:pl-14">
+            <p className="mb-5 max-w-full break-words font-mono text-[9px] font-black uppercase leading-relaxed tracking-[0.32em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.42em] md:mb-7 md:text-[11px] md:tracking-[0.48em]">
               Eryawan Agung · Interior & Residential Design
             </p>
 
@@ -331,13 +331,13 @@ export default async function Home() {
 
             <div className="mt-5 flex max-w-4xl flex-wrap gap-2 sm:mt-6" aria-label="Ringkasan cepat portfolio">
               {quickScanProof.map((item) => (
-                <span key={item} className="inline-flex max-w-full items-center rounded-full border border-[#C8A951]/22 bg-[#080807]/38 px-3 py-1.5 font-mono text-[9px] font-black uppercase leading-relaxed tracking-[0.12em] text-white/72 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur-[2px] sm:px-3.5 sm:text-[10px] sm:tracking-[0.16em]">
+                <span key={item} className="inline-flex max-w-full items-center break-words rounded-full border border-[#C8A951]/22 bg-[#080807]/38 px-3 py-1.5 font-mono text-[9px] font-black uppercase leading-relaxed tracking-[0.12em] text-white/72 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur-[2px] sm:px-3.5 sm:text-[10px] sm:tracking-[0.16em]">
                   {item}
                 </span>
               ))}
             </div>
 
-            <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:gap-3 lg:mt-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[860px] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-row [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-nowrap [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-3 [@media_(min-width:1281px)]:grid [@media_(min-width:1281px)]:grid-cols-3 [@media_(min-width:1281px)]:gap-4">
+            <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:gap-3 lg:mt-10 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-[900px] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-row [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-wrap [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:items-center [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:gap-3 [@media_(min-width:1281px)]:grid [@media_(min-width:1281px)]:grid-cols-3 [@media_(min-width:1281px)]:gap-4">
               <TrackedLink href="/mulai-project" eventName="cta_click" eventProps={{ source: "homepage_hero", label: "mulai_percakapan_proyek", href_type: "internal" }} data-cta="homepage-hero-primary" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full bg-[#C8A951] px-5 py-2.5 text-center font-mono text-[0.76rem] font-semibold uppercase tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] premium-interactive transition-all duration-300 ease-out hover:bg-[#D7BD72] hover:bg-white/5 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_18rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-5 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[0.78rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:tracking-[0.08em]">Mulai Percakapan Proyek</TrackedLink>
               <TrackedLink href="/karya" eventName="project_view_intent" eventProps={{ source: "homepage_hero", label: "lihat_karya", content_type: "karya", href_type: "internal" }} data-cta="homepage-karya" className="inline-flex min-h-10 max-w-full items-center justify-center rounded-full border border-white/10 bg-transparent px-5 py-2.5 text-center font-mono text-[0.76rem] font-semibold uppercase tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] premium-interactive transition-all duration-300 ease-out text-[#C8A951] hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10 active:translate-y-0 active:scale-[0.98] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] w-full motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_12.5rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-5 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[0.78rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:tracking-[0.08em]">Lihat Karya</TrackedLink>
               <Button href="/karya" variant="secondary" className="w-full min-h-10 px-5 py-2.5 text-center text-[0.76rem] tracking-[0.08em] sm:min-h-11 sm:px-7 sm:py-3 sm:text-sm sm:tracking-[0.12em] motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:w-auto [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:flex-[0_1_12.5rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:px-5 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:text-[0.78rem] [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:tracking-[0.08em]">
@@ -743,15 +743,15 @@ export default async function Home() {
           <div className="mt-10 grid gap-7 sm:mt-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end">
             <div>
               <p className="font-display text-3xl leading-none tracking-[-0.03em] text-[#F4F1EA] sm:text-4xl">Eryawan Agung</p>
-              <p className="mt-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.22em]">Interior & Residential Design / Decision-Based Design</p>
+              <p className="mt-3 max-w-full break-words font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.14em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.18em]">Interior & Residential Design / Decision-Based Design</p>
               <p className="mt-4 max-w-xl font-sans text-sm leading-7 text-white/50 sm:text-base">
                 Karya interior, arsitektur hunian, wawasan desain, dan proses Decision-Based Design untuk ruang yang jelas dan fungsional.
               </p>
             </div>
 
-            <div className="flex flex-col gap-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/42 sm:text-[10px] sm:tracking-[0.22em] md:items-end md:text-right md:text-[11px]">
+            <div className="flex min-w-0 flex-col gap-4 break-words font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/42 sm:text-[10px] sm:tracking-[0.22em] md:items-end md:text-right md:text-[11px]">
               <p>© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
+              <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-8">
                 <AdminFooterShortcut />
                 <span>Surabaya • Melayani Indonesia</span>
               </div>

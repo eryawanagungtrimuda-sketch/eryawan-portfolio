@@ -66,15 +66,15 @@ function InsightCard({
       ) : (
         <div className="premium-oval-media-top aspect-[16/10] border-b border-white/10 bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08]" />
       )}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
+      <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap gap-2 text-[10px] leading-none">
-          <span className="rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-[#D4AF37]/90">
+          <span className="max-w-full break-words rounded-full border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-[#D4AF37]/90">
             {toLabel(item.category)}
           </span>
-          <span className="rounded-full border border-white/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-white/50">
+          <span className="max-w-full break-words rounded-full border border-white/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-white/50">
             {toLabel(item.content_type)}
           </span>
-          <span className="rounded-full border border-white/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-white/50">
+          <span className="max-w-full break-words rounded-full border border-white/10 px-3 py-1.5 font-mono uppercase tracking-[0.14em] text-white/50">
             {toLabel(item.source_type, "source")}
           </span>
         </div>
@@ -91,7 +91,7 @@ function InsightCard({
         </p>
         <Link
           href={`/wawasan/${item.slug}`}
-          className="premium-interactive mt-5 inline-flex w-fit items-center gap-2 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+          className="premium-interactive mt-5 inline-flex max-w-full items-center justify-center whitespace-normal break-words text-center gap-2 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
         >
           Lanjut Membaca <span aria-hidden>→</span>
         </Link>
@@ -341,7 +341,7 @@ export default function WawasanArchive({ insights }: Props) {
             {filteredInsights.length} wawasan ditemukan
           </span>
         </div>
-        <div className="grid grid-cols-[minmax(0,1fr)_84px] gap-3 sm:grid-cols-[minmax(0,1fr)_112px]">
+        <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-[minmax(0,1fr)_84px] sm:grid-cols-[minmax(0,1fr)_112px]">
           <input
             id="wawasan-search"
             value={search}
@@ -353,7 +353,7 @@ export default function WawasanArchive({ insights }: Props) {
             type="button"
             onClick={() => setIsFilterOpen(true)}
             aria-expanded={isFilterOpen}
-            className="premium-interactive flex h-12 w-full items-center justify-center rounded-2xl border border-[#C8A951]/35 bg-[#C8A951]/5 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+            className="premium-interactive flex h-12 w-full min-w-0 items-center justify-center rounded-2xl border border-[#C8A951]/35 bg-[#C8A951]/5 px-0 font-sans text-sm font-semibold text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
           >
             Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </button>
@@ -428,7 +428,7 @@ export default function WawasanArchive({ insights }: Props) {
                   <span className="rounded-full border border-[#C8A951]/40 bg-[#C8A951]/10 px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-[#D4AF37]">
                     Wawasan Utama
                   </span>
-                  <span className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/52">
+                  <span className="max-w-full break-words rounded-full border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/52">
                     {toLabel(featured.category)}
                   </span>
                 </div>
@@ -441,7 +441,7 @@ export default function WawasanArchive({ insights }: Props) {
                 </p>
                 <Link
                   href={`/wawasan/${featured.slug}`}
-                  className="premium-interactive mt-7 inline-flex min-h-11 w-fit items-center rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/5 px-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
+                  className="premium-interactive mt-7 inline-flex min-h-11 max-w-full items-center rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/5 px-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-[#D4AF37] active:translate-y-0 active:scale-[0.98]"
                 >
                   Baca Catatan Lengkap
                 </Link>
@@ -517,7 +517,7 @@ export default function WawasanArchive({ insights }: Props) {
               id={MOBILE_FILTER_SHEET_ID}
               role="dialog"
               aria-modal="true"
-              className="absolute bottom-0 left-0 right-0 flex max-h-[80vh] flex-col overflow-hidden rounded-t-[28px] border border-white/10 bg-[#11100d]/98 p-5 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-24px_80px_rgba(0,0,0,0.45)] md:hidden"
+              className="absolute bottom-0 left-0 right-0 flex max-h-[80vh] flex-col overflow-hidden overflow-x-clip rounded-t-[28px] border border-white/10 bg-[#11100d]/98 p-5 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-24px_80px_rgba(0,0,0,0.45)] md:hidden"
             >
               <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-white/30" />
               <div className="mb-2 flex items-center justify-between">

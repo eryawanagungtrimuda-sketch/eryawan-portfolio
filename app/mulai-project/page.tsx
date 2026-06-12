@@ -85,7 +85,7 @@ export default function MulaiProjectPage() {
             ))}
           </div>
 
-          <div className="mt-7 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-7 flex min-w-0 flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-2xl text-sm leading-7 text-white/62">
               Saya akan membaca konteks kebutuhan Anda sebelum merespons, lalu
               percakapan dapat dilanjutkan melalui kanal yang paling nyaman.
@@ -99,7 +99,7 @@ export default function MulaiProjectPage() {
                 href_type: "internal",
               }}
               data-cta="mulai-project-contact"
-              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20"
+              className="inline-flex min-h-11 max-w-full whitespace-normal break-words text-center items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20"
             >
               Butuh opsi email? Kunjungi halaman kontak
             </TrackedLink>

@@ -221,8 +221,8 @@ export default function ProjectBriefForm() {
   }
 
   return (
-    <form onSubmit={handleSend} className="mt-8 grid gap-6 lg:grid-cols-2">
-      <section style={{ "--reveal-delay": "80ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal space-y-5 rounded-2xl border border-white/10 bg-[#0d0d0c] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-6">
+    <form onSubmit={handleSend} className="mt-8 grid min-w-0 gap-6 lg:grid-cols-2">
+      <section style={{ "--reveal-delay": "80ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal min-w-0 space-y-5 rounded-2xl border border-white/10 bg-[#0d0d0c] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-6">
         <div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/85">
             Ceritakan Kebutuhan Anda
@@ -309,7 +309,7 @@ export default function ProjectBriefForm() {
                 type="button"
                 key={item}
                 onClick={() => setForm({ ...form, jenisKebutuhan: item })}
-                className={`min-h-11 rounded-xl border px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35 ${
+                className={`min-h-11 max-w-full break-words rounded-xl border px-3 py-2 text-left text-sm leading-6 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35 ${
                   form.jenisKebutuhan === item
                     ? "border-[#D4AF37] bg-[#D4AF37]/12 text-[#F3DF9C]"
                     : "border-white/12 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/35"
@@ -399,7 +399,7 @@ export default function ProjectBriefForm() {
           <button
             type="submit"
             disabled={submitState === "saving" || submitState === "success"}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#E1C25F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0d0c] disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center gap-2 rounded-xl border border-[#D4AF37] bg-[#D4AF37] px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#E1C25F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0d0c] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {submitState === "saving" ? (
               <>
@@ -416,7 +416,7 @@ export default function ProjectBriefForm() {
           <button
             type="button"
             onClick={handleCopy}
-            className="min-h-11 rounded-xl border border-white/20 bg-white/[0.02] px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35"
+            className="min-h-11 max-w-full rounded-xl border border-white/20 bg-white/[0.02] px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/35"
           >
             Salin Brief
           </button>
@@ -432,7 +432,7 @@ export default function ProjectBriefForm() {
           <p className="text-xs text-emerald-300">{copyState}</p>
         ) : null}
       </section>
-      <section style={{ "--reveal-delay": "160ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal h-fit rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-b from-[#12100b] to-[#0b0b0a] p-5 sm:p-6 lg:sticky lg:top-8">
+      <section style={{ "--reveal-delay": "160ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal min-w-0 h-fit rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-b from-[#12100b] to-[#0b0b0a] p-5 sm:p-6 lg:sticky lg:top-8">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/85">
           Preview Percakapan
         </p>
@@ -443,7 +443,7 @@ export default function ProjectBriefForm() {
           Ringkasan ini membantu percakapan pertama terasa terarah, personal,
           dan mudah ditindaklanjuti.
         </p>
-        <pre className="mt-4 whitespace-pre-wrap rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-7 text-white/80">
+        <pre className="mt-4 max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-7 text-white/80">
           {message}
         </pre>
       </section>
@@ -473,7 +473,7 @@ function SelectField({
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30"
+        className="mt-2 w-full min-w-0 rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30"
       >
         <option value="">Pilih opsi</option>
         {options.map((option) => (

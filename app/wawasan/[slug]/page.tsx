@@ -161,11 +161,11 @@ ${insightUrl}`;
         </SmartBackLink>
 
         <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
-          <span className="inline-block rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-[11px] font-semibold text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
-          {insight.content_type === 'review_karya' ? <span className="inline-block rounded-2xl border border-white/8 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
+          <span className="inline-block max-w-full break-words rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/10 px-3 py-1.5 font-sans text-[11px] font-semibold text-[#D4AF37]">{insight.category || 'Uncategorized'}</span>
+          {insight.content_type === 'review_karya' ? <span className="inline-block max-w-full break-words rounded-2xl border border-white/8 px-3 py-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">Review Karya</span> : null}
         </div>
 
-        <h1 className="font-sans mt-4 text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
+        <h1 className="font-sans mt-4 break-words text-[2.05rem] font-normal leading-[1.06] tracking-[-0.02em] sm:text-[2.4rem] md:text-6xl">{insight.title}</h1>
         {insight.excerpt ? <p className="mt-4 max-w-3xl font-sans text-base leading-7 text-white/64 sm:mt-5 sm:text-lg sm:leading-relaxed">{insight.excerpt}</p> : null}
 
         {insight.content_type === 'review_karya' ? (
@@ -187,7 +187,7 @@ ${insightUrl}`;
         {sourceProject && sourceProjectHref ? (
           <section className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#C8A951]/10 p-4 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:border-[#D4AF37]/45 hover:bg-white/[0.04] sm:p-5">
             <p className="font-display text-[11px] uppercase tracking-[0.14em] text-[#D4AF37]">Berdasarkan Proyek</p>
-            <div className="mt-3 flex items-center gap-3 sm:gap-4">
+            <div className="mt-3 flex min-w-0 items-center gap-3 sm:gap-4">
               {sourceProject.cover_image ? (
                 <Image
                   src={sourceProject.cover_image}
@@ -199,13 +199,13 @@ ${insightUrl}`;
                   loading="lazy"
                 />
               ) : null}
-              <div className="min-w-0">
+              <div className="min-w-0 break-words">
                 <h2 className="font-sans text-xl leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl">{sourceProject.title}</h2>
                 {sourceProject.category ? <p className="mt-1 font-sans text-sm text-white/62">{sourceProject.category}</p> : null}
               </div>
             </div>
             <p className="mt-3 font-sans text-sm leading-7 text-white/56">Proyek ini menjadi studi kasus utama yang melahirkan wawasan teknis di halaman ini.</p>
-            <TrackedLink href={sourceProjectHref} eventName="project_view_intent" eventProps={{ source: "wawasan_detail", label: "lihat_studi_kasus_proyek", content_type: "karya", slug: sourceProject.slug, href_type: "internal" }} data-cta="wawasan-detail-source-project" aria-label={`Lihat studi kasus proyek ${sourceProject.title}`} className="mobile-tap-feedback mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
+            <TrackedLink href={sourceProjectHref} eventName="project_view_intent" eventProps={{ source: "wawasan_detail", label: "lihat_studi_kasus_proyek", content_type: "karya", slug: sourceProject.slug, href_type: "internal" }} data-cta="wawasan-detail-source-project" aria-label={`Lihat studi kasus proyek ${sourceProject.title}`} className="mobile-tap-feedback mt-4 inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Proyek
             </TrackedLink>
           </section>
@@ -213,7 +213,7 @@ ${insightUrl}`;
           <section className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
             <p className="font-display text-[11px] uppercase tracking-[0.14em] text-[#D4AF37]">Sumber Proyek</p>
             <p className="mt-3 font-sans text-sm leading-7 text-white/60">Artikel ini ditulis sebagai insight mandiri dan tidak terhubung ke satu proyek tertentu. Jelajahi halaman Karya untuk melihat studi kasus lengkap.</p>
-            <Link href="/karya" className="mobile-tap-feedback mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Lihat Karya</Link>
+            <Link href="/karya" className="mobile-tap-feedback mt-4 inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words text-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Lihat Karya</Link>
           </section>
         )}
 
@@ -227,12 +227,12 @@ ${insightUrl}`;
           <h2 className="mt-4 font-sans text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
           <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim proyek.</p>
           <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
-            <TrackedLink href={whatsappHref} target="_blank" rel="noopener noreferrer" eventName="whatsapp_click" eventProps={{ source: "wawasan_detail", label: "mulai_percakapan_proyek", content_type: "wawasan", slug: insight.slug, href_type: "external" }} data-cta="wawasan-detail-whatsapp" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
+            <TrackedLink href={whatsappHref} target="_blank" rel="noopener noreferrer" eventName="whatsapp_click" eventProps={{ source: "wawasan_detail", label: "mulai_percakapan_proyek", content_type: "wawasan", slug: insight.slug, href_type: "external" }} data-cta="wawasan-detail-whatsapp" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
               Mulai Percakapan Proyek via WhatsApp
             </TrackedLink>
             <ShareLinkButton
               url={insightUrl}
-              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold text-white/78 transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] hover:text-[#D4AF37]"
+              className="mobile-tap-feedback inline-flex min-h-11 max-w-full items-center justify-center whitespace-normal break-words rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold text-white/78 transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] hover:text-[#D4AF37]"
             />
           </div>
         </section>
