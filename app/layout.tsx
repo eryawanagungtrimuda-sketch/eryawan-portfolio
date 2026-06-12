@@ -8,12 +8,12 @@ import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Eryawan Agung | Portfolio Design Strategy',
-  description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+  title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+  description: 'Portfolio personal Eryawan Agung untuk karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
   authors: [{ name: 'Eryawan Agung', url: SITE_URL }],
   creator: 'Eryawan Agung',
   publisher: 'Eryawan Agung',
-  keywords: ['Eryawan Agung', 'design strategy', 'spatial logic', 'portfolio desain', 'interior strategy'],
+  keywords: ['Eryawan Agung', 'Interior & Residential Design', 'Decision-Based Design', 'portfolio desain interior', 'arsitektur hunian', 'modern residential design'],
   robots: {
     index: true,
     follow: true,
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     canonical: absoluteUrl('/'),
   },
   openGraph: {
-    title: 'Eryawan Agung | Portfolio Design Strategy',
-    description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+    title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+    description: 'Portfolio personal Eryawan Agung untuk karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
     url: absoluteUrl('/'),
     siteName: 'Eryawan Agung',
     locale: 'id_ID',
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
         url: absoluteUrl('/opengraph-image'),
         width: 1200,
         height: 630,
-        alt: 'Eryawan Agung Portfolio Design Strategy',
+        alt: 'Eryawan Agung Interior & Residential Design Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Eryawan Agung | Portfolio Design Strategy',
-    description: 'Portfolio personal Eryawan Agung untuk design strategy, spatial logic, dan kolaborasi profesional.',
+    title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+    description: 'Portfolio personal Eryawan Agung untuk karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
     images: [absoluteUrl('/opengraph-image')],
   },
 };

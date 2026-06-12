@@ -6,11 +6,32 @@ import { absoluteUrl } from "@/lib/site-url";
 import TrackedLink from "@/components/tracked-link";
 
 export const metadata: Metadata = {
-  title: "Mulai Percakapan Proyek | Eryawan Agung Design Portfolio",
+  title: "Mulai Percakapan | Eryawan Agung",
   description:
-    "Susun brief awal untuk peluang kerja, kolaborasi, proyek interior, design review, atau diskusi desain bersama Eryawan Agung.",
+    "Susun brief awal untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau kebutuhan ruang bersama Eryawan Agung.",
   alternates: {
     canonical: absoluteUrl("/mulai-project"),
+  },
+  openGraph: {
+    title: "Mulai Percakapan | Eryawan Agung",
+    description:
+      "Susun brief awal untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau kebutuhan ruang bersama Eryawan Agung.",
+    url: absoluteUrl("/mulai-project"),
+    images: [
+      {
+        url: absoluteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: "Mulai percakapan desain interior dan arsitektur hunian Eryawan Agung",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mulai Percakapan | Eryawan Agung",
+    description:
+      "Susun brief awal untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau kebutuhan ruang bersama Eryawan Agung.",
+    images: [absoluteUrl("/opengraph-image")],
   },
 };
 

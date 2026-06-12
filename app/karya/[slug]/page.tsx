@@ -24,19 +24,19 @@ type Props = {
 
 function buildProjectDescription(project: { problem?: string | null; konteks?: string | null }) {
   const conciseDescription = project.problem?.trim() || project.konteks?.trim();
-  return conciseDescription || 'Studi kasus desain yang membaca masalah ruang, keputusan desain, dan dampaknya terhadap pengguna.';
+  return conciseDescription || 'Studi kasus interior dan residential design yang membaca konteks ruang, keputusan desain, dan dampaknya terhadap pengguna.';
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getPublishedProjectBySlug(params.slug);
   if (!project) {
     return {
-      title: 'Project Not Found | Eryawan Agung Design Portfolio',
-      description: 'Project yang Anda cari belum tersedia.',
+      title: 'Karya Tidak Ditemukan | Eryawan Agung',
+      description: 'Karya yang Anda cari belum tersedia dalam portfolio desain interior dan arsitektur hunian Eryawan Agung.',
     };
   }
 
-  const title = `${project.title} | Eryawan Agung Design Portfolio`;
+  const title = `${project.title} | Karya Eryawan Agung`;
   const description = buildProjectDescription(project);
   const url = absoluteUrl(`/karya/${project.slug}`);
   const ogImageUrl = absoluteUrl(`/karya/${project.slug}/opengraph-image`);
@@ -140,9 +140,9 @@ ${projectUrl}`;
     name: project.title,
     description: buildProjectDescription(project),
     image: project.cover_image || galleryImages[0]?.image_url || absoluteUrl('/hero.jpg'),
-    author: { '@type': 'Person', name: 'Eryawan Agung' },
+    author: { '@type': 'Person', name: 'Eryawan Agung', jobTitle: 'Interior & Residential Designer' },
     datePublished: project.created_at,
-    publisher: { '@type': 'Person', name: 'Eryawan Agung' },
+    publisher: { '@type': 'Person', name: 'Eryawan Agung', jobTitle: 'Interior & Residential Designer' },
   };
 
   return (

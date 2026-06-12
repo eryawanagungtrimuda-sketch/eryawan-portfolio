@@ -11,19 +11,19 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
-  description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+  title: 'Karya | Interior & Residential Design Portfolio Eryawan Agung',
+  description: 'Arsip karya Eryawan Agung yang menampilkan desain interior, arsitektur hunian, dan proses keputusan ruang berbasis konteks.',
   alternates: { canonical: absoluteUrl('/karya') },
   openGraph: {
-    title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
-    description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+    title: 'Karya | Interior & Residential Design Portfolio Eryawan Agung',
+    description: 'Arsip karya Eryawan Agung yang menampilkan desain interior, arsitektur hunian, dan proses keputusan ruang berbasis konteks.',
     url: absoluteUrl('/karya'),
-    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Portfolio Karya Eryawan Agung' }],
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Karya interior dan arsitektur hunian Eryawan Agung' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Portfolio Karya | Eryawan Agung Design Portfolio',
-    description: 'Explore the detailed design analysis and strategy behind every portfolio project by Eryawan Agung.',
+    title: 'Karya | Interior & Residential Design Portfolio Eryawan Agung',
+    description: 'Arsip karya Eryawan Agung yang menampilkan desain interior, arsitektur hunian, dan proses keputusan ruang berbasis konteks.',
     images: [absoluteUrl('/opengraph-image')],
   },
 };

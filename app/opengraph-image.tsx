@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export const alt = 'Eryawan Agung Portfolio Design Strategy';
+export const alt = 'Eryawan Agung Interior & Residential Design Portfolio';
 export const size = {
   width: 1200,
   height: 630,
@@ -53,7 +53,7 @@ export default function Image() {
               fontWeight: 600,
             }}
           >
-            Portfolio Design Strategy
+            Interior & Residential Design
           </div>
 
           <div
@@ -65,7 +65,7 @@ export default function Image() {
               fontWeight: 400,
             }}
           >
-            Strategic Design, Spatial Logic, and Professional Collaboration
+            Decision-Based Design for functional modern living spaces
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export default function Image() {
           }}
         >
           <span>eryawanagung.my.id</span>
-          <span style={{ color: '#D4AF37' }}>Design Strategy</span>
+          <span style={{ color: '#D4AF37' }}>Decision-Based Design</span>
         </div>
       </div>
     ),
