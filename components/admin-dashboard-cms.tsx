@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
+import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at';
 
@@ -301,7 +302,7 @@ export default function AdminDashboardCMS() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Projects</p>
             <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Daftar Project</h2>
           </div>
-          <Link href="/admin/projects/new" className="inline-flex min-h-11 items-center justify-center rounded-[4px] bg-[#D4AF37] px-6 py-3.5 text-center text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
+          <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-[4px] bg-[#D4AF37] px-6 py-3.5 text-center text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
             Tambah Project
           </Link>
         </div>
@@ -371,7 +372,7 @@ export default function AdminDashboardCMS() {
                   </p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
                   <div className="flex flex-wrap items-center gap-3 md:justify-end">
-                    <Link href={`/admin/projects/${project.id}/edit`} className="min-h-11 rounded-full border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
+                    <Link href={getAdminProjectEditHref(project.id, '/admin/dashboard')} className="min-h-11 rounded-full border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
                       Edit
                     </Link>
                     <button type="button" disabled={deletingId === project.id} onClick={() => deleteProject(project)} className="min-h-11 rounded-full border border-red-400/20 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-red-200/80 transition duration-300 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50">

@@ -9,6 +9,7 @@ type ContextualBackButtonProps = {
   label?: string;
   className?: string;
   ariaLabel?: string;
+  preferFallback?: boolean;
 };
 
 export default function ContextualBackButton({
@@ -16,6 +17,7 @@ export default function ContextualBackButton({
   label = '← Kembali ke Sebelumnya',
   className,
   ariaLabel = 'Kembali ke halaman sebelumnya',
+  preferFallback = false,
 }: ContextualBackButtonProps) {
   const router = useRouter();
 
@@ -25,7 +27,7 @@ export default function ContextualBackButton({
     const referrer = document.referrer;
     const hasSameOriginReferrer = referrer.startsWith(window.location.origin);
 
-    if (hasSameOriginReferrer) {
+    if (!preferFallback && hasSameOriginReferrer) {
       router.back();
       return;
     }

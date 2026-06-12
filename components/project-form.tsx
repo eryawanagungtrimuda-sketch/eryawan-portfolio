@@ -11,8 +11,9 @@ import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePath
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
+import { defaultAdminProjectReturnPath, type AdminProjectReturnPath } from '@/lib/admin-project-return-path';
 
-type Props = { project?: Project; initialRelatedInsight?: { id: string; slug: string } | null };
+type Props = { project?: Project; initialRelatedInsight?: { id: string; slug: string } | null; returnPath?: AdminProjectReturnPath };
 type AiNarrativeResponse = { konteks?: string; konflik?: string; keputusan_desain?: string; pendekatan?: string; dampak?: string; insight_kunci?: string; error?: string };
 type CustomSelectState = { choice: string; custom: string };
 type ApiJsonResult = { id?: string; error?: string; exists?: boolean; message?: string; slug?: string };
@@ -257,8 +258,9 @@ function buildGalleryAltText({
   return `Visual interior ${cleanedTitle} dengan suasana ruang ${style.toLowerCase()} yang nyaman.`;
 }
 
-export default function ProjectForm({ project, initialRelatedInsight = null }: Props) {
+export default function ProjectForm({ project, initialRelatedInsight = null, returnPath = defaultAdminProjectReturnPath }: Props) {
   const router = useRouter();
+  const safeReturnPath = returnPath;
   const galleryInputRef = useRef<HTMLInputElement | null>(null);
   const [savedProjectId, setSavedProjectId] = useState(project?.id || '');
   const isEditing = Boolean(savedProjectId);
@@ -924,13 +926,13 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
         if (error) throw error;
         setMessage('Project berhasil diperbarui.');
         toast({ type: 'success', title: 'Perubahan disimpan', description: 'Project berhasil diperbarui.' });
-        router.push(`/admin/projects/${savedProjectId}/edit`);
+        router.push(safeReturnPath);
       } else {
         const { data, error } = await supabase.from('projects').insert(payload).select('id').single();
         if (error) throw error;
         setSavedProjectId(data.id as string);
         toast({ type: 'success', title: 'Project tersimpan', description: 'Project baru berhasil dibuat.' });
-        router.push(`/admin/projects/${data.id}/edit`);
+        router.push(safeReturnPath);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Gagal menyimpan project.';
@@ -996,7 +998,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null }: P
       const { error } = await supabase.from('projects').delete().eq('id', savedProjectId);
       if (error) throw error;
       toast({ type: 'success', title: 'Project dihapus', description: 'Project berhasil dihapus.' });
-      router.push('/admin/projects');
+      router.push(safeReturnPath);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Gagal menghapus project.';
       setMessage(errorMessage);

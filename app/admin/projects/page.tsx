@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminProjectsList from '@/components/admin-projects-list';
+import { getAdminProjectCreateHref } from '@/lib/admin-project-return-path';
 
 export default function AdminProjectsPage() {
   return (
@@ -12,7 +13,7 @@ export default function AdminProjectsPage() {
               <Link href="/admin/dashboard" className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35">Dashboard</Link>
               <h1 className="font-display mt-4 text-5xl font-normal leading-[1.05] tracking-[-0.04em]">Projects</h1>
             </div>
-            <Link href="/admin/projects/new" className="rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866]">
+            <Link href={getAdminProjectCreateHref('/admin/projects')} className="rounded-[4px] bg-[#D4AF37] px-6 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866]">
               Tambah Project
             </Link>
           </div>

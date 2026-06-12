@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { normalizeDisplayRatio, normalizeObjectPosition } from '@/lib/project-image-display';
 import type { Project } from '@/lib/types';
+import type { AdminProjectReturnPath } from '@/lib/admin-project-return-path';
 import ProjectForm from './project-form';
 
 type Props = {
   id: string;
+  returnPath?: AdminProjectReturnPath;
 };
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -20,7 +22,7 @@ function normalizeLegacySlug(value?: string | null) {
   return normalizeLegacyText(value).replace(/&/g, ' ').replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
 }
 
-export default function AdminProjectEditor({ id }: Props) {
+export default function AdminProjectEditor({ id, returnPath }: Props) {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -125,5 +127,5 @@ export default function AdminProjectEditor({ id }: Props) {
   if (message) return <p className="py-10 text-red-300">{message}</p>;
   if (!project) return <p className="py-10 text-white/50">Project belum tersedia.</p>;
 
-  return <ProjectForm project={project} initialRelatedInsight={relatedInsight} />;
+  return <ProjectForm project={project} initialRelatedInsight={relatedInsight} returnPath={returnPath} />;
 }
