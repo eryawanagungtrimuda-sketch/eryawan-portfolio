@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+import { getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 
 type AdminProjectListItem = {
   id: string;
@@ -110,7 +111,7 @@ export default function AdminProjectsList() {
       {filteredProjects.map((project) => (
         <Link
           key={project.id}
-          href={`/admin/projects/${project.id}/edit`}
+          href={getAdminProjectEditHref(project.id, '/admin/projects')}
           className="grid gap-4 rounded-sm border border-white/10 bg-white/[0.025] p-5 transition hover:border-[#D4AF37]/35 md:grid-cols-[1fr_auto] md:items-center"
         >
           <div>

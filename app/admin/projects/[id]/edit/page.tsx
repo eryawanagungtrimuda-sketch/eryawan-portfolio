@@ -1,24 +1,29 @@
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminProjectEditor from '@/components/admin-project-editor';
 import BackButton from '@/components/back-button';
+import { getSafeAdminProjectReturnPath } from '@/lib/admin-project-return-path';
 
 type Props = {
   params: { id: string };
+  searchParams?: { returnTo?: string | string[] };
 };
 
-export default function EditProjectPage({ params }: Props) {
+export default function EditProjectPage({ params, searchParams }: Props) {
+  const returnToParam = Array.isArray(searchParams?.returnTo) ? searchParams?.returnTo[0] : searchParams?.returnTo;
+  const safeReturnPath = getSafeAdminProjectReturnPath(returnToParam);
+
   return (
     <AdminAuthGuard>
       <main id="admin-shell" className="min-h-screen bg-[#080807] px-4 py-10 font-sans text-[#F4F1EA] sm:px-5 md:px-8 lg:px-12">
         <div className="mx-auto max-w-6xl">
           <div className="border-b border-white/10 pb-8">
-            <BackButton fallbackHref="/admin/projects" />
+            <BackButton fallbackHref={safeReturnPath} preferFallback />
             <p className="mt-6 font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35">Admin / Projects / Edit Project</p>
             <h1 className="font-display mt-4 text-[2.1rem] font-normal leading-[1.05] tracking-[-0.03em] sm:text-[2.5rem] md:text-5xl">Edit Project</h1>
             <p className="mt-4 max-w-2xl text-white/56">Kelola konten case study, gallery images, cover selection, dan narasi project.</p>
           </div>
           <section className="py-10">
-            <AdminProjectEditor id={params.id} />
+            <AdminProjectEditor id={params.id} returnPath={safeReturnPath} />
           </section>
         </div>
       </main>

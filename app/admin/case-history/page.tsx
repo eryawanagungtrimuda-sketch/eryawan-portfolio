@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import ContextualBackButton from '@/components/contextual-back-button';
 import { getSupabaseClient } from '@/lib/supabaseClient';
+import { getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 
 type CaseHistoryProject = {
   id: string;
@@ -93,7 +94,7 @@ export default function AdminCaseHistoryPage() {
                         <h2 className="text-2xl font-semibold text-white/90">{project.title || 'Tanpa Judul'}</h2>
                         <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/40">/{project.slug || '-'}</p>
                       </div>
-                      <Link href={`/admin/projects/${project.id}/edit`} className="inline-flex rounded-sm border border-[#D4AF37]/40 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:border-[#D4AF37] hover:bg-[#D4AF37]/10">
+                      <Link href={getAdminProjectEditHref(project.id, '/admin/projects')} className="inline-flex rounded-sm border border-[#D4AF37]/40 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition hover:border-[#D4AF37] hover:bg-[#D4AF37]/10">
                         Edit Project
                       </Link>
                     </div>
