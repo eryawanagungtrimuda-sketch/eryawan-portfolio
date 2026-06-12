@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 const conversationIntents = [
   "Peluang Kerja",
   "Kolaborasi",
-  "Proyek Interior",
+  "Interior & Hunian",
   "Diskusi Desain",
 ];
 
@@ -67,7 +67,8 @@ export default function MulaiProjectPage() {
             <p className="mt-4 text-sm leading-7 text-white/70 sm:text-base sm:leading-8">
               Ceritakan konteks singkatnya agar arah pembicaraan lebih jelas
               sejak awal—baik untuk peluang kerja, kolaborasi proyek, proyek
-              interior, maupun diskusi desain yang membutuhkan sudut pandang
+              interior dan arsitektur hunian, maupun diskusi desain yang
+              membutuhkan sudut pandang
               terstruktur.
             </p>
           </div>

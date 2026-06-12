@@ -44,7 +44,7 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div className="max-w-2xl">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Eryawan Agung</p>
-          <p className="mt-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/42 sm:text-[10px]">Interior Designer / Decision-Based Interior Design</p>
+          <p className="mt-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/42 sm:text-[10px]">Interior & Residential Design / Decision-Based Design</p>
           <h2 className="mt-4 font-display text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">{title}</h2>
           <p className="mt-3 max-w-xl text-sm leading-7 text-white/58">
             Pilih langkah berikutnya tanpa kehilangan konteks: baca wawasan, lihat karya lain, atau mulai percakapan desain.

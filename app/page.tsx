@@ -58,7 +58,7 @@ const framework = [
   {
     title: 'Pahami',
     description:
-      `Desain terbaik lahir dari mendengarkan
+      `Desain yang kuat lahir dari mendengarkan
 Saya mendesain untuk cara hidup Anda yang sesungguhnya. Setiap keputusan punya alasan yang jelas, berakar dari kebutuhan, kebiasaan, dan nilai-nilai yang Anda jaga.`,
     icon: Search,
     number: '01',
@@ -715,7 +715,7 @@ export default async function Home() {
             </div>
 
             <p className="mx-auto mt-5 max-w-2xl font-sans text-sm leading-7 text-white/50 sm:mt-6">
-              Portfolio desain interior yang menampilkan karya, wawasan, dan proses berpikir desain berbasis keputusan. Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
+              Portfolio desain interior dan arsitektur hunian yang menampilkan karya, wawasan, dan proses berpikir desain berbasis keputusan. Diskusi awal dapat dimulai dari konteks ruang, kebutuhan aktivitas, dan arah desain.
             </p>
 
             <div className="mt-8 flex items-center justify-center gap-8 text-white/50">

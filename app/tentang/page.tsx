@@ -109,18 +109,18 @@ export default function TentangPage() {
           <div className="reveal-on-scroll" style={{ '--reveal-delay': '80ms' } as CSSProperties}>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#C8A951] md:text-[11px]">TENTANG ERYAWAN AGUNG</p>
             <h1 className="font-display mt-5 max-w-6xl text-[2rem] font-normal leading-[1.08] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem] md:text-7xl">
-              Saya merancang interior sebagai strategi bisnis dan pengalaman, bukan sekadar tampilan.
+              Saya merancang interior dan arsitektur hunian sebagai strategi pengalaman, bukan sekadar tampilan.
             </h1>
           </div>
           <div className="reveal-on-scroll mt-8 max-w-4xl space-y-5 text-base leading-[1.75] text-white/70 sm:text-lg md:text-xl" style={{ '--reveal-delay': '140ms' } as CSSProperties}>
             <p>
-              Saya membantu perusahaan, HRD, owner, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan yang jelas, fungsional, dan realistis untuk dieksekusi.
+              Saya membantu owner, perusahaan, HRD, dan tim desain menerjemahkan kebutuhan ruang menjadi keputusan yang jelas, fungsional, dan realistis untuk dieksekusi.
             </p>
             <p>
-              Pendekatan saya menghubungkan estetika, alur aktivitas, material, dan eksekusi supaya ruang bukan hanya menarik dilihat, tetapi benar-benar membantu aktivitas dan citra bisnis.
+              Pendekatan saya menghubungkan estetika, alur aktivitas, material, dan eksekusi supaya ruang bukan hanya menarik dilihat, tetapi benar-benar membantu aktivitas, kenyamanan hunian, dan citra bisnis.
             </p>
             <p>
-              Saya terbuka untuk peluang profesional di bidang arsitektur dan interior, serta kolaborasi sejak tahap awal ketika keputusan strategis paling menentukan hasil akhir.
+              Saya terbuka untuk peluang profesional di bidang desain interior dan arsitektur hunian, serta kolaborasi sejak tahap awal ketika keputusan strategis paling menentukan hasil akhir.
             </p>
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
