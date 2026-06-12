@@ -11,7 +11,7 @@ type ActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const baseStyles =
-  'inline-flex min-h-11 items-center justify-center rounded-full font-sans text-sm font-semibold leading-none transition duration-300 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
+  'inline-flex min-h-11 items-center justify-center rounded-full font-sans text-sm font-semibold leading-none transition duration-300 motion-safe:active:scale-[0.985] motion-safe:active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
 
 const variantStyles: Record<ActionButtonVariant, string> = {
   primary: 'border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-black hover:bg-[#E2C866]',

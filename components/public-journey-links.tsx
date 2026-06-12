@@ -47,11 +47,11 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
           <p className="mt-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/42 sm:text-[10px]">Interior Designer / Decision-Based Interior Design</p>
           <h2 className="mt-4 font-display text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">{title}</h2>
           <p className="mt-3 max-w-xl text-sm leading-7 text-white/58">
-            Portfolio desain interior yang menampilkan karya, wawasan, dan proses berpikir desain berbasis keputusan.
+            Pilih langkah berikutnya tanpa kehilangan konteks: baca wawasan, lihat karya lain, atau mulai percakapan desain.
           </p>
         </div>
         <p className="max-w-sm text-sm leading-7 text-white/56 md:text-right">
-          Terbuka untuk peluang kerja, kolaborasi proyek, dan diskusi desain interior.
+          Dirancang sebagai penutup editorial yang tenang, bukan dorongan CTA yang berat.
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
           const badgeText = link.badge || (isCurrent ? 'Sedang dibuka' : null);
           const cardClassName = isCurrent
             ? 'flex min-h-11 flex-col rounded-2xl border border-white/10 bg-white/[0.015] px-4 py-3 font-sans opacity-90'
-            : 'group flex min-h-11 flex-col rounded-2xl border border-white/12 bg-white/[0.02] px-4 py-3 font-sans transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
+            : 'mobile-tap-feedback group flex min-h-11 flex-col rounded-2xl border border-white/12 bg-white/[0.02] px-4 py-3 font-sans transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]';
 
           const content = (
             <>

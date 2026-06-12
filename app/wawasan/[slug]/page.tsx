@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import SmartBackLink from '@/components/smart-back-link';
 import InsightImageGallery from '@/components/insight-image-gallery';
 import RevealObserver from '@/components/reveal-observer';
+import ScrollProgress from '@/components/scroll-progress';
 import ShareLinkButton from '@/components/share-link-button';
 import WawasanAdminActions from '@/components/wawasan-admin-actions';
 import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
@@ -149,11 +150,12 @@ ${insightUrl}`;
   return (
     <main id="main-content" className="min-h-screen overflow-x-clip bg-[#080807] px-4 py-12 text-[#F4F1EA] sm:px-5 sm:py-14 md:px-8 md:py-16 lg:px-12">
       <RevealObserver />
+      <ScrollProgress />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <div className="reveal-on-scroll mx-auto max-w-4xl pb-28 md:pb-32">
         <SmartBackLink
           fallbackHref="/wawasan"
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 px-6 py-2.5 font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
+          className="mobile-tap-feedback inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 px-6 py-2.5 font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-x-0.5 hover:border-[#D4AF37]/45 hover:text-[#D4AF37]"
         >
           ← Kembali ke Wawasan
         </SmartBackLink>
@@ -203,7 +205,7 @@ ${insightUrl}`;
               </div>
             </div>
             <p className="mt-3 font-sans text-sm leading-7 text-white/56">Proyek ini menjadi studi kasus utama yang melahirkan wawasan teknis di halaman ini.</p>
-            <TrackedLink href={sourceProjectHref} eventName="project_view_intent" eventProps={{ source: "wawasan_detail", label: "lihat_studi_kasus_proyek", content_type: "karya", slug: sourceProject.slug, href_type: "internal" }} data-cta="wawasan-detail-source-project" aria-label={`Lihat studi kasus proyek ${sourceProject.title}`} className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
+            <TrackedLink href={sourceProjectHref} eventName="project_view_intent" eventProps={{ source: "wawasan_detail", label: "lihat_studi_kasus_proyek", content_type: "karya", slug: sourceProject.slug, href_type: "internal" }} data-cta="wawasan-detail-source-project" aria-label={`Lihat studi kasus proyek ${sourceProject.title}`} className="mobile-tap-feedback mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-500 motion-safe:ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:transform-gpu hover:bg-[#D4AF37]/20">
               Lihat Studi Kasus Proyek
             </TrackedLink>
           </section>
@@ -211,7 +213,7 @@ ${insightUrl}`;
           <section className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
             <p className="font-display text-[11px] uppercase tracking-[0.14em] text-[#D4AF37]">Sumber Proyek</p>
             <p className="mt-3 font-sans text-sm leading-7 text-white/60">Artikel ini ditulis sebagai insight mandiri dan tidak terhubung ke satu proyek tertentu. Jelajahi halaman Karya untuk melihat studi kasus lengkap.</p>
-            <Link href="/karya" className="mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37]">Lihat Karya</Link>
+            <Link href="/karya" className="mobile-tap-feedback mt-4 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/10 px-4 py-2.5 font-sans text-sm text-[#D4AF37] transition motion-safe:duration-300 hover:bg-[#D4AF37]/20">Lihat Karya</Link>
           </section>
         )}
 
@@ -225,12 +227,12 @@ ${insightUrl}`;
           <h2 className="mt-4 font-sans text-2xl leading-[1.15] tracking-[-0.02em] text-[#F4F1EA] sm:text-3xl">Punya rekan yang sedang memikirkan ruang serupa?</h2>
           <p className="mt-4 max-w-3xl font-sans text-sm leading-7 text-white/68 sm:text-base">Kirimkan artikel ini melalui WhatsApp agar ide desainnya lebih mudah didiskusikan bersama pasangan, kontraktor, atau tim proyek.</p>
           <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
-            <TrackedLink href={whatsappHref} target="_blank" rel="noopener noreferrer" eventName="whatsapp_click" eventProps={{ source: "wawasan_detail", label: "mulai_percakapan_proyek", content_type: "wawasan", slug: insight.slug, href_type: "external" }} data-cta="wawasan-detail-whatsapp" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
+            <TrackedLink href={whatsappHref} target="_blank" rel="noopener noreferrer" eventName="whatsapp_click" eventProps={{ source: "wawasan_detail", label: "mulai_percakapan_proyek", content_type: "wawasan", slug: insight.slug, href_type: "external" }} data-cta="wawasan-detail-whatsapp" aria-label={`Bagikan insight ${insight.title} via WhatsApp`} className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/65 bg-[#D4AF37] px-5 py-2.5 text-center font-sans text-sm font-semibold text-black transition motion-safe:duration-300 hover:bg-[#E2C866]">
               Mulai Percakapan Proyek via WhatsApp
             </TrackedLink>
             <ShareLinkButton
               url={insightUrl}
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold text-white/78 transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] hover:text-[#D4AF37]"
+              className="mobile-tap-feedback inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-center font-sans text-sm font-semibold text-white/78 transition motion-safe:duration-300 hover:border-[#D4AF37]/45 hover:bg-white/[0.03] hover:text-[#D4AF37]"
             />
           </div>
         </section>
@@ -247,9 +249,9 @@ ${insightUrl}`;
         <div className="mt-8 border-t border-white/10 pt-10 sm:mt-10 sm:pt-12">
           <div className="flex flex-col items-stretch gap-3 md:items-center md:gap-5">
             <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:justify-center md:gap-3.5">
-              <Link href="/mulai-project" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866] md:w-auto">Diskusikan Proyek Serupa</Link>
+              <Link href="/mulai-project" className="mobile-tap-feedback inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-black transition motion-safe:duration-300 hover:bg-[#E2C866] md:w-auto">Diskusikan Proyek Serupa</Link>
               <AdminEditWawasanShortcut insightId={insight.id} className="premium-interactive inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#D4AF37]/55 bg-transparent px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-[#D4AF37] transition motion-safe:duration-300 hover:border-[#D4AF37]/80 hover:bg-[#D4AF37]/12 md:w-auto" />
-              <SmartBackLink fallbackHref="/wawasan" className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] md:w-auto">← Kembali ke Wawasan</SmartBackLink>
+              <SmartBackLink fallbackHref="/wawasan" className="mobile-tap-feedback inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-center font-sans text-sm font-semibold leading-none text-white/80 transition motion-safe:duration-300 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] md:w-auto">← Kembali ke Wawasan</SmartBackLink>
             </div>
             <WawasanAdminActions slug={insight.slug} placement="inline-desktop" />
           </div>
