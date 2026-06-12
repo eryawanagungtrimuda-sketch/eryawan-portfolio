@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrackedLink from '@/components/tracked-link';
@@ -73,7 +74,7 @@ function formatProjectStatus(status?: string | null) {
 
 function TextBlock({ label, body, index, fallback }: { label: string; body?: string | null; index: number; fallback: string }) {
   return (
-    <article className="group rounded-[1.75rem] border border-white/10 bg-white/[0.018] px-5 py-7 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.03] sm:px-7 sm:py-8 lg:grid lg:grid-cols-[0.68fr_2fr] lg:gap-14 lg:px-8 lg:py-10">
+    <article style={{ '--reveal-delay': `${Math.min((index - 1) * 90, 450)}ms` } as CSSProperties} className="reveal-on-scroll mobile-card-reveal group rounded-[1.75rem] border border-white/10 bg-white/[0.018] px-5 py-7 transition motion-safe:duration-700 motion-safe:ease-out motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.03] sm:px-7 sm:py-8 lg:grid lg:grid-cols-[0.68fr_2fr] lg:gap-14 lg:px-8 lg:py-10">
       <div className="border-b border-white/10 pb-5 lg:border-b-0 lg:pb-0">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#C8A951]">0{index}</p>
         <h2 className="mt-3 text-sm font-bold uppercase tracking-[0.2em] text-[#D4AF37]">{label}</h2>
@@ -198,7 +199,7 @@ ${projectUrl}`;
         </section>
 
         {caseSummaryItems.length > 0 || areaTags.length > 0 ? (
-          <section className="border-y border-white/10 py-7 md:py-9">
+          <section className="reveal-on-scroll border-y border-white/10 py-7 md:py-9">
             <div className="grid gap-7 lg:grid-cols-[0.5fr_1fr] lg:gap-11">
               <div>
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Ringkasan Proyek</p>
@@ -224,7 +225,7 @@ ${projectUrl}`;
           </section>
         ) : null}
 
-        <section className="py-16 md:py-20">
+        <section className="py-16 md:py-20" data-reveal-group>
           <div className="mb-8 max-w-3xl md:mb-10">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.44em] text-[#D4AF37]">Alur Studi Kasus</p>
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.1] tracking-[-0.035em] md:text-5xl">Dari konteks ruang menuju keputusan desain.</h2>
@@ -240,7 +241,7 @@ ${projectUrl}`;
         </section>
 
         {relatedInsight?.slug ? (
-          <section className="rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:p-6 md:p-7">
+          <section className="reveal-on-scroll rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:p-6 md:p-7">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
             <h2 className="font-display mt-4 text-2xl font-normal leading-[1.18] tracking-[-0.02em] sm:text-[2rem]">
               Ingin tahu alasan teknis di balik project ini?
@@ -257,14 +258,14 @@ ${projectUrl}`;
             </Link>
           </section>
         ) : (
-          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-7">
+          <section className="reveal-on-scroll rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-7">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-white/66 sm:text-base">Belum ada wawasan terkait untuk proyek ini saat ini. Anda tetap dapat melanjutkan ke daftar wawasan untuk membaca pembahasan desain lainnya.</p>
             <Link href="/wawasan" className="mt-5 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37]">Lihat Wawasan</Link>
           </section>
         )}
 
-        <section className="border-t border-white/10 pt-20 pb-12 md:pt-24 md:pb-16">
+        <section className="reveal-on-scroll border-t border-white/10 pt-20 pb-12 md:pt-24 md:pb-16">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37]">Galeri Gambar</p>
@@ -282,7 +283,7 @@ ${projectUrl}`;
           )}
         </section>
 
-        <section className="rounded-[1.75rem] border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 font-sans sm:p-6 md:p-8">
+        <section className="reveal-on-scroll mobile-card-reveal rounded-[1.75rem] border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 font-sans sm:p-6 md:p-8">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Bagikan Studi Kasus</p>
           <h2 className="font-display mt-4 text-3xl font-normal leading-[1.12] tracking-[-0.03em] text-[#F4F1EA] sm:text-[2.4rem]">Diskusikan arah desain dengan konteks yang lebih jelas.</h2>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-white/70 sm:text-base">

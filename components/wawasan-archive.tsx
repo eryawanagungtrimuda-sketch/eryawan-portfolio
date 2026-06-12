@@ -454,7 +454,7 @@ export default function WawasanArchive({ insights }: Props) {
               <div
                 key={item.id}
                 style={
-                  { "--reveal-delay": `${(index + 1) * 90}ms` } as CSSProperties
+                  { "--reveal-delay": `${Math.min((index + 1) * 90, 450)}ms` } as CSSProperties
                 }
                 className="reveal-on-scroll mobile-card-breathing mobile-card-reveal"
               >

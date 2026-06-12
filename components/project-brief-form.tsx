@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useMemo, useRef, useState } from "react";
+import type { CSSProperties, FormEvent } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/toast-provider";
 
 type FormState = {
@@ -221,7 +222,7 @@ export default function ProjectBriefForm() {
 
   return (
     <form onSubmit={handleSend} className="mt-8 grid gap-6 lg:grid-cols-2">
-      <section className="space-y-5 rounded-2xl border border-white/10 bg-[#0d0d0c] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-6">
+      <section style={{ "--reveal-delay": "80ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal space-y-5 rounded-2xl border border-white/10 bg-[#0d0d0c] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-6">
         <div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/85">
             Ceritakan Kebutuhan Anda
@@ -431,7 +432,7 @@ export default function ProjectBriefForm() {
           <p className="text-xs text-emerald-300">{copyState}</p>
         ) : null}
       </section>
-      <section className="h-fit rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-b from-[#12100b] to-[#0b0b0a] p-5 sm:p-6 lg:sticky lg:top-8">
+      <section style={{ "--reveal-delay": "160ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal h-fit rounded-2xl border border-[#D4AF37]/20 bg-gradient-to-b from-[#12100b] to-[#0b0b0a] p-5 sm:p-6 lg:sticky lg:top-8">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/85">
           Preview Percakapan
         </p>
