@@ -15,21 +15,21 @@ import TrackedLink from '@/components/tracked-link';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
-  title: 'Eryawan Agung | Interior Designer Portfolio',
-  description: 'Portfolio desain interior Eryawan Agung: karya, wawasan, dan proses berpikir Decision-Based Interior Design.',
+  title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+  description: 'Portfolio Eryawan Agung yang menampilkan karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
   alternates: { canonical: absoluteUrl('/') },
   openGraph: {
-    title: 'Eryawan Agung | Interior Designer Portfolio',
-    description: 'Portfolio desain interior Eryawan Agung: karya, wawasan, dan proses berpikir Decision-Based Interior Design.',
+    title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+    description: 'Portfolio Eryawan Agung yang menampilkan karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
     url: absoluteUrl('/'),
     type: 'website',
-    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Eryawan Agung Interior Designer Portfolio' }],
+    images: [{ url: absoluteUrl('/opengraph-image'), width: 1200, height: 630, alt: 'Eryawan Agung Interior & Residential Design Portfolio' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Eryawan Agung | Interior Designer Portfolio',
-    description: 'Portfolio desain interior Eryawan Agung: karya, wawasan, dan proses berpikir Decision-Based Interior Design.',
-    images: [absoluteUrl('/opengraph-image')],
+    title: 'Eryawan Agung | Interior & Residential Design Portfolio',
+    description: 'Portfolio Eryawan Agung yang menampilkan karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design.',
+    images: [{ url: absoluteUrl('/opengraph-image'), alt: 'Eryawan Agung Interior & Residential Design Portfolio' }],
   },
 };
 
@@ -85,11 +85,10 @@ Fungsi maksimal bukan soal kekuatannya tapi soal kemudahan yang terasa alami set
 
 const quickScanProof = [
   'Eryawan Agung',
-  'Interior Designer',
-  'Decision-Based Interior Design',
+  'Interior & Residential Design',
+  'Decision-Based Design',
   'Karya Interior',
-  'Wawasan Desain',
-  'Terbuka untuk peluang kerja & kolaborasi',
+  'Arsitektur Hunian',
 ];
 
 const decisions = [
@@ -195,7 +194,7 @@ function BrandWordmark({ compact = false }: { compact?: boolean }) {
         className={compact ? 'font-display text-[0.98rem] uppercase text-[#C8A951]' : 'font-display text-[1.07rem] uppercase text-[#C8A951]'}
       />
       <SpreadTextLine
-        text="INTERIOR DESIGN PORTFOLIO"
+        text="INTERIOR & RESIDENTIAL DESIGN"
         className={compact ? 'mt-0.5 font-sans text-[0.56rem] font-semibold uppercase text-white/70' : 'mt-0.5 font-sans text-[0.58rem] font-semibold uppercase text-white/68'}
       />
     </div>
@@ -230,8 +229,8 @@ export default async function Home() {
     name: 'Eryawan Agung',
     url: absoluteUrl('/'),
     image: absoluteUrl('/hero.jpg'),
-    jobTitle: 'Interior Designer',
-    description: 'Interior Designer yang berfokus pada Decision-Based Interior Design, spatial logic, keputusan desain, dan dampak ruang.',
+    jobTitle: 'Interior & Residential Designer',
+    description: 'Interior and residential design focused on Decision-Based Design, spatial logic, and functional modern living spaces.',
     sameAs: ['https://www.instagram.com/eryawanagung'],
   };
   return (
@@ -308,10 +307,10 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 grid flex-1 items-center pt-1 lg:grid-cols-[1fr_0.5fr] lg:pt-2 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:grid-cols-1">
+        <div className="relative z-10 flex flex-1 items-center pt-1 lg:pt-2">
           <div className="max-w-6xl lg:pl-8 xl:pl-14">
             <p className="mb-5 font-mono text-[9px] font-black uppercase tracking-[0.42em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.5em] md:mb-7 md:text-[11px] md:tracking-[0.56em]">
-              Eryawan Agung · Interior Designer
+              Eryawan Agung · Interior & Residential Design
             </p>
 
             <h1 className="font-display max-w-6xl text-balance text-[1.74rem] font-normal uppercase leading-[1.08] tracking-[-0.035em] text-[#F4F1EA] drop-shadow-[0_16px_34px_rgba(0,0,0,0.42)] min-[375px]:text-[1.85rem] min-[390px]:text-[1.95rem] sm:text-[2.25rem] sm:leading-[1.06] sm:tracking-[-0.04em] md:text-[clamp(2.9rem,5.4vw,6.1rem)]">
@@ -327,7 +326,7 @@ export default async function Home() {
             </h1>
 
             <p className="mt-4 max-w-3xl pr-1 font-sans text-[0.95rem] leading-[1.62] text-white drop-shadow-md sm:mt-5 sm:text-[1.05rem] md:mt-6 md:text-[1.15rem]">
-              Portfolio desain interior Eryawan Agung yang merangkum karya, wawasan, dan proses berpikir Decision-Based Interior Design untuk ruang yang jelas, fungsional, dan relevan terhadap cara digunakan.
+              Portfolio Eryawan Agung yang merangkum karya interior, arsitektur hunian, wawasan desain, dan proses berpikir Decision-Based Design untuk ruang yang jelas, fungsional, dan relevan terhadap cara digunakan.
             </p>
 
             <div className="mt-5 flex max-w-4xl flex-wrap gap-2 sm:mt-6" aria-label="Ringkasan cepat portfolio">
@@ -346,31 +345,6 @@ export default async function Home() {
               </Button>
             </div>
           </div>
-
-          <aside className="mt-8 max-w-xl rounded-[24px] border border-white/10 bg-[#080807]/48 p-5 shadow-[0_24px_72px_rgba(0,0,0,0.28)] backdrop-blur-md sm:p-6 lg:mt-0 lg:justify-self-end [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:mt-8 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:max-w-3xl [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:justify-self-start" aria-label="Orientasi cepat untuk HRD, partner, dan calon klien">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.28em]">Untuk HRD, partner, dan calon klien</p>
-            <p className="mt-4 text-sm leading-[1.75] text-white/72 sm:text-[0.98rem]">
-              Portfolio ini merangkum cara saya membaca konteks ruang, mengambil keputusan desain, dan menerjemahkannya menjadi karya interior yang fungsional.
-            </p>
-            <div className="mt-5 grid gap-3 text-sm text-white/68 sm:grid-cols-3 lg:grid-cols-1 [@media_(min-width:900px)_and_(max-width:1280px)_and_(orientation:landscape)]:grid-cols-3">
-              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-3">
-                <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/38">Lihat</p>
-                <p className="mt-1.5 font-semibold text-white/86">Karya Interior</p>
-              </div>
-              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-3">
-                <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/38">Baca</p>
-                <p className="mt-1.5 font-semibold text-white/86">Wawasan Desain</p>
-              </div>
-              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-3">
-                <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/38">Mulai</p>
-                <p className="mt-1.5 font-semibold text-white/86">Percakapan</p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
-              <a href="/wawasan" className="inline-flex min-h-10 items-center rounded-full border border-white/12 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/64 transition hover:border-[#C8A951]/35 hover:bg-[#C8A951]/10 hover:text-[#C8A951] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]">Baca Wawasan</a>
-              <span className="text-xs leading-6 text-white/42">Karya dan percakapan tetap tersedia lewat CTA utama.</span>
-            </div>
-          </aside>
         </div>
 
         <div className="relative z-10 hidden items-center pb-2 md:flex">
@@ -769,14 +743,14 @@ export default async function Home() {
           <div className="mt-10 grid gap-7 sm:mt-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end">
             <div>
               <p className="font-display text-3xl leading-none tracking-[-0.03em] text-[#F4F1EA] sm:text-4xl">Eryawan Agung</p>
-              <p className="mt-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.22em]">Interior Designer / Decision-Based Interior Design</p>
+              <p className="mt-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.22em]">Interior & Residential Design / Decision-Based Design</p>
               <p className="mt-4 max-w-xl font-sans text-sm leading-7 text-white/50 sm:text-base">
-                Karya, wawasan, dan proses desain interior berbasis keputusan — terbuka untuk peluang kerja, kolaborasi proyek, dan diskusi desain interior.
+                Karya interior, arsitektur hunian, wawasan desain, dan proses Decision-Based Design untuk ruang yang jelas dan fungsional.
               </p>
             </div>
 
             <div className="flex flex-col gap-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/42 sm:text-[10px] sm:tracking-[0.22em] md:items-end md:text-right md:text-[11px]">
-              <p>© 2026 Eryawan Agung — Portfolio Desain Interior</p>
+              <p>© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-8">
                 <AdminFooterShortcut />
                 <span>Surabaya • Melayani Indonesia</span>
