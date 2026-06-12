@@ -54,7 +54,7 @@ export default async function WawasanPage() {
           />
         </div>
 
-        <section className="reveal-on-scroll pb-10 md:py-24 lg:py-28">
+        <section className="pb-10 md:py-24 lg:py-28">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.52em] text-[#D4AF37] md:text-[11px]">
             Beranda / Jurnal Desain
           </p>
