@@ -42,6 +42,17 @@ body {
   transform: translateY(0) scale(0.98);
 }
 
+
+.mobile-tap-feedback {
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.12);
+  touch-action: manipulation;
+}
+
+.mobile-tap-feedback:active {
+  filter: brightness(0.95);
+  transform: scale(0.985);
+}
+
 .premium-card-hover {
   transition: transform 360ms ease, border-color 360ms ease, background-color 360ms ease, box-shadow 360ms ease;
   will-change: transform;
@@ -284,7 +295,9 @@ body {
   .premium-interactive:hover,
   .premium-interactive:active,
   .premium-card-hover,
-  .premium-card-hover:hover {
+  .premium-card-hover:hover,
+  .mobile-tap-feedback,
+  .mobile-tap-feedback:active {
     transform: none !important;
     transition-property: border-color, background-color, color, box-shadow, opacity;
     transition-duration: 160ms;
