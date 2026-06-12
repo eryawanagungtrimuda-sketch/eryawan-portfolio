@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 const contactIntents = [
   "Peluang kerja",
   "Kolaborasi proyek",
-  "Diskusi desain interior",
+  "Diskusi interior & hunian",
   "Ulasan desain",
 ];
 
@@ -54,9 +54,10 @@ export default function KontakPage() {
               Mulai Percakapan yang Terarah
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-white/66 md:text-lg">
-              Eryawan Agung — Interior Designer dengan pendekatan Decision-Based
-              Interior Design. Terbuka untuk peluang kerja, kolaborasi proyek,
-              diskusi desain interior, dan ulasan desain yang membutuhkan
+              Eryawan Agung — Interior & Residential Designer dengan pendekatan
+              Decision-Based Design. Terbuka untuk peluang kerja, kolaborasi
+              proyek, diskusi desain interior dan arsitektur hunian, serta
+              ulasan desain yang membutuhkan
               pembacaan konteks secara jernih.
             </p>
           </div>

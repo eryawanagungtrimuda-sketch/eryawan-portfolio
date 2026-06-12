@@ -233,11 +233,11 @@ ${projectUrl}`;
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.1] tracking-[-0.035em] md:text-5xl">Dari konteks ruang menuju keputusan desain.</h2>
           </div>
           <div className="grid gap-5 md:gap-6">
-            <TextBlock label="Konteks" body={project.konteks} index={1} fallback="Konteks project belum ditambahkan." />
+            <TextBlock label="Konteks" body={project.konteks} index={1} fallback="Konteks proyek belum ditambahkan." />
             <TextBlock label="Konflik" body={project.konflik} index={2} fallback="Konflik utama belum ditambahkan." />
             <TextBlock label="Keputusan Desain" body={project.keputusan_desain} index={3} fallback="Keputusan desain belum ditambahkan." />
             <TextBlock label="Pendekatan" body={project.pendekatan} index={4} fallback="Pendekatan implementasi belum ditambahkan." />
-            <TextBlock label="Dampak" body={project.dampak || project.impact} index={5} fallback="Dampak project belum ditambahkan." />
+            <TextBlock label="Dampak" body={project.dampak || project.impact} index={5} fallback="Dampak proyek belum ditambahkan." />
             <TextBlock label="Insight Kunci" body={project.insight_kunci} index={6} fallback="Insight kunci belum ditambahkan." />
           </div>
         </section>
@@ -246,10 +246,10 @@ ${projectUrl}`;
           <section className="reveal-on-scroll rounded-2xl border border-[#D4AF37]/30 bg-[#C8A951]/[0.08] p-5 sm:p-6 md:p-7">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
             <h2 className="font-display mt-4 text-2xl font-normal leading-[1.18] tracking-[-0.02em] sm:text-[2rem]">
-              Ingin tahu alasan teknis di balik project ini?
+              Ingin tahu alasan teknis di balik proyek ini?
             </h2>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-white/70 sm:text-base">
-              Saya membedah salah satu keputusan desain dari project ini agar Anda dapat melihat hubungan antara masalah ruang, strategi, dan hasil akhirnya.
+              Saya membedah salah satu keputusan desain dari proyek ini agar Anda dapat melihat hubungan antara masalah ruang, strategi, dan hasil akhirnya.
             </p>
             <Link
               href={`/wawasan/${relatedInsight.slug}`}
