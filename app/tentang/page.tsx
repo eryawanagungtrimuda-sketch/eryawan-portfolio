@@ -8,14 +8,14 @@ import Button from '@/components/ui/button';
 import { absoluteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
-  title: 'Tentang Eryawan Agung | Interior Design Strategy',
+  title: 'Tentang Eryawan Agung | Interior & Residential Design',
   description:
-    'Profil Eryawan Agung sebagai desainer interior strategis yang membantu membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, eksekusi, serta nilai bisnis.',
+    'Profil Eryawan Agung sebagai Interior & Residential Designer dengan pendekatan Decision-Based Design untuk membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, serta eksekusi.',
   alternates: { canonical: absoluteUrl('/tentang') },
   openGraph: {
-    title: 'Tentang Eryawan Agung | Interior Design Strategy',
+    title: 'Tentang Eryawan Agung | Interior & Residential Design',
     description:
-      'Profil Eryawan Agung sebagai desainer interior strategis yang membantu membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, eksekusi, serta nilai bisnis.',
+      'Profil Eryawan Agung sebagai Interior & Residential Designer dengan pendekatan Decision-Based Design untuk membaca kebutuhan ruang, menyusun keputusan desain, dan menghubungkan estetika, fungsi, serta eksekusi.',
     url: absoluteUrl('/tentang'),
   },
 };

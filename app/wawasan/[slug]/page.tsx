@@ -17,7 +17,7 @@ import PublicJourneyLinks from '@/components/public-journey-links';
 export const dynamic = 'force-dynamic';
 
 function buildInsightDescription(title: string, excerpt?: string | null) {
-  return excerpt || `Explore the detailed design analysis and strategy behind ${title}. Read how design decisions were made and their impact on functionality and aesthetics.`;
+  return excerpt || `Catatan wawasan desain Eryawan Agung tentang ${title}, keputusan ruang, dan proses berpikir Decision-Based Design.`;
 }
 
 function resolveOgImageUrl(imageUrl?: string | null) {
@@ -98,8 +98,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
-  const title = `${insight.title} | Eryawan Agung Design Portfolio`;
-  const description = insight.excerpt || 'Bedah singkat tentang keputusan desain, masalah ruang, dan dampaknya terhadap pengalaman pengguna.';
+  const title = `${insight.title} | Wawasan Eryawan Agung`;
+  const description = insight.excerpt || 'Catatan desain tentang interior, arsitektur hunian, keputusan ruang, dan proses berpikir Decision-Based Design.';
   const url = absoluteUrl(`/wawasan/${insight.slug}`);
   const ogImageUrl = absoluteUrl(`/wawasan/${insight.slug}/opengraph-image`);
 
@@ -135,9 +135,9 @@ export default async function WawasanDetailPage({ params }: { params: { slug: st
     headline: insight.title,
     description,
     image: schemaImageUrl,
-    author: { '@type': 'Person', name: 'Eryawan Agung' },
+    author: { '@type': 'Person', name: 'Eryawan Agung', jobTitle: 'Interior & Residential Designer' },
     datePublished: insight.created_at,
-    publisher: { '@type': 'Person', name: 'Eryawan Agung' },
+    publisher: { '@type': 'Person', name: 'Eryawan Agung', jobTitle: 'Interior & Residential Designer' },
   };
   const sourceProjectHref = sourceProject?.slug ? `/karya/${sourceProject.slug}` : null;
   const insightUrl = absoluteUrl(`/wawasan/${insight.slug}`);

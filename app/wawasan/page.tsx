@@ -10,29 +10,29 @@ import PublicJourneyLinks from "@/components/public-journey-links";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Wawasan Desain | Eryawan Agung Design Portfolio",
+  title: "Wawasan | Catatan Interior & Residential Design",
   description:
-    "Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.",
+    "Catatan desain Eryawan Agung tentang interior, arsitektur hunian, keputusan ruang, dan proses berpikir Decision-Based Design.",
   alternates: { canonical: absoluteUrl("/wawasan") },
   openGraph: {
-    title: "Wawasan Desain | Eryawan Agung Design Portfolio",
+    title: "Wawasan | Catatan Interior & Residential Design",
     description:
-      "Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.",
+      "Catatan desain Eryawan Agung tentang interior, arsitektur hunian, keputusan ruang, dan proses berpikir Decision-Based Design.",
     url: absoluteUrl("/wawasan"),
     images: [
       {
         url: absoluteUrl("/opengraph-image"),
         width: 1200,
         height: 630,
-        alt: "Wawasan Desain Eryawan Agung",
+        alt: "Wawasan desain interior dan arsitektur hunian Eryawan Agung",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wawasan Desain | Eryawan Agung Design Portfolio",
+    title: "Wawasan | Catatan Interior & Residential Design",
     description:
-      "Explore the detailed design analysis and strategy behind each insight and design review by Eryawan Agung.",
+      "Catatan desain Eryawan Agung tentang interior, arsitektur hunian, keputusan ruang, dan proses berpikir Decision-Based Design.",
     images: [absoluteUrl("/opengraph-image")],
   },
 };

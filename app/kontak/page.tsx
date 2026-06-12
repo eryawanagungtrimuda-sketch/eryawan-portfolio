@@ -1,5 +1,38 @@
+import type { Metadata } from "next";
 import ContextualBackButton from "@/components/contextual-back-button";
 import TrackedLink from "@/components/tracked-link";
+import { absoluteUrl } from "@/lib/site-url";
+
+
+export const metadata: Metadata = {
+  title: "Kontak | Eryawan Agung",
+  description:
+    "Hubungi Eryawan Agung untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau percakapan awal tentang kebutuhan ruang.",
+  alternates: {
+    canonical: absoluteUrl("/kontak"),
+  },
+  openGraph: {
+    title: "Kontak | Eryawan Agung",
+    description:
+      "Hubungi Eryawan Agung untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau percakapan awal tentang kebutuhan ruang.",
+    url: absoluteUrl("/kontak"),
+    images: [
+      {
+        url: absoluteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: "Kontak Eryawan Agung untuk interior dan arsitektur hunian",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kontak | Eryawan Agung",
+    description:
+      "Hubungi Eryawan Agung untuk diskusi desain interior, arsitektur hunian, kolaborasi, atau percakapan awal tentang kebutuhan ruang.",
+    images: [absoluteUrl("/opengraph-image")],
+  },
+};
 
 const contactIntents = [
   "Peluang kerja",

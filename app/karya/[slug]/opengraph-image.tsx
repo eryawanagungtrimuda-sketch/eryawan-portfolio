@@ -3,7 +3,7 @@ import { absoluteUrl } from '@/lib/site-url';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 
 export const runtime = 'nodejs';
-export const alt = 'Studi Kasus Proyek | Eryawan Agung';
+export const alt = 'Karya Interior dan Residential Design | Eryawan Agung';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const project = await getPublishedProjectBySlug(params.slug);
   const ogImage = resolveProjectImage(project);
   const hasProject = Boolean(project);
-  const description = trimText(project?.problem) || trimText(project?.konteks) || 'Studi kasus desain yang membaca masalah ruang, keputusan desain, dan dampaknya terhadap pengguna.';
+  const description = trimText(project?.problem) || trimText(project?.konteks) || 'Studi kasus interior dan residential design yang membaca konteks ruang, keputusan desain, dan dampaknya terhadap pengguna.';
   const category = trimText(project?.design_category) || trimText(project?.category);
 
   return new ImageResponse(
@@ -61,7 +61,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ width: 48, height: 2, background: '#D4AF37' }} />
-              <span style={{ fontSize: 30, letterSpacing: 1.6, color: '#D4AF37', textTransform: 'uppercase' }}>Studi Kasus Proyek</span>
+              <span style={{ fontSize: 30, letterSpacing: 1.6, color: '#D4AF37', textTransform: 'uppercase' }}>Karya Berbasis Keputusan</span>
             </div>
             <h1 style={{ margin: 0, fontSize: hasProject ? 60 : 54, lineHeight: 1.05, letterSpacing: -1.4, display: 'flex' }}>
               {hasProject ? project?.title : 'Proyek tidak ditemukan'}
