@@ -1,12 +1,12 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ImagePlus, Sparkles, Star, Trash2 } from 'lucide-react';
 import { ProjectTagPicker } from '@/components/project-tag-picker';
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import { DEFAULT_AREA_TAGS, dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
+import { DEFAULT_AREA_TAGS, dedupeAreaTags, getAreaTagLabel, mergeAreaTagOptions, normalizeAreaTag } from '@/lib/area-tags';
 import { createUniqueStorageFileName, getProjectImagesBucketName, getStoragePathFromPublicUrl } from '@/lib/storage';
 import { DEFAULT_CROP_X, DEFAULT_CROP_Y, DEFAULT_CROP_ZOOM, DisplayRatio, getDisplayRatioNumber, getGalleryImageFrameStyle, getGalleryImageStyle, normalizeCropX, normalizeCropY, normalizeCropZoom, ObjectPosition } from '@/lib/project-image-display';
 import type { Project, ProjectImage } from '@/lib/types';
@@ -295,6 +295,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
       project?.area_type || null,
     ]),
   );
+  const [savedAreaTagOptions, setSavedAreaTagOptions] = useState<string[]>([]);
   const [coverImage, setCoverImage] = useState(project?.cover_image || '');
   const [bulkAltUpdating, setBulkAltUpdating] = useState(false);
   const hasRelatedWawasan = Boolean(relatedInsight);
@@ -315,6 +316,31 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
   const [projectStatus, setProjectStatus] = useState<'konsep' | 'berjalan' | 'selesai' | ''>(project?.project_status || '');
   const [completionYear, setCompletionYear] = useState(project?.completion_year?.toString() || '');
 
+  const areaTagOptions = useMemo(
+    () => mergeAreaTagOptions(DEFAULT_AREA_TAGS, areaTags, savedAreaTagOptions),
+    [areaTags, savedAreaTagOptions],
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase.from('projects').select('area_tags');
+        if (error) throw error;
+
+        const savedTags = (data || []).flatMap((item: { area_tags?: string[] | null }) => item.area_tags || []);
+        if (isMounted) setSavedAreaTagOptions(dedupeAreaTags(savedTags));
+      } catch (error) {
+        console.warn('[ProjectForm] Failed to load reusable area tags', error);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!savedProjectId || !coverImage || coverUpdatingId || galleryImages.length === 0) return;
@@ -1049,7 +1075,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
           <label>Area/Ruang Tags</label>
           <p className="mt-2 text-xs leading-5 text-white/42">Pilih area/ruang yang termasuk dalam proyek ini. Tags ini membantu filter visual dan konten sosial.</p>
           <div className="mt-3">
-            <ProjectTagPicker value={areaTags} onChange={setAreaTags} suggestions={DEFAULT_AREA_TAGS} normalizeTagValue={normalizeAreaTag} getTagLabel={getAreaTagLabel} placeholder="Cari atau tambah area..." maxTags={10} />
+            <ProjectTagPicker value={areaTags} onChange={setAreaTags} suggestions={areaTagOptions} normalizeTagValue={normalizeAreaTag} getTagLabel={getAreaTagLabel} placeholder="Cari atau tambah area..." maxTags={10} />
           </div>
         </div>
         {formError ? <p className="md:col-span-2 text-sm leading-6 text-red-300">{formError}</p> : null}
