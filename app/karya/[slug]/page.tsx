@@ -206,7 +206,7 @@ ${projectUrl}`;
               <div>
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Ringkasan Proyek</p>
                 <h2 className="font-display mt-3 max-w-lg text-2xl font-normal leading-[1.12] tracking-[-0.025em] md:text-4xl">Narasi singkat sebelum membaca detail keputusan desain.</h2>
-                <p className="mt-4 max-w-md text-sm leading-7 text-white/54">Ringkasan ini hanya menggunakan data proyek yang tersedia agar pembacaan studi kasus tetap akurat dan mudah dipindai.</p>
+                <p className="mt-4 max-w-md text-sm leading-7 text-white/54">Ringkasan ini disusun dari data proyek yang tersedia agar pembacaan studi kasus tetap akurat dan mudah dipahami.</p>
               </div>
               <div className="grid gap-4">
                 {caseSummaryItems.map((item) => (
