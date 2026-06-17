@@ -58,6 +58,7 @@ export function ProjectTagPicker({
     return map;
   }, [suggestions, normalizeValue]);
 
+  const normalizedValueSet = useMemo(() => new Set(value.map((item) => normalizeValue(item)).filter(Boolean)), [value, normalizeValue]);
   const canAddMore = value.length < maxTags;
   const normalizedInput = normalizeValue(input);
 
@@ -68,18 +69,20 @@ export function ProjectTagPicker({
   }, [normalizedInput, normalizedSuggestions]);
 
   const inputExistsInSuggestions = normalizedInput ? normalizedSuggestions.has(normalizedInput) : false;
-  const inputAlreadySelected = normalizedInput ? value.includes(normalizedInput) : false;
+  const inputAlreadySelected = normalizedInput ? normalizedValueSet.has(normalizedInput) : false;
   const shouldShowSuggestions = canAddMore && (isFocused || normalizedInput.length > 0);
 
   function addTag(raw: string) {
     const normalized = normalizeValue(raw);
-    if (!normalized || value.includes(normalized) || !canAddMore) return;
-    onChange([...value, normalized]);
+    if (!normalized || normalizedValueSet.has(normalized) || !canAddMore) return;
+    const suggestionLabel = normalizedSuggestions.get(normalized);
+    onChange([...value, labelValue(suggestionLabel || normalized) || normalized]);
     setInput('');
   }
 
   function removeTag(tag: string) {
-    onChange(value.filter((item) => item !== tag));
+    const normalized = normalizeValue(tag);
+    onChange(value.filter((item) => normalizeValue(item) !== normalized));
   }
 
   const containerClassName = variant === 'compact'
@@ -126,7 +129,7 @@ export function ProjectTagPicker({
       {shouldShowSuggestions ? (
         <div className={`${suggestionSpacingClassName} max-w-full overflow-hidden flex flex-wrap gap-1.5`}>
           {filteredSuggestions.map(([tag, label]) => {
-            const isSelected = value.includes(tag);
+            const isSelected = normalizedValueSet.has(tag);
             return (
               <button
                 key={tag}

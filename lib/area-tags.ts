@@ -108,3 +108,7 @@ export function dedupeAreaTags(values: Array<string | null | undefined> = []): s
 
   return orderedKeys.map((key) => getAreaTagLabel(key)).filter(Boolean);
 }
+
+export function mergeAreaTagOptions(...groups: Array<Array<string | null | undefined> | null | undefined>): string[] {
+  return dedupeAreaTags(groups.flatMap((group) => group || []));
+}
