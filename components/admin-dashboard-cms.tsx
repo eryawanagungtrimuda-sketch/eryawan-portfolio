@@ -6,6 +6,7 @@ import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
+import { buildPromotionUrl, toUtmContentLabel, type PromotionSource, type PromotionTarget } from '@/lib/utm-links';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at,project_images(id)';
 
@@ -30,7 +31,28 @@ type AttentionReason = {
   metric: 'missingCover' | 'galleryIncomplete' | 'missingNarrative' | 'missingAreaTags' | 'missingWawasan';
 };
 
+type PromotionTargetOption = PromotionTarget & {
+  value: string;
+  label: string;
+};
+
 const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
+
+const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
+  { value: 'instagram', label: 'Instagram' },
+  { value: 'tiktok', label: 'TikTok' },
+  { value: 'facebook', label: 'Facebook' },
+  { value: 'youtube_short', label: 'YouTube Short' },
+  { value: 'linkedin', label: 'LinkedIn' },
+  { value: 'manual', label: 'Manual / Lainnya' },
+];
+
+const staticPromotionTargets: PromotionTargetOption[] = [
+  { value: 'home', label: 'Beranda', path: '/', contentLabel: 'home' },
+  { value: 'all-works', label: 'Semua Karya', path: '/karya', contentLabel: 'all_works' },
+  { value: 'start-project', label: 'Mulai Project', path: '/mulai-project', contentLabel: 'start_project' },
+  { value: 'insights', label: 'Wawasan', path: '/wawasan', contentLabel: 'wawasan' },
+];
 
 function isBlank(value?: string | null) {
   return !value || value.trim().length === 0;
@@ -115,6 +137,11 @@ export default function AdminDashboardCMS() {
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
+  const [promotionTargetValue, setPromotionTargetValue] = useState(staticPromotionTargets[0].value);
+  const [promotionSource, setPromotionSource] = useState<PromotionSource>('instagram');
+  const [promotionCampaign, setPromotionCampaign] = useState('portfolio_content');
+  const [promotionContent, setPromotionContent] = useState(staticPromotionTargets[0].contentLabel);
+  const [promotionCopied, setPromotionCopied] = useState(false);
   const { toast } = useToast();
 
   async function loadProjects() {
@@ -212,11 +239,65 @@ export default function AdminDashboardCMS() {
 
   const attentionPreview = useMemo(() => contentHealth.needsAttention.slice(0, 8), [contentHealth.needsAttention]);
 
+  const promotionTargets = useMemo<PromotionTargetOption[]>(() => {
+    const projectTargets = projects
+      .filter((project) => Boolean(project.slug))
+      .map((project) => ({
+        value: `project:${project.id}`,
+        label: `Proyek: ${project.title}`,
+        path: `/karya/${project.slug}`,
+        contentLabel: toUtmContentLabel(project.slug || project.title || 'project'),
+      }));
+
+    return [...staticPromotionTargets, ...projectTargets];
+  }, [projects]);
+
+  const selectedPromotionTarget = useMemo(() => {
+    return promotionTargets.find((target) => target.value === promotionTargetValue) || promotionTargets[0];
+  }, [promotionTargets, promotionTargetValue]);
+
+  const generatedPromotionUrl = useMemo(() => buildPromotionUrl({
+    target: selectedPromotionTarget,
+    source: promotionSource,
+    campaign: promotionCampaign,
+    content: promotionContent,
+  }), [selectedPromotionTarget, promotionSource, promotionCampaign, promotionContent]);
+
+  useEffect(() => {
+    const fallbackTarget = promotionTargets[0];
+    const currentTarget = promotionTargets.find((target) => target.value === promotionTargetValue);
+
+    if (!currentTarget && fallbackTarget) {
+      setPromotionTargetValue(fallbackTarget.value);
+      setPromotionContent(fallbackTarget.contentLabel);
+    }
+  }, [promotionTargets, promotionTargetValue]);
+
   const filteredProjects = useMemo(() => {
     if (wawasanFilter === 'with_wawasan') return projects.filter((project) => project.hasWawasan);
     if (wawasanFilter === 'without_wawasan') return projects.filter((project) => !project.hasWawasan);
     return projects;
   }, [projects, wawasanFilter]);
+
+  function handlePromotionTargetChange(value: string) {
+    const nextTarget = promotionTargets.find((target) => target.value === value);
+    setPromotionTargetValue(value);
+    setPromotionContent(nextTarget?.contentLabel || '');
+    setPromotionCopied(false);
+  }
+
+  async function copyPromotionLink() {
+    try {
+      await navigator.clipboard.writeText(generatedPromotionUrl);
+      setPromotionCopied(true);
+      toast({ type: 'success', title: 'Link disalin', description: 'Link promosi UTM siap ditempel ke caption atau bio.' });
+      window.setTimeout(() => setPromotionCopied(false), 2400);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Browser tidak mengizinkan salin otomatis.';
+      setPromotionCopied(false);
+      toast({ type: 'error', title: 'Gagal menyalin link', description: errorMessage });
+    }
+  }
 
   async function deleteProject(project: DashboardProject) {
     const confirmed = window.confirm(`Hapus project "${project.title}"?`);
@@ -334,6 +415,49 @@ export default function AdminDashboardCMS() {
           <Link href={vercelAnalyticsUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
             Lihat Vercel Analytics
           </Link>
+        </div>
+      </section>
+
+      <section className="mt-8 rounded-[28px] border border-[#D4AF37]/16 bg-[#D4AF37]/[0.028] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Link Promosi</p>
+            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Pembuat Link Promosi</h2>
+            <p className="mt-4 text-sm leading-6 text-white/52">Buat link portfolio dengan penanda sumber traffic untuk IG, TikTok, Facebook, YouTube Short, dan kanal lainnya.</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42">UTM Medium: social</div>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="space-y-2">
+            <label htmlFor="promotion-target" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Target halaman</label>
+            <select id="promotion-target" value={promotionTargetValue} onChange={(event) => handlePromotionTargetChange(event.target.value)} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20">
+              {promotionTargets.map((target) => <option key={target.value} value={target.value}>{target.label}</option>)}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="promotion-source" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Kanal / Sumber</label>
+            <select id="promotion-source" value={promotionSource} onChange={(event) => { setPromotionSource(event.target.value as PromotionSource); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20">
+              {promotionSourceOptions.map((source) => <option key={source.value} value={source.value}>{source.label}</option>)}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="promotion-campaign" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Campaign</label>
+            <input id="promotion-campaign" value={promotionCampaign} onChange={(event) => { setPromotionCampaign(event.target.value); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition placeholder:text-white/24 focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20" placeholder="portfolio_content" />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="promotion-content" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Label konten opsional</label>
+            <input id="promotion-content" value={promotionContent} onChange={(event) => { setPromotionContent(event.target.value); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition placeholder:text-white/24 focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20" placeholder={selectedPromotionTarget.contentLabel} />
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/38">Generated URL</p>
+          <p className="mt-3 break-all text-sm leading-6 text-white/72">{generatedPromotionUrl}</p>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button type="button" onClick={copyPromotionLink} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">Salin Link</button>
+            {promotionCopied ? <p className="text-sm leading-6 text-emerald-300">Link promosi berhasil disalin.</p> : null}
+          </div>
         </div>
       </section>
 
