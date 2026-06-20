@@ -244,7 +244,7 @@ export default function AdminDashboardCMS() {
       .filter((project) => Boolean(project.slug))
       .map((project) => ({
         value: `project:${project.id}`,
-        label: `Project: ${project.title}`,
+        label: `Proyek: ${project.title}`,
         path: `/karya/${project.slug}`,
         contentLabel: toUtmContentLabel(project.slug || project.title || 'project'),
       }));
