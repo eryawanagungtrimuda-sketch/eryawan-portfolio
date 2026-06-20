@@ -8,7 +8,7 @@ import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 import { buildPromotionUrl, toUtmContentLabel, type PromotionSource, type PromotionTarget } from '@/lib/utm-links';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at,project_images(id)';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,created_at,project_images(id)';
 
 type DashboardInsight = {
   id: string;
@@ -70,8 +70,18 @@ function getProjectAttentionReasons(project: DashboardProject): AttentionReason[
     reasons.push({ label: 'Galeri belum lengkap', metric: 'galleryIncomplete' });
   }
 
-  if (isBlank(project.problem) || isBlank(project.solution) || isBlank(project.impact)) {
-    reasons.push({ label: 'Narasi masalah/solusi/dampak belum lengkap', metric: 'missingNarrative' });
+  const isCaseStudyNarrativeIncomplete = [
+    project.problem,
+    project.konteks,
+    project.konflik,
+    project.keputusan_desain,
+    project.pendekatan,
+    project.dampak || project.impact,
+    project.insight_kunci,
+  ].some(isBlank);
+
+  if (isCaseStudyNarrativeIncomplete) {
+    reasons.push({ label: 'Narasi studi kasus belum lengkap', metric: 'missingNarrative' });
   }
 
   if (!Array.isArray(project.area_tags) || project.area_tags.length === 0) {
@@ -467,14 +477,14 @@ export default function AdminDashboardCMS() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Kesiapan Konten</p>
             <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Kesehatan Konten</h2>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-white/48">Ringkasan kesiapan konten berdasarkan gambar cover, galeri, narasi masalah/solusi/dampak, tag area, dan dukungan Wawasan.</p>
+          <p className="max-w-xl text-sm leading-6 text-white/48">Ringkasan kesiapan konten berdasarkan gambar cover, galeri, narasi studi kasus, tag area, dan dukungan Wawasan.</p>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
           {[
             ['Proyek tanpa gambar cover', contentHealth.missingCover],
             ['Proyek dengan galeri kurang lengkap', contentHealth.galleryIncomplete],
-            ['Proyek tanpa narasi masalah / solusi / dampak', contentHealth.missingNarrative],
+            ['Proyek dengan narasi studi kasus belum lengkap', contentHealth.missingNarrative],
             ['Proyek tanpa tag area', contentHealth.missingAreaTags],
             ['Proyek tanpa Wawasan terkait', contentHealth.missingWawasan],
           ].map(([label, count]) => (
