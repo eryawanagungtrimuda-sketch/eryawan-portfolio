@@ -41,23 +41,23 @@ function getProjectAttentionReasons(project: DashboardProject): AttentionReason[
   const galleryCount = Array.isArray(project.project_images) ? project.project_images.length : null;
 
   if (isBlank(project.cover_image)) {
-    reasons.push({ label: 'Belum ada cover', metric: 'missingCover' });
+    reasons.push({ label: 'Belum ada gambar cover', metric: 'missingCover' });
   }
 
   if (galleryCount !== null && galleryCount < 3) {
-    reasons.push({ label: 'Gallery belum lengkap', metric: 'galleryIncomplete' });
+    reasons.push({ label: 'Galeri belum lengkap', metric: 'galleryIncomplete' });
   }
 
   if (isBlank(project.problem) || isBlank(project.solution) || isBlank(project.impact)) {
-    reasons.push({ label: 'Problem/Solution/Impact belum lengkap', metric: 'missingNarrative' });
+    reasons.push({ label: 'Narasi masalah/solusi/dampak belum lengkap', metric: 'missingNarrative' });
   }
 
   if (!Array.isArray(project.area_tags) || project.area_tags.length === 0) {
-    reasons.push({ label: 'Belum ada Area Tags', metric: 'missingAreaTags' });
+    reasons.push({ label: 'Belum ada tag area', metric: 'missingAreaTags' });
   }
 
   if (!project.hasWawasan) {
-    reasons.push({ label: 'Belum ada Wawasan', metric: 'missingWawasan' });
+    reasons.push({ label: 'Belum ada Wawasan terkait', metric: 'missingWawasan' });
   }
 
   return reasons;
@@ -294,45 +294,45 @@ export default function AdminDashboardCMS() {
       <section>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Overview</p>
-            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Project Overview</h2>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Ikhtisar</p>
+            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Ringkasan Proyek</h2>
           </div>
           <div className="hidden h-px flex-1 bg-white/[0.07] md:block" />
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Proyek</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">Seluruh project yang tercatat di control room.</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Seluruh proyek yang tercatat di dashboard admin.</p>
           </div>
 
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Published / Draft</p>
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Terbit / Draft</p>
             <p className="mt-6 font-display text-4xl leading-none text-white/90 md:text-5xl">{contentHealth.publishedCount} / {contentHealth.draftCount}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">{contentHealth.publishedCount} Published / {contentHealth.draftCount} Draft</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">{contentHealth.publishedCount} Terbit / {contentHealth.draftCount} Draft</p>
           </div>
 
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Projects With Wawasan</p>
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Proyek dengan Wawasan</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{contentHealth.withWawasanCount}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">Project yang sudah memiliki konten Wawasan pendukung.</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Proyek yang sudah memiliki konten Wawasan pendukung.</p>
           </div>
 
           <div className="rounded-2xl border border-[#D4AF37]/18 bg-[#D4AF37]/[0.035] p-7 transition duration-300 hover:border-[#D4AF37]/35 hover:bg-[#D4AF37]/[0.055] hover:shadow-[0_18px_44px_rgba(212,175,55,0.055)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-[#D4AF37]/85">Needs Attention</p>
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-[#D4AF37]/85">Perlu Dilengkapi</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{contentHealth.needsAttention.length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/45">Project yang masih perlu dilengkapi sebelum dipromosikan.</p>
+            <p className="mt-4 text-sm leading-6 text-white/45">Proyek yang masih perlu dilengkapi sebelum dipromosikan.</p>
           </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-white/8 bg-white/[0.018] p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/40">Analytics Shortcut</p>
-            <p className="mt-2 text-sm leading-6 text-white/52">Buka dashboard Vercel untuk melihat performa tanpa menarik data analytics ke admin.</p>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/40">Akses Analitik</p>
+            <p className="mt-2 text-sm leading-6 text-white/52">Buka Vercel Analytics untuk melihat performa website tanpa menarik data analitik ke dashboard admin.</p>
           </div>
           <Link href={vercelAnalyticsUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
-            Lihat Analytics Vercel
+            Lihat Vercel Analytics
           </Link>
         </div>
       </section>
@@ -340,19 +340,19 @@ export default function AdminDashboardCMS() {
       <section className="mt-20 border-t border-white/[0.07] pt-14">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Readiness</p>
-            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Content Health</h2>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Kesiapan Konten</p>
+            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Kesehatan Konten</h2>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-white/48">Ringkasan kesiapan konten berdasarkan cover, gallery, narasi problem/solution/impact, area tags, dan dukungan Wawasan.</p>
+          <p className="max-w-xl text-sm leading-6 text-white/48">Ringkasan kesiapan konten berdasarkan gambar cover, galeri, narasi masalah/solusi/dampak, tag area, dan dukungan Wawasan.</p>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
           {[
-            ['Projects without cover image', contentHealth.missingCover],
-            ['Projects with empty or low gallery image count', contentHealth.galleryIncomplete],
-            ['Projects without problem / solution / impact copy', contentHealth.missingNarrative],
-            ['Projects without area tags', contentHealth.missingAreaTags],
-            ['Projects without related Wawasan', contentHealth.missingWawasan],
+            ['Proyek tanpa gambar cover', contentHealth.missingCover],
+            ['Proyek dengan galeri kurang lengkap', contentHealth.galleryIncomplete],
+            ['Proyek tanpa narasi masalah / solusi / dampak', contentHealth.missingNarrative],
+            ['Proyek tanpa tag area', contentHealth.missingAreaTags],
+            ['Proyek tanpa Wawasan terkait', contentHealth.missingWawasan],
           ].map(([label, count]) => (
             <div key={label} className="rounded-2xl border border-white/8 bg-white/[0.018] p-5">
               <p className="font-display text-4xl leading-none text-white/90">{count}</p>
@@ -385,7 +385,7 @@ export default function AdminDashboardCMS() {
               ))}
             </div>
           ) : (
-            <div className="px-6 py-8 text-sm leading-6 text-white/52">Semua project utama sudah terlihat siap dipromosikan.</div>
+            <div className="px-6 py-8 text-sm leading-6 text-white/52">Semua proyek utama sudah terlihat siap dipromosikan.</div>
           )}
         </div>
       </section>
@@ -393,11 +393,11 @@ export default function AdminDashboardCMS() {
       <section className="mt-20 border-t border-white/[0.07] pt-14">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Projects</p>
-            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Daftar Project</h2>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Proyek</p>
+            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Daftar Proyek</h2>
           </div>
           <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-[4px] bg-[#D4AF37] px-6 py-3.5 text-center text-sm font-semibold uppercase tracking-[0.12em] text-[#080807] shadow-[0_18px_40px_rgba(212,175,55,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">
-            Tambah Project
+            Tambah Proyek
           </Link>
         </div>
 
@@ -406,9 +406,9 @@ export default function AdminDashboardCMS() {
         {projects.length === 0 ? (
           <div className="mt-10 flex min-h-[280px] items-center justify-center rounded-2xl border border-white/8 bg-white/[0.018] p-8 text-center md:p-12">
             <div className="max-w-xl">
-              <p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada project</p>
+              <p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada proyek</p>
               <p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/52 md:text-lg">
-                Mulai tambahkan project pertama Anda untuk membangun portfolio berbasis keputusan yang terstruktur.
+                Mulai tambahkan proyek pertama Anda untuk membangun portfolio berbasis keputusan yang terstruktur.
               </p>
             </div>
           </div>
@@ -477,7 +477,7 @@ export default function AdminDashboardCMS() {
               ))}
             </div>
             {projects.length > 0 && filteredProjects.length === 0 ? (
-              <div className="px-6 py-8 text-sm text-white/52">Tidak ada project yang sesuai filter Wawasan.</div>
+              <div className="px-6 py-8 text-sm text-white/52">Tidak ada proyek yang sesuai filter Wawasan.</div>
             ) : null}
             </div>
           </div>
