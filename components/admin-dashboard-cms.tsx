@@ -30,7 +30,7 @@ type AttentionReason = {
   metric: 'missingCover' | 'galleryIncomplete' | 'missingNarrative' | 'missingAreaTags' | 'missingWawasan';
 };
 
-const vercelAnalyticsUrl = 'https://vercel.com/dashboard';
+const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
 
 function isBlank(value?: string | null) {
   return !value || value.trim().length === 0;
