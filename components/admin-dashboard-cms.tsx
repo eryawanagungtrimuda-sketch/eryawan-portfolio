@@ -71,7 +71,6 @@ function getProjectAttentionReasons(project: DashboardProject): AttentionReason[
   }
 
   const isCaseStudyNarrativeIncomplete = [
-    project.problem,
     project.konteks,
     project.konflik,
     project.keputusan_desain,
