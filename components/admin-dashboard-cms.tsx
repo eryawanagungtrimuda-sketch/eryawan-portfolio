@@ -7,7 +7,7 @@ import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 
-const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at';
+const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,created_at,project_images(id)';
 
 type DashboardInsight = {
   id: string;
@@ -24,6 +24,44 @@ type DashboardProject = Project & {
   relatedInsightId?: string | null;
   relatedInsightSlug?: string | null;
 };
+
+type AttentionReason = {
+  label: string;
+  metric: 'missingCover' | 'galleryIncomplete' | 'missingNarrative' | 'missingAreaTags' | 'missingWawasan';
+};
+
+const vercelAnalyticsUrl = 'https://vercel.com/dashboard';
+
+function isBlank(value?: string | null) {
+  return !value || value.trim().length === 0;
+}
+
+function getProjectAttentionReasons(project: DashboardProject): AttentionReason[] {
+  const reasons: AttentionReason[] = [];
+  const galleryCount = Array.isArray(project.project_images) ? project.project_images.length : null;
+
+  if (isBlank(project.cover_image)) {
+    reasons.push({ label: 'Belum ada cover', metric: 'missingCover' });
+  }
+
+  if (galleryCount !== null && galleryCount < 3) {
+    reasons.push({ label: 'Gallery belum lengkap', metric: 'galleryIncomplete' });
+  }
+
+  if (isBlank(project.problem) || isBlank(project.solution) || isBlank(project.impact)) {
+    reasons.push({ label: 'Problem/Solution/Impact belum lengkap', metric: 'missingNarrative' });
+  }
+
+  if (!Array.isArray(project.area_tags) || project.area_tags.length === 0) {
+    reasons.push({ label: 'Belum ada Area Tags', metric: 'missingAreaTags' });
+  }
+
+  if (!project.hasWawasan) {
+    reasons.push({ label: 'Belum ada Wawasan', metric: 'missingWawasan' });
+  }
+
+  return reasons;
+}
 
 function normalizeText(value?: string | null) {
   return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
@@ -70,20 +108,6 @@ function formatDate(value?: string | null) {
   }
 }
 
-function formatDateTime(value?: string | null) {
-  if (!value) return '—';
-  try {
-    return new Intl.DateTimeFormat('id-ID', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(value));
-  } catch {
-    return '—';
-  }
-}
 
 export default function AdminDashboardCMS() {
   const [projects, setProjects] = useState<DashboardProject[]>([]);
@@ -171,10 +195,22 @@ export default function AdminDashboardCMS() {
     loadProjects();
   }, []);
 
-  const lastUpdatedProject = useMemo(() => {
-    if (projects.length === 0) return null;
-    return [...projects].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+  const contentHealth = useMemo(() => {
+    const projectsWithReasons = projects.map((project) => ({ project, reasons: getProjectAttentionReasons(project) }));
+    return {
+      publishedCount: projects.filter((project) => project.is_published !== false).length,
+      draftCount: projects.filter((project) => project.is_published === false).length,
+      withWawasanCount: projects.filter((project) => project.hasWawasan).length,
+      needsAttention: projectsWithReasons.filter((item) => item.reasons.length > 0),
+      missingCover: projectsWithReasons.filter((item) => item.reasons.some((reason) => reason.metric === 'missingCover')).length,
+      galleryIncomplete: projectsWithReasons.filter((item) => item.reasons.some((reason) => reason.metric === 'galleryIncomplete')).length,
+      missingNarrative: projectsWithReasons.filter((item) => item.reasons.some((reason) => reason.metric === 'missingNarrative')).length,
+      missingAreaTags: projectsWithReasons.filter((item) => item.reasons.some((reason) => reason.metric === 'missingAreaTags')).length,
+      missingWawasan: projectsWithReasons.filter((item) => item.reasons.some((reason) => reason.metric === 'missingWawasan')).length,
+    };
   }, [projects]);
+
+  const attentionPreview = useMemo(() => contentHealth.needsAttention.slice(0, 8), [contentHealth.needsAttention]);
 
   const filteredProjects = useMemo(() => {
     if (wawasanFilter === 'with_wawasan') return projects.filter((project) => project.hasWawasan);
@@ -268,31 +304,89 @@ export default function AdminDashboardCMS() {
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Total Projects</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.length}</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Seluruh project yang tercatat di control room.</p>
           </div>
 
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Published Projects</p>
-            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.is_published !== false).length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">Project yang terhitung hanya yang berstatus published.</p>
-          </div>
-
-          <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Last Updated Project</p>
-            {lastUpdatedProject ? (
-              <>
-                <p className="mt-6 text-lg font-semibold leading-6 text-white/88">{lastUpdatedProject.title}</p>
-                <p className="mt-3 text-sm text-white/38">{formatDateTime(lastUpdatedProject.created_at)}</p>
-              </>
-            ) : (
-              <p className="mt-6 text-base leading-7 text-white/38">Belum ada data project.</p>
-            )}
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Published / Draft</p>
+            <p className="mt-6 font-display text-4xl leading-none text-white/90 md:text-5xl">{contentHealth.publishedCount} / {contentHealth.draftCount}</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">{contentHealth.publishedCount} Published / {contentHealth.draftCount} Draft</p>
           </div>
 
           <div className="rounded-2xl border border-white/8 bg-white/[0.022] p-7 transition duration-300 hover:border-[#D4AF37]/22 hover:bg-white/[0.032] hover:shadow-[0_18px_44px_rgba(212,175,55,0.035)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-white/42">Projects With Wawasan</p>
-            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{projects.filter((project) => project.hasWawasan).length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/38">Project yang sudah diangkat menjadi Wawasan.</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{contentHealth.withWawasanCount}</p>
+            <p className="mt-4 text-sm leading-6 text-white/38">Project yang sudah memiliki konten Wawasan pendukung.</p>
           </div>
+
+          <div className="rounded-2xl border border-[#D4AF37]/18 bg-[#D4AF37]/[0.035] p-7 transition duration-300 hover:border-[#D4AF37]/35 hover:bg-[#D4AF37]/[0.055] hover:shadow-[0_18px_44px_rgba(212,175,55,0.055)]">
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-[#D4AF37]/85">Needs Attention</p>
+            <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{contentHealth.needsAttention.length}</p>
+            <p className="mt-4 text-sm leading-6 text-white/45">Project yang masih perlu dilengkapi sebelum dipromosikan.</p>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-white/8 bg-white/[0.018] p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/40">Analytics Shortcut</p>
+            <p className="mt-2 text-sm leading-6 text-white/52">Buka dashboard Vercel untuk melihat performa tanpa menarik data analytics ke admin.</p>
+          </div>
+          <Link href={vercelAnalyticsUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+            Lihat Analytics Vercel
+          </Link>
+        </div>
+      </section>
+
+      <section className="mt-20 border-t border-white/[0.07] pt-14">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Readiness</p>
+            <h2 className="font-display mt-4 text-4xl font-normal leading-[1.08] tracking-[-0.035em] md:text-5xl">Content Health</h2>
+          </div>
+          <p className="max-w-xl text-sm leading-6 text-white/48">Ringkasan kesiapan konten berdasarkan cover, gallery, narasi problem/solution/impact, area tags, dan dukungan Wawasan.</p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+          {[
+            ['Projects without cover image', contentHealth.missingCover],
+            ['Projects with empty or low gallery image count', contentHealth.galleryIncomplete],
+            ['Projects without problem / solution / impact copy', contentHealth.missingNarrative],
+            ['Projects without area tags', contentHealth.missingAreaTags],
+            ['Projects without related Wawasan', contentHealth.missingWawasan],
+          ].map(([label, count]) => (
+            <div key={label} className="rounded-2xl border border-white/8 bg-white/[0.018] p-5">
+              <p className="font-display text-4xl leading-none text-white/90">{count}</p>
+              <p className="mt-4 text-sm leading-6 text-white/45">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 overflow-hidden rounded-2xl border border-white/8 bg-white/[0.016]">
+          <div className="border-b border-white/[0.07] px-6 py-5">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]/85">Perlu Dilengkapi</p>
+          </div>
+          {attentionPreview.length > 0 ? (
+            <div className="divide-y divide-white/[0.07]">
+              {attentionPreview.map(({ project, reasons }) => (
+                <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] md:grid-cols-[1fr_1.4fr_auto] md:items-center">
+                  <div>
+                    <p className="text-base font-semibold leading-6 text-white/90">{project.title}</p>
+                    <p className="mt-1 text-sm text-white/36">/{project.slug}</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {reasons.map((reason) => (
+                      <span key={reason.metric} className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1.5 text-xs text-white/58">{reason.label}</span>
+                    ))}
+                  </div>
+                  <Link href={getAdminProjectEditHref(project.id, '/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+                    Edit Cepat
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="px-6 py-8 text-sm leading-6 text-white/52">Semua project utama sudah terlihat siap dipromosikan.</div>
+          )}
         </div>
       </section>
 
