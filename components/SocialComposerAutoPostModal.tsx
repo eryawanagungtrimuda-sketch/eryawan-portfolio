@@ -347,6 +347,79 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     checklist.whatsappShared,
   ].filter(Boolean).length;
 
+  function joinPublishPackSections(sections: Array<string | undefined | null>) {
+    return sections.map((section) => String(section || '').trim()).filter(Boolean).join('\n\n');
+  }
+
+  function buildPublishPackText() {
+    if (!draft) return '';
+    const promoLine = activePromoLink ? `Link promosi: ${activePromoLink}` : '';
+
+    if (activeTab === 'instagram') {
+      const instagramPromoLine = activePromoLink ? `Link promosi (paling aman untuk bio, story, atau komentar pin): ${activePromoLink}` : '';
+      return joinPublishPackSections([draft.igCaption, draft.igCta, draft.igHashtag, instagramPromoLine]);
+    }
+
+    if (activeTab === 'tiktok') {
+      return joinPublishPackSections([draft.tiktokCaption, draft.tiktokCta, draft.tiktokHashtag, promoLine]);
+    }
+
+    if (activeTab === 'facebook') {
+      return joinPublishPackSections([draft.facebookCaption, draft.facebookCta, promoLine]);
+    }
+
+    if (activeTab === 'youtube') {
+      return joinPublishPackSections([draft.youtubeDescription, draft.youtubeHashtags, promoLine]);
+    }
+
+    if (activeTab === 'linkedin') {
+      return joinPublishPackSections([draft.linkedInCaption, draft.linkedInBullets, draft.linkedInCta, promoLine]);
+    }
+
+    if (activeTab === 'threads') {
+      return joinPublishPackSections([draft.threadsPost, draft.threadsCta, promoLine]);
+    }
+
+    if (activeTab === 'whatsapp') {
+      return joinPublishPackSections([draft.whatsappMessage, activePromoLink || draft.whatsappLink]);
+    }
+
+    return '';
+  }
+
+  function renderPublishPackPanel() {
+    const publishPackText = buildPublishPackText();
+    if (!publishPackText) return null;
+    const isYoutube = activeTab === 'youtube';
+
+    return (
+      <div className="rounded-2xl border border-white/14 bg-white/[0.04] p-3 sm:p-4">
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-[#E6C676]">Paket Siap Posting</p>
+            <p className="text-xs leading-5 text-white/68">Gabungan caption, CTA, hashtag, dan link promosi yang siap disalin sebelum upload manual.</p>
+          </div>
+          {isYoutube ? (
+            <div className="rounded-xl border border-white/12 bg-black/25 p-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E6C676]/80">Judul YouTube</p>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-white/88">{draft?.youtubeTitle}</p>
+            </div>
+          ) : null}
+          <textarea
+            readOnly
+            value={publishPackText}
+            rows={isYoutube ? 7 : 9}
+            aria-label={isYoutube ? 'Paket Deskripsi YouTube' : 'Paket Siap Posting'}
+            className="min-h-11 w-full max-w-full rounded-xl border border-white/15 bg-[#11100f] p-3 text-sm font-sans text-[#F4F1EA] break-words focus:border-[#D4AF37]/70 focus:outline-none"
+          />
+          <ButtonRow>
+            <CopyButton label="Salin Paket Posting" copied={copied[`${activeTab}PublishPack`]} onClick={() => copyDraftText(`${activeTab}PublishPack`, publishPackText)} />
+          </ButtonRow>
+        </div>
+      </div>
+    );
+  }
+
   function renderPromoLinkPanel() {
     if (!activePromoLink) return null;
 
@@ -466,6 +539,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                       <p className="text-sm text-white/75">Asset visual diproduksi dulu di Canva, lalu upload langsung atau share dari Canva ke Instagram.</p>
                       <p className="text-xs text-[#E6C676]/90">Untuk Reels dan Carousel, gunakan brief lengkap di tab Canva.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Caption Instagram" value={draft.igCaption} onChange={(v) => updateDraft('igCaption', v)} rows={7} />
                       <Field label="Hashtag" value={draft.igHashtag} onChange={(v) => updateDraft('igHashtag', v)} rows={3} />
                       <Field label="CTA website" value={draft.igCta} onChange={(v) => updateDraft('igCta', v)} rows={2} />
@@ -483,6 +557,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Format ini dibuat untuk percakapan ringan di Threads: reflektif, natural, tanpa hard selling.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Threads Post" value={draft.threadsPost} onChange={(v) => updateDraft('threadsPost', v)} rows={9} />
                       <Field label="Reply Ideas" value={draft.threadsReplyIdeas} onChange={(v) => updateDraft('threadsReplyIdeas', v)} rows={6} />
                       <Field label="CTA" value={ensureThreadsCta(draft, payload?.canonicalUrl).threadsCta} onChange={(v) => updateDraft('threadsCta', v)} rows={2} />
@@ -499,6 +574,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Video MP4 bisa dibagikan langsung dari Canva Share atau diupload manual ke TikTok.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Hook 3 detik" value={draft.tiktokHook} onChange={(v) => updateDraft('tiktokHook', v)} rows={3} />
                       <Field label="Script voice over" value={draft.tiktokScript} onChange={(v) => updateDraft('tiktokScript', v)} rows={7} />
                       <Field label="Caption TikTok" value={draft.tiktokCaption} onChange={(v) => updateDraft('tiktokCaption', v)} rows={4} />
@@ -518,6 +594,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Gunakan visual utama atau carousel dari Canva, lalu tempatkan link promosi langsung di caption Facebook.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Caption Facebook" value={draft.facebookCaption} onChange={(v) => updateDraft('facebookCaption', v)} rows={7} />
                       <Field label="CTA Facebook" value={draft.facebookCta} onChange={(v) => updateDraft('facebookCta', v)} rows={2} />
                       <ButtonRow>
@@ -530,6 +607,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Gunakan MP4 dari Canva untuk upload ke YouTube Shorts agar alur produksi tetap satu pintu.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Judul SEO YouTube Shorts" value={draft.youtubeTitle} onChange={(v) => updateDraft('youtubeTitle', v)} rows={3} />
                       <Field label="Deskripsi singkat" value={draft.youtubeDescription} onChange={(v) => updateDraft('youtubeDescription', v)} rows={5} />
                       <Field label="Hashtag (wajib #Shorts)" value={draft.youtubeHashtags} onChange={(v) => updateDraft('youtubeHashtags', v)} rows={3} />
@@ -547,6 +625,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                     <div className="space-y-3">
                       <p className="text-sm text-white/75">Export carousel atau visual utama dari Canva terlebih dahulu, lalu gunakan narasi profesional saat publish di LinkedIn.</p>
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="Professional caption" value={draft.linkedInCaption} onChange={(v) => updateDraft('linkedInCaption', v)} rows={8} />
                       <Field label="Key insight bullet points" value={draft.linkedInBullets} onChange={(v) => updateDraft('linkedInBullets', v)} rows={6} />
                       <Field label="CTA ke halaman" value={draft.linkedInCta} onChange={(v) => updateDraft('linkedInCta', v)} rows={2} />
@@ -561,6 +640,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                   {activeTab === 'whatsapp' && (
                     <div className="space-y-3">
                       {renderPromoLinkPanel()}
+                      {renderPublishPackPanel()}
                       <Field label="WhatsApp message" value={draft.whatsappMessage} onChange={(v) => updateDraft('whatsappMessage', v)} rows={6} />
                       <Field label="Link website" value={draft.whatsappLink} onChange={(v) => updateDraft('whatsappLink', v)} rows={2} />
                       <ButtonRow>
