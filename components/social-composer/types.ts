@@ -14,16 +14,21 @@ export type PublishChecklist = {
   canvaDesignDone: boolean;
   instagramReelsPosted: boolean;
   instagramCarouselPosted: boolean;
+  threadsPosted: boolean;
   tiktokPosted: boolean;
+  facebookPosted: boolean;
   youtubeShortsPosted: boolean;
   linkedinPosted: boolean;
   whatsappShared: boolean;
   postingDate: string;
   postingNotes: string;
   instagramUrl: string;
+  threadsUrl: string;
   tiktokUrl: string;
+  facebookUrl: string;
   youtubeUrl: string;
   linkedinUrl: string;
+  whatsappUrl: string;
 };
 
 export type DetailPayload = {

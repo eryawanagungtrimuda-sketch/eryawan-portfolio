@@ -60,6 +60,9 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   const [regenLoading, setRegenLoading] = useState(false);
   const [regenFeedback, setRegenFeedback] = useState<{ tone: 'success' | 'warning' | 'error'; message: string } | null>(null);
   const [postStatus, setPostStatus] = useState<Partial<Record<'instagram' | 'tiktok' | 'youtube' | 'linkedin' | 'whatsapp', { state: 'idle' | 'posting' | 'success' | 'error'; message: string }>>>({});
+  const [checklistLoading, setChecklistLoading] = useState(false);
+  const [checklistSaving, setChecklistSaving] = useState(false);
+  const [checklistFeedback, setChecklistFeedback] = useState<{ tone: 'success' | 'error' | 'warning'; message: string } | null>(null);
   const [downloadAllLoading, setDownloadAllLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const storageKey = `social-composer-${contentType}-${slug}`;
@@ -126,13 +129,11 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   useEffect(() => {
     if (!open) return;
-    setChecklist(readStoredChecklist(checklistStorageKey));
+    void loadChecklistFromServer();
+  // loadChecklistFromServer is intentionally called on modal/key changes only; it reads the latest auth/session at call time.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checklistStorageKey, open]);
 
-  useEffect(() => {
-    if (!open) return;
-    writeStoredChecklist(checklistStorageKey, checklist);
-  }, [checklist, checklistStorageKey, open]);
 
   async function openModal() {
     setOpen(true);
@@ -334,14 +335,115 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
   function resetChecklist() {
     setChecklist(defaultChecklist);
     removeStoredChecklist(checklistStorageKey);
+    setChecklistFeedback({ tone: 'warning', message: 'Checklist direset di layar ini. Klik Simpan Checklist untuk menyimpan reset ke database.' });
   }
 
+  function checklistToApiPayload() {
+    return {
+      content_type: contentType,
+      content_slug: slug,
+      content_title: payload?.title || null,
+      instagram_posted: checklist.instagramReelsPosted || checklist.instagramCarouselPosted,
+      threads_posted: checklist.threadsPosted,
+      tiktok_posted: checklist.tiktokPosted,
+      facebook_posted: checklist.facebookPosted,
+      youtube_shorts_posted: checklist.youtubeShortsPosted,
+      linkedin_posted: checklist.linkedinPosted,
+      whatsapp_shared: checklist.whatsappShared,
+      instagram_url: checklist.instagramUrl,
+      threads_url: checklist.threadsUrl,
+      tiktok_url: checklist.tiktokUrl,
+      facebook_url: checklist.facebookUrl,
+      youtube_shorts_url: checklist.youtubeUrl,
+      linkedin_url: checklist.linkedinUrl,
+      whatsapp_url: checklist.whatsappUrl,
+      posting_date: checklist.postingDate,
+      notes: checklist.postingNotes,
+    };
+  }
+
+  function checklistFromApiRow(row: Record<string, unknown> | null): PublishChecklist {
+    if (!row) return readStoredChecklist(checklistStorageKey);
+    const instagramPosted = row.instagram_posted === true;
+    return {
+      ...defaultChecklist,
+      instagramReelsPosted: instagramPosted,
+      instagramCarouselPosted: instagramPosted,
+      threadsPosted: row.threads_posted === true,
+      tiktokPosted: row.tiktok_posted === true,
+      facebookPosted: row.facebook_posted === true,
+      youtubeShortsPosted: row.youtube_shorts_posted === true,
+      linkedinPosted: row.linkedin_posted === true,
+      whatsappShared: row.whatsapp_shared === true,
+      instagramUrl: typeof row.instagram_url === 'string' ? row.instagram_url : '',
+      threadsUrl: typeof row.threads_url === 'string' ? row.threads_url : '',
+      tiktokUrl: typeof row.tiktok_url === 'string' ? row.tiktok_url : '',
+      facebookUrl: typeof row.facebook_url === 'string' ? row.facebook_url : '',
+      youtubeUrl: typeof row.youtube_shorts_url === 'string' ? row.youtube_shorts_url : '',
+      linkedinUrl: typeof row.linkedin_url === 'string' ? row.linkedin_url : '',
+      whatsappUrl: typeof row.whatsapp_url === 'string' ? row.whatsapp_url : '',
+      postingDate: typeof row.posting_date === 'string' ? row.posting_date : '',
+      postingNotes: typeof row.notes === 'string' ? row.notes : '',
+    };
+  }
+
+  async function loadChecklistFromServer() {
+    if (!open) return;
+    setChecklistLoading(true);
+    setChecklistFeedback(null);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error('Sesi admin tidak ditemukan.');
+      const params = new URLSearchParams({ content_type: contentType, content_slug: slug });
+      const response = await fetch(`/api/admin/social-composer-checklist?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
+      if (!response.ok) throw new Error('Gagal memuat checklist.');
+      const result = (await response.json()) as { checklist: Record<string, unknown> | null };
+      const nextChecklist = checklistFromApiRow(result.checklist);
+      setChecklist(nextChecklist);
+      writeStoredChecklist(checklistStorageKey, nextChecklist);
+      setChecklistFeedback({ tone: 'success', message: result.checklist ? 'Checklist dimuat.' : 'Belum ada checklist database; memakai data browser bila tersedia.' });
+    } catch {
+      const localChecklist = readStoredChecklist(checklistStorageKey);
+      setChecklist(localChecklist);
+      setChecklistFeedback({ tone: 'warning', message: 'Gagal memuat database. Memakai checklist browser admin.' });
+    } finally {
+      setChecklistLoading(false);
+    }
+  }
+
+  async function saveChecklistToServer() {
+    setChecklistSaving(true);
+    setChecklistFeedback(null);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error('Sesi admin tidak ditemukan.');
+      const response = await fetch('/api/admin/social-composer-checklist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(checklistToApiPayload()),
+      });
+      if (!response.ok) throw new Error('Gagal menyimpan checklist.');
+      const result = (await response.json()) as { checklist: Record<string, unknown> | null };
+      const nextChecklist = checklistFromApiRow(result.checklist);
+      setChecklist(nextChecklist);
+      writeStoredChecklist(checklistStorageKey, nextChecklist);
+      setChecklistFeedback({ tone: 'success', message: 'Checklist tersimpan' });
+    } catch {
+      setChecklistFeedback({ tone: 'error', message: 'Gagal menyimpan checklist' });
+    } finally {
+      setChecklistSaving(false);
+    }
+  }
 
   const checklistProgress = [
-    checklist.canvaDesignDone,
-    checklist.instagramReelsPosted,
-    checklist.instagramCarouselPosted,
+    checklist.instagramReelsPosted || checklist.instagramCarouselPosted,
+    checklist.threadsPosted,
     checklist.tiktokPosted,
+    checklist.facebookPosted,
     checklist.youtubeShortsPosted,
     checklist.linkedinPosted,
     checklist.whatsappShared,
@@ -654,37 +756,63 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
                   {activeTab === 'checklist' && (
                     <div className="space-y-4 rounded-xl border border-[#D4AF37]/30 bg-[#11100f] p-4">
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-[#E6C676]">Progress: {checklistProgress}/7 selesai</p>
+                        <p className="text-sm font-medium text-[#E6C676]">Checklist Publikasi</p>
+                        <p className="text-sm text-white/78">{checklistProgress} dari 7 kanal sudah diposting</p>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-white/10"><div className="h-full bg-[#D4AF37]" style={{ width: `${(checklistProgress / 7) * 100}%` }} /></div>
-                        <p className="text-xs text-white/65">Checklist ini tersimpan di browser admin. Belum masuk database.</p>
+                        <p className="text-xs text-white/65">Checklist ini tersimpan di database admin melalui tombol Simpan Checklist. Alur ini hanya pencatatan manual, bukan auto-posting.</p>
+                        {checklistFeedback ? <p className={`rounded-xl border p-3 text-xs ${checklistFeedback.tone === 'success' ? 'border-emerald-300/25 bg-emerald-300/10 text-emerald-100' : checklistFeedback.tone === 'error' ? 'border-red-300/25 bg-red-300/10 text-red-100' : 'border-amber-300/25 bg-amber-300/10 text-amber-100'}`}>{checklistFeedback.message}</p> : null}
                       </div>
 
-                      <ChecklistSection title="Production">
+                      <ChecklistSection title="Produksi">
                         <ChecklistItem label="Canva Design selesai" checked={checklist.canvaDesignDone} onChange={(value) => updateChecklist('canvaDesignDone', value)} />
                       </ChecklistSection>
 
-                      <ChecklistSection title="Distribution">
+                      <ChecklistSection title="Distribusi Manual">
                         <ChecklistItem label="Instagram Reels sudah diposting" checked={checklist.instagramReelsPosted} onChange={(value) => updateChecklist('instagramReelsPosted', value)} />
                         <ChecklistItem label="Instagram Carousel sudah diposting" checked={checklist.instagramCarouselPosted} onChange={(value) => updateChecklist('instagramCarouselPosted', value)} />
+                        <ChecklistItem label="Threads sudah diposting" checked={checklist.threadsPosted} onChange={(value) => updateChecklist('threadsPosted', value)} />
                         <ChecklistItem label="TikTok sudah diposting" checked={checklist.tiktokPosted} onChange={(value) => updateChecklist('tiktokPosted', value)} />
+                        <ChecklistItem label="Facebook sudah diposting" checked={checklist.facebookPosted} onChange={(value) => updateChecklist('facebookPosted', value)} />
                         <ChecklistItem label="YouTube Shorts sudah diposting" checked={checklist.youtubeShortsPosted} onChange={(value) => updateChecklist('youtubeShortsPosted', value)} />
                         <ChecklistItem label="LinkedIn sudah diposting" checked={checklist.linkedinPosted} onChange={(value) => updateChecklist('linkedinPosted', value)} />
                         <ChecklistItem label="WhatsApp sudah dibagikan" checked={checklist.whatsappShared} onChange={(value) => updateChecklist('whatsappShared', value)} />
                       </ChecklistSection>
 
-                      <ChecklistSection title="Posting Links">
-                        <InputField label="Instagram URL" value={checklist.instagramUrl} onChange={(value) => updateChecklist('instagramUrl', value)} />
-                        <InputField label="TikTok URL" value={checklist.tiktokUrl} onChange={(value) => updateChecklist('tiktokUrl', value)} />
-                        <InputField label="YouTube Shorts URL" value={checklist.youtubeUrl} onChange={(value) => updateChecklist('youtubeUrl', value)} />
-                        <InputField label="LinkedIn URL" value={checklist.linkedinUrl} onChange={(value) => updateChecklist('linkedinUrl', value)} />
+                      <ChecklistSection title="URL Posting dan Link Promosi">
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {[
+                            ['Instagram', 'instagramUrl', promoLinks?.instagram],
+                            ['Threads', 'threadsUrl', promoLinks?.threads],
+                            ['TikTok', 'tiktokUrl', promoLinks?.tiktok],
+                            ['Facebook', 'facebookUrl', promoLinks?.facebook],
+                            ['YouTube Shorts', 'youtubeUrl', promoLinks?.youtube],
+                            ['LinkedIn', 'linkedinUrl', promoLinks?.linkedin],
+                            ['WhatsApp', 'whatsappUrl', promoLinks?.whatsapp],
+                          ].map(([label, field, promoLink]) => (
+                            <div key={field} className="space-y-2 rounded-2xl border border-white/10 bg-black/20 p-3">
+                              <InputField label={`${label} URL Posting`} value={String(checklist[field as keyof PublishChecklist] || '')} onChange={(value) => updateChecklist(field as keyof PublishChecklist, value as never)} />
+                              <div className="space-y-1">
+                                <p className="text-xs font-semibold text-[#E6C676]/90">Link Promosi</p>
+                                {promoLink ? (
+                                  <div className="space-y-2">
+                                    <p className="break-all rounded-xl border border-white/10 bg-black/25 p-2 text-xs leading-5 text-white/75">{promoLink}</p>
+                                    <CopyButton label="Salin Link Promosi" copied={copied[`checklist-${field}`]} onClick={() => copyDraftText(`checklist-${field}`, String(promoLink))} />
+                                  </div>
+                                ) : <p className="text-xs leading-5 text-white/48">Link promosi tersedia setelah data konten proyek dimuat.</p>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </ChecklistSection>
 
-                      <ChecklistSection title="Notes">
-                        <InputField label="Tanggal posting" value={checklist.postingDate} onChange={(value) => updateChecklist('postingDate', value)} />
-                        <Field label="Catatan posting" value={checklist.postingNotes} onChange={(value) => updateChecklist('postingNotes', value)} rows={4} />
+                      <ChecklistSection title="Catatan Posting">
+                        <InputField label="Tanggal Posting" value={checklist.postingDate} onChange={(value) => updateChecklist('postingDate', value)} />
+                        <Field label="Catatan Posting" value={checklist.postingNotes} onChange={(value) => updateChecklist('postingNotes', value)} rows={4} />
                       </ChecklistSection>
 
                       <ButtonRow>
+                        <button type="button" onClick={saveChecklistToServer} disabled={checklistSaving} className="rounded-full border border-[#D4AF37]/70 bg-[#D4AF37]/15 px-4 py-2 text-sm font-semibold text-[#E6C676] disabled:cursor-not-allowed disabled:opacity-60">{checklistSaving ? 'Menyimpan...' : 'Simpan Checklist'}</button>
+                        <button type="button" onClick={loadChecklistFromServer} disabled={checklistLoading} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80 disabled:cursor-not-allowed disabled:opacity-60">{checklistLoading ? 'Memuat...' : 'Muat Ulang Checklist'}</button>
                         <CopyButton label="Copy Laporan Publish" copied={copied.publishReport} onClick={() => copyDraftText('publishReport', buildPublishReport(contentType, slug, checklist))} />
                         <button type="button" onClick={resetChecklist} className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/80">Reset Checklist</button>
                       </ButtonRow>
