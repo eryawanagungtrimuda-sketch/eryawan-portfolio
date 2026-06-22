@@ -45,7 +45,7 @@ export default function PromoVisitTracker() {
     const utmSource = (params.get('utm_source') || '').trim().toLowerCase();
     if (!utmSource || !allowedSources.has(utmSource)) return;
 
-    const path = `${window.location.pathname}${window.location.search}`;
+    const path = window.location.pathname;
     const payload = {
       path,
       utm_source: utmSource,
