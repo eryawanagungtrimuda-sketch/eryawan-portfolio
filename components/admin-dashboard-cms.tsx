@@ -147,6 +147,10 @@ function formatDate(value?: string | null) {
   }
 }
 
+function formatLoadedAt(value: Date) {
+  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(value);
+}
+
 
 export default function AdminDashboardCMS() {
   const [projects, setProjects] = useState<DashboardProject[]>([]);
@@ -162,6 +166,7 @@ export default function AdminDashboardCMS() {
   const [promoSummary, setPromoSummary] = useState<PromoLinkSummary | null>(null);
   const [promoSummaryLoading, setPromoSummaryLoading] = useState(true);
   const [promoSummaryMessage, setPromoSummaryMessage] = useState('');
+  const [promoSummaryLoadedAt, setPromoSummaryLoadedAt] = useState<Date | null>(null);
   const { toast } = useToast();
 
   async function loadProjects() {
@@ -266,6 +271,7 @@ export default function AdminDashboardCMS() {
       }
 
       setPromoSummary(result as PromoLinkSummary);
+      setPromoSummaryLoadedAt(new Date());
     } catch (error) {
       console.error('[AdminDashboardCMS] Failed to load promo summary', error);
       setPromoSummary(null);
@@ -321,6 +327,12 @@ export default function AdminDashboardCMS() {
     campaign: promotionCampaign,
     content: promotionContent,
   }), [selectedPromotionTarget, promotionSource, promotionCampaign, promotionContent]);
+
+  const promotionPathLabels = useMemo(() => new Map(promotionTargets.map((target) => [target.path, target.label.replace(/^Proyek: /, '')])), [promotionTargets]);
+
+  function getPromotionPathLabel(path: string) {
+    return promotionPathLabels.get(path) || path;
+  }
 
   useEffect(() => {
     const fallbackTarget = promotionTargets[0];
@@ -484,7 +496,7 @@ export default function AdminDashboardCMS() {
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Pembuat Link Promosi</h2>
             <p className="mt-4 text-sm leading-6 text-white/52">Buat link portfolio dengan penanda sumber traffic untuk IG, TikTok, Facebook, YouTube Short, dan kanal lainnya.</p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42">UTM Medium: social</div>
+          <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42">Medium UTM: social</div>
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -501,7 +513,7 @@ export default function AdminDashboardCMS() {
             </select>
           </div>
           <div className="space-y-2">
-            <label htmlFor="promotion-campaign" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Campaign</label>
+            <label htmlFor="promotion-campaign" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Kampanye</label>
             <input id="promotion-campaign" value={promotionCampaign} onChange={(event) => { setPromotionCampaign(event.target.value); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition placeholder:text-white/24 focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20" placeholder="portfolio_content" />
           </div>
           <div className="space-y-2">
@@ -511,7 +523,7 @@ export default function AdminDashboardCMS() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/38">Generated URL</p>
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/38">Link yang Dihasilkan</p>
           <p className="mt-3 break-all text-sm leading-6 text-white/72">{generatedPromotionUrl}</p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button type="button" onClick={copyPromotionLink} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">Salin Link</button>
@@ -526,10 +538,14 @@ export default function AdminDashboardCMS() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Analitik Promosi</p>
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Performa Link Promosi</h2>
             <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kunjungan dari link promosi yang memakai UTM.</p>
+            <p className="mt-2 text-xs leading-5 text-white/40">Data ini hanya menghitung kunjungan dari link yang memiliki UTM.</p>
           </div>
-          <button type="button" onClick={loadPromoSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
-            Muat Ulang
-          </button>
+          <div className="flex flex-col items-start gap-2 lg:items-end">
+            <button type="button" onClick={loadPromoSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+              Muat Ulang
+            </button>
+            {promoSummaryLoadedAt ? <p className="text-xs leading-5 text-white/38">Terakhir dimuat: {formatLoadedAt(promoSummaryLoadedAt)}</p> : null}
+          </div>
         </div>
 
         {promoSummaryLoading ? (
@@ -538,6 +554,8 @@ export default function AdminDashboardCMS() {
           </div>
         ) : promoSummaryMessage ? (
           <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{promoSummaryMessage}</p>
+        ) : promoSummary && promoSummary.total === 0 ? (
+          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada kunjungan promosi. Buat link dari Pembuat Link Promosi, buka link tersebut, lalu klik Muat Ulang.</p>
         ) : promoSummary ? (
           <>
             <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
@@ -556,13 +574,16 @@ export default function AdminDashboardCMS() {
               })}
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
               <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Halaman paling sering dibuka dari promosi</p>
                 <div className="mt-5 space-y-3">
                   {promoSummary.topPaths.length > 0 ? promoSummary.topPaths.slice(0, 5).map((item) => (
                     <div key={item.path} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
-                      <span className="break-all text-sm text-white/70">{item.path}</span>
+                      <span>
+                        <span className="block text-sm font-semibold leading-5 text-white/82">{getPromotionPathLabel(item.path)}</span>
+                        <span className="mt-1 block break-all text-xs leading-5 text-white/38">{item.path}</span>
+                      </span>
                       <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
                     </div>
                   )) : <p className="text-sm leading-6 text-white/42">Belum ada kunjungan promosi.</p>}
@@ -578,6 +599,18 @@ export default function AdminDashboardCMS() {
                       <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
                     </div>
                   )) : <p className="text-sm leading-6 text-white/42">Belum ada label konten promosi.</p>}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Kampanye Teratas</p>
+                <div className="mt-5 space-y-3">
+                  {promoSummary.topCampaigns.length > 0 ? promoSummary.topCampaigns.slice(0, 5).map((item) => (
+                    <div key={item.campaign} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
+                      <span className="break-all text-sm text-white/70">{item.campaign}</span>
+                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
+                    </div>
+                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kampanye promosi.</p>}
                 </div>
               </div>
             </div>
