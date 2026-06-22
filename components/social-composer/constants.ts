@@ -21,6 +21,7 @@ export const platformTabs: [PlatformTab, string][] = [
   ['instagram', 'Instagram'],
   ['threads', 'Threads'],
   ['tiktok', 'TikTok'],
+  ['facebook', 'Facebook'],
   ['youtube', 'YouTube Shorts'],
   ['linkedin', 'LinkedIn'],
   ['whatsapp', 'WhatsApp'],

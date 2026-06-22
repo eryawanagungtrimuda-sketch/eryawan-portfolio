@@ -4,6 +4,7 @@ export type PlatformTab =
   | 'instagram'
   | 'threads'
   | 'tiktok'
+  | 'facebook'
   | 'youtube'
   | 'linkedin'
   | 'whatsapp'
@@ -57,6 +58,8 @@ export type ComposerDraft = {
   tiktokCaption: string;
   tiktokHashtag: string;
   tiktokCta: string;
+  facebookCaption: string;
+  facebookCta: string;
   youtubeTitle: string;
   youtubeDescription: string;
   youtubeHashtags: string;

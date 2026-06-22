@@ -18,6 +18,15 @@ export function buildSocialDrafts(data: DetailPayload, contentType: ContentType)
 
   const igCarousel = `Carousel slide outline\nSlide 1: Hook + judul proyek\nSlide 2: Latar belakang singkat\nSlide 3: Pembuka masalah\nSlide 4: Batasan ruang\nSlide 5: Masalah ke solusi\nSlide 6: Sudut pandang pengguna + hasil\nSlide 7: CTA ke website`;
 
+  const facebookCaption = `${core}
+
+${shortText(summary, 180)}
+
+Keputusan utama: ${shortText(decision, 160)}
+Dampak: ${shortText(impact, 150)}
+
+Lihat studi lengkap di website: ${data.canonicalUrl}`;
+
   const linkedInCaption = `Dalam proyek ${core}, kami memulai dari kebutuhan pengguna dan batasan ruang nyata.\n\n${context}\n\nKeputusan desain difokuskan agar fungsi ruang lebih efektif sekaligus tetap memiliki karakter visual yang kuat.\n\nDampak utama: ${impact}`;
   const youtubeTitle = `${core} | Transformasi Ruang yang Lebih Fungsional #Shorts`;
   const youtubeDescription = `Proyek ${core} dimulai dari konteks nyata: ${shortText(context, 120)}\n\nSolusi utamanya: ${shortText(decision, 120)}\nDampak: ${shortText(impact, 120)}\n\nLihat studi lengkap di website:\n${data.canonicalUrl}`;
@@ -181,6 +190,8 @@ Best practice:
     tiktokCaption: `${core} — strategi ruang yang fokus pada fungsi dan pengalaman pengguna.\nDetail lengkap: ${data.canonicalUrl}`,
     tiktokHashtag: tags,
     tiktokCta: `Lanjut baca di website: ${data.canonicalUrl}`,
+    facebookCaption,
+    facebookCta: `Baca studi lengkap: ${data.canonicalUrl}`,
     youtubeTitle,
     youtubeDescription,
     youtubeHashtags,
