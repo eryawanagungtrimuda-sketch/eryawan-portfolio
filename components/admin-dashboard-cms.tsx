@@ -36,6 +36,14 @@ type PromotionTargetOption = PromotionTarget & {
   label: string;
 };
 
+type PromoLinkSummary = {
+  total: number;
+  bySource: { source: PromotionSource; count: number }[];
+  topPaths: { path: string; count: number }[];
+  topContent: { content: string; count: number }[];
+  topCampaigns: { campaign: string; count: number }[];
+};
+
 const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
 
 const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
@@ -151,6 +159,9 @@ export default function AdminDashboardCMS() {
   const [promotionCampaign, setPromotionCampaign] = useState('portfolio_content');
   const [promotionContent, setPromotionContent] = useState(staticPromotionTargets[0].contentLabel);
   const [promotionCopied, setPromotionCopied] = useState(false);
+  const [promoSummary, setPromoSummary] = useState<PromoLinkSummary | null>(null);
+  const [promoSummaryLoading, setPromoSummaryLoading] = useState(true);
+  const [promoSummaryMessage, setPromoSummaryMessage] = useState('');
   const { toast } = useToast();
 
   async function loadProjects() {
@@ -227,8 +238,47 @@ export default function AdminDashboardCMS() {
     }
   }
 
+
+  async function loadPromoSummary() {
+    setPromoSummaryLoading(true);
+    setPromoSummaryMessage('');
+
+    try {
+      const supabase = getSupabaseClient();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) {
+        setPromoSummary(null);
+        setPromoSummaryMessage('Sesi admin belum tersedia untuk membaca ringkasan promosi.');
+        return;
+      }
+
+      const response = await fetch('/api/admin/promo-link-summary', {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      });
+      const result = await response.json().catch(() => null) as PromoLinkSummary | { error?: string } | null;
+
+      if (!response.ok) {
+        setPromoSummary(null);
+        setPromoSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat ringkasan link promosi.');
+        return;
+      }
+
+      setPromoSummary(result as PromoLinkSummary);
+    } catch (error) {
+      console.error('[AdminDashboardCMS] Failed to load promo summary', error);
+      setPromoSummary(null);
+      setPromoSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat ringkasan link promosi.');
+    } finally {
+      setPromoSummaryLoading(false);
+    }
+  }
+
+
   useEffect(() => {
     loadProjects();
+    loadPromoSummary();
   }, []);
 
   const contentHealth = useMemo(() => {
@@ -469,6 +519,72 @@ export default function AdminDashboardCMS() {
           </div>
         </div>
       </section>
+
+      <section className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Analitik Promosi</p>
+            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Performa Link Promosi</h2>
+            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kunjungan dari link promosi yang memakai UTM.</p>
+          </div>
+          <button type="button" onClick={loadPromoSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+            Muat Ulang
+          </button>
+        </div>
+
+        {promoSummaryLoading ? (
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
+            {Array.from({ length: 6 }).map((_, index) => <div key={index} className="premium-skeleton h-28 rounded-2xl" />)}
+          </div>
+        ) : promoSummaryMessage ? (
+          <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{promoSummaryMessage}</p>
+        ) : promoSummary ? (
+          <>
+            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
+              <div className="rounded-2xl border border-[#D4AF37]/18 bg-[#D4AF37]/[0.035] p-5">
+                <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#D4AF37]/85">Total 30 Hari</p>
+                <p className="mt-5 font-display text-5xl leading-none text-white/92">{promoSummary.total}</p>
+              </div>
+              {promotionSourceOptions.map((source) => {
+                const count = promoSummary.bySource.find((item) => item.source === source.value)?.count || 0;
+                return (
+                  <div key={source.value} className="rounded-2xl border border-white/8 bg-black/20 p-5">
+                    <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/42">{source.label}</p>
+                    <p className="mt-5 font-display text-5xl leading-none text-white/90">{count}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
+              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Halaman paling sering dibuka dari promosi</p>
+                <div className="mt-5 space-y-3">
+                  {promoSummary.topPaths.length > 0 ? promoSummary.topPaths.slice(0, 5).map((item) => (
+                    <div key={item.path} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
+                      <span className="break-all text-sm text-white/70">{item.path}</span>
+                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
+                    </div>
+                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kunjungan promosi.</p>}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Konten promosi teratas</p>
+                <div className="mt-5 space-y-3">
+                  {promoSummary.topContent.length > 0 ? promoSummary.topContent.slice(0, 5).map((item) => (
+                    <div key={item.content} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
+                      <span className="break-all text-sm text-white/70">{item.content}</span>
+                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
+                    </div>
+                  )) : <p className="text-sm leading-6 text-white/42">Belum ada label konten promosi.</p>}
+                </div>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </section>
+
 
       <section className="mt-20 border-t border-white/[0.07] pt-14">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
