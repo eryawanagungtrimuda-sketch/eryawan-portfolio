@@ -453,37 +453,64 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
     return sections.map((section) => String(section || '').trim()).filter(Boolean).join('\n\n');
   }
 
+  function escapeRegExp(value: string) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function removePublishPackDuplicateLinks(section: string | undefined | null) {
+    const text = String(section || '');
+    if (!activePromoLink || !payload?.canonicalUrl || !text.trim()) return text;
+
+    const linksToRemove = [payload.canonicalUrl, activePromoLink].filter(Boolean);
+    const withoutDuplicateLinks = linksToRemove.reduce((currentText, link) => {
+      const escapedLink = escapeRegExp(link);
+      return currentText.replace(new RegExp(escapedLink, 'g'), '');
+    }, text);
+
+    return withoutDuplicateLinks
+      .split('\n')
+      .map((line) => line.replace(/[ \t]{2,}/g, ' ').trimEnd())
+      .filter((line) => !/^(link promosi|link dengan tracking|lihat studi lengkap)\s*:?\s*$/i.test(line.trim()))
+      .join('\n')
+      .trim();
+  }
+
+  function buildTrackedPublishPackSections(sections: Array<string | undefined | null>, promoLine: string) {
+    const cleanedSections = activePromoLink && payload?.canonicalUrl ? sections.map(removePublishPackDuplicateLinks) : sections;
+    return joinPublishPackSections([...cleanedSections, promoLine]);
+  }
+
   function buildPublishPackText() {
     if (!draft) return '';
     const promoLine = activePromoLink ? `Link promosi: ${activePromoLink}` : '';
 
     if (activeTab === 'instagram') {
       const instagramPromoLine = activePromoLink ? `Link promosi (paling aman untuk bio, story, atau komentar pin): ${activePromoLink}` : '';
-      return joinPublishPackSections([draft.igCaption, draft.igCta, draft.igHashtag, instagramPromoLine]);
+      return buildTrackedPublishPackSections([draft.igCaption, draft.igCta, draft.igHashtag], instagramPromoLine);
     }
 
     if (activeTab === 'tiktok') {
-      return joinPublishPackSections([draft.tiktokCaption, draft.tiktokCta, draft.tiktokHashtag, promoLine]);
+      return buildTrackedPublishPackSections([draft.tiktokCaption, draft.tiktokCta, draft.tiktokHashtag], promoLine);
     }
 
     if (activeTab === 'facebook') {
-      return joinPublishPackSections([draft.facebookCaption, draft.facebookCta, promoLine]);
+      return buildTrackedPublishPackSections([draft.facebookCaption, draft.facebookCta], promoLine);
     }
 
     if (activeTab === 'youtube') {
-      return joinPublishPackSections([draft.youtubeDescription, draft.youtubeHashtags, promoLine]);
+      return buildTrackedPublishPackSections([draft.youtubeDescription, draft.youtubeHashtags], promoLine);
     }
 
     if (activeTab === 'linkedin') {
-      return joinPublishPackSections([draft.linkedInCaption, draft.linkedInBullets, draft.linkedInCta, promoLine]);
+      return buildTrackedPublishPackSections([draft.linkedInCaption, draft.linkedInBullets, draft.linkedInCta], promoLine);
     }
 
     if (activeTab === 'threads') {
-      return joinPublishPackSections([draft.threadsPost, draft.threadsCta, promoLine]);
+      return buildTrackedPublishPackSections([draft.threadsPost, draft.threadsCta], promoLine);
     }
 
     if (activeTab === 'whatsapp') {
-      return joinPublishPackSections([draft.whatsappMessage, activePromoLink || draft.whatsappLink]);
+      return buildTrackedPublishPackSections([draft.whatsappMessage], activePromoLink || draft.whatsappLink);
     }
 
     return '';
