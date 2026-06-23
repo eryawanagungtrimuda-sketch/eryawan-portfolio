@@ -7,7 +7,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const allowedContentTypes = new Set(['karya', 'wawasan']);
 const textFields = ['content_title', 'instagram_url', 'threads_url', 'tiktok_url', 'facebook_url', 'youtube_shorts_url', 'linkedin_url', 'whatsapp_url', 'posting_date', 'notes'] as const;
-const booleanFields = ['instagram_posted', 'threads_posted', 'tiktok_posted', 'facebook_posted', 'youtube_shorts_posted', 'linkedin_posted', 'whatsapp_shared'] as const;
+const booleanFields = ['instagram_reels_posted', 'instagram_carousel_posted', 'threads_posted', 'tiktok_posted', 'facebook_posted', 'youtube_shorts_posted', 'linkedin_posted', 'whatsapp_shared'] as const;
 
 function sanitizeText(value: unknown, maxLength = 2000) {
   if (typeof value !== 'string') return null;

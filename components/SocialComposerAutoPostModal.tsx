@@ -343,7 +343,8 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
       content_type: contentType,
       content_slug: slug,
       content_title: payload?.title || null,
-      instagram_posted: checklist.instagramReelsPosted || checklist.instagramCarouselPosted,
+      instagram_reels_posted: checklist.instagramReelsPosted,
+      instagram_carousel_posted: checklist.instagramCarouselPosted,
       threads_posted: checklist.threadsPosted,
       tiktok_posted: checklist.tiktokPosted,
       facebook_posted: checklist.facebookPosted,
@@ -364,11 +365,10 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
 
   function checklistFromApiRow(row: Record<string, unknown> | null): PublishChecklist {
     if (!row) return readStoredChecklist(checklistStorageKey);
-    const instagramPosted = row.instagram_posted === true;
     return {
       ...defaultChecklist,
-      instagramReelsPosted: instagramPosted,
-      instagramCarouselPosted: instagramPosted,
+      instagramReelsPosted: row.instagram_reels_posted === true,
+      instagramCarouselPosted: row.instagram_carousel_posted === true,
       threadsPosted: row.threads_posted === true,
       tiktokPosted: row.tiktok_posted === true,
       facebookPosted: row.facebook_posted === true,
