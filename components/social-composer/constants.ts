@@ -4,16 +4,21 @@ export const defaultChecklist: PublishChecklist = {
   canvaDesignDone: false,
   instagramReelsPosted: false,
   instagramCarouselPosted: false,
+  threadsPosted: false,
   tiktokPosted: false,
+  facebookPosted: false,
   youtubeShortsPosted: false,
   linkedinPosted: false,
   whatsappShared: false,
   postingDate: '',
   postingNotes: '',
   instagramUrl: '',
+  threadsUrl: '',
   tiktokUrl: '',
+  facebookUrl: '',
   youtubeUrl: '',
   linkedinUrl: '',
+  whatsappUrl: '',
 };
 
 export const platformTabs: [PlatformTab, string][] = [
