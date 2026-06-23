@@ -94,26 +94,48 @@ export async function GET(request: Request) {
   const auth = await requireAdmin(request);
   if ('error' in auth) return auth.error;
 
-  const [{ data: checklists, error: checklistError }, { data: projects, error: projectsError }, { data: insights, error: insightsError }, { data: visits, error: visitsError }] = await Promise.all([
+  const [{ data: checklists, error: checklistError }, { data: projects, error: projectsError }] = await Promise.all([
     auth.supabase.from('social_composer_checklists').select('*').order('updated_at', { ascending: false }).limit(200),
     auth.supabase.from('projects').select('slug,title').limit(1000),
+  ]);
+
+  if (checklistError) {
+    console.error('[social-publishing-summary] Required social_composer_checklists query failed', {
+      code: checklistError.code,
+      message: checklistError.message,
+    });
+    return NextResponse.json({ error: 'Gagal memuat checklist publikasi.' }, { status: 500 });
+  }
+
+  if (projectsError) {
+    console.error('[social-publishing-summary] Required projects query failed', {
+      code: projectsError.code,
+      message: projectsError.message,
+    });
+    return NextResponse.json({ error: 'Gagal memuat ringkasan publikasi.' }, { status: 500 });
+  }
+
+  const [{ data: insights, error: insightsError }, { data: visits, error: visitsError }] = await Promise.all([
     auth.supabase.from('insights').select('slug,title').limit(1000),
     auth.supabase.from('promo_link_visits').select('path,utm_source,utm_content').limit(5000),
   ]);
 
-  if (checklistError) {
-    console.error('[social-publishing-summary] Failed to fetch checklists', { code: checklistError.code, message: checklistError.message });
-    return NextResponse.json({ error: 'Gagal memuat checklist publikasi.' }, { status: 500 });
+  if (insightsError) {
+    console.warn('[social-publishing-summary] Optional insights query failed', {
+      code: insightsError.code,
+      message: insightsError.message,
+    });
   }
 
-  if (projectsError || insightsError || visitsError) {
-    console.error('[social-publishing-summary] Failed to fetch related summary data', {
-      projects: projectsError?.message,
-      insights: insightsError?.message,
-      visits: visitsError?.message,
+  if (visitsError) {
+    console.warn('[social-publishing-summary] Optional promo visits query failed', {
+      code: visitsError.code,
+      message: visitsError.message,
     });
-    return NextResponse.json({ error: 'Gagal memuat ringkasan publikasi.' }, { status: 500 });
   }
+
+  const insightRows = insightsError ? [] : insights || [];
+  const visitRows = (visitsError ? [] : visits || []) as PromoVisitRow[];
 
   const checklistLookup = new Map<string, ChecklistRow>();
   ((checklists || []) as ChecklistRow[]).forEach((row) => {
@@ -129,7 +151,7 @@ export async function GET(request: Request) {
         title: project.title || null,
         href: `/karya/${project.slug}`,
       })),
-    ...(insights || [])
+    ...(insightRows)
       .filter((insight) => Boolean(insight.slug))
       .map((insight) => ({
         contentType: 'wawasan' as const,
@@ -138,8 +160,6 @@ export async function GET(request: Request) {
         href: `/wawasan/${insight.slug}`,
       })),
   ];
-
-  const visitRows = (visits || []) as PromoVisitRow[];
 
   const items = contentItems.map((content) => {
     const checklist = checklistLookup.get(`${content.contentType}:${content.slug}`);
