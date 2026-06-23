@@ -44,6 +44,30 @@ type PromoLinkSummary = {
   topCampaigns: { campaign: string; count: number }[];
 };
 
+type SocialPublishingSummaryItem = {
+  contentType: string;
+  slug: string;
+  title: string;
+  href: string;
+  postedChannels: string[];
+  unpostedChannels: string[];
+  postingDate: string | null;
+  notes: string | null;
+  totalPostedChannels: number;
+  totalRequiredChannels: number;
+  promoVisitCount: number;
+  topPromoSource: string | null;
+  status: 'Belum dipromosikan' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
+};
+
+type SocialPublishingSummary = {
+  items: SocialPublishingSummaryItem[];
+};
+
+function getPromotionSourceLabel(value?: string | null) {
+  return promotionSourceOptions.find((source) => source.value === value)?.label || value || 'Manual / Lainnya';
+}
+
 const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
 
 const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
@@ -167,6 +191,11 @@ export default function AdminDashboardCMS() {
   const [promoSummaryLoading, setPromoSummaryLoading] = useState(true);
   const [promoSummaryMessage, setPromoSummaryMessage] = useState('');
   const [promoSummaryLoadedAt, setPromoSummaryLoadedAt] = useState<Date | null>(null);
+  const [publishingSummary, setPublishingSummary] = useState<SocialPublishingSummary | null>(null);
+  const [publishingSummaryLoading, setPublishingSummaryLoading] = useState(true);
+  const [publishingSummaryMessage, setPublishingSummaryMessage] = useState('');
+  const [publishingSummaryLoadedAt, setPublishingSummaryLoadedAt] = useState<Date | null>(null);
+  const [publishingFilter, setPublishingFilter] = useState<'all' | 'not_promoted' | 'posted' | 'no_visits'>('all');
   const { toast } = useToast();
 
   async function loadProjects() {
@@ -282,9 +311,48 @@ export default function AdminDashboardCMS() {
   }
 
 
+  async function loadPublishingSummary() {
+    setPublishingSummaryLoading(true);
+    setPublishingSummaryMessage('');
+
+    try {
+      const supabase = getSupabaseClient();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) {
+        setPublishingSummary(null);
+        setPublishingSummaryMessage('Sesi admin belum tersedia untuk membaca status publikasi.');
+        return;
+      }
+
+      const response = await fetch('/api/admin/social-publishing-summary', {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store',
+      });
+      const result = await response.json().catch(() => null) as SocialPublishingSummary | { error?: string } | null;
+
+      if (!response.ok) {
+        setPublishingSummary(null);
+        setPublishingSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat status publikasi konten.');
+        return;
+      }
+
+      setPublishingSummary(result as SocialPublishingSummary);
+      setPublishingSummaryLoadedAt(new Date());
+    } catch (error) {
+      console.error('[AdminDashboardCMS] Failed to load publishing summary', error);
+      setPublishingSummary(null);
+      setPublishingSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat status publikasi konten.');
+    } finally {
+      setPublishingSummaryLoading(false);
+    }
+  }
+
+
   useEffect(() => {
     loadProjects();
     loadPromoSummary();
+    loadPublishingSummary();
   }, []);
 
   const contentHealth = useMemo(() => {
@@ -303,6 +371,14 @@ export default function AdminDashboardCMS() {
   }, [projects]);
 
   const attentionPreview = useMemo(() => contentHealth.needsAttention.slice(0, 8), [contentHealth.needsAttention]);
+
+  const filteredPublishingItems = useMemo(() => {
+    const items = publishingSummary?.items || [];
+    if (publishingFilter === 'not_promoted') return items.filter((item) => item.totalPostedChannels === 0);
+    if (publishingFilter === 'posted') return items.filter((item) => item.totalPostedChannels > 0);
+    if (publishingFilter === 'no_visits') return items.filter((item) => item.totalPostedChannels > 0 && item.promoVisitCount === 0);
+    return items;
+  }, [publishingFilter, publishingSummary]);
 
   const promotionTargets = useMemo<PromotionTargetOption[]>(() => {
     const projectTargets = projects
@@ -615,6 +691,85 @@ export default function AdminDashboardCMS() {
               </div>
             </div>
           </>
+        ) : null}
+      </section>
+
+
+      <section className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Publikasi Manual</p>
+            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Status Publikasi Konten</h2>
+            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kanal yang sudah diposting dan performa awal dari link promosi.</p>
+          </div>
+          <div className="flex flex-col items-start gap-2 lg:items-end">
+            <button type="button" onClick={loadPublishingSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+              Muat Ulang
+            </button>
+            {publishingSummaryLoadedAt ? <p className="text-xs leading-5 text-white/38">Terakhir dimuat: {formatLoadedAt(publishingSummaryLoadedAt)}</p> : null}
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {[
+            ['all', 'Semua'],
+            ['not_promoted', 'Belum dipromosikan'],
+            ['posted', 'Sudah diposting'],
+            ['no_visits', 'Belum ada kunjungan'],
+          ].map(([value, label]) => (
+            <button key={value} type="button" onClick={() => setPublishingFilter(value as typeof publishingFilter)} className={`rounded-full border px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition ${publishingFilter === value ? 'border-[#D4AF37]/60 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 bg-black/20 text-white/48 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {publishingSummaryLoading ? (
+          <div className="mt-8 space-y-3">
+            {Array.from({ length: 4 }).map((_, index) => <div key={index} className="premium-skeleton h-20 rounded-2xl" />)}
+          </div>
+        ) : publishingSummaryMessage ? (
+          <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{publishingSummaryMessage}</p>
+        ) : publishingSummary && publishingSummary.items.length === 0 ? (
+          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada data publikasi. Simpan Checklist dari Social Composer untuk mulai melihat status publikasi di dashboard.</p>
+        ) : publishingSummary ? (
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/8 bg-black/20">
+            <div className="hidden grid-cols-[1.2fr_1fr_1fr_0.45fr_0.9fr] border-b border-white/[0.07] px-5 py-4 font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/34 lg:grid">
+              <span>Konten</span>
+              <span>Sudah Diposting</span>
+              <span>Belum Diposting</span>
+              <span>Kunjungan UTM</span>
+              <span>Status</span>
+            </div>
+            {filteredPublishingItems.length > 0 ? (
+              <div className="divide-y divide-white/[0.07]">
+                {filteredPublishingItems.map((item) => (
+                  <div key={`${item.contentType}:${item.slug}`} className="grid gap-4 px-5 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] lg:grid-cols-[1.2fr_1fr_1fr_0.45fr_0.9fr] lg:items-start">
+                    <div>
+                      <p className="text-base font-semibold leading-6 text-white/90">{item.title}</p>
+                      <p className="mt-1 text-xs text-white/36">/{item.slug}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Link href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.14em] text-white/58 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Lihat Checklist</Link>
+                        {item.postingDate ? <span className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/42">{formatDate(item.postingDate)}</span> : null}
+                      </div>
+                    </div>
+                    <p className="text-sm leading-6 text-emerald-200/80">{item.postedChannels.length > 0 ? item.postedChannels.join(', ') : '—'}</p>
+                    <p className="text-sm leading-6 text-white/50">{item.unpostedChannels.length > 0 ? item.unpostedChannels.join(', ') : '—'}</p>
+                    <div>
+                      <p className="font-display text-4xl leading-none text-white/90">{item.promoVisitCount}</p>
+                      {item.topPromoSource ? <p className="mt-2 text-xs leading-5 text-white/38">Teratas: {getPromotionSourceLabel(item.topPromoSource)}</p> : null}
+                    </div>
+                    <div>
+                      <span className="inline-flex rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/10 px-3 py-1.5 text-xs font-semibold text-[#D4AF37]">{item.status}</span>
+                      <p className="mt-2 text-xs leading-5 text-white/38">{item.totalPostedChannels}/{item.totalRequiredChannels} kanal aktif</p>
+                      {item.notes ? <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/42">{item.notes}</p> : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="px-5 py-8 text-sm leading-6 text-white/52">Tidak ada data publikasi yang sesuai filter.</div>
+            )}
+          </div>
         ) : null}
       </section>
 
