@@ -748,7 +748,7 @@ export default function AdminDashboardCMS() {
                       <p className="text-base font-semibold leading-6 text-white/90">{item.title}</p>
                       <p className="mt-1 text-xs text-white/36">/{item.slug}</p>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <Link href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.14em] text-white/58 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Lihat Checklist</Link>
+                        <Link href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.14em] text-white/58 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Buka Halaman</Link>
                         {item.postingDate ? <span className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/42">{formatDate(item.postingDate)}</span> : null}
                       </div>
                     </div>

@@ -47,7 +47,9 @@ type PromoVisitRow = {
   utm_content: string | null;
 };
 
-type ContentLookup = {
+type ContentItem = {
+  contentType: 'karya' | 'wawasan';
+  slug: string;
   title: string | null;
   href: string;
 };
@@ -113,28 +115,45 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Gagal memuat ringkasan publikasi.' }, { status: 500 });
   }
 
-  const lookup = new Map<string, ContentLookup>();
-  (projects || []).forEach((project) => {
-    if (project.slug) lookup.set(`karya:${project.slug}`, { title: project.title || null, href: `/karya/${project.slug}` });
+  const checklistLookup = new Map<string, ChecklistRow>();
+  ((checklists || []) as ChecklistRow[]).forEach((row) => {
+    checklistLookup.set(`${row.content_type}:${row.content_slug}`, row);
   });
-  (insights || []).forEach((insight) => {
-    if (insight.slug) lookup.set(`wawasan:${insight.slug}`, { title: insight.title || null, href: `/wawasan/${insight.slug}` });
-  });
+
+  const contentItems: ContentItem[] = [
+    ...(projects || [])
+      .filter((project) => Boolean(project.slug))
+      .map((project) => ({
+        contentType: 'karya' as const,
+        slug: project.slug as string,
+        title: project.title || null,
+        href: `/karya/${project.slug}`,
+      })),
+    ...(insights || [])
+      .filter((insight) => Boolean(insight.slug))
+      .map((insight) => ({
+        contentType: 'wawasan' as const,
+        slug: insight.slug as string,
+        title: insight.title || null,
+        href: `/wawasan/${insight.slug}`,
+      })),
+  ];
 
   const visitRows = (visits || []) as PromoVisitRow[];
 
-  const items = ((checklists || []) as ChecklistRow[]).map((row) => {
+  const items = contentItems.map((content) => {
+    const checklist = checklistLookup.get(`${content.contentType}:${content.slug}`);
     const platforms = platformDefinitions.map((platform) => {
-      const posted = platform.fields.some((field) => row[field] === true);
+      const posted = checklist ? platform.fields.some((field) => checklist[field] === true) : false;
       return {
         key: platform.key,
         label: platform.label,
         posted,
-        url: row[platform.urlField] || null,
+        url: checklist ? checklist[platform.urlField] || null : null,
       };
     });
 
-    const matchedVisits = visitRows.filter((visit) => visitMatchesContent(visit, row.content_type, row.content_slug));
+    const matchedVisits = visitRows.filter((visit) => visitMatchesContent(visit, content.contentType, content.slug));
     const sourceCounts = new Map<string, number>();
     matchedVisits.forEach((visit) => {
       const source = visit.utm_source?.trim() || 'manual';
@@ -144,24 +163,23 @@ export async function GET(request: Request) {
     const postedCount = platforms.filter((platform) => platform.posted).length;
     const totalRequired = platforms.length;
     const visitCount = matchedVisits.length;
-    const content = lookup.get(`${row.content_type}:${row.content_slug}`);
 
     return {
-      contentType: row.content_type,
-      slug: row.content_slug,
-      title: row.content_title || content?.title || row.content_slug,
-      href: content?.href || getContentHref(row.content_type, row.content_slug),
+      contentType: content.contentType,
+      slug: content.slug,
+      title: checklist?.content_title || content.title || content.slug,
+      href: content.href,
       platforms,
       postedChannels: platforms.filter((platform) => platform.posted).map((platform) => platform.label),
       unpostedChannels: platforms.filter((platform) => !platform.posted).map((platform) => platform.label),
-      postingDate: row.posting_date,
-      notes: row.notes,
+      postingDate: checklist?.posting_date || null,
+      notes: checklist?.notes || null,
       totalPostedChannels: postedCount,
       totalRequiredChannels: totalRequired,
       promoVisitCount: visitCount,
       topPromoSource: topSource ? topSource[0] : null,
       status: getStatus(postedCount, totalRequired, visitCount),
-      updatedAt: row.updated_at,
+      updatedAt: checklist?.updated_at || null,
     };
   }).sort((a, b) => {
     const rank = (item: { totalPostedChannels: number; promoVisitCount: number }) => {
