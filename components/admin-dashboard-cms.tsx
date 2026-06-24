@@ -58,6 +58,9 @@ type SocialPublishingSummaryItem = {
   promoVisitCount: number;
   topPromoSource: string | null;
   status: 'Belum dipromosikan' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
+  recommendationLabel: 'Prioritas Tinggi' | 'Prioritas Sedang' | 'Layak Dipromosikan Ulang' | 'Prioritas Rendah' | null;
+  recommendationReason: string | null;
+  recommendationPriority: 'high' | 'medium' | 'repost' | 'low' | 'healthy';
 };
 
 type SocialPublishingSummary = {
@@ -78,6 +81,14 @@ const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
   { value: 'linkedin', label: 'LinkedIn' },
   { value: 'manual', label: 'Manual / Lainnya' },
 ];
+
+const recommendationPriorityRank: Record<SocialPublishingSummaryItem['recommendationPriority'], number> = {
+  high: 0,
+  medium: 1,
+  repost: 2,
+  low: 3,
+  healthy: 4,
+};
 
 const staticPromotionTargets: PromotionTargetOption[] = [
   { value: 'home', label: 'Beranda', path: '/', contentLabel: 'home' },
@@ -379,6 +390,23 @@ export default function AdminDashboardCMS() {
     if (publishingFilter === 'no_visits') return items.filter((item) => item.totalPostedChannels > 0 && item.promoVisitCount === 0);
     return items;
   }, [publishingFilter, publishingSummary]);
+
+  const promotionRecommendations = useMemo(() => {
+    return (publishingSummary?.items || [])
+      .filter((item) => item.recommendationLabel && item.recommendationReason)
+      .sort((a, b) => {
+        const aMissing = a.totalRequiredChannels - a.totalPostedChannels;
+        const bMissing = b.totalRequiredChannels - b.totalPostedChannels;
+        const aPostedWithoutVisits = a.totalPostedChannels > 0 && a.promoVisitCount === 0 ? 0 : 1;
+        const bPostedWithoutVisits = b.totalPostedChannels > 0 && b.promoVisitCount === 0 ? 0 : 1;
+
+        return recommendationPriorityRank[a.recommendationPriority] - recommendationPriorityRank[b.recommendationPriority]
+          || aPostedWithoutVisits - bPostedWithoutVisits
+          || bMissing - aMissing
+          || a.title.localeCompare(b.title);
+      })
+      .slice(0, 6);
+  }, [publishingSummary]);
 
   const promotionTargets = useMemo<PromotionTargetOption[]>(() => {
     const projectTargets = projects
@@ -722,6 +750,45 @@ export default function AdminDashboardCMS() {
             </button>
           ))}
         </div>
+
+
+        {publishingSummary ? (
+          <div className="mt-8 rounded-[24px] border border-[#D4AF37]/15 bg-[#D4AF37]/[0.045] p-5 md:p-6">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]/85">Rekomendasi Manual</p>
+                <h3 className="mt-3 font-display text-2xl font-normal leading-tight tracking-[-0.03em] text-white/92">Rekomendasi Prioritas Promosi</h3>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/52">Saran konten yang perlu diprioritaskan berdasarkan checklist publikasi dan kunjungan link promosi.</p>
+              </div>
+              <p className="text-xs leading-5 text-white/38">Maksimal 6 rekomendasi teratas.</p>
+            </div>
+
+            {promotionRecommendations.length > 0 ? (
+              <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
+                {promotionRecommendations.map((item) => (
+                  <article key={`recommendation:${item.contentType}:${item.slug}`} className="rounded-2xl border border-white/10 bg-black/24 p-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-base font-semibold leading-6 text-white/90">{item.title}</p>
+                        <p className="mt-1 text-xs text-white/36">/{item.slug}</p>
+                      </div>
+                      <span className="inline-flex w-fit rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/12 px-3 py-1.5 text-xs font-semibold text-[#D4AF37]">{item.recommendationLabel}</span>
+                    </div>
+                    <p className="mt-4 text-sm leading-6 text-white/60">{item.recommendationReason}</p>
+                    <div className="mt-4 flex flex-wrap gap-2 text-xs leading-5">
+                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white/56">{item.totalPostedChannels}/{item.totalRequiredChannels} kanal aktif</span>
+                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white/56">{item.promoVisitCount} kunjungan</span>
+                    </div>
+                    <p className="mt-4 text-xs leading-5 text-white/42">Belum: {item.unpostedChannels.length > 0 ? item.unpostedChannels.join(', ') : '—'}</p>
+                    <Link href={item.href} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-10 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">Buka Halaman</Link>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada rekomendasi prioritas. Semua konten utama sudah memiliki aktivitas publikasi yang cukup.</p>
+            )}
+          </div>
+        ) : null}
 
         {publishingSummaryLoading ? (
           <div className="mt-8 space-y-3">

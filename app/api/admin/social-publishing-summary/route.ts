@@ -84,6 +84,56 @@ function getStatus(postedCount: number, totalRequired: number, visitCount: numbe
   return 'Sudah diposting, belum ada kunjungan';
 }
 
+function getPromotionRecommendation(postedCount: number, totalRequired: number, visitCount: number) {
+  const missingChannels = Math.max(totalRequired - postedCount, 0);
+
+  if (postedCount === 0) {
+    return {
+      recommendationLabel: 'Prioritas Tinggi',
+      recommendationReason: 'Konten belum dipromosikan di kanal manapun.',
+      recommendationPriority: 'high',
+    };
+  }
+
+  if (postedCount > 0 && visitCount === 0) {
+    return {
+      recommendationLabel: 'Prioritas Tinggi',
+      recommendationReason: 'Konten sudah diposting, tetapi belum menghasilkan kunjungan UTM.',
+      recommendationPriority: 'high',
+    };
+  }
+
+  if (visitCount > 0 && postedCount < totalRequired) {
+    if (missingChannels <= 2) {
+      return {
+        recommendationLabel: 'Layak Dipromosikan Ulang',
+        recommendationReason: 'Sudah terbukti mendapat kunjungan, cocok didorong lagi di kanal yang belum aktif.',
+        recommendationPriority: 'repost',
+      };
+    }
+
+    return {
+      recommendationLabel: 'Prioritas Sedang',
+      recommendationReason: 'Konten mulai mendapat kunjungan, tetapi kanal promosinya belum lengkap.',
+      recommendationPriority: 'medium',
+    };
+  }
+
+  if (visitCount > 0 && postedCount >= 4) {
+    return {
+      recommendationLabel: 'Prioritas Rendah',
+      recommendationReason: 'Kanal utama sudah aktif dan konten mulai mendapat kunjungan.',
+      recommendationPriority: 'low',
+    };
+  }
+
+  return {
+    recommendationLabel: null,
+    recommendationReason: null,
+    recommendationPriority: 'healthy',
+  };
+}
+
 function visitMatchesContent(row: PromoVisitRow, contentType: string, slug: string) {
   const href = getContentHref(contentType, slug);
   const contentLabel = toUtmContentLabel(slug);
@@ -199,6 +249,7 @@ export async function GET(request: Request) {
       promoVisitCount: visitCount,
       topPromoSource: topSource ? topSource[0] : null,
       status: getStatus(postedCount, totalRequired, visitCount),
+      ...getPromotionRecommendation(postedCount, totalRequired, visitCount),
       updatedAt: checklist?.updated_at || null,
     };
   }).sort((a, b) => {
