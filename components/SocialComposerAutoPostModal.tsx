@@ -858,7 +858,7 @@ export default function SocialComposerAutoPostModal({ contentType, slug, buttonC
               </div>
                   )}
 
-                  {activeTab === 'whatsapp' && (
+                  {activeTab !== 'checklist' && (
                     <div className="rounded-2xl border border-[#D4AF37]/30 bg-[#13110d]/70 p-3 font-sans sm:p-4">
                       <p className="text-sm font-semibold text-[#E6C676]">Opsi Lanjutan</p>
                       <p className="mt-1 text-xs text-white/70">Bagian kosong akan dibuat ulang dengan AI. Bagian yang sudah diedit tidak ditimpa.</p>
