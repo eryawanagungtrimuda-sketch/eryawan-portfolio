@@ -57,8 +57,8 @@ type SocialPublishingSummaryItem = {
   totalRequiredChannels: number;
   promoVisitCount: number;
   topPromoSource: string | null;
-  status: 'Belum dipromosikan' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
-  recommendationLabel: 'Prioritas Tinggi' | 'Prioritas Sedang' | 'Layak Dipromosikan Ulang' | 'Prioritas Rendah' | null;
+  status: 'Belum diposting' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
+  recommendationLabel: 'Prioritas Tinggi' | 'Prioritas Sedang' | 'Layak Diposting Ulang' | 'Prioritas Rendah' | null;
   recommendationReason: string | null;
   recommendationPriority: 'high' | 'medium' | 'repost' | 'low' | 'healthy';
 };
@@ -206,7 +206,11 @@ export default function AdminDashboardCMS() {
   const [publishingSummaryLoading, setPublishingSummaryLoading] = useState(true);
   const [publishingSummaryMessage, setPublishingSummaryMessage] = useState('');
   const [publishingSummaryLoadedAt, setPublishingSummaryLoadedAt] = useState<Date | null>(null);
-  const [publishingFilter, setPublishingFilter] = useState<'all' | 'not_promoted' | 'posted' | 'no_visits'>('all');
+  const [publishingFilter, setPublishingFilter] = useState<'all' | 'not_posted' | 'posted' | 'no_visits'>('all');
+  const [showAllPromotionRecommendations, setShowAllPromotionRecommendations] = useState(false);
+  const [showAllPublishingItems, setShowAllPublishingItems] = useState(false);
+  const [showAllAttentionItems, setShowAllAttentionItems] = useState(false);
+  const [showAllProjectsMobile, setShowAllProjectsMobile] = useState(false);
   const { toast } = useToast();
 
   async function loadProjects() {
@@ -306,7 +310,7 @@ export default function AdminDashboardCMS() {
 
       if (!response.ok) {
         setPromoSummary(null);
-        setPromoSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat ringkasan link promosi.');
+        setPromoSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat ringkasan link posting.');
         return;
       }
 
@@ -315,7 +319,7 @@ export default function AdminDashboardCMS() {
     } catch (error) {
       console.error('[AdminDashboardCMS] Failed to load promo summary', error);
       setPromoSummary(null);
-      setPromoSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat ringkasan link promosi.');
+      setPromoSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat ringkasan link posting.');
     } finally {
       setPromoSummaryLoading(false);
     }
@@ -385,7 +389,7 @@ export default function AdminDashboardCMS() {
 
   const filteredPublishingItems = useMemo(() => {
     const items = publishingSummary?.items || [];
-    if (publishingFilter === 'not_promoted') return items.filter((item) => item.totalPostedChannels === 0);
+    if (publishingFilter === 'not_posted') return items.filter((item) => item.totalPostedChannels === 0);
     if (publishingFilter === 'posted') return items.filter((item) => item.totalPostedChannels > 0);
     if (publishingFilter === 'no_visits') return items.filter((item) => item.totalPostedChannels > 0 && item.promoVisitCount === 0);
     return items;
@@ -546,7 +550,12 @@ export default function AdminDashboardCMS() {
   }
 
   return (
-    <div className="py-14">
+    <div className="py-8 md:py-14">
+      <nav aria-label="Aksi cepat dashboard" className="mb-6 grid grid-cols-2 gap-2 md:hidden">
+        <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#080807]">Tambah Proyek</Link>
+        <a href="#checklist-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#D4AF37]">Checklist Publikasi</a>
+        <a href="#pembuat-link-posting" className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.025] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-white/70">Buka Composer</a>
+      </nav>
       <section>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -578,7 +587,7 @@ export default function AdminDashboardCMS() {
           <div className="rounded-2xl border border-[#D4AF37]/18 bg-[#D4AF37]/[0.035] p-7 transition duration-300 hover:border-[#D4AF37]/35 hover:bg-[#D4AF37]/[0.055] hover:shadow-[0_18px_44px_rgba(212,175,55,0.055)]">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.26em] text-[#D4AF37]/85">Perlu Dilengkapi</p>
             <p className="mt-6 font-display text-6xl leading-none text-white/90 md:text-7xl">{contentHealth.needsAttention.length}</p>
-            <p className="mt-4 text-sm leading-6 text-white/45">Proyek yang masih perlu dilengkapi sebelum dipromosikan.</p>
+            <p className="mt-4 text-sm leading-6 text-white/45">Proyek yang masih perlu dilengkapi sebelum diposting.</p>
           </div>
         </div>
 
@@ -593,11 +602,11 @@ export default function AdminDashboardCMS() {
         </div>
       </section>
 
-      <section className="mt-8 rounded-[28px] border border-[#D4AF37]/16 bg-[#D4AF37]/[0.028] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
+      <section id="pembuat-link-posting" className="mt-8 rounded-[28px] border border-[#D4AF37]/16 bg-[#D4AF37]/[0.028] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-2xl">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Link Promosi</p>
-            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Pembuat Link Promosi</h2>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Link Posting</p>
+            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Pembuat Link Posting</h2>
             <p className="mt-4 text-sm leading-6 text-white/52">Buat link portfolio dengan penanda sumber traffic untuk IG, TikTok, Facebook, YouTube Short, dan kanal lainnya.</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42">Medium UTM: social</div>
@@ -636,12 +645,12 @@ export default function AdminDashboardCMS() {
         </div>
       </section>
 
-      <section className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
+      <section id="checklist-publikasi" className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-2xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Analitik Promosi</p>
-            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Performa Link Promosi</h2>
-            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kunjungan dari link promosi yang memakai UTM.</p>
+            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Performa Link Posting</h2>
+            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kunjungan dari link posting yang memakai UTM.</p>
             <p className="mt-2 text-xs leading-5 text-white/40">Data ini hanya menghitung kunjungan dari link yang memiliki UTM.</p>
           </div>
           <div className="flex flex-col items-start gap-2 lg:items-end">
@@ -659,7 +668,7 @@ export default function AdminDashboardCMS() {
         ) : promoSummaryMessage ? (
           <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{promoSummaryMessage}</p>
         ) : promoSummary && promoSummary.total === 0 ? (
-          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada kunjungan promosi. Buat link dari Pembuat Link Promosi, buka link tersebut, lalu klik Muat Ulang.</p>
+          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada kunjungan posting. Buat link dari Pembuat Link Posting, buka link tersebut, lalu klik Muat Ulang.</p>
         ) : promoSummary ? (
           <>
             <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
@@ -690,7 +699,7 @@ export default function AdminDashboardCMS() {
                       </span>
                       <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
                     </div>
-                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kunjungan promosi.</p>}
+                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kunjungan posting.</p>}
                 </div>
               </div>
 
@@ -702,7 +711,7 @@ export default function AdminDashboardCMS() {
                       <span className="break-all text-sm text-white/70">{item.content}</span>
                       <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
                     </div>
-                  )) : <p className="text-sm leading-6 text-white/42">Belum ada label konten promosi.</p>}
+                  )) : <p className="text-sm leading-6 text-white/42">Belum ada label konten posting.</p>}
                 </div>
               </div>
 
@@ -728,7 +737,7 @@ export default function AdminDashboardCMS() {
           <div className="max-w-2xl">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Publikasi Manual</p>
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Status Publikasi Konten</h2>
-            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kanal yang sudah diposting dan performa awal dari link promosi.</p>
+            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kanal yang sudah diposting dan performa awal dari link posting.</p>
           </div>
           <div className="flex flex-col items-start gap-2 lg:items-end">
             <button type="button" onClick={loadPublishingSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
@@ -741,7 +750,7 @@ export default function AdminDashboardCMS() {
         <div className="mt-6 flex flex-wrap gap-2">
           {[
             ['all', 'Semua'],
-            ['not_promoted', 'Belum dipromosikan'],
+            ['not_posted', 'Belum diposting'],
             ['posted', 'Sudah diposting'],
             ['no_visits', 'Belum ada kunjungan'],
           ].map(([value, label]) => (
@@ -757,14 +766,15 @@ export default function AdminDashboardCMS() {
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]/85">Rekomendasi Manual</p>
-                <h3 className="mt-3 font-display text-2xl font-normal leading-tight tracking-[-0.03em] text-white/92">Rekomendasi Prioritas Promosi</h3>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/52">Saran konten yang perlu diprioritaskan berdasarkan checklist publikasi dan kunjungan link promosi.</p>
+                <h3 className="mt-3 font-display text-2xl font-normal leading-tight tracking-[-0.03em] text-white/92">Rekomendasi Prioritas Posting</h3>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/52">Saran konten yang perlu diprioritaskan berdasarkan checklist publikasi dan kunjungan link posting.</p>
               </div>
               <p className="text-xs leading-5 text-white/38">Maksimal 6 rekomendasi teratas.</p>
             </div>
 
             {promotionRecommendations.length > 0 ? (
-              <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <>
+              <div className={`mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2 ${showAllPromotionRecommendations ? '' : '[&>article:nth-child(n+4)]:hidden md:[&>article:nth-child(n+4)]:block'}`}>
                 {promotionRecommendations.map((item) => (
                   <article key={`recommendation:${item.contentType}:${item.slug}`} className="rounded-2xl border border-white/10 bg-black/24 p-5">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -784,6 +794,12 @@ export default function AdminDashboardCMS() {
                   </article>
                 ))}
               </div>
+              {promotionRecommendations.length > 3 ? (
+                <button type="button" onClick={() => setShowAllPromotionRecommendations((current) => !current)} className="mt-5 w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37] md:hidden">
+                  {showAllPromotionRecommendations ? 'Sembunyikan' : `Lihat semua (${promotionRecommendations.length})`}
+                </button>
+              ) : null}
+              </>
             ) : (
               <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada rekomendasi prioritas. Semua konten utama sudah memiliki aktivitas publikasi yang cukup.</p>
             )}
@@ -808,7 +824,8 @@ export default function AdminDashboardCMS() {
               <span>Status</span>
             </div>
             {filteredPublishingItems.length > 0 ? (
-              <div className="divide-y divide-white/[0.07]">
+              <>
+              <div className={`divide-y divide-white/[0.07] ${showAllPublishingItems ? '' : '[&>div:nth-child(n+4)]:hidden md:[&>div:nth-child(n+4)]:grid'}`}>
                 {filteredPublishingItems.map((item) => (
                   <div key={`${item.contentType}:${item.slug}`} className="grid gap-4 px-5 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] lg:grid-cols-[1.2fr_1fr_1fr_0.45fr_0.9fr] lg:items-start">
                     <div>
@@ -833,6 +850,14 @@ export default function AdminDashboardCMS() {
                   </div>
                 ))}
               </div>
+              {filteredPublishingItems.length > 3 ? (
+                <div className="border-t border-white/[0.07] p-4 md:hidden">
+                  <button type="button" onClick={() => setShowAllPublishingItems((current) => !current)} className="w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">
+                    {showAllPublishingItems ? 'Sembunyikan' : `Lihat semua (${filteredPublishingItems.length})`}
+                  </button>
+                </div>
+              ) : null}
+              </>
             ) : (
               <div className="px-5 py-8 text-sm leading-6 text-white/52">Tidak ada data publikasi yang sesuai filter.</div>
             )}
@@ -870,7 +895,8 @@ export default function AdminDashboardCMS() {
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]/85">Perlu Dilengkapi</p>
           </div>
           {attentionPreview.length > 0 ? (
-            <div className="divide-y divide-white/[0.07]">
+            <>
+            <div className={`divide-y divide-white/[0.07] ${showAllAttentionItems ? '' : '[&>div:nth-child(n+4)]:hidden md:[&>div:nth-child(n+4)]:grid'}`}>
               {attentionPreview.map(({ project, reasons }) => (
                 <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] md:grid-cols-[1fr_1.4fr_auto] md:items-center">
                   <div>
@@ -888,8 +914,16 @@ export default function AdminDashboardCMS() {
                 </div>
               ))}
             </div>
+            {attentionPreview.length > 3 ? (
+              <div className="border-t border-white/[0.07] p-4 md:hidden">
+                <button type="button" onClick={() => setShowAllAttentionItems((current) => !current)} className="w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">
+                  {showAllAttentionItems ? 'Sembunyikan' : `Lihat semua (${attentionPreview.length})`}
+                </button>
+              </div>
+            ) : null}
+            </>
           ) : (
-            <div className="px-6 py-8 text-sm leading-6 text-white/52">Semua proyek utama sudah terlihat siap dipromosikan.</div>
+            <div className="px-6 py-8 text-sm leading-6 text-white/52">Semua proyek utama sudah terlihat siap diposting.</div>
           )}
         </div>
       </section>
@@ -943,7 +977,7 @@ export default function AdminDashboardCMS() {
               <span className="text-right">Actions</span>
             </div>
 
-            <div className="divide-y divide-white/[0.07]">
+            <div className={`divide-y divide-white/[0.07] ${showAllProjectsMobile ? '' : '[&>div:nth-child(n+4)]:hidden md:[&>div:nth-child(n+4)]:grid'}`}>
               {filteredProjects.map((project) => (
                 <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] md:items-center">
                   <div>
@@ -980,6 +1014,13 @@ export default function AdminDashboardCMS() {
                 </div>
               ))}
             </div>
+            {filteredProjects.length > 3 ? (
+              <div className="border-t border-white/[0.07] p-4 md:hidden">
+                <button type="button" onClick={() => setShowAllProjectsMobile((current) => !current)} className="w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">
+                  {showAllProjectsMobile ? 'Sembunyikan' : `Lihat semua (${filteredProjects.length})`}
+                </button>
+              </div>
+            ) : null}
             {projects.length > 0 && filteredProjects.length === 0 ? (
               <div className="px-6 py-8 text-sm text-white/52">Tidak ada proyek yang sesuai filter Wawasan.</div>
             ) : null}
