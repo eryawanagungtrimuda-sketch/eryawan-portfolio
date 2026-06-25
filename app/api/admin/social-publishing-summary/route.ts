@@ -77,7 +77,7 @@ function getContentHref(contentType: string, slug: string) {
 }
 
 function getStatus(postedCount: number, totalRequired: number, visitCount: number) {
-  if (postedCount === 0) return 'Belum dipromosikan';
+  if (postedCount === 0) return 'Belum diposting';
   if (postedCount >= 4 && visitCount > 0) return 'Kanal utama sudah aktif';
   if (postedCount < totalRequired && visitCount > 0) return 'Perlu lengkapi kanal';
   if (visitCount > 0) return 'Mulai mendapat kunjungan';
@@ -90,7 +90,7 @@ function getPromotionRecommendation(postedCount: number, totalRequired: number, 
   if (postedCount === 0) {
     return {
       recommendationLabel: 'Prioritas Tinggi',
-      recommendationReason: 'Konten belum dipromosikan di kanal manapun.',
+      recommendationReason: 'Konten belum diposting di kanal manapun.',
       recommendationPriority: 'high',
     };
   }
@@ -106,7 +106,7 @@ function getPromotionRecommendation(postedCount: number, totalRequired: number, 
   if (visitCount > 0 && postedCount < totalRequired) {
     if (missingChannels <= 2) {
       return {
-        recommendationLabel: 'Layak Dipromosikan Ulang',
+        recommendationLabel: 'Layak Diposting Ulang',
         recommendationReason: 'Sudah terbukti mendapat kunjungan, cocok didorong lagi di kanal yang belum aktif.',
         recommendationPriority: 'repost',
       };
