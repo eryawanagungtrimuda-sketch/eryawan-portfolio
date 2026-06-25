@@ -556,6 +556,12 @@ export default function AdminDashboardCMS() {
         <a href="#checklist-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#D4AF37]">Checklist Publikasi</a>
         <a href="#pembuat-link-posting" className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.025] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-white/70">Buat Link Posting</a>
       </nav>
+      <nav aria-label="Aksi cepat desktop dashboard" className="mb-8 hidden items-center gap-3 rounded-full border border-white/10 bg-white/[0.018] p-2 md:flex">
+        <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">Tambah Proyek</Link>
+        <a href="#pembuat-link-posting" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Buat Link Posting</a>
+        <a href="#status-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Status Publikasi</a>
+        <a href="#checklist-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/[0.035] px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">Checklist Publikasi</a>
+      </nav>
       <section>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -734,7 +740,7 @@ export default function AdminDashboardCMS() {
 
       <section id="checklist-publikasi" className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-2xl">
+          <div id="status-publikasi" className="max-w-2xl scroll-mt-24">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Publikasi Manual</p>
             <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Status Publikasi Konten</h2>
             <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kanal yang sudah diposting dan performa awal dari link posting.</p>
