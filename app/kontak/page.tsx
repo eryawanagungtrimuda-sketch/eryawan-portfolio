@@ -161,6 +161,26 @@ export default function KontakPage() {
             />
           </div>
         </div>
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.025] p-5 sm:p-6">
+          <p className="max-w-2xl text-sm leading-7 text-white/58">
+            Untuk keperluan profesional, Anda dapat meminta akses CV lengkap.
+          </p>
+          <TrackedLink
+            href="/request-cv"
+            eventName="cta_click"
+            eventProps={{
+              source: "kontak_page",
+              label: "minta_akses_cv",
+              href_type: "internal",
+            }}
+            data-cta="contact-request-cv"
+            className="mt-4 inline-flex min-h-10 max-w-full items-center justify-center whitespace-normal break-words rounded-full border border-[#D4AF37]/32 bg-[#D4AF37]/[0.06] px-5 py-2.5 text-center font-mono text-[11px] font-black uppercase tracking-[0.14em] text-[#D4AF37] transition hover:border-[#D4AF37]/48 hover:bg-[#D4AF37]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+            aria-label="Minta akses CV lengkap"
+          >
+            Minta Akses CV
+          </TrackedLink>
+        </div>
       </section>
     </main>
   );
