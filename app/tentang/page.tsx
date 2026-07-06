@@ -131,6 +131,17 @@ export default function TentangPage() {
               Lihat Karya dan Prosesnya
             </Button>
           </div>
+          <div className="mt-6 max-w-3xl rounded-2xl border border-[#C8A951]/18 bg-[#C8A951]/[0.045] p-5 sm:p-6">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#D7BD72]">
+              Profil Profesional
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white/62 sm:text-base">
+              Untuk kebutuhan profesional seperti rekrutmen, kolaborasi formal, atau verifikasi pengalaman, CV lengkap tersedia melalui permintaan akses terkurasi.
+            </p>
+            <Button href="/request-cv" variant="secondary" className="mt-5 px-6 py-2.5 text-[11px] tracking-[0.14em]">
+              Minta Akses CV
+            </Button>
+          </div>
         </div>
       </section>
 
