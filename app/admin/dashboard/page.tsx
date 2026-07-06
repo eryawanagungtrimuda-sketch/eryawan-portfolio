@@ -2,6 +2,7 @@ import Link from 'next/link';
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminDashboardCMS from '@/components/admin-dashboard-cms';
 import AdminLogoutButton from '@/components/admin-logout-button';
+import AdminCvAccessRequests from '@/components/admin-cv-access-requests';
 
 export default function AdminDashboardPage() {
   return (
@@ -40,6 +41,7 @@ export default function AdminDashboardPage() {
             <AdminLogoutButton />
           </div>
 
+          <AdminCvAccessRequests />
           <AdminDashboardCMS />
         </div>
       </main>
