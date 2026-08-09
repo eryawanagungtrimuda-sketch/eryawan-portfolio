@@ -1,5 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
+import { absoluteUrl } from '@/lib/site-url';
 import type { ProjectWithArchiveImages } from '@/lib/types';
 
 type Props = {
@@ -13,6 +15,12 @@ function projectConcept(project: ProjectWithArchiveImages) {
 
 function projectCover(project: ProjectWithArchiveImages) {
   return project.cover_image || project.archive_images?.find((image) => image.image_url)?.image_url || null;
+}
+
+function projectGalleryTeaser(project: ProjectWithArchiveImages, cover: string | null) {
+  return (project.archive_images || [])
+    .filter((image) => image.image_url && image.image_url !== cover)
+    .slice(0, 4);
 }
 
 export default function ProjectSheetDocument({ projects, preview = false }: Props) {
@@ -32,27 +40,54 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
       <div className="project-sheet-list">
         {projects.length > 0 ? projects.map((project, index) => {
           const cover = projectCover(project);
+          const galleryTeaser = projectGalleryTeaser(project, cover);
           const concept = projectConcept(project);
           const number = String(index + 1).padStart(2, '0');
+          const projectHref = `/karya/${project.slug}`;
+          const projectUrl = absoluteUrl(projectHref);
 
           return (
             <section className="project-sheet-project" key={project.id}>
-              <div className="project-sheet-image">
-                {cover ? (
-                  <Image
-                    src={cover}
-                    alt={`Cover ${project.title}`}
-                    fill
-                    sizes={preview ? '130mm' : '(min-width: 768px) 58vw, 100vw'}
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                ) : (
-                  <div className="project-sheet-image-fallback" aria-label="Cover project belum tersedia">
-                    <span>{number}</span>
-                    <small>Image forthcoming</small>
+              <div className="project-sheet-visuals">
+                <div className="project-sheet-image">
+                  {cover ? (
+                    <Image
+                      src={cover}
+                      alt={`Cover ${project.title}`}
+                      fill
+                      sizes={preview ? '130mm' : '(min-width: 768px) 58vw, 100vw'}
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                  ) : (
+                    <div className="project-sheet-image-fallback" aria-label="Cover project belum tersedia">
+                      <span>{number}</span>
+                      <small>Image forthcoming</small>
+                    </div>
+                  )}
+                </div>
+
+                <div className="project-sheet-teaser-row">
+                  {galleryTeaser.length > 0 ? (
+                    <div className="project-sheet-gallery" aria-label={`Gallery teaser ${project.title}`}>
+                      {galleryTeaser.map((image, imageIndex) => (
+                        <div className="project-sheet-gallery-thumbnail" key={image.id}>
+                          <Image
+                            src={image.image_url!}
+                            alt={image.alt_text || `${project.title}, gallery ${imageIndex + 1}`}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  <div className="project-sheet-project-link">
+                    <Link href={projectHref}>LIHAT PROYEK LENGKAP →</Link>
+                    <span>{projectUrl.replace(/^https?:\/\//, '')}</span>
                   </div>
-                )}
+                </div>
               </div>
 
               <div className="project-sheet-details">
