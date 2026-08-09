@@ -1,8 +1,9 @@
 .project-sheet-page { min-height: 100vh; overflow-x: clip; background: #f2f1ed; color: #171714; font-family: var(--font-inter); }
 .project-sheet-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 24px 0; }
 .project-sheet-toolbar a { color: #373731; font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; }
-.project-sheet-download, .project-sheet-print-button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .55rem; border: 1px solid #22221e; background: #22221e; padding: .7rem 1.1rem; color: white; font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background .2s, color .2s; }
-.project-sheet-download:hover, .project-sheet-print-button:hover { background: transparent; color: #22221e; }
+.project-sheet-toolbar .project-sheet-download, .project-sheet-print-button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .55rem; border: 1px solid #22221e; background: #22221e; padding: .7rem 1.1rem; color: #f8f7f2; font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; transition: background .2s, color .2s; }
+.project-sheet-toolbar .project-sheet-download:hover, .project-sheet-print-button:hover { background: transparent; color: #22221e; }
+.project-sheet-toolbar .project-sheet-download:focus-visible, .project-sheet-print-button:focus-visible { outline: 2px solid #8a6e22; outline-offset: 3px; }
 .project-sheet-document { position: relative; width: min(1180px, calc(100% - 40px)); margin: 0 auto; overflow: hidden; background: white; padding: clamp(42px, 7vw, 94px); color: #171714; }
 .project-sheet-preview-paper { width: 210mm; min-height: 297mm; margin-bottom: 72px; padding: 18mm 16mm 15mm; box-shadow: 0 20px 70px rgb(23 23 20 / 12%); }
 .project-sheet-heading { display: grid; grid-template-columns: 1.4fr .6fr; align-items: end; gap: 4rem; border-bottom: 1px solid #cacac3; padding-bottom: 3rem; }
