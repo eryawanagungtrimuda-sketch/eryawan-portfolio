@@ -21,7 +21,7 @@
 .project-sheet-project-link a { display: block; color: #292925; font-size: .61rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .project-sheet-project-link a:hover { color: #7a6222; }
 .project-sheet-project-link a:focus-visible { outline: 1px solid #8a6e22; outline-offset: 3px; }
-.project-sheet-project-link span { display: block; margin-top: .38rem; overflow-wrap: anywhere; color: #8a8a82; font-size: .52rem; line-height: 1.35; }
+.project-sheet-project-link span { display: block; margin-top: .38rem; overflow-wrap: anywhere; color: #74746d; font-size: .52rem; line-height: 1.35; }
 .project-sheet-image-fallback { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; color: #85857c; }
 .project-sheet-image-fallback span { font-family: var(--font-display); font-size: 3rem; }
 .project-sheet-image-fallback small { margin-top: .5rem; font-size: .55rem; letter-spacing: .18em; text-transform: uppercase; }
@@ -30,7 +30,7 @@
 .project-sheet-details h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1.4rem, 2vw, 2.05rem); font-weight: 400; letter-spacing: -.02em; line-height: 1.12; overflow-wrap: anywhere; text-wrap: balance; }
 .project-sheet-details dl { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 1rem; margin: 2rem 0 0; }
 .project-sheet-details dt { margin-bottom: .38rem; color: #85857c; font-size: .57rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-.project-sheet-details dd { margin: 0; color: #34342f; font-size: .75rem; line-height: 1.65; }
+.project-sheet-details dd { margin: 0; overflow-wrap: anywhere; color: #34342f; font-size: .75rem; line-height: 1.65; }
 .project-sheet-concept { grid-column: 1 / -1; }
 .project-sheet-empty { padding: 5rem 0; color: #696961; }
 .project-sheet-authorship { display: flex; justify-content: space-between; gap: 1rem; padding-top: 2rem; color: #74746d; font-size: .52rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
@@ -58,13 +58,14 @@
 @media print {
   :root { color-scheme: light; }
   body { overflow: visible !important; background: white !important; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .project-sheet-toolbar, .project-sheet-preview-label { display: none !important; }
   .project-sheet-page { background: white; }
   .project-sheet-document, .project-sheet-preview-paper { width: auto; min-height: 0; margin: 0; padding: 0 0 10mm; overflow: visible; box-shadow: none; }
   .project-sheet-heading { gap: 16mm; padding-bottom: 10mm; }
   .project-sheet-heading h1 { font-size: 8.5mm; }
   .project-sheet-intro { font-size: 7.5pt; line-height: 1.65; }
-  .project-sheet-project { grid-template-columns: 118mm 1fr; gap: 10mm; padding: 10mm 0; }
+  .project-sheet-project { grid-template-columns: 118mm minmax(0, 1fr); gap: 10mm; padding: 10mm 0; }
   .project-sheet-teaser-row { min-height: 12mm; gap: 4mm; margin-top: 3mm; break-inside: avoid; page-break-inside: avoid; }
   .project-sheet-gallery, .project-sheet-preview-paper .project-sheet-gallery { gap: 2.4mm; }
   .project-sheet-gallery-thumbnail, .project-sheet-preview-paper .project-sheet-gallery-thumbnail { width: 12mm; height: 12mm; flex-basis: 12mm; }
@@ -73,7 +74,7 @@
   .project-sheet-details h2 { font-size: 11.5pt; line-height: 1.15; }
   .project-sheet-number { margin-bottom: 4mm; }
   .project-sheet-details dl { margin-top: 5.5mm; gap: 4mm; }
-  .project-sheet-details dd { font-size: 7.5pt; line-height: 1.45; }
+  .project-sheet-details dd { font-size: 7.5pt; line-height: 1.45; orphans: 3; widows: 3; }
   .project-sheet-authorship { position: fixed; right: 0; bottom: 0; left: 0; padding: 3mm 0 0; background: white; }
   .project-sheet-watermark { position: fixed; right: 0; top: 0; font-size: 30pt; }
 }
