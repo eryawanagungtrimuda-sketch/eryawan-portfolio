@@ -13,6 +13,15 @@
 .project-sheet-list { width: 100%; }
 .project-sheet-project { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(240px, .55fr); gap: clamp(2rem, 5vw, 5rem); break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #cacac3; padding: clamp(40px, 6vw, 76px) 0; }
 .project-sheet-image { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #e9e8e2; }
+.project-sheet-visuals { min-width: 0; }
+.project-sheet-teaser-row { display: flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 1.25rem; margin-top: 1rem; }
+.project-sheet-gallery { display: flex; flex: 0 0 auto; gap: .55rem; }
+.project-sheet-gallery-thumbnail { position: relative; width: 46px; height: 46px; flex: 0 0 46px; overflow: hidden; border-radius: 999px; background: #e9e8e2; }
+.project-sheet-project-link { min-width: 0; margin-left: auto; text-align: right; }
+.project-sheet-project-link a { display: block; color: #292925; font-size: .58rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.project-sheet-project-link a:hover { color: #7a6222; }
+.project-sheet-project-link a:focus-visible { outline: 1px solid #8a6e22; outline-offset: 3px; }
+.project-sheet-project-link span { display: block; margin-top: .32rem; overflow-wrap: anywhere; color: #85857c; font-size: .5rem; line-height: 1.35; }
 .project-sheet-image-fallback { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; color: #85857c; }
 .project-sheet-image-fallback span { font-family: var(--font-display); font-size: 3rem; }
 .project-sheet-image-fallback small { margin-top: .5rem; font-size: .55rem; letter-spacing: .18em; text-transform: uppercase; }
@@ -34,6 +43,8 @@
   .project-sheet-heading { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 2.25rem; }
   .project-sheet-heading h1 { font-size: 2.85rem; }
   .project-sheet-project { grid-template-columns: minmax(0, 1fr); gap: 1.7rem; padding: 38px 0; }
+  .project-sheet-teaser-row { flex-wrap: wrap; align-items: flex-end; }
+  .project-sheet-gallery-thumbnail { width: 42px; height: 42px; flex-basis: 42px; }
   .project-sheet-number { margin-bottom: 1rem; }
   .project-sheet-details h2 { font-size: 2.025rem; }
   .project-sheet-details dl { margin-top: 1.8rem; }
@@ -52,6 +63,11 @@
   .project-sheet-heading h1 { font-size: 14mm; }
   .project-sheet-intro { font-size: 8pt; }
   .project-sheet-project { grid-template-columns: 118mm 1fr; gap: 10mm; padding: 10mm 0; }
+  .project-sheet-teaser-row { min-height: 9mm; gap: 4mm; margin-top: 3mm; break-inside: avoid; page-break-inside: avoid; }
+  .project-sheet-gallery { gap: 1.8mm; }
+  .project-sheet-gallery-thumbnail { width: 9mm; height: 9mm; flex-basis: 9mm; }
+  .project-sheet-project-link a { font-size: 5.5pt; }
+  .project-sheet-project-link span { margin-top: 1mm; font-size: 4.8pt; }
   .project-sheet-details h2 { font-size: 16.2pt; }
   .project-sheet-number { margin-bottom: 5mm; }
   .project-sheet-details dl { margin-top: 7mm; gap: 4mm; }
