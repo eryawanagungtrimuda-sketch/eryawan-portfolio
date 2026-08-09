@@ -8,7 +8,7 @@
 .project-sheet-preview-paper { width: 210mm; min-height: 297mm; margin-bottom: 72px; padding: 18mm 16mm 15mm; box-shadow: 0 20px 70px rgb(23 23 20 / 12%); }
 .project-sheet-heading { display: grid; grid-template-columns: 1.4fr .6fr; align-items: end; gap: 4rem; border-bottom: 1px solid #cacac3; padding-bottom: 3rem; }
 .project-sheet-kicker { margin: 0 0 1.5rem; color: #68685f; font-size: .62rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
-.project-sheet-heading h1 { margin: 0; font-family: var(--font-display); font-size: clamp(3rem, 6vw, 6rem); font-weight: 400; letter-spacing: -.04em; line-height: .94; }
+.project-sheet-heading h1 { margin: 0; font-family: var(--font-display); font-size: clamp(2.6rem, 5.2vw, 5.2rem); font-weight: 400; letter-spacing: -.04em; line-height: .94; }
 .project-sheet-intro { max-width: 26rem; margin: 0; color: #55554e; font-size: .82rem; line-height: 1.75; }
 .project-sheet-list { width: 100%; }
 .project-sheet-project { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(240px, .55fr); gap: clamp(2rem, 5vw, 5rem); break-inside: avoid; page-break-inside: avoid; border-bottom: 1px solid #cacac3; padding: clamp(40px, 6vw, 76px) 0; }
@@ -18,7 +18,7 @@
 .project-sheet-image-fallback small { margin-top: .5rem; font-size: .55rem; letter-spacing: .18em; text-transform: uppercase; }
 .project-sheet-details { min-width: 0; align-self: center; }
 .project-sheet-number { margin: 0 0 2.1rem; color: #76766e; font-size: .7rem; letter-spacing: .16em; }
-.project-sheet-details h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1.8rem, 3.2vw, 3.25rem); font-weight: 400; letter-spacing: -.025em; line-height: 1.05; overflow-wrap: anywhere; }
+.project-sheet-details h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1.62rem, 2.88vw, 2.925rem); font-weight: 400; letter-spacing: -.025em; line-height: 1.05; overflow-wrap: anywhere; }
 .project-sheet-details dl { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 1rem; margin: 2.5rem 0 0; }
 .project-sheet-details dt { margin-bottom: .38rem; color: #85857c; font-size: .57rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
 .project-sheet-details dd { margin: 0; color: #34342f; font-size: .75rem; line-height: 1.65; }
@@ -32,10 +32,10 @@
   .project-sheet-toolbar { width: calc(100% - 32px); align-items: flex-start; }
   .project-sheet-document, .project-sheet-preview-paper { width: 100%; min-height: 0; margin: 0; padding: 38px 20px; box-shadow: none; }
   .project-sheet-heading { grid-template-columns: 1fr; gap: 2rem; padding-bottom: 2.25rem; }
-  .project-sheet-heading h1 { font-size: 3.25rem; }
+  .project-sheet-heading h1 { font-size: 2.85rem; }
   .project-sheet-project { grid-template-columns: minmax(0, 1fr); gap: 1.7rem; padding: 38px 0; }
   .project-sheet-number { margin-bottom: 1rem; }
-  .project-sheet-details h2 { font-size: 2.25rem; }
+  .project-sheet-details h2 { font-size: 2.025rem; }
   .project-sheet-details dl { margin-top: 1.8rem; }
   .project-sheet-authorship { flex-direction: column; gap: .45rem; }
   .project-sheet-watermark { right: 1.4rem; top: 1.2rem; }
@@ -49,10 +49,10 @@
   .project-sheet-page { background: white; }
   .project-sheet-document, .project-sheet-preview-paper { width: auto; min-height: 0; margin: 0; padding: 0 0 10mm; overflow: visible; box-shadow: none; }
   .project-sheet-heading { gap: 16mm; padding-bottom: 10mm; }
-  .project-sheet-heading h1 { font-size: 16mm; }
+  .project-sheet-heading h1 { font-size: 14mm; }
   .project-sheet-intro { font-size: 8pt; }
   .project-sheet-project { grid-template-columns: 118mm 1fr; gap: 10mm; padding: 10mm 0; }
-  .project-sheet-details h2 { font-size: 18pt; }
+  .project-sheet-details h2 { font-size: 16.2pt; }
   .project-sheet-number { margin-bottom: 5mm; }
   .project-sheet-details dl { margin-top: 7mm; gap: 4mm; }
   .project-sheet-details dd { font-size: 7.5pt; line-height: 1.45; }
