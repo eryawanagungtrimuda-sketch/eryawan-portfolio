@@ -21,11 +21,11 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
       <div className="project-sheet-watermark" aria-hidden="true">EA</div>
       <header className="project-sheet-heading">
         <div>
-          <p className="project-sheet-kicker">Selected interior works · Project sheet</p>
-          <h1>Spaces shaped<br />with intention.</h1>
+          <p className="project-sheet-kicker">KARYA DESAIN TERPILIH · PROJECT SHEET</p>
+          <h1>Bentuk yang bermakna, ruang yang berkarakter.</h1>
         </div>
         <p className="project-sheet-intro">
-          A concise selection of interior projects by Eryawan Agung Trimuda, presented through context, style, and design direction.
+          Pilihan karya desain Eryawan Agung Trimuda, mencakup arsitektur dan interior dengan pendekatan yang merespons konteks, bentuk, dan pengalaman ruang.
         </p>
       </header>
 

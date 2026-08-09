@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Project Sheet | Eryawan Agung Trimuda',
-  description: 'Selected interior design projects by Eryawan Agung Trimuda in a concise editorial project sheet.',
+  description: 'Pilihan karya desain Eryawan Agung Trimuda, mencakup arsitektur dan interior dengan pendekatan yang merespons konteks, bentuk, dan pengalaman ruang.',
   alternates: { canonical: absoluteUrl('/project-sheet') },
 };
 
