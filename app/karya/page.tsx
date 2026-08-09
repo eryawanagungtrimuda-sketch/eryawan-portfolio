@@ -48,6 +48,7 @@ export default async function KaryaPage() {
             Setiap proyek dibaca sebagai studi kasus: dimulai dari konteks masalah, keputusan desain yang diambil, hingga dampak yang dihasilkan.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/project-sheet" className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2.5 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]">View Project Sheet</Link>
             <Link href="/wawasan" className="inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37]/20">Baca Wawasan</Link>
             <Link href="/mulai-project" className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2.5 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/45 hover:text-[#D4AF37]">Ajukan Kolaborasi</Link>
           </div>
