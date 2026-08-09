@@ -56,6 +56,7 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
                       alt={`Cover ${project.title}`}
                       fill
                       sizes={preview ? '130mm' : '(min-width: 768px) 58vw, 100vw'}
+                      quality={90}
                       className="object-cover"
                       priority={index === 0}
                     />
@@ -76,7 +77,8 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
                             src={image.image_url!}
                             alt={image.alt_text || `${project.title}, gallery ${imageIndex + 1}`}
                             fill
-                            sizes="48px"
+                            sizes="96px"
+                            quality={85}
                             className="object-cover"
                           />
                         </div>
