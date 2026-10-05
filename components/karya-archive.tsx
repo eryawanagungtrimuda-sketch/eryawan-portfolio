@@ -26,7 +26,6 @@ function normalize(value?: string | null) {
   return (value || '').trim().toLowerCase();
 }
 
-
 const displayLabelMap: Record<string, string> = {
   'Commercial Interior': 'Interior Komersial',
   'Office / Workspace Interior': 'Interior Kantor / Ruang Kerja',
@@ -36,7 +35,6 @@ const displayLabelMap: Record<string, string> = {
   Minimalist: 'Minimalis',
   Modern: 'Modern',
 };
-
 
 function getDisplayLabel(value?: string | null) {
   const normalized = (value || '').trim();
@@ -137,8 +135,8 @@ function FilterChips({ label, options, value, onChange }: { label: string; optio
         {options.map((item) => {
           const active = item === value;
           return (
-            <button key={item} type="button" aria-pressed={active} aria-label={`${label}: ${item}${active ? ' dipilih' : ''}`} onClick={() => onChange(item)} className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/55 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${
-              active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
+            <button key={item} type="button" aria-pressed={active} aria-label={`${label}: ${item}${active ? ' dipilih' : ''}`} onClick={() => onChange(item)} className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 text-center font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-300 ${
+              active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
             }`}>
               {item}
             </button>
@@ -269,7 +267,6 @@ export default function KaryaArchive({ projects }: Props) {
   const getProjectShareCopy = (project: Project) => {
     const projectUrl = `${shareBase}/karya/${project.slug}`;
     const teaser = truncateText(getProjectTeaser(project), 110);
-    // Prefilled social copy combines title + canonical URL + teaser for quick sharing.
     return `Lihat studi kasus ini dari eryawanagung.my.id: ${project.title} - ${projectUrl}${teaser ? ` | ${teaser}` : ''}`;
   };
 
@@ -336,7 +333,7 @@ export default function KaryaArchive({ projects }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="Filter Karya"
-        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-x-hidden overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 font-sans shadow-[0_-24px_80px_rgba(0,0,0,0.55)]"
+        className="absolute inset-x-0 bottom-0 max-h-[82dvh] overflow-x-hidden overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#0B0B0A] p-5 pb-24 font-sans shadow-[0_-24px_80px_rgba(0,0,0,0.45)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-white/20" />
@@ -345,7 +342,7 @@ export default function KaryaArchive({ projects }: Props) {
             <h2 className="font-sans text-lg font-semibold text-white">Filter Karya</h2>
             <p className="mt-1 text-sm text-white/58">Pilih filter agar Anda lebih cepat menemukan karya yang relevan.</p>
           </div>
-          <button type="button" aria-label="Tutup panel filter karya" onClick={closeMobileFilter} className="rounded-full border border-white/15 p-2 text-white/80 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0A]">
+          <button type="button" aria-label="Tutup panel filter karya" onClick={closeMobileFilter} className="rounded-full border border-white/15 p-2 text-white/80 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
             <X size={16} />
           </button>
         </div>
@@ -366,7 +363,9 @@ export default function KaryaArchive({ projects }: Props) {
                     onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
                     aria-pressed={active}
                     aria-label={`Area / Ruang: ${tag}${active ? ' dipilih' : ''}`}
-                    className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/55 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}
+                    className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-300 ${
+                      active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
+                    }`}
                   >
                     {tag}
                   </button>
@@ -376,16 +375,23 @@ export default function KaryaArchive({ projects }: Props) {
           </div>
           <div>
             <p className="mb-3 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</p>
-            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40">
-              <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
-              <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-2xl border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/78 outline-none focus:border-[#D4AF37]/45">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="year_desc">Tahun Terbaru</option>
+              <option value="year_asc">Tahun Terlama</option>
+              <option value="status">Status Proyek</option>
             </select>
           </div>
         </div>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B0B0A] from-70% to-transparent px-5 pb-5 pt-8">
           <div className="pointer-events-auto grid grid-cols-2 gap-3">
-            <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="premium-interactive min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/85 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0A]">Reset</button>
-            <button type="button" onClick={closeMobileFilter} className="premium-interactive min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0B0A]">Terapkan</button>
+            <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="premium-interactive min-h-11 rounded-full border border-white/15 bg-transparent px-4 py-2 font-sans text-sm font-semibold text-white/76 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">
+              Reset
+            </button>
+            <button type="button" onClick={closeMobileFilter} className="premium-interactive min-h-11 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-2 font-sans text-sm font-semibold text-[#F4E4B2]">
+              Terapkan
+            </button>
           </div>
         </div>
       </div>
@@ -393,16 +399,16 @@ export default function KaryaArchive({ projects }: Props) {
   ) : null;
 
   if (projects.length === 0) {
-    return <section className="pb-24"><div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center md:p-12"><div className="max-w-xl"><p className="font-display text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-white/90 md:text-5xl">Belum ada karya dipublikasikan</p><p className="mx-auto mt-5 max-w-lg text-base leading-7 text-white/60 md:text-lg">Portofolio sedang diperbarui. Anda tetap bisa memulai diskusi proyek agar kebutuhan ruang Anda dipetakan lebih awal.</p><a href="/mulai-project" className="mt-6 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37]">Mulai Percakapan Proyek</a></div></div></section>;
+    return <section className="pb-24"><div className="flex min-h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center md:p-12"><div className="max-w-md"><p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Karya</p><h2 className="mt-4 font-display text-3xl text-white/90">Belum ada konten yang dipublikasikan.</h2><p className="mt-3 text-sm leading-7 text-white/58">Konten karya akan tampil di sini setelah dipublikasikan oleh admin.</p></div></div></section>;
   }
 
   return (
     <section className="mobile-scroll-section mobile-section-breathing pb-28 md:pb-24">
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] transition motion-safe:duration-700 motion-safe:ease-out motion-safe:transform-gpu motion-safe:hover:border-[#C8A951]/35 motion-safe:hover:bg-white/[0.04] md:p-7 lg:p-8">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.015] p-5 shadow-[0_28px_60px_rgba(0,0,0,0.22)] transition motion-safe:duration-700 motion-safe:ease-out hover:border-white/15">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-end">
           <div>
             <label htmlFor="karya-search" className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Cari karya berdasarkan konteks</label>
-            <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-3.5 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/30 hover:bg-white/[0.035] focus-within:border-[#D4AF37]/40 focus-within:shadow-[0_0_0_1px_rgba(212,175,55,0.16)]">
+            <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-3.5 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#C8A951]/30 focus-within:border-[#D4AF37]/45 focus-within:bg-black/35">
               <Search size={17} className="text-white/44" />
               <input
                 id="karya-search"
@@ -421,7 +427,7 @@ export default function KaryaArchive({ projects }: Props) {
                   type="button"
                   aria-label="Hapus pencarian"
                   onClick={handleClearSearch}
-                  className="rounded-full border border-transparent p-1 text-white/45 transition hover:border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866]"
+                  className="rounded-full border border-transparent p-1 text-white/45 transition hover:border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/35 focus-visible:outline-none"
                 >
                   <X size={15} />
                 </button>
@@ -432,9 +438,12 @@ export default function KaryaArchive({ projects }: Props) {
 
           <div className="hidden lg:block">
             <label className="mb-3 block font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#C8A951]">Urutkan</label>
-            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/5 bg-[#090909] px-4 py-3 font-sans text-sm text-white/64 outline-none transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus:border-[#D4AF37]/40">
-              <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
-              <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="w-full rounded-2xl border border-white/5 bg-[#090909] px-4 py-3 font-sans text-sm text-white/78 outline-none transition focus:border-[#D4AF37]/45">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="year_desc">Tahun Terbaru</option>
+              <option value="year_asc">Tahun Terlama</option>
+              <option value="status">Status Proyek</option>
             </select>
           </div>
         </div>
@@ -447,25 +456,32 @@ export default function KaryaArchive({ projects }: Props) {
               aria-expanded={hasSearchQuery ? undefined : isMobileFilterOpen}
               aria-controls={hasSearchQuery ? undefined : 'karya-mobile-filter-sheet'}
               onClick={handleMobilePrimaryAction}
-              className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] ${hasSearchQuery ? 'border-[#D4AF37]/50 bg-[#D4AF37]/20 text-[#F0DA8B] shadow-[0_10px_24px_rgba(212,175,55,0.2)] hover:bg-[#D4AF37]/25' : 'border-[#D4AF37]/35 text-[#D4AF37] hover:bg-[#D4AF37]/10'}`}
+              className={`min-h-11 rounded-full border px-4 py-2 font-sans text-sm font-semibold transition active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 ${
+                activeFilterCount > 0 ? 'border-[#D4AF37]/35 bg-[#D4AF37]/10 text-[#F4E4B2]' : 'border-white/10 bg-transparent text-white/76 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'
+              }`}
             >
               {hasSearchQuery ? 'Cari' : activeFilterCount > 0 ? `Filter ${activeFilterCount}` : 'Filter'}
             </button>
-            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-full border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/72 outline-none focus:border-[#D4AF37]/40 sm:max-w-[220px]">
-              <option value="newest">Terbaru</option><option value="oldest">Terlama</option>
-              <option value="year_desc">Tahun Terbaru</option><option value="year_asc">Tahun Terlama</option><option value="status">Status Proyek</option>
+            <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)} className="min-h-11 w-full rounded-full border border-white/10 bg-[#090909] px-4 py-2 font-sans text-sm text-white/78 outline-none focus:border-[#D4AF37]/45">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="year_desc">Tahun Terbaru</option>
+              <option value="year_asc">Tahun Terlama</option>
+              <option value="status">Status Proyek</option>
             </select>
           </div>
           <p id="karya-result-summary-mobile" aria-live="polite" className="font-sans text-sm text-white/66">{filteredProjects.length} karya relevan ditemukan</p>
           {mobileActiveChips.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2">
               {mobileActiveChips.map((chip) => (
-                <button key={chip.key} type="button" aria-label={`Hapus filter ${chip.label}`} onClick={chip.onRemove} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-3 py-1.5 font-sans text-xs font-semibold text-[#E2C866] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]">
+                <button key={chip.key} type="button" aria-label={`Hapus filter ${chip.label}`} onClick={chip.onRemove} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/8 px-2.5 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-[#F4E4B2]">
                   <span className="min-w-0 break-words">{chip.label}</span>
                   <span aria-hidden>×</span>
                 </button>
               ))}
-              {mobileActiveChips.length > 0 ? <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline-offset-4 hover:text-[#D4AF37] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]">Reset semua</button> : null}
+              <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="font-sans text-xs font-semibold text-white/70 underline decoration-white/35 underline-offset-4">
+                Reset
+              </button>
             </div>
           ) : null}
         </div>
@@ -475,10 +491,23 @@ export default function KaryaArchive({ projects }: Props) {
             <p className="mb-2 font-sans text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]">Filter Utama</p>
             <h3 className="font-sans text-lg font-semibold text-white/92">Area / Ruang</h3>
             <p className="mt-1 font-sans text-sm text-white/60">Pilih area yang ingin Anda eksplorasi terlebih dahulu.</p>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
               {areaTagOptions.map((tag) => {
                 const active = selectedAreaTags.includes(tag);
-                return <button key={tag} type="button" aria-pressed={active} aria-label={`Area / Ruang: ${tag}${active ? ' dipilih' : ''}`} onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])} className={`min-h-11 max-w-full break-words rounded-[999px] border px-3.5 py-2 font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-500 motion-safe:ease-out focus-visible:border-[#D4AF37]/45 focus-visible:bg-[#D4AF37]/10 focus-visible:text-[#E2C866] ${active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50  hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'}`}>{tag}</button>;
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    aria-pressed={active}
+                    aria-label={`Area / Ruang: ${tag}${active ? ' dipilih' : ''}`}
+                    onClick={() => setSelectedAreaTags((prev) => prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag])}
+                    className={`min-h-11 rounded-[999px] border px-3.5 py-2 text-center font-sans text-[10px] font-black uppercase leading-relaxed tracking-[0.12em] transition-all motion-safe:duration-300 ${
+                      active ? 'border-[#D4AF37]/45 bg-[#D4AF37]/10 text-[#D4AF37]' : 'border-white/5 text-white/50 hover:border-[#D4AF37]/28 hover:text-[#D4AF37] hover:bg-white/[0.035]'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                );
               })}
             </div>
           </div>
@@ -489,8 +518,8 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
 
         <div className="mt-6 hidden border-t border-white/10 pt-6 lg:block">
-          <button type="button" aria-expanded={isDesktopAdvancedOpen} aria-controls="karya-advanced-filters-panel" onClick={() => setIsDesktopAdvancedOpen((prev) => !prev)} className="flex w-full min-w-0 items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-3 text-left transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] focus-visible:border-[#D4AF37]/40">
-            <span className="min-w-0"><span className="block font-sans text-[10px] font-black uppercase tracking-[0.2em] text-[#C8A951]">Filter Lanjutan</span><span className="mt-1 block break-words font-sans text-sm text-white/70">Kategori Proyek, Kategori Desain, dan Status Proyek</span></span>
+          <button type="button" aria-expanded={isDesktopAdvancedOpen} aria-controls="karya-advanced-filters-panel" onClick={() => setIsDesktopAdvancedOpen((prev) => !prev)} className="flex w-full items-center justify-between gap-4 rounded-[20px] border border-white/10 bg-white/[0.015] px-4 py-3 text-left transition hover:border-[#D4AF37]/28">
+            <span className="min-w-0"><span className="block font-sans text-[10px] font-black uppercase tracking-[0.2em] text-[#C8A951]">Filter Lanjutan</span><span className="mt-1 block break-words text-sm text-white/62">Lebih banyak opsi untuk kategori, desain, dan status proyek.</span></span>
             <span aria-hidden className="font-sans text-xl leading-none text-[#D4AF37]">{isDesktopAdvancedOpen ? '−' : '+'}</span>
           </button>
           <div id="karya-advanced-filters-panel" className={isDesktopAdvancedOpen ? 'mt-5 grid grid-cols-3 gap-6' : 'hidden'}>
@@ -505,45 +534,78 @@ export default function KaryaArchive({ projects }: Props) {
             <p id="karya-result-summary-desktop" aria-live="polite" className="font-sans text-sm text-white/66">Menampilkan {filteredProjects.length} dari {projects.length} karya yang tersedia</p>
             {activeFilters.length > 0 ? <div className="mt-3 flex flex-wrap gap-2">{activeFilters.map((item) => <Badge key={item}>{item}</Badge>)}</div> : null}
           </div>
-          <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="premium-interactive min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-sans text-[10px] font-black uppercase tracking-[0.16em] text-white/62 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#D4AF37]/30 hover:bg-white/[0.035] hover:text-[#D4AF37] focus-visible:border-[#D4AF37]/40 active:translate-y-0 active:scale-[0.98]">Reset Filter</button>
+          <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="premium-interactive min-h-11 rounded-[999px] border border-white/5 px-4 py-2 font-sans text-sm font-semibold text-white/72 hover:border-[#D4AF37]/25 hover:text-[#D4AF37]">
+            Reset filter
+          </button>
         </div>
       </div>
       {mounted && mobileFilterSheet ? createPortal(mobileFilterSheet, document.body) : null}
 
       <div ref={resultsRef}>
-        {filteredProjects.length === 0 ? <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center"><div><p className="max-w-md text-lg leading-8 text-white/66">Belum ada karya yang cocok dengan kombinasi filter ini.</p><button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="mt-5 min-h-11 rounded-full border border-[#D4AF37]/40 px-4 py-2 font-sans text-sm font-semibold text-[#D4AF37] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]">Reset Filter</button></div></div> : (
+        {filteredProjects.length === 0 ? (
+          <div className="mt-10 flex min-h-[260px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.018] p-8 text-center">
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Hasil tidak ditemukan</p>
+              <h3 className="mt-4 font-display text-3xl text-white/90">Coba ubah kriteria filter.</h3>
+              <p className="mt-3 text-sm leading-7 text-white/58">Tidak ada karya yang cocok dengan kombinasi filter yang Anda pilih saat ini.</p>
+              <button type="button" aria-label="Reset semua filter karya" onClick={resetFilters} className="mt-6 rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#F4E4B2] transition hover:border-[#D4AF37]/55 hover:bg-[#D4AF37]/15">
+                Reset filter
+              </button>
+            </div>
+          </div>
+        ) : (
           <div className="mt-12 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
             {filteredProjects.map((project, index) => {
-            const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
-            const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain saya.`);
-            const { visible: visibleAreaTags, overflow: areaOverflow } = limitedAreaTags(project);
-            const thumbnail = getProjectArchiveThumbnail(project, selectedAreaTags);
-            const visualBadgeLabel = selectedAreaTags.length === 1 && thumbnail.matchedAreaTag ? `Sesuai: ${thumbnail.matchedAreaTag}` : 'Visual sesuai filter';
-            return <article key={project.id} style={{ '--reveal-delay': `${Math.min(index * 90, 450)}ms`, '--premium-card-border': index === 0 ? 'rgba(212, 175, 55, 0.42)' : 'rgba(255, 255, 255, 0.105)' } as CSSProperties} className={`reveal-on-scroll mobile-card-breathing mobile-card-reveal premium-oval-card premium-oval-frame group relative flex h-full flex-col border border-transparent bg-gradient-to-br from-white/[0.035] via-[#15120b]/[0.18] to-black/30 shadow-[0_18px_46px_rgba(0,0,0,0.18)] transition-all motion-safe:duration-500 motion-safe:ease-out hover:-translate-y-1 hover:bg-white/[0.045] hover:shadow-[0_22px_52px_rgba(0,0,0,0.28)] ${index === 0 ? 'md:col-span-2 xl:col-span-2' : ''}`}>
-              {thumbnail.imageUrl ? (
-                <button type="button" onClick={() => setLightboxImage({ src: thumbnail.imageUrl!, alt: thumbnail.altText })} className="premium-oval-media-top relative aspect-square border-b border-white/[0.08] bg-[#11100d]">
-                  <img src={thumbnail.imageUrl} alt={thumbnail.altText} className="h-full w-full object-cover opacity-90 transition duration-700 motion-safe:ease-out group-hover:opacity-100" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                  <span className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/38 to-transparent" />
-                  {thumbnail.isFilterMatchedImage ? <span className="absolute left-4 top-4 rounded-full border border-[#D4AF37]/35 bg-[#0B0A08]/82 px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-[#E2C866] shadow-[0_8px_20px_rgba(0,0,0,0.26)]">{visualBadgeLabel}</span> : null}
-                </button>
-              ) : <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/[0.08] bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] px-6 text-center text-sm text-white/46">Cover image belum tersedia</div>}
-              <div className="flex flex-1 flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
-                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                  <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/90">Studi Kasus / {String(index + 1).padStart(2, '0')}</p>
-                  <span className="h-px min-w-12 flex-1 bg-gradient-to-r from-[#D4AF37]/28 to-transparent" aria-hidden="true" />
-                  <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Karya Terpilih</p>
-                </div>
-                <h2 className="font-display mt-5 line-clamp-2 max-w-2xl text-[1.9rem] font-normal leading-[1.06] tracking-[-0.035em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
-                {getProjectTeaser(project) ? <p className="mt-4 font-sans text-sm leading-[1.78] text-white/64 md:text-[15px]">{truncateText(getProjectTeaser(project), 132)}</p> : null}
-                <p className="mt-3 line-clamp-2 border-l border-[#D4AF37]/22 pl-3 font-sans text-xs leading-relaxed text-white/45">{truncateText(getProjectShareCopy(project), 150)}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-2 overflow-hidden border-t border-white/[0.075] pt-5 text-white/58"><Badge>{getDisplayLabel(project.category || project.design_category) || 'Uncategorized'}</Badge><Badge>{getProjectStatus(project)}</Badge><Badge>{String(getProjectYear(project))}</Badge>{visibleAreaTags.map((tag) => <Badge key={`${project.id}-area-${normalize(tag)}`}>{getAreaTagLabel(tag)}</Badge>)}{areaOverflow > 0 ? <Badge>{`+${areaOverflow}`}</Badge> : null}</div>
-                <div className="mt-auto flex flex-wrap gap-2.5 pt-7">
-                  <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-3 whitespace-normal break-words text-center rounded-[999px] border border-[#D4AF37]/42 bg-[#D4AF37]/[0.055] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-[#E2C866] transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-[#E0BF61]/55 hover:bg-[#D4AF37]/10 hover:text-[#F0D980] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] active:translate-y-0 active:scale-[0.98]">Lihat Proses & Hasil <ArrowUpRight size={16} /></Link>
-                  <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal break-words text-center rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">Email <Mail size={14} /></a>
-                  <a href={`https://wa.me/?text=${encodeURIComponent(`Halo, saya tertarik membahas karya "${project.title}" dan peluang kolaborasinya.`)}`} target="_blank" rel="noopener noreferrer" className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-2 whitespace-normal break-words text-center rounded-[999px] border border-white/[0.08] px-4 py-2 font-mono text-[11px] font-black uppercase tracking-[0.2em] text-white/64 transition-all motion-safe:duration-500 motion-safe:ease-out hover:border-white/20 hover:bg-white/[0.03] hover:text-white active:translate-y-0 active:scale-[0.98]">WhatsApp</a>
-                </div>
-              </div>
-            </article>;
+              const encodedSubject = encodeURIComponent(`Pertanyaan tentang project: ${project.title}`);
+              const encodedBody = encodeURIComponent(`Halo, saya tertarik dengan project "${project.title}" di portfolio Eryawan Agung.\n\nSaya ingin berdiskusi lebih lanjut mengenai kebutuhan desain ruang saya.\n\nTerima kasih.`);
+              const { visible: visibleAreaTags, overflow: areaOverflow } = limitedAreaTags(project);
+              const thumbnail = getProjectArchiveThumbnail(project, selectedAreaTags);
+              const visualBadgeLabel = selectedAreaTags.length === 1 && thumbnail.matchedAreaTag ? `Sesuai: ${thumbnail.matchedAreaTag}` : 'Visual sesuai filter';
+              return (
+                <article key={project.id} style={{ '--reveal-delay': `${Math.min(index * 90, 450)}ms`, '--premium-card-border': index === 0 ? 'rgba(212, 175, 55, 0.42)' : 'rgba(255, 255, 255, 0.08)' } as CSSProperties} className="reveal-on-scroll premium-oval-card premium-card-hover group flex flex-col overflow-hidden rounded-[26px] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(16,14,12,0.96),rgba(9,8,8,0.94))] shadow-[0_20px_55px_rgba(0,0,0,0.24)]">
+                  {thumbnail.imageUrl ? (
+                    <button type="button" onClick={() => setLightboxImage({ src: thumbnail.imageUrl!, alt: thumbnail.altText })} className="premium-oval-media-top relative aspect-square border-b border-white/[0.08] bg-[#0d0b09] text-left">
+                      <img src={thumbnail.imageUrl} alt={thumbnail.altText} className="h-full w-full object-cover opacity-90 transition duration-700 motion-safe:ease-out group-hover:opacity-100" loading="lazy" decoding="async" />
+                      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/38 to-transparent" />
+                      {thumbnail.isFilterMatchedImage ? <span className="absolute left-4 top-4 rounded-full border border-[#D4AF37]/35 bg-[#0B0A08]/82 px-3 py-1.5 font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-[#F4E4B2]">{visualBadgeLabel}</span> : null}
+                    </button>
+                  ) : (
+                    <div className="premium-oval-media-top aspect-square flex items-center justify-center border-b border-white/[0.08] bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] px-6 text-center">
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Portfolio</p>
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col px-5 pb-5 pt-5 md:px-6 md:pb-6 md:pt-6">
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                      <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/90">Studi Kasus / {String(index + 1).padStart(2, '0')}</p>
+                      <span className="h-px min-w-12 flex-1 bg-gradient-to-r from-[#D4AF37]/28 to-transparent" aria-hidden="true" />
+                      <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-white/38">Karya Terpilih</p>
+                    </div>
+                    <h2 className="font-display mt-5 line-clamp-2 max-w-2xl text-[1.9rem] font-normal leading-[1.06] tracking-[-0.035em] text-white/95 md:text-[2.2rem]">{project.title}</h2>
+                    {getProjectTeaser(project) ? <p className="mt-4 font-sans text-sm leading-[1.78] text-white/64 md:text-[15px]">{truncateText(getProjectTeaser(project), 132)}</p> : null}
+                    <p className="mt-3 line-clamp-2 border-l border-[#D4AF37]/22 pl-3 font-sans text-xs leading-relaxed text-white/45">{truncateText(getProjectShareCopy(project), 150)}</p>
+                    <div className="mt-6 flex flex-wrap items-center gap-2 overflow-hidden border-t border-white/[0.075] pt-5 text-white/58">
+                      <Badge>{getDisplayLabel(project.category || project.design_category || 'Karya')}</Badge>
+                      <Badge>{getDisplayLabel(project.design_style || project.design_category || 'Desain')}</Badge>
+                    </div>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {visibleAreaTags.map((tag) => (
+                        <span key={tag} className="rounded-full border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-white/48">
+                          {getAreaTagLabel(tag)}
+                        </span>
+                      ))}
+                      {areaOverflow > 0 ? <span className="rounded-full border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-white/48">+{areaOverflow}</span> : null}
+                    </div>
+                    <div className="mt-auto flex flex-wrap gap-2.5 pt-7">
+                      <Link href={`/karya/${project.slug}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-3 whitespace-normal break-words rounded-full bg-[#D4AF37] px-5 py-2.5 font-sans text-sm font-semibold text-[#080807] transition hover:bg-[#E2C866]">
+                        Lihat detail <ArrowUpRight size={16} />
+                      </Link>
+                      <a href={`mailto:${contactEmail}?subject=${encodedSubject}&body=${encodedBody}`} className="premium-interactive inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.025] px-4 py-2.5 font-sans text-sm font-semibold text-white/82 transition hover:border-[#D4AF37]/35 hover:text-[#D4AF37]" aria-label={`Email tentang ${project.title}`}>
+                        <Mail size={15} /> Email
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
             })}
           </div>
         )}
@@ -559,9 +621,11 @@ export default function KaryaArchive({ projects }: Props) {
         </div>
       ) : null}
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:inset-x-auto md:right-6 md:justify-end">
-        <div className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.4)] backdrop-blur">
-          <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa studi kasus desain yang menarik untuk dilihat\n\nhttps://eryawanagung.my.id/karya')}`} target="_blank" rel="noopener noreferrer" aria-label="Bagikan daftar karya via WhatsApp" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/55 bg-[#D4AF37]/16 px-4 py-2 font-sans text-sm font-semibold text-[#E2C866] transition hover:bg-[#D4AF37]/22 hover:text-[#F4D987]">WhatsApp</a>
-          <ShareLinkButton url="https://eryawanagung.my.id/karya" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/78 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]" />
+        <div className="pointer-events-auto flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#0B0A08]/90 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-md">
+          <a href={`https://wa.me/?text=${encodeURIComponent('Saya menemukan beberapa studi kasus desain yang menarik untuk dilihat\n\nhttps://eryawanagung.my.id/karya')}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/8 px-4 py-2 font-sans text-sm font-semibold text-[#F4E4B2] transition hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/12">
+            WhatsApp
+          </a>
+          <ShareLinkButton url="https://eryawanagung.my.id/karya" className="inline-flex min-h-10 items-center rounded-full border border-white/20 px-4 py-2 font-sans text-sm font-semibold text-white/82 transition hover:border-[#D4AF37]/30 hover:text-[#D4AF37]" />
         </div>
       </div>
     </section>
