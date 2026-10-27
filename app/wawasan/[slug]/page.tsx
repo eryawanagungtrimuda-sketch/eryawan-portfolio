@@ -13,6 +13,7 @@ import AdminEditWawasanShortcut from '@/components/admin-edit-wawasan-shortcut';
 import { getPublishedInsightBySlug, getPublishedInsightDetailBySlug } from '@/lib/insights';
 import { absoluteUrl } from '@/lib/site-url';
 import PublicJourneyLinks from '@/components/public-journey-links';
+import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -176,7 +177,7 @@ ${insightUrl}`;
           />
         ) : insight.cover_image ? (
           <div className="mt-8 overflow-hidden rounded-xl border border-white/10 sm:mt-10">
-            <Image src={insight.cover_image} alt={insight.title || 'Gambar wawasan desain'} width={1600} height={1000} sizes="(max-width: 640px) 100vw, 70vw" className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" priority />
+            <Image src={insight.cover_image} alt={insight.title || 'Gambar wawasan desain'} width={1600} height={1000} sizes="(max-width: 640px) 100vw, 70vw" className="h-auto max-h-[380px] w-full object-cover sm:max-h-[520px]" priority unoptimized={isSupabaseStorageUrl(insight.cover_image)} />
           </div>
         ) : (
           <div className="mt-8 rounded-xl border border-white/10 bg-gradient-to-br from-[#11100e] via-[#15120b] to-[#0b0a08] p-6 sm:mt-10 sm:p-10">
@@ -197,7 +198,7 @@ ${insightUrl}`;
                   sizes="80px"
                   className="h-16 w-16 rounded-xl border border-white/10 object-cover sm:h-20 sm:w-20"
                   loading="lazy"
-                />
+                unoptimized={isSupabaseStorageUrl(sourceProject.cover_image)} />
               ) : null}
               <div className="min-w-0 break-words">
                 <h2 className="font-sans text-xl leading-[1.15] tracking-[-0.015em] text-[#F4F1EA] sm:text-2xl">{sourceProject.title}</h2>

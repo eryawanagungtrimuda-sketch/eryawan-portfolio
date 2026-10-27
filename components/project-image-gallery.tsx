@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { dedupeAreaTags, getAreaTagLabel, normalizeAreaTag } from '@/lib/area-tags';
 import { getGalleryImageFrameStyle, getGalleryImageStyle } from '@/lib/project-image-display';
+import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
 
 type GalleryImage = { src: string; alt: string; area_tags?: string[] | null; display_ratio?: string | null; object_position?: string | null; crop_x?: number | null; crop_y?: number | null; crop_zoom?: number | null };
 
@@ -121,6 +122,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                     className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                     style={getGalleryImageStyle(featureImage)}
                     priority
+                    unoptimized={isSupabaseStorageUrl(featureImage.src)}
                   />
                 </div>
               </button>
@@ -150,6 +152,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
                           className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.01] group-hover:opacity-95"
                           style={getGalleryImageStyle(image)}
                           loading="lazy"
+                          unoptimized={isSupabaseStorageUrl(image.src)}
                         />
                       </div>
                     </button>
@@ -162,7 +165,7 @@ export default function ProjectImageGallery({ images, projectTitle, coverImage }
           {activeImage ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-5" role="dialog" aria-modal="true" onClick={closeLightbox}>
               <div className="relative w-full max-w-6xl scale-100 opacity-100 transition duration-200" onClick={(event) => event.stopPropagation()}>
-                <Image src={activeImage.src} alt={activeImage.alt || projectTitle} width={1600} height={1000} sizes="100vw" className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" />
+                <Image src={activeImage.src} alt={activeImage.alt || projectTitle} width={1600} height={1000} sizes="100vw" className="mx-auto max-h-[84vh] w-auto max-w-full rounded-lg object-contain sm:max-h-[88vh]" unoptimized={isSupabaseStorageUrl(activeImage.src)} />
                 <button type="button" aria-label="Tutup lightbox" onClick={closeLightbox} className="absolute right-2 top-2 rounded-full border border-[#D4AF37]/60 bg-black/75 px-3 py-2 font-sans text-xs text-[#D4AF37] transition hover:bg-black/90">Tutup</button>
                 {hasMultiple ? (
                   <>
