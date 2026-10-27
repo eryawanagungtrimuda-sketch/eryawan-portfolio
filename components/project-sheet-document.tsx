@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { absoluteUrl } from '@/lib/site-url';
 import type { ProjectWithArchiveImages } from '@/lib/types';
+import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
 
 type Props = {
   projects: ProjectWithArchiveImages[];
@@ -52,7 +53,7 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
                 <div className="project-sheet-image">
                   {cover ? (
                     <Image
-                      src={cover}
+                      src={cover} unoptimized={isSupabaseStorageUrl(cover)}
                       alt={`Cover ${project.title}`}
                       fill
                       sizes={preview ? '130mm' : '(min-width: 768px) 58vw, 100vw'}
@@ -74,7 +75,7 @@ export default function ProjectSheetDocument({ projects, preview = false }: Prop
                       {galleryTeaser.map((image, imageIndex) => (
                         <div className="project-sheet-gallery-thumbnail" key={image.id}>
                           <Image
-                            src={image.image_url!}
+                            src={image.image_url!} unoptimized={isSupabaseStorageUrl(image.image_url)}
                             alt={image.alt_text || `${project.title}, gallery ${imageIndex + 1}`}
                             fill
                             sizes="96px"
