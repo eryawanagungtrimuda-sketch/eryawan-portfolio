@@ -47,7 +47,6 @@ function trimOutput(value: string, maxLength: number) {
   return `${trimmed.slice(0, maxLength - 1).trim()}…`;
 }
 
-
 function normalizeJsonOutput(value: string) {
   let normalized = value.trim();
 
@@ -141,39 +140,56 @@ export async function POST(request: Request) {
   }
 
   const prompt = `
-Susun case study interior/arsitektur untuk Eryawan Studio.
+Peran: Anda adalah editor studi kasus untuk portfolio Eryawan Studio sekaligus partner berpikir seorang desainer interior senior. Tugas Anda bukan sekadar memperindah kalimat, tetapi mengungkap logika di balik keputusan desain yang benar-benar didukung data.
 
-Gaya wajib: tenang, matang, strategis, tidak bombastis, langsung ke inti. Jangan terdengar seperti AI generik.
-Alur berpikir: konteks → konflik → keputusan desain → pendekatan → dampak → insight.
-Fokus: fungsi, zoning, sirkulasi, material, lighting, aktivitas pengguna, efisiensi, dan clarity keputusan klien.
-Jangan mengarang jika input/gambar kurang jelas; gunakan observasi aman seperti "terlihat" atau "mendukung".
+Bahasa dan suara:
+- Bahasa Indonesia yang natural, tenang, tajam, profesional, dan terasa ditulis manusia.
+- Tunjukkan kecermatan mengamati ruang, kreativitas, dan pertimbangan desain melalui alasan yang konkret; jangan memuji desainer secara langsung.
+- Hindari jargon berlebihan, kalimat promosi, kata sifat kosong, dan frasa template seperti "meningkatkan pengalaman pengguna", "memenuhi kebutuhan secara optimal", atau "keseimbangan estetika dan fungsi" kecuali dijelaskan secara spesifik.
+- Ringkas, tetapi setiap bagian harus memberi informasi baru.
 
-Konteks:
-Title: ${context.title || '-'}
-Category: ${context.category || '-'}
-Client problem: ${context.client_problem_raw || '-'}
-Design reference: ${context.design_reference || '-'}
-Area scope: ${context.area_scope || '-'}
-Project size: ${context.project_size || '-'}
-Images sent: ${imageUrls.length}
+Aturan fakta yang wajib:
+1. Gunakan data proyek dan gambar sebagai sumber utama. Jangan mengarang brief klien, kebutuhan, batasan ruang, material, ukuran, proses kerja, hasil pembangunan, feedback pengguna, atau dampak terukur.
+2. Bedakan fakta yang diberikan, hal yang benar-benar terlihat pada gambar, dan interpretasi desain. Jika brief klien tidak tersedia, jangan menulis "klien menginginkan..." seolah-olah itu fakta.
+3. Jika gambar atau konteks tidak cukup untuk memastikan suatu hal, hilangkan klaim tersebut atau nyatakan sebagai tujuan/pertimbangan rancangan, bukan hasil yang sudah terbukti.
+4. Jangan memaksakan topik material, zoning, sirkulasi, lighting, atau efisiensi jika tidak relevan dengan proyek.
+5. Jangan mengulang gagasan yang sama di beberapa bagian.
 
-Output JSON valid saja:
-{
-  "konteks": "maks 350 karakter",
-  "konflik": "maks 350 karakter",
-  "keputusan_desain": "maks 450 karakter",
-  "pendekatan": "maks 450 karakter",
-  "dampak": "maks 350 karakter",
-  "insight_kunci": "maks 260 karakter"
-}
+Tugas keenam bagian:
+- konteks: ringkas fakta utama, jenis ruang, cakupan, dan tujuan yang memang didukung input.
+- konflik: jelaskan ketegangan atau trade-off desain yang nyata dan didukung input/gambar. Jangan menciptakan masalah klien hanya agar cerita terasa dramatis.
+- keputusan_desain: pilih 1–3 keputusan paling bermakna yang didukung input/gambar dan jelaskan alasan serta kaitannya dengan kebutuhan ruang.
+- pendekatan: jelaskan hubungan antar-keputusan dan logika penataan ruang. Jangan sekadar mengulang daftar material atau keputusan.
+- dampak: uraikan konsekuensi yang bisa dibaca dari rancangan atau manfaat yang dituju. Jangan mengklaim hasil operasional, kepuasan, peningkatan kolaborasi, atau keberhasilan terukur tanpa bukti.
+- insight_kunci: simpulkan pelajaran desain yang spesifik dari proyek ini dan bisa diterapkan pada proyek lain. Hindari nasihat umum yang dapat ditempelkan ke proyek apa pun.
+
+Batas karakter:
+- konteks: maks 350 karakter
+- konflik: maks 350 karakter
+- keputusan_desain: maks 450 karakter
+- pendekatan: maks 450 karakter
+- dampak: maks 350 karakter
+- insight_kunci: maks 260 karakter
+
+Data proyek:
+Judul: ${context.title || '-'}
+Kategori: ${context.category || '-'}
+Masalah/brief klien: ${context.client_problem_raw || 'Tidak diberikan'}
+Referensi desain: ${context.design_reference || 'Tidak diberikan'}
+Cakupan area: ${context.area_scope || 'Tidak diberikan'}
+Ukuran proyek: ${context.project_size || 'Tidak diberikan'}
+Jumlah gambar yang dianalisis: ${imageUrls.length}
+
+Tulis setiap bagian sebagai paragraf mandiri. Keluaran harus berupa JSON dengan keenam properti yang diminta; tanpa markdown atau teks di luar JSON.
 `;
 
   const content = [
     { type: 'input_text', text: prompt },
-    ...imageUrls.map((imageUrl) => ({
+    ...imageUrls.map((imageUrl, index) => ({
       type: 'input_image',
       image_url: imageUrl,
-      detail: 'low',
+      // Give the cover image more visual detail while keeping gallery inputs economical.
+      detail: index === 0 ? 'high' : 'low',
     })),
   ];
 
@@ -185,15 +201,42 @@ Output JSON valid saja:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-6.1-terra',
+        reasoning: { effort: 'low' },
         input: [
           {
             role: 'user',
             content,
           },
         ],
-        temperature: 0.2,
-        max_output_tokens: 520,
+        text: {
+          format: {
+            type: 'json_schema',
+            name: 'project_narrative',
+            strict: true,
+            schema: {
+              type: 'object',
+              properties: {
+                konteks: { type: 'string' },
+                konflik: { type: 'string' },
+                keputusan_desain: { type: 'string' },
+                pendekatan: { type: 'string' },
+                dampak: { type: 'string' },
+                insight_kunci: { type: 'string' },
+              },
+              required: [
+                'konteks',
+                'konflik',
+                'keputusan_desain',
+                'pendekatan',
+                'dampak',
+                'insight_kunci',
+              ],
+              additionalProperties: false,
+            },
+          },
+        },
+        max_output_tokens: 1200,
       }),
     });
 
