@@ -908,7 +908,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
     const imageUrls = coverImage && coverImage.startsWith('http')
       ? [coverImage, ...uniqueGalleryImages.filter((url) => url !== coverImage)].slice(0, 3)
       : uniqueGalleryImages.slice(0, 3);
-    const hasStructuredInput = Boolean(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim() || areaTags.length);
+    const hasStructuredInput = Boolean(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim());
     if (imageUrls.length === 0 && !hasStructuredInput) {
       setAiError('Tambahkan gambar atau konteks project terlebih dahulu.');
       return;
@@ -1063,7 +1063,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
     }
   }
 
-  const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim() || areaTags.length));
+  const isAiButtonDisabled = (aiGenerating || galleryUploading || loading) || (!galleryImages.length && !(clientProblemRaw.trim() || designReference.trim() || areaScope.trim() || projectSize.trim()));
 
   function getUploadStatusLabel(status: UploadQueueStatus) {
     if (status === 'uploading') return 'Mengunggah';
