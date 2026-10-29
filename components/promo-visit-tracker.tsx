@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 const sessionKey = 'eryawan_promo_session_id';
 const trackedKey = 'eryawan_promo_tracked_keys';
-const allowedSources = new Set(['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'manual']);
+const allowedSources = new Set(['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'pinterest', 'whatsapp', 'manual']);
 
 function getSessionId() {
   try {
