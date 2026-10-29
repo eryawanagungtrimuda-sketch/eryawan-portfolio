@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
+import { buildPromotionUrl, toUtmContentLabel, type PromotionSource } from '@/lib/utm-links';
 
 type SharePlatform = 'instagram' | 'pinterest' | 'facebook' | 'linkedin' | 'whatsapp' | 'tiktok' | 'youtube';
 
@@ -72,6 +73,26 @@ function buildHashtags(areaTags?: string[] | null) {
   return Array.from(new Set(['#DesainInterior', '#InteriorDesign', '#EryawanAgung', ...area])).join(' ');
 }
 
+const promotionSourceByPlatform: Record<SharePlatform, PromotionSource> = {
+  instagram: 'instagram',
+  pinterest: 'manual',
+  facebook: 'facebook',
+  linkedin: 'linkedin',
+  whatsapp: 'manual',
+  tiktok: 'tiktok',
+  youtube: 'youtube_short',
+};
+
+function getTrackedProjectUrl(props: ProjectShareKitProps, platform: SharePlatform) {
+  const contentLabel = toUtmContentLabel(props.slug || props.title);
+  return buildPromotionUrl({
+    target: { path: '/karya/' + props.slug, contentLabel },
+    source: promotionSourceByPlatform[platform],
+    campaign: 'portfolio_content',
+    content: contentLabel,
+  });
+}
+
 function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDraft> {
   const projectName = clean(props.title) + (props.year ? ' (' + props.year + ')' : '');
   const context = clean(props.context) || clean(props.summary);
@@ -86,7 +107,6 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
   const impactSentence = impact ? 'Dampak visual: ' + shorten(impact, 220) : '';
   const approachSentence = approach ? 'Pendekatan: ' + shorten(approach, 220) : '';
   const insightSentence = insight ? 'Insight desain: ' + shorten(insight, 200) : '';
-  const link = props.canonicalUrl;
 
   return {
     instagram: {
@@ -97,7 +117,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         contextSentence,
         decisionSentence,
         '',
-        'Baca studi kasus lengkap: ' + link,
+        'Baca studi kasus lengkap: ' + getTrackedProjectUrl(props, 'instagram'),
         '',
         tags,
       ].filter(Boolean).join('\n'),
@@ -109,7 +129,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         'Studi kasus desain interior ' + projectName + '.',
         contextSentence,
         decisionSentence,
-        'Lihat detail proyek: ' + link,
+        'Lihat detail proyek: ' + getTrackedProjectUrl(props, 'pinterest'),
         tags,
       ].filter(Boolean).join('\n\n'),
       instruction: 'Salin judul dan deskripsi, lalu buat Pin menggunakan gambar cover atau gambar terbaik dari proyek.',
@@ -123,7 +143,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         decisionSentence,
         impactSentence,
         '',
-        'Lihat proyek lengkap: ' + link,
+        'Lihat proyek lengkap: ' + getTrackedProjectUrl(props, 'facebook'),
       ].filter(Boolean).join('\n'),
       instruction: 'Caption dapat langsung ditempel pada postingan Facebook bersama gambar proyek.',
     },
@@ -137,7 +157,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         approachSentence,
         insightSentence,
         '',
-        'Baca selengkapnya: ' + link,
+        'Baca selengkapnya: ' + getTrackedProjectUrl(props, 'linkedin'),
         '',
         tags,
       ].filter(Boolean).join('\n'),
@@ -148,7 +168,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
       body: [
         'Saya ingin berbagi studi kasus desain interior: ' + projectName + '.',
         contextSentence,
-        'Lihat proyek lengkap di website: ' + link,
+        'Lihat proyek lengkap di website: ' + getTrackedProjectUrl(props, 'whatsapp'),
       ].filter(Boolean).join('\n\n'),
       instruction: 'Teks ini bisa dikirim ke kontak, grup, atau WhatsApp Status bersama gambar proyek.',
     },
@@ -158,7 +178,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         'Di balik desain ' + projectName + ':',
         contextSentence,
         decisionSentence,
-        'Studi kasus lengkap: ' + link,
+        'Studi kasus lengkap: ' + getTrackedProjectUrl(props, 'tiktok'),
         '',
         tags,
       ].filter(Boolean).join('\n'),
@@ -174,7 +194,7 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
         impactSentence,
         insightSentence,
         '',
-        'Lihat portfolio lengkap: ' + link,
+        'Lihat portfolio lengkap: ' + getTrackedProjectUrl(props, 'youtube'),
         '',
         tags + ' #Shorts',
       ].filter(Boolean).join('\n'),
@@ -235,6 +255,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
 
   const drafts = useMemo(() => buildDrafts(props), [props]);
   const activeDraft = drafts[activePlatform];
+  const activeTrackedUrl = getTrackedProjectUrl(props, activePlatform);
   const activePlatformInfo = platforms.find((platform) => platform.key === activePlatform) || platforms[0];
 
   async function copyValue(value: string, kind: 'title' | 'body' | 'link') {
@@ -254,7 +275,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
         await navigator.share({
           title: props.title,
           text: clean(props.summary) || clean(props.context),
-          url: props.canonicalUrl,
+          url: activeTrackedUrl,
         });
         setFeedback('Menu berbagi perangkat dibuka.');
         return;
@@ -262,7 +283,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') return;
     }
-    await copyValue(props.canonicalUrl, 'link');
+    await copyValue(activeTrackedUrl, 'link');
   }
 
   if (!ready || !isAdmin) return null;
@@ -347,9 +368,9 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
                     <span className="flex items-center gap-2 px-3 py-3 text-xs font-semibold text-white/75"><ImageIcon size={14} /> Buka gambar cover <ExternalLink size={12} /></span>
                   </a>
                 ) : null}
-                <button type="button" onClick={() => void copyValue(props.canonicalUrl, 'link')} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-3 text-sm font-semibold text-white/80 hover:border-[#D4AF37]/45 hover:text-[#E6C676]"><Link2 size={15} /> Salin tautan proyek</button>
+                <button type="button" onClick={() => void copyValue(activeTrackedUrl, 'link')} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-3 text-sm font-semibold text-white/80 hover:border-[#D4AF37]/45 hover:text-[#E6C676]"><Link2 size={15} /> Salin tautan proyek</button>
                 <button type="button" onClick={() => void shareProjectLink()} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] hover:bg-[#D4AF37]/15"><Share2 size={15} /> Bagikan tautan</button>
-                <a href={getPlatformUrl(activePlatform, props.canonicalUrl, activeDraft.body)} target="_blank" rel="noreferrer" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#D4AF37] px-4 py-3 text-sm font-semibold text-[#080807] hover:bg-[#E2C866]"><ExternalLink size={15} /> Buka {activePlatformInfo.label}</a>
+                <a href={getPlatformUrl(activePlatform, activeTrackedUrl, activeDraft.body)} target="_blank" rel="noreferrer" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#D4AF37] px-4 py-3 text-sm font-semibold text-[#080807] hover:bg-[#E2C866]"><ExternalLink size={15} /> Buka {activePlatformInfo.label}</a>
                 <p className="text-xs leading-5 text-white/38">Website menyiapkan materi, bukan menerbitkan posting secara otomatis. Periksa caption dan gambar sebelum unggah.</p>
               </aside>
             </div>
