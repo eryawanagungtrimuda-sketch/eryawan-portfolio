@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { Download } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import { getAdminProjectEditHref } from '@/lib/admin-project-return-path';
+import { triggerBrowserDownload } from '@/components/social-composer/actions';
 
 type AdminProjectListItem = {
   id: string;
@@ -15,12 +17,66 @@ type AdminProjectListItem = {
 };
 
 type InsightFilter = 'all' | 'without_wawasan' | 'with_wawasan';
+type DownloadFeedback = { projectId: string; tone: 'success' | 'error'; message: string };
 
 export default function AdminProjectsList() {
   const [projects, setProjects] = useState<AdminProjectListItem[]>([]);
   const [insightFilter, setInsightFilter] = useState<InsightFilter>('all');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [downloadingProjectId, setDownloadingProjectId] = useState<string | null>(null);
+  const [downloadFeedback, setDownloadFeedback] = useState<DownloadFeedback | null>(null);
+
+  async function downloadProjectImages(project: AdminProjectListItem) {
+    if (downloadingProjectId) return;
+
+    setDownloadingProjectId(project.id);
+    setDownloadFeedback(null);
+
+    try {
+      const { data, error: sessionError } = await getSupabaseClient().auth.getSession();
+      const token = data.session?.access_token;
+
+      if (sessionError || !token) {
+        throw sessionError || new Error('Sesi admin tidak ditemukan. Silakan login ulang.');
+      }
+
+      const response = await fetch(
+        '/api/download-project-images?projectId=' + encodeURIComponent(project.id),
+        {
+          method: 'GET',
+          headers: { Authorization: 'Bearer ' + token },
+          cache: 'no-store',
+        },
+      );
+
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({})) as { error?: string };
+        throw new Error(result.error || 'Gagal mengunduh gambar proyek.');
+      }
+
+      const blob = await response.blob();
+      if (!blob.size) throw new Error('File ZIP kosong.');
+
+      const disposition = response.headers.get('Content-Disposition') || '';
+      const matched = disposition.match(/filename="?([^";]+)"?/i);
+      triggerBrowserDownload(blob, matched?.[1] || (project.slug + '-images.zip'));
+
+      setDownloadFeedback({
+        projectId: project.id,
+        tone: 'success',
+        message: 'ZIP gambar berhasil disiapkan. Periksa folder Downloads.',
+      });
+    } catch (error) {
+      setDownloadFeedback({
+        projectId: project.id,
+        tone: 'error',
+        message: error instanceof Error ? error.message : 'Gagal mengunduh gambar proyek. Coba lagi.',
+      });
+    } finally {
+      setDownloadingProjectId(null);
+    }
+  }
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -109,12 +165,15 @@ export default function AdminProjectsList() {
       ) : null}
 
       {filteredProjects.map((project) => (
-        <Link
+        <div
           key={project.id}
-          href={getAdminProjectEditHref(project.id, '/admin/projects')}
-          className="grid gap-4 rounded-sm border border-white/10 bg-white/[0.025] p-5 transition hover:border-[#D4AF37]/35 md:grid-cols-[1fr_auto] md:items-center"
+          className="grid gap-4 rounded-sm border border-white/10 bg-white/[0.025] p-5 transition hover:border-[#D4AF37]/35 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
         >
-          <div>
+          <Link
+            href={getAdminProjectEditHref(project.id, '/admin/projects')}
+            aria-label={'Edit project ' + project.title}
+            className="block min-w-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/70"
+          >
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-xl font-semibold text-white/90">{project.title}</h2>
               {project.category ? (
@@ -133,9 +192,36 @@ export default function AdminProjectsList() {
               )}
             </div>
             <p className="mt-2 text-sm text-white/45">/{project.slug}</p>
+          </Link>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => void downloadProjectImages(project)}
+              disabled={downloadingProjectId !== null}
+              aria-busy={downloadingProjectId === project.id}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#D4AF37]/50 bg-[#D4AF37]/[0.06] px-4 py-2 text-center font-sans text-xs font-semibold text-[#E6C676] transition hover:bg-[#D4AF37]/[0.14] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Download size={15} aria-hidden="true" />
+              {downloadingProjectId === project.id ? 'Menyiapkan ZIP...' : 'Download Semua Gambar'}
+            </button>
+            <Link
+              href={getAdminProjectEditHref(project.id, '/admin/projects')}
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-4 py-2 font-mono text-xs font-black uppercase tracking-[0.18em] text-[#D4AF37] transition hover:border-[#D4AF37]/40"
+            >
+              Edit
+            </Link>
           </div>
-          <span className="font-mono text-xs font-black uppercase tracking-[0.18em] text-[#D4AF37]">Edit</span>
-        </Link>
+
+          {downloadFeedback?.projectId === project.id ? (
+            <p
+              role="status"
+              className={downloadFeedback.tone === 'success' ? 'text-xs text-emerald-200 md:col-span-2' : 'text-xs text-red-300 md:col-span-2'}
+            >
+              {downloadFeedback.message}
+            </p>
+          ) : null}
+        </div>
       ))}
     </div>
   );

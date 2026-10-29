@@ -10,11 +10,17 @@ export const dynamic = 'force-dynamic';
 type ProjectMeta = {
   id: string;
   title: string | null;
+  cover_image: string | null;
 };
 
 type ImageRow = {
   image_url: string | null;
   sort_order: number | null;
+};
+
+type CandidateAsset = {
+  kind: 'cover' | 'project' | 'insight';
+  url: string;
 };
 
 type ZipAsset = {
@@ -34,9 +40,9 @@ function sanitizeFileName(value: string): string {
 }
 
 // Step 2: Resolve extension from URL path; fallback to jpg when uncertain.
-function getFileExtensionFromUrl(url: string): string {
+function getFileExtensionFromUrl(url: string, baseUrl?: string): string {
   try {
-    const { pathname } = new URL(url);
+    const { pathname } = baseUrl ? new URL(url, baseUrl) : new URL(url);
     const fileName = pathname.split('/').pop() || '';
     const extension = fileName.includes('.') ? fileName.split('.').pop()?.toLowerCase() : '';
     if (extension && /^[a-z0-9]{2,5}$/.test(extension)) return extension;
@@ -47,7 +53,17 @@ function getFileExtensionFromUrl(url: string): string {
   return 'jpg';
 }
 
-// Step 3: Verify admin from Supabase access token to keep endpoint server-side/admin-only.
+// Step 3: Normalize URLs only for duplicate detection. Fetch the original URL so its query string is preserved.
+function getAssetDeduplicationKey(url: string, baseUrl?: string): string {
+  try {
+    const parsed = baseUrl ? new URL(url, baseUrl) : new URL(url);
+    return parsed.origin + parsed.pathname.replace(/\/+$/, '');
+  } catch {
+    return url.trim().replace(/[?#].*$/, '').replace(/\/+$/, '');
+  }
+}
+
+// Step 4: Verify admin from Supabase access token to keep endpoint server-side/admin-only.
 async function requireAdminUser(request: Request): Promise<User | null> {
   const authHeader = request.headers.get('authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
@@ -62,7 +78,7 @@ async function requireAdminUser(request: Request): Promise<User | null> {
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
-    // Step 4: Early config and auth guards.
+    // Step 5: Early config and auth guards.
     if (!isSupabaseConfigured) {
       return NextResponse.json({ error: 'Supabase belum terkonfigurasi.' }, { status: 503 });
     }
@@ -72,7 +88,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'Akses ditolak.' }, { status: 403 });
     }
 
-    // Step 5: Validate required query param for current Social Composer flow.
+    // Step 6: Validate required query param for current Social Composer flow.
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get('projectId')?.trim();
     if (!projectId) {
@@ -81,10 +97,10 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const supabase = createSupabaseServerClient();
 
-    // Step 6: Resolve project/insight display name for final ZIP filename.
+    // Step 7: Resolve project/insight title and cover image for the final ZIP.
     const { data: project, error: projectError } = await supabase
       .from('projects')
-      .select('id,title')
+      .select('id,title,cover_image')
       .eq('id', projectId)
       .maybeSingle<ProjectMeta>();
     if (projectError) {
@@ -95,7 +111,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       ? { data: null, error: null }
       : await supabase
           .from('insights')
-          .select('id,title')
+          .select('id,title,cover_image')
           .eq('id', projectId)
           .maybeSingle<ProjectMeta>();
     if (insightError) {
@@ -106,7 +122,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'Project/Wawasan tidak ditemukan.' }, { status: 404 });
     }
 
-    // Step 7: Fetch all related image rows from both project_images and insight_images.
+    // Step 8: Fetch all gallery images for the project or insight.
     const [projectImagesResult, insightImagesResult] = await Promise.all([
       supabase
         .from('project_images')
@@ -126,37 +142,57 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'Gagal mengambil daftar gambar.' }, { status: 500 });
     }
 
-    const assets: ZipAsset[] = [
+    // Include the cover first, followed by the sorted gallery. Avoid duplicate downloads when
+    // the cover is also present in the gallery, matching the public gallery behavior.
+    const coverImageUrl = project?.cover_image || insight?.cover_image || null;
+    const candidateAssets: CandidateAsset[] = [
+      ...(coverImageUrl ? [{ kind: 'cover' as const, url: coverImageUrl }] : []),
       ...(projectImagesResult.data || [])
-        .filter((row) => Boolean(row.image_url))
-        .map((row, index) => ({
-          name: `project-${String(index + 1).padStart(2, '0')}`,
-          url: row.image_url as string,
-        })),
+        .filter((row): row is ImageRow & { image_url: string } => Boolean(row.image_url))
+        .map((row) => ({ kind: 'project' as const, url: row.image_url })),
       ...(insightImagesResult.data || [])
-        .filter((row) => Boolean(row.image_url))
-        .map((row, index) => ({
-          name: `wawasan-${String(index + 1).padStart(2, '0')}`,
-          url: row.image_url as string,
-        })),
+        .filter((row): row is ImageRow & { image_url: string } => Boolean(row.image_url))
+        .map((row) => ({ kind: 'insight' as const, url: row.image_url })),
     ];
+
+    const requestOrigin = new URL(request.url).origin;
+    const seenAssetUrls = new Set<string>();
+    const uniqueAssets = candidateAssets.filter((asset) => {
+      const key = getAssetDeduplicationKey(asset.url, requestOrigin);
+      if (!key || seenAssetUrls.has(key)) return false;
+      seenAssetUrls.add(key);
+      return true;
+    });
+
+    const imageCounters = { project: 0, insight: 0 };
+    const assets: ZipAsset[] = uniqueAssets.map((asset) => {
+      if (asset.kind === 'cover') return { name: 'cover', url: asset.url };
+
+      imageCounters[asset.kind] += 1;
+      const prefix = asset.kind === 'project' ? 'project' : 'wawasan';
+      return {
+        name: prefix + '-' + String(imageCounters[asset.kind]).padStart(2, '0'),
+        url: asset.url,
+      };
+    });
 
     if (!assets.length) {
       return NextResponse.json({ error: 'Belum ada gambar untuk diunduh.' }, { status: 404 });
     }
 
-    // Step 8: Build ZIP by downloading each asset and adding ArrayBuffer bytes to JSZip.
+    // Step 9: Build ZIP by downloading each original asset URL and adding its bytes to JSZip.
     const zip = new JSZip();
     for (const asset of assets) {
-      const imageResponse = await fetch(asset.url, { cache: 'no-store' });
-      if (!imageResponse.ok) throw new Error(`Gagal mengunduh aset: ${asset.url}`);
+      const assetUrl = new URL(asset.url, requestOrigin).toString();
+      const imageResponse = await fetch(assetUrl, { cache: 'no-store' });
+      if (!imageResponse.ok) throw new Error('Gagal mengunduh aset: ' + assetUrl);
 
       const imageArrayBuffer: ArrayBuffer = await imageResponse.arrayBuffer();
-      const extension = getFileExtensionFromUrl(asset.url);
-      zip.file(`${asset.name}.${extension}`, imageArrayBuffer);
+      const extension = getFileExtensionFromUrl(assetUrl);
+      zip.file(asset.name + '.' + extension, imageArrayBuffer);
     }
 
-    // Step 9: Generate ArrayBuffer so body type is valid for NextResponse on Vercel/Next.js.
+    // Step 10: Generate ArrayBuffer so body type is valid for NextResponse on Vercel/Next.js.
     const zipArrayBuffer: ArrayBuffer = await zip.generateAsync({
       type: 'arraybuffer',
       compression: 'DEFLATE',
@@ -166,14 +202,14 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const baseName = sanitizeFileName(project?.title || insight?.title || 'project');
     const dateStamp = new Date().toISOString().slice(0, 10);
-    const fileName = `${baseName}-${dateStamp}.zip`;
+    const fileName = baseName + '-' + dateStamp + '.zip';
 
-    // Step 10: Return downloadable ZIP with required headers.
+    // Step 11: Return downloadable ZIP with required headers.
     return new NextResponse(zipArrayBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/zip',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Disposition': 'attachment; filename="' + fileName + '"',
         'Cache-Control': 'no-store',
       },
     });
