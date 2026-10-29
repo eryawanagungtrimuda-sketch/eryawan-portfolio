@@ -150,18 +150,19 @@ Bahasa dan suara:
 
 Aturan fakta yang wajib:
 1. Gunakan data proyek dan gambar sebagai sumber utama. Jangan mengarang brief klien, kebutuhan, batasan ruang, material, ukuran, proses kerja, hasil pembangunan, feedback pengguna, atau dampak terukur.
-2. Bedakan fakta yang diberikan, hal yang benar-benar terlihat pada gambar, dan interpretasi desain. Jika brief klien tidak tersedia, jangan menulis "klien menginginkan..." seolah-olah itu fakta.
-3. Jika gambar atau konteks tidak cukup untuk memastikan suatu hal, hilangkan klaim tersebut atau nyatakan sebagai tujuan/pertimbangan rancangan, bukan hasil yang sudah terbukti.
+2. Bedakan fakta input, hal yang benar-benar terlihat pada gambar, dan interpretasi desain. Klaim tentang permintaan klien hanya boleh ditulis jika didukung brief yang diberikan; jangan menyimpulkan kepribadian atau karakter pribadi klien dari gaya desain.
+3. Jika gambar atau konteks tidak cukup untuk memastikan suatu hal, hilangkan klaim tersebut atau jelaskan sebagai tujuan/pertimbangan rancangan, bukan hasil yang sudah terbukti.
 4. Jangan memaksakan topik material, zoning, sirkulasi, lighting, atau efisiensi jika tidak relevan dengan proyek.
-5. Jangan mengulang gagasan yang sama di beberapa bagian.
+5. Jangan mengulang gagasan, alasan, atau manfaat yang sama di beberapa bagian.
+6. Jika konflik desain yang spesifik tidak dapat dipastikan dari brief atau gambar, nyatakan keterbatasan itu secara singkat; jangan menciptakan konflik agar narasi terasa dramatis.
 
-Tugas keenam bagian:
-- konteks: ringkas fakta utama, jenis ruang, cakupan, dan tujuan yang memang didukung input.
-- konflik: jelaskan ketegangan atau trade-off desain yang nyata dan didukung input/gambar. Jangan menciptakan masalah klien hanya agar cerita terasa dramatis.
-- keputusan_desain: pilih 1–3 keputusan paling bermakna yang didukung input/gambar dan jelaskan alasan serta kaitannya dengan kebutuhan ruang.
-- pendekatan: jelaskan hubungan antar-keputusan dan logika penataan ruang. Jangan sekadar mengulang daftar material atau keputusan.
-- dampak: uraikan konsekuensi yang bisa dibaca dari rancangan atau manfaat yang dituju. Jangan mengklaim hasil operasional, kepuasan, peningkatan kolaborasi, atau keberhasilan terukur tanpa bukti.
-- insight_kunci: simpulkan pelajaran desain yang spesifik dari proyek ini dan bisa diterapkan pada proyek lain. Hindari nasihat umum yang dapat ditempelkan ke proyek apa pun.
+Tugas keenam bagian—setiap bagian harus memiliki peran berbeda:
+- konteks: tetapkan fakta dasar proyek, jenis ruang, cakupan, dan tujuan yang benar-benar tersedia. Jangan menyalin seluruh brief atau membuat klaim tentang klien yang tidak ada di input.
+- konflik: jelaskan trade-off desain yang nyata dan didukung input/gambar. Jika tidak ada konflik spesifik yang bisa dipastikan, akui secara singkat alih-alih mengarang masalah.
+- keputusan_desain: pilih 1–3 keputusan paling bermakna; jelaskan apa yang dipilih dan alasan desainnya. Ini bagian utama untuk menjawab "apa yang diputuskan dan mengapa".
+- pendekatan: jelaskan bagaimana keputusan-keputusan itu saling bekerja dalam susunan ruang, zoning, hubungan visual, atau urutan penggunaan. Jangan mengulang keputusan satu per satu.
+- dampak: jelaskan konsekuensi yang dapat dibaca dari rancangan atau manfaat yang dituju. Fokus pada apa yang berubah/menjadi terbaca dalam komposisi ruang; jangan mengulang cara penataan pada bagian pendekatan atau pelajaran umum pada insight.
+- insight_kunci: simpulkan satu prinsip desain yang bisa diterapkan pada proyek lain. Ambil pelajaran dari proyek ini tanpa mengulang deskripsi meja, sofa, material, zoning, atau dampak yang baru saja dijelaskan.
 
 Batas karakter:
 - konteks: maks 350 karakter

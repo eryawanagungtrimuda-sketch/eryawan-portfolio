@@ -129,10 +129,10 @@ ${projectUrl}`;
     formatProjectStatus(project.project_status) ? { label: 'Status', value: formatProjectStatus(project.project_status)! } : null,
     project.completion_year ? { label: 'Tahun', value: String(project.completion_year) } : null,
   ].filter(Boolean) as { label: string; value: string }[];
+  // Fokus desain sudah tampil pada pengantar hero, sedangkan keputusan desain dibahas lengkap di alur studi kasus.
+  // Ringkasan hanya menampilkan cakupan agar informasi tidak berulang.
   const caseSummaryItems = [
-    project.problem ? { label: 'Fokus Desain', value: project.problem } : null,
     project.solution ? { label: 'Ruang Lingkup', value: project.solution } : null,
-    project.keputusan_desain ? { label: 'Keputusan Utama', value: project.keputusan_desain } : null,
   ].filter(Boolean) as { label: string; value: string }[];
   const schemaData = {
     '@context': 'https://schema.org',
@@ -205,8 +205,7 @@ ${projectUrl}`;
             <div className="grid gap-7 lg:grid-cols-[0.5fr_1fr] lg:gap-11">
               <div>
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]">Ringkasan Proyek</p>
-                <h2 className="font-display mt-3 max-w-lg text-2xl font-normal leading-[1.12] tracking-[-0.025em] md:text-4xl">Narasi singkat sebelum membaca detail keputusan desain.</h2>
-                <p className="mt-4 max-w-md text-sm leading-7 text-white/54">Ringkasan ini disusun dari data proyek yang tersedia agar pembacaan studi kasus tetap akurat dan mudah dipahami.</p>
+                <h2 className="font-display mt-3 max-w-lg text-2xl font-normal leading-[1.12] tracking-[-0.025em] md:text-4xl">Cakupan dan area proyek.</h2>
               </div>
               <div className="grid gap-4">
                 {caseSummaryItems.map((item) => (
