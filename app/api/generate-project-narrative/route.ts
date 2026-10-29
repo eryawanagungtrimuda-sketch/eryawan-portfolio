@@ -165,15 +165,21 @@ Aturan fakta yang wajib:
 4. Jangan memaksakan topik material, zoning, sirkulasi, lighting, atau efisiensi jika tidak relevan dengan proyek.
 5. Jangan mengulang gagasan, alasan, atau manfaat yang sama di beberapa bagian.
 6. Jika konflik desain yang spesifik tidak dapat dipastikan dari brief atau gambar, nyatakan keterbatasan itu secara singkat; jangan menciptakan konflik agar narasi terasa dramatis.
-7. Gunakan Area/Ruang Tags sebagai metadata cakupan yang dipilih editor dan Area Scope sebagai deskripsi teks. Cocokkan keduanya dengan brief serta gambar; jika tidak konsisten, jangan menebak atau menyelaraskannya dengan fakta baru. Hindari klaim area spesifik yang tidak didukung.
+7. Area/Ruang Tags adalah daftar area terstruktur yang dipilih editor dan harus diperlakukan sebagai area yang termasuk dalam proyek. Area Scope adalah deskripsi teks pendamping yang mungkin belum menyebut semua area. Gunakan keduanya secara komplementer untuk menjelaskan cakupan secara natural. Jangan menambahkan area yang tidak didukung tag, brief, atau gambar. Jika ada pertentangan langsung antar-sumber, jangan menebak penyelesaiannya.
+8. Narasi ditujukan untuk pengunjung portofolio, bukan editor. Jangan pernah menyebut tag, metadata, Area Scope, input yang tidak konsisten, atau masalah pengisian data. Jangan menceritakan perbedaan sumber internal; cukup tulis fakta proyek yang dapat dinyatakan dengan aman.
 
-Tugas keenam bagian—setiap bagian harus memiliki peran berbeda:
-- konteks: tetapkan fakta dasar proyek, jenis ruang, cakupan, dan tujuan yang benar-benar tersedia. Jangan menyalin seluruh brief atau membuat klaim tentang klien yang tidak ada di input.
-- konflik: jelaskan trade-off desain yang nyata dan didukung input/gambar. Jika tidak ada konflik spesifik yang bisa dipastikan, akui secara singkat alih-alih mengarang masalah.
-- keputusan_desain: pilih 1–3 keputusan paling bermakna; jelaskan apa yang dipilih dan alasan desainnya. Ini bagian utama untuk menjawab "apa yang diputuskan dan mengapa".
-- pendekatan: jelaskan bagaimana keputusan-keputusan itu saling bekerja dalam susunan ruang, zoning, hubungan visual, atau urutan penggunaan. Jangan mengulang keputusan satu per satu.
-- dampak: jelaskan konsekuensi yang dapat dibaca dari rancangan atau manfaat yang dituju. Fokus pada apa yang berubah/menjadi terbaca dalam komposisi ruang; jangan mengulang cara penataan pada bagian pendekatan atau pelajaran umum pada insight.
-- insight_kunci: simpulkan satu prinsip desain yang bisa diterapkan pada proyek lain. Ambil pelajaran dari proyek ini tanpa mengulang deskripsi meja, sofa, material, zoning, atau dampak yang baru saja dijelaskan.
+Tugas keenam bagian—setiap bagian harus memberi informasi baru dan memiliki peran yang tegas:
+- konteks: rangkum jenis proyek, cakupan area yang termasuk, luas jika tersedia, dan tujuan desain yang benar-benar didukung input. Gunakan tag area terpilih sebagai daftar cakupan; satukan dengan Area Scope dalam kalimat natural. Jangan menyimpulkan karakter pribadi klien dari gaya desain.
+- konflik: sebutkan satu trade-off desain yang nyata dan didukung brief atau gambar. Jangan menganggap luas yang kecil otomatis berarti ruang bermasalah. Jika tidak ada konflik spesifik yang didukung, katakan secara ringkas bahwa brief tidak merinci konflik khusus dan jangan menciptakan konflik generik.
+- keputusan_desain: pilih 1–3 keputusan paling bermakna dan jelaskan alasan desainnya. Ini satu-satunya bagian yang menjabarkan secara langsung apa yang dipilih dan mengapa.
+- pendekatan: jelaskan prinsip pengorganisasian ruang atau hubungan antarelemen secara menyeluruh. Jangan membuat daftar ulang keputusan atau mengulang objek utama dari bagian sebelumnya kecuali diperlukan untuk menjelaskan hubungan yang berbeda.
+- dampak: jelaskan hasil visual/komposisional yang dapat diamati dari rancangan pada gambar, seperti keterbacaan zona, hubungan antararea, atau keseimbangan komposisi. Jangan mengklaim hasil terbangun, peningkatan kenyamanan nyata, kepuasan klien, atau dampak terukur tanpa bukti.
+- insight_kunci: tarik satu prinsip desain yang dapat diterapkan pada proyek lain. Tulis sebagai pelajaran umum, bukan rangkuman ulang keputusan, objek, material, zoning, atau dampak proyek ini.
+
+Pemeriksaan sebelum keluaran:
+- Setiap bagian harus punya gagasan utama yang berbeda. Jangan mengulang ide yang sama dengan sinonim seperti "tanpa sekat penuh", "penanda peralihan", dan "mudah dibaca" di banyak bagian.
+- Satu keputusan spesifik boleh dirujuk lagi hanya jika bagian berikutnya menambahkan konsekuensi yang berbeda dan penting; jika tidak, jangan ulangi.
+- Jangan menulis kalimat yang membahas tag, metadata, kelengkapan input, atau perbedaan data internal kepada pengunjung portofolio.
 
 Batas karakter:
 - konteks: maks 350 karakter
