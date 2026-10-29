@@ -6,7 +6,6 @@ import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
-import { buildPromotionUrl, toUtmContentLabel, type PromotionSource, type PromotionTarget } from '@/lib/utm-links';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,created_at,project_images(id)';
 
@@ -30,72 +29,6 @@ type AttentionReason = {
   label: string;
   metric: 'missingCover' | 'galleryIncomplete' | 'missingNarrative' | 'missingAreaTags' | 'missingWawasan';
 };
-
-type PromotionTargetOption = PromotionTarget & {
-  value: string;
-  label: string;
-};
-
-type PromoLinkSummary = {
-  total: number;
-  bySource: { source: PromotionSource; count: number }[];
-  topPaths: { path: string; count: number }[];
-  topContent: { content: string; count: number }[];
-  topCampaigns: { campaign: string; count: number }[];
-};
-
-type SocialPublishingSummaryItem = {
-  contentType: string;
-  slug: string;
-  title: string;
-  href: string;
-  postedChannels: string[];
-  unpostedChannels: string[];
-  postingDate: string | null;
-  notes: string | null;
-  totalPostedChannels: number;
-  totalRequiredChannels: number;
-  promoVisitCount: number;
-  topPromoSource: string | null;
-  status: 'Belum diposting' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
-  recommendationLabel: 'Prioritas Tinggi' | 'Prioritas Sedang' | 'Layak Diposting Ulang' | 'Prioritas Rendah' | null;
-  recommendationReason: string | null;
-  recommendationPriority: 'high' | 'medium' | 'repost' | 'low' | 'healthy';
-};
-
-type SocialPublishingSummary = {
-  items: SocialPublishingSummaryItem[];
-};
-
-function getPromotionSourceLabel(value?: string | null) {
-  return promotionSourceOptions.find((source) => source.value === value)?.label || value || 'Manual / Lainnya';
-}
-
-const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
-
-const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
-  { value: 'instagram', label: 'Instagram' },
-  { value: 'tiktok', label: 'TikTok' },
-  { value: 'facebook', label: 'Facebook' },
-  { value: 'youtube_short', label: 'YouTube Short' },
-  { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'manual', label: 'Manual / Lainnya' },
-];
-
-const recommendationPriorityRank: Record<SocialPublishingSummaryItem['recommendationPriority'], number> = {
-  high: 0,
-  medium: 1,
-  repost: 2,
-  low: 3,
-  healthy: 4,
-};
-
-const staticPromotionTargets: PromotionTargetOption[] = [
-  { value: 'home', label: 'Beranda', path: '/', contentLabel: 'home' },
-  { value: 'all-works', label: 'Semua Karya', path: '/karya', contentLabel: 'all_works' },
-  { value: 'start-project', label: 'Mulai Project', path: '/mulai-project', contentLabel: 'start_project' },
-  { value: 'insights', label: 'Wawasan', path: '/wawasan', contentLabel: 'wawasan' },
-];
 
 function isBlank(value?: string | null) {
   return !value || value.trim().length === 0;
@@ -193,22 +126,6 @@ export default function AdminDashboardCMS() {
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
-  const [promotionTargetValue, setPromotionTargetValue] = useState(staticPromotionTargets[0].value);
-  const [promotionSource, setPromotionSource] = useState<PromotionSource>('instagram');
-  const [promotionCampaign, setPromotionCampaign] = useState('portfolio_content');
-  const [promotionContent, setPromotionContent] = useState(staticPromotionTargets[0].contentLabel);
-  const [promotionCopied, setPromotionCopied] = useState(false);
-  const [promoSummary, setPromoSummary] = useState<PromoLinkSummary | null>(null);
-  const [promoSummaryLoading, setPromoSummaryLoading] = useState(true);
-  const [promoSummaryMessage, setPromoSummaryMessage] = useState('');
-  const [promoSummaryLoadedAt, setPromoSummaryLoadedAt] = useState<Date | null>(null);
-  const [publishingSummary, setPublishingSummary] = useState<SocialPublishingSummary | null>(null);
-  const [publishingSummaryLoading, setPublishingSummaryLoading] = useState(true);
-  const [publishingSummaryMessage, setPublishingSummaryMessage] = useState('');
-  const [publishingSummaryLoadedAt, setPublishingSummaryLoadedAt] = useState<Date | null>(null);
-  const [publishingFilter, setPublishingFilter] = useState<'all' | 'not_posted' | 'posted' | 'no_visits'>('all');
-  const [showAllPromotionRecommendations, setShowAllPromotionRecommendations] = useState(false);
-  const [showAllPublishingItems, setShowAllPublishingItems] = useState(false);
   const [showAllAttentionItems, setShowAllAttentionItems] = useState(false);
   const [showAllProjectsMobile, setShowAllProjectsMobile] = useState(false);
   const { toast } = useToast();
@@ -288,82 +205,6 @@ export default function AdminDashboardCMS() {
   }
 
 
-  async function loadPromoSummary() {
-    setPromoSummaryLoading(true);
-    setPromoSummaryMessage('');
-
-    try {
-      const supabase = getSupabaseClient();
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) {
-        setPromoSummary(null);
-        setPromoSummaryMessage('Sesi admin belum tersedia untuk membaca ringkasan promosi.');
-        return;
-      }
-
-      const response = await fetch('/api/admin/promo-link-summary', {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: 'no-store',
-      });
-      const result = await response.json().catch(() => null) as PromoLinkSummary | { error?: string } | null;
-
-      if (!response.ok) {
-        setPromoSummary(null);
-        setPromoSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat ringkasan link posting.');
-        return;
-      }
-
-      setPromoSummary(result as PromoLinkSummary);
-      setPromoSummaryLoadedAt(new Date());
-    } catch (error) {
-      console.error('[AdminDashboardCMS] Failed to load promo summary', error);
-      setPromoSummary(null);
-      setPromoSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat ringkasan link posting.');
-    } finally {
-      setPromoSummaryLoading(false);
-    }
-  }
-
-
-  async function loadPublishingSummary() {
-    setPublishingSummaryLoading(true);
-    setPublishingSummaryMessage('');
-
-    try {
-      const supabase = getSupabaseClient();
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) {
-        setPublishingSummary(null);
-        setPublishingSummaryMessage('Sesi admin belum tersedia untuk membaca status publikasi.');
-        return;
-      }
-
-      const response = await fetch('/api/admin/social-publishing-summary', {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: 'no-store',
-      });
-      const result = await response.json().catch(() => null) as SocialPublishingSummary | { error?: string } | null;
-
-      if (!response.ok) {
-        setPublishingSummary(null);
-        setPublishingSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat status publikasi konten.');
-        return;
-      }
-
-      setPublishingSummary(result as SocialPublishingSummary);
-      setPublishingSummaryLoadedAt(new Date());
-    } catch (error) {
-      console.error('[AdminDashboardCMS] Failed to load publishing summary', error);
-      setPublishingSummary(null);
-      setPublishingSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat status publikasi konten.');
-    } finally {
-      setPublishingSummaryLoading(false);
-    }
-  }
-
-
   useEffect(() => {
     loadProjects();
   }, []);
@@ -385,96 +226,11 @@ export default function AdminDashboardCMS() {
 
   const attentionPreview = useMemo(() => contentHealth.needsAttention.slice(0, 8), [contentHealth.needsAttention]);
 
-  const filteredPublishingItems = useMemo(() => {
-    const items = publishingSummary?.items || [];
-    if (publishingFilter === 'not_posted') return items.filter((item) => item.totalPostedChannels === 0);
-    if (publishingFilter === 'posted') return items.filter((item) => item.totalPostedChannels > 0);
-    if (publishingFilter === 'no_visits') return items.filter((item) => item.totalPostedChannels > 0 && item.promoVisitCount === 0);
-    return items;
-  }, [publishingFilter, publishingSummary]);
-
-  const promotionRecommendations = useMemo(() => {
-    return (publishingSummary?.items || [])
-      .filter((item) => item.recommendationLabel && item.recommendationReason)
-      .sort((a, b) => {
-        const aMissing = a.totalRequiredChannels - a.totalPostedChannels;
-        const bMissing = b.totalRequiredChannels - b.totalPostedChannels;
-        const aPostedWithoutVisits = a.totalPostedChannels > 0 && a.promoVisitCount === 0 ? 0 : 1;
-        const bPostedWithoutVisits = b.totalPostedChannels > 0 && b.promoVisitCount === 0 ? 0 : 1;
-
-        return recommendationPriorityRank[a.recommendationPriority] - recommendationPriorityRank[b.recommendationPriority]
-          || aPostedWithoutVisits - bPostedWithoutVisits
-          || bMissing - aMissing
-          || a.title.localeCompare(b.title);
-      })
-      .slice(0, 6);
-  }, [publishingSummary]);
-
-  const promotionTargets = useMemo<PromotionTargetOption[]>(() => {
-    const projectTargets = projects
-      .filter((project) => Boolean(project.slug))
-      .map((project) => ({
-        value: `project:${project.id}`,
-        label: `Proyek: ${project.title}`,
-        path: `/karya/${project.slug}`,
-        contentLabel: toUtmContentLabel(project.slug || project.title || 'project'),
-      }));
-
-    return [...staticPromotionTargets, ...projectTargets];
-  }, [projects]);
-
-  const selectedPromotionTarget = useMemo(() => {
-    return promotionTargets.find((target) => target.value === promotionTargetValue) || promotionTargets[0];
-  }, [promotionTargets, promotionTargetValue]);
-
-  const generatedPromotionUrl = useMemo(() => buildPromotionUrl({
-    target: selectedPromotionTarget,
-    source: promotionSource,
-    campaign: promotionCampaign,
-    content: promotionContent,
-  }), [selectedPromotionTarget, promotionSource, promotionCampaign, promotionContent]);
-
-  const promotionPathLabels = useMemo(() => new Map(promotionTargets.map((target) => [target.path, target.label.replace(/^Proyek: /, '')])), [promotionTargets]);
-
-  function getPromotionPathLabel(path: string) {
-    return promotionPathLabels.get(path) || path;
-  }
-
-  useEffect(() => {
-    const fallbackTarget = promotionTargets[0];
-    const currentTarget = promotionTargets.find((target) => target.value === promotionTargetValue);
-
-    if (!currentTarget && fallbackTarget) {
-      setPromotionTargetValue(fallbackTarget.value);
-      setPromotionContent(fallbackTarget.contentLabel);
-    }
-  }, [promotionTargets, promotionTargetValue]);
-
   const filteredProjects = useMemo(() => {
     if (wawasanFilter === 'with_wawasan') return projects.filter((project) => project.hasWawasan);
     if (wawasanFilter === 'without_wawasan') return projects.filter((project) => !project.hasWawasan);
     return projects;
   }, [projects, wawasanFilter]);
-
-  function handlePromotionTargetChange(value: string) {
-    const nextTarget = promotionTargets.find((target) => target.value === value);
-    setPromotionTargetValue(value);
-    setPromotionContent(nextTarget?.contentLabel || '');
-    setPromotionCopied(false);
-  }
-
-  async function copyPromotionLink() {
-    try {
-      await navigator.clipboard.writeText(generatedPromotionUrl);
-      setPromotionCopied(true);
-      toast({ type: 'success', title: 'Link disalin', description: 'Link promosi UTM siap ditempel ke caption atau bio.' });
-      window.setTimeout(() => setPromotionCopied(false), 2400);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Browser tidak mengizinkan salin otomatis.';
-      setPromotionCopied(false);
-      toast({ type: 'error', title: 'Gagal menyalin link', description: errorMessage });
-    }
-  }
 
   async function deleteProject(project: DashboardProject) {
     const confirmed = window.confirm(`Hapus project "${project.title}"?`);
