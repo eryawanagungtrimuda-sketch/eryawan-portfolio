@@ -1266,7 +1266,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
                 {areaScopeTagConsistency.tagsNotInScope.length > 0 ? (
                   <p className="mt-1">Tag yang belum disebut di Area Scope: {areaScopeTagConsistency.tagsNotInScope.join(', ')}.</p>
                 ) : null}
-                <p className="mt-1 text-white/45">Periksa sesuai kondisi proyek sebenarnya. Ini hanya pengingat; data tidak diubah otomatis.</p>
+                <p className="mt-1 text-white/45">Tag terpilih diperlakukan sebagai area yang termasuk proyek. Perbarui Area Scope bila deskripsinya belum mencakup semua area. Pengingat ini tidak mengubah data otomatis.</p>
               </div>
             ) : null}
           </div>
@@ -1278,7 +1278,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <label>AI Narrative Generator</label>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, referensi, Area Scope, Area/Ruang Tags, ukuran proyek, dan hingga tiga gambar galeri untuk menyusun enam bagian studi kasus.</p>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI memakai Area/Ruang Tags sebagai daftar area proyek, lalu menggabungkannya dengan brief, Area Scope, ukuran, dan hingga tiga gambar. Narasi publik tidak membahas perbedaan metadata internal.</p>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/65">Gunakan AI hanya setelah foto utama dan konteks project siap. Hasil AI bisa diedit manual sebelum disimpan.</p>
             <p className="mt-1 text-xs leading-5 text-[#D4AF37]">Setiap klik Generate memakai quota API.</p>
           </div>
