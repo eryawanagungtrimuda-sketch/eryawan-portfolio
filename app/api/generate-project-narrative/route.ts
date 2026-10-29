@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { dedupeAreaTags } from '@/lib/area-tags';
 
 type GenerateNarrativeBody = {
   imageUrls?: string[];
@@ -8,6 +9,7 @@ type GenerateNarrativeBody = {
   client_problem_raw?: string;
   design_reference?: string;
   area_scope?: string;
+  area_tags?: string[];
   project_size?: string;
 };
 
@@ -130,9 +132,17 @@ export async function POST(request: Request) {
     project_size: trimTo(body.project_size, inputLimits.project_size),
   };
 
+  const areaTags = Array.isArray(body.area_tags)
+    ? dedupeAreaTags(
+        body.area_tags
+          .filter((tag): tag is string => typeof tag === 'string')
+          .map((tag) => trimTo(tag, 60))
+          .slice(0, 10),
+      )
+    : [];
   const imageUrls = getOptimizedImageUrls(body);
   const hasContext = Boolean(
-    context.client_problem_raw || context.design_reference || context.area_scope || context.project_size,
+    context.client_problem_raw || context.design_reference || context.area_scope || context.project_size || areaTags.length > 0,
   );
 
   if (imageUrls.length === 0 && !hasContext) {
@@ -155,6 +165,7 @@ Aturan fakta yang wajib:
 4. Jangan memaksakan topik material, zoning, sirkulasi, lighting, atau efisiensi jika tidak relevan dengan proyek.
 5. Jangan mengulang gagasan, alasan, atau manfaat yang sama di beberapa bagian.
 6. Jika konflik desain yang spesifik tidak dapat dipastikan dari brief atau gambar, nyatakan keterbatasan itu secara singkat; jangan menciptakan konflik agar narasi terasa dramatis.
+7. Gunakan Area/Ruang Tags sebagai metadata cakupan yang dipilih editor dan Area Scope sebagai deskripsi teks. Cocokkan keduanya dengan brief serta gambar; jika tidak konsisten, jangan menebak atau menyelaraskannya dengan fakta baru. Hindari klaim area spesifik yang tidak didukung.
 
 Tugas keenam bagian—setiap bagian harus memiliki peran berbeda:
 - konteks: tetapkan fakta dasar proyek, jenis ruang, cakupan, dan tujuan yang benar-benar tersedia. Jangan menyalin seluruh brief atau membuat klaim tentang klien yang tidak ada di input.
@@ -177,7 +188,8 @@ Judul: ${context.title || '-'}
 Kategori: ${context.category || '-'}
 Masalah/brief klien: ${context.client_problem_raw || 'Tidak diberikan'}
 Referensi desain: ${context.design_reference || 'Tidak diberikan'}
-Cakupan area: ${context.area_scope || 'Tidak diberikan'}
+Cakupan area (deskripsi teks): ${context.area_scope || 'Tidak diberikan'}
+Tag area terstruktur: ${areaTags.length ? areaTags.join(', ') : 'Tidak diberikan'}
 Ukuran proyek: ${context.project_size || 'Tidak diberikan'}
 Jumlah gambar yang dianalisis: ${imageUrls.length}
 
