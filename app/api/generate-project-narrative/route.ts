@@ -142,7 +142,7 @@ export async function POST(request: Request) {
     : [];
   const imageUrls = getOptimizedImageUrls(body);
   const hasContext = Boolean(
-    context.client_problem_raw || context.design_reference || context.area_scope || context.project_size || areaTags.length > 0,
+    context.client_problem_raw || context.design_reference || context.area_scope || context.project_size,
   );
 
   if (imageUrls.length === 0 && !hasContext) {
