@@ -115,11 +115,6 @@ function formatDate(value?: string | null) {
   }
 }
 
-function formatLoadedAt(value: Date) {
-  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(value);
-}
-
-
 export default function AdminDashboardCMS() {
   const [projects, setProjects] = useState<DashboardProject[]>([]);
   const [loading, setLoading] = useState(true);
