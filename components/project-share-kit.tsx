@@ -75,7 +75,7 @@ function buildHashtags(areaTags?: string[] | null) {
 
 const promotionSourceByPlatform: Record<SharePlatform, PromotionSource> = {
   instagram: 'instagram',
-  pinterest: 'manual',
+  pinterest: 'pinterest',
   facebook: 'facebook',
   linkedin: 'linkedin',
   whatsapp: 'manual',
