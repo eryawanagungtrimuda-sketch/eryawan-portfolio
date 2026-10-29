@@ -5,7 +5,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase-admin';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const knownSources = ['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'manual'];
+const knownSources = ['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'pinterest', 'whatsapp', 'manual'];
 
 type PromoVisitSummaryRow = {
   path: string | null;
