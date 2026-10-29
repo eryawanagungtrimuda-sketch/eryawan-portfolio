@@ -40,9 +40,9 @@ function sanitizeFileName(value: string): string {
 }
 
 // Step 2: Resolve extension from URL path; fallback to jpg when uncertain.
-function getFileExtensionFromUrl(url: string): string {
+function getFileExtensionFromUrl(url: string, baseUrl?: string): string {
   try {
-    const { pathname } = new URL(url);
+    const { pathname } = baseUrl ? new URL(url, baseUrl) : new URL(url);
     const fileName = pathname.split('/').pop() || '';
     const extension = fileName.includes('.') ? fileName.split('.').pop()?.toLowerCase() : '';
     if (extension && /^[a-z0-9]{2,5}$/.test(extension)) return extension;
@@ -54,9 +54,9 @@ function getFileExtensionFromUrl(url: string): string {
 }
 
 // Step 3: Normalize URLs only for duplicate detection. Fetch the original URL so its query string is preserved.
-function getAssetDeduplicationKey(url: string): string {
+function getAssetDeduplicationKey(url: string, baseUrl?: string): string {
   try {
-    const parsed = new URL(url);
+    const parsed = baseUrl ? new URL(url, baseUrl) : new URL(url);
     return parsed.origin + parsed.pathname.replace(/\/+$/, '');
   } catch {
     return url.trim().replace(/[?#].*$/, '').replace(/\/+$/, '');
@@ -155,9 +155,10 @@ export async function GET(request: Request): Promise<NextResponse> {
         .map((row) => ({ kind: 'insight' as const, url: row.image_url })),
     ];
 
+    const requestOrigin = new URL(request.url).origin;
     const seenAssetUrls = new Set<string>();
     const uniqueAssets = candidateAssets.filter((asset) => {
-      const key = getAssetDeduplicationKey(asset.url);
+      const key = getAssetDeduplicationKey(asset.url, requestOrigin);
       if (!key || seenAssetUrls.has(key)) return false;
       seenAssetUrls.add(key);
       return true;
@@ -182,11 +183,12 @@ export async function GET(request: Request): Promise<NextResponse> {
     // Step 9: Build ZIP by downloading each original asset URL and adding its bytes to JSZip.
     const zip = new JSZip();
     for (const asset of assets) {
-      const imageResponse = await fetch(asset.url, { cache: 'no-store' });
-      if (!imageResponse.ok) throw new Error('Gagal mengunduh aset: ' + asset.url);
+      const assetUrl = new URL(asset.url, requestOrigin).toString();
+      const imageResponse = await fetch(assetUrl, { cache: 'no-store' });
+      if (!imageResponse.ok) throw new Error('Gagal mengunduh aset: ' + assetUrl);
 
       const imageArrayBuffer: ArrayBuffer = await imageResponse.arrayBuffer();
-      const extension = getFileExtensionFromUrl(asset.url);
+      const extension = getFileExtensionFromUrl(assetUrl);
       zip.file(asset.name + '.' + extension, imageArrayBuffer);
     }
 
