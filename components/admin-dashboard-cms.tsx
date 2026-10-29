@@ -7,6 +7,8 @@ import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
 
+const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
+
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,created_at,project_images(id)';
 
 type DashboardInsight = {
