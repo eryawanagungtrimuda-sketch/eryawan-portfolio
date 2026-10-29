@@ -118,6 +118,29 @@ function normalizeOption(value: string, options: string[]) {
   return matched || normalized;
 }
 
+function getAreaScopeTagConsistency(areaScope: string, areaTags: string[], knownAreaTags: string[] = []) {
+  const normalizedScope = normalizeAreaTag(areaScope);
+  const selectedTags = dedupeAreaTags(areaTags);
+  if (!normalizedScope || selectedTags.length === 0) return null;
+
+  const scopeText = ` ${normalizedScope} `;
+  const selectedKeys = new Set(selectedTags.map((tag) => normalizeAreaTag(tag)));
+  const recognizedScopeTags = dedupeAreaTags([...DEFAULT_AREA_TAGS, ...knownAreaTags, ...selectedTags]).filter((tag) => {
+    const normalizedTag = normalizeAreaTag(tag);
+    return Boolean(normalizedTag) && scopeText.includes(` ${normalizedTag} `);
+  });
+
+  if (recognizedScopeTags.length === 0) return null;
+
+  const scopeOnlyTags = recognizedScopeTags.filter((tag) => !selectedKeys.has(normalizeAreaTag(tag)));
+  const tagsNotInScope = selectedTags.filter(
+    (tag) => !recognizedScopeTags.some((scopeTag) => normalizeAreaTag(scopeTag) === normalizeAreaTag(tag)),
+  );
+
+  if (scopeOnlyTags.length === 0 && tagsNotInScope.length === 0) return null;
+  return { scopeOnlyTags, tagsNotInScope };
+}
+
 function getInitialSelectState(value: string | null | undefined, options: string[]): CustomSelectState {
   const normalized = normalizeOption(value || '', options);
   if (!normalized) return { choice: '', custom: '' };
@@ -320,6 +343,10 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
   const areaTagOptions = useMemo(
     () => mergeAreaTagOptions(DEFAULT_AREA_TAGS, areaTags, savedAreaTagOptions),
     [areaTags, savedAreaTagOptions],
+  );
+  const areaScopeTagConsistency = useMemo(
+    () => getAreaScopeTagConsistency(areaScope, areaTags, savedAreaTagOptions),
+    [areaScope, areaTags, savedAreaTagOptions],
   );
 
   useEffect(() => {
@@ -900,6 +927,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
           client_problem_raw: clientProblemRaw,
           design_reference: designReference,
           area_scope: areaScope,
+          area_tags: dedupeAreaTags(areaTags),
           project_size: projectSize,
         }),
       });
@@ -1226,7 +1254,22 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
         <div className="grid gap-6 md:grid-cols-2">
           <div className="md:col-span-2"><label>Client Problem Raw</label><textarea maxLength={500} value={clientProblemRaw} onChange={(event) => setClientProblemRaw(event.target.value)} placeholder="Tuliskan problem awal dari klien secara mentah, misalnya: ruang terasa sempit, flow tidak nyaman, storage kurang, dsb." /></div>
           <div><label>Design Reference</label><textarea maxLength={500} value={designReference} onChange={(event) => setDesignReference(event.target.value)} placeholder="Arah referensi desain, mood, style, material, atau benchmark yang diinginkan." /></div>
-          <div><label>Area Scope</label><textarea maxLength={300} value={areaScope} onChange={(event) => setAreaScope(event.target.value)} placeholder="Area yang didesain, misalnya living room, pantry, bedroom, workspace, lobby, dsb." /></div>
+          <div>
+            <label>Area Scope</label>
+            <textarea maxLength={300} value={areaScope} onChange={(event) => setAreaScope(event.target.value)} placeholder="Area yang didesain, misalnya living room, pantry, bedroom, workspace, lobby, dsb." />
+            {areaScopeTagConsistency ? (
+              <div role="status" aria-live="polite" className="mt-3 rounded-xl border border-amber-300/20 bg-amber-400/[0.045] px-4 py-3 text-xs leading-5 text-white/65">
+                <p className="font-semibold text-amber-200">Periksa konsistensi cakupan</p>
+                {areaScopeTagConsistency.scopeOnlyTags.length > 0 ? (
+                  <p className="mt-1">Disebut di Area Scope, tetapi belum dipilih sebagai tag: {areaScopeTagConsistency.scopeOnlyTags.join(', ')}.</p>
+                ) : null}
+                {areaScopeTagConsistency.tagsNotInScope.length > 0 ? (
+                  <p className="mt-1">Tag yang belum disebut di Area Scope: {areaScopeTagConsistency.tagsNotInScope.join(', ')}.</p>
+                ) : null}
+                <p className="mt-1 text-white/45">Periksa sesuai kondisi proyek sebenarnya. Ini hanya pengingat; data tidak diubah otomatis.</p>
+              </div>
+            ) : null}
+          </div>
           <div className="md:col-span-2"><label>Project Size</label><input maxLength={100} value={projectSize} onChange={(event) => setProjectSize(event.target.value)} placeholder="Contoh: 36 m², 120 m², tipe 45, 2 lantai" /></div>
         </div>
       </div>
@@ -1235,7 +1278,7 @@ export default function ProjectForm({ project, initialRelatedInsight = null, ret
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <label>AI Narrative Generator</label>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, reference, scope, ukuran project, dan gallery untuk menyusun 6 section case study.</p>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-white/50">AI menggabungkan brief, referensi, Area Scope, Area/Ruang Tags, ukuran proyek, dan hingga tiga gambar galeri untuk menyusun enam bagian studi kasus.</p>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-white/65">Gunakan AI hanya setelah foto utama dan konteks project siap. Hasil AI bisa diedit manual sebelum disimpan.</p>
             <p className="mt-1 text-xs leading-5 text-[#D4AF37]">Setiap klik Generate memakai quota API.</p>
           </div>
