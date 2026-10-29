@@ -6,7 +6,8 @@ import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
-import { buildPromotionUrl, toUtmContentLabel, type PromotionSource, type PromotionTarget } from '@/lib/utm-links';
+
+const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
 
 const projectColumns = 'id,title,slug,category,design_category,design_style,area_type,area_tags,is_published,cover_image,problem,solution,impact,konteks,konflik,keputusan_desain,pendekatan,dampak,insight_kunci,created_at,project_images(id)';
 
@@ -30,72 +31,6 @@ type AttentionReason = {
   label: string;
   metric: 'missingCover' | 'galleryIncomplete' | 'missingNarrative' | 'missingAreaTags' | 'missingWawasan';
 };
-
-type PromotionTargetOption = PromotionTarget & {
-  value: string;
-  label: string;
-};
-
-type PromoLinkSummary = {
-  total: number;
-  bySource: { source: PromotionSource; count: number }[];
-  topPaths: { path: string; count: number }[];
-  topContent: { content: string; count: number }[];
-  topCampaigns: { campaign: string; count: number }[];
-};
-
-type SocialPublishingSummaryItem = {
-  contentType: string;
-  slug: string;
-  title: string;
-  href: string;
-  postedChannels: string[];
-  unpostedChannels: string[];
-  postingDate: string | null;
-  notes: string | null;
-  totalPostedChannels: number;
-  totalRequiredChannels: number;
-  promoVisitCount: number;
-  topPromoSource: string | null;
-  status: 'Belum diposting' | 'Sudah diposting, belum ada kunjungan' | 'Mulai mendapat kunjungan' | 'Perlu lengkapi kanal' | 'Kanal utama sudah aktif';
-  recommendationLabel: 'Prioritas Tinggi' | 'Prioritas Sedang' | 'Layak Diposting Ulang' | 'Prioritas Rendah' | null;
-  recommendationReason: string | null;
-  recommendationPriority: 'high' | 'medium' | 'repost' | 'low' | 'healthy';
-};
-
-type SocialPublishingSummary = {
-  items: SocialPublishingSummaryItem[];
-};
-
-function getPromotionSourceLabel(value?: string | null) {
-  return promotionSourceOptions.find((source) => source.value === value)?.label || value || 'Manual / Lainnya';
-}
-
-const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
-
-const promotionSourceOptions: { value: PromotionSource; label: string }[] = [
-  { value: 'instagram', label: 'Instagram' },
-  { value: 'tiktok', label: 'TikTok' },
-  { value: 'facebook', label: 'Facebook' },
-  { value: 'youtube_short', label: 'YouTube Short' },
-  { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'manual', label: 'Manual / Lainnya' },
-];
-
-const recommendationPriorityRank: Record<SocialPublishingSummaryItem['recommendationPriority'], number> = {
-  high: 0,
-  medium: 1,
-  repost: 2,
-  low: 3,
-  healthy: 4,
-};
-
-const staticPromotionTargets: PromotionTargetOption[] = [
-  { value: 'home', label: 'Beranda', path: '/', contentLabel: 'home' },
-  { value: 'all-works', label: 'Semua Karya', path: '/karya', contentLabel: 'all_works' },
-  { value: 'start-project', label: 'Mulai Project', path: '/mulai-project', contentLabel: 'start_project' },
-  { value: 'insights', label: 'Wawasan', path: '/wawasan', contentLabel: 'wawasan' },
-];
 
 function isBlank(value?: string | null) {
   return !value || value.trim().length === 0;
@@ -182,33 +117,12 @@ function formatDate(value?: string | null) {
   }
 }
 
-function formatLoadedAt(value: Date) {
-  return new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(value);
-}
-
-
 export default function AdminDashboardCMS() {
   const [projects, setProjects] = useState<DashboardProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
-  const [promotionTargetValue, setPromotionTargetValue] = useState(staticPromotionTargets[0].value);
-  const [promotionSource, setPromotionSource] = useState<PromotionSource>('instagram');
-  const [promotionCampaign, setPromotionCampaign] = useState('portfolio_content');
-  const [promotionContent, setPromotionContent] = useState(staticPromotionTargets[0].contentLabel);
-  const [promotionCopied, setPromotionCopied] = useState(false);
-  const [promoSummary, setPromoSummary] = useState<PromoLinkSummary | null>(null);
-  const [promoSummaryLoading, setPromoSummaryLoading] = useState(true);
-  const [promoSummaryMessage, setPromoSummaryMessage] = useState('');
-  const [promoSummaryLoadedAt, setPromoSummaryLoadedAt] = useState<Date | null>(null);
-  const [publishingSummary, setPublishingSummary] = useState<SocialPublishingSummary | null>(null);
-  const [publishingSummaryLoading, setPublishingSummaryLoading] = useState(true);
-  const [publishingSummaryMessage, setPublishingSummaryMessage] = useState('');
-  const [publishingSummaryLoadedAt, setPublishingSummaryLoadedAt] = useState<Date | null>(null);
-  const [publishingFilter, setPublishingFilter] = useState<'all' | 'not_posted' | 'posted' | 'no_visits'>('all');
-  const [showAllPromotionRecommendations, setShowAllPromotionRecommendations] = useState(false);
-  const [showAllPublishingItems, setShowAllPublishingItems] = useState(false);
   const [showAllAttentionItems, setShowAllAttentionItems] = useState(false);
   const [showAllProjectsMobile, setShowAllProjectsMobile] = useState(false);
   const { toast } = useToast();
@@ -288,86 +202,8 @@ export default function AdminDashboardCMS() {
   }
 
 
-  async function loadPromoSummary() {
-    setPromoSummaryLoading(true);
-    setPromoSummaryMessage('');
-
-    try {
-      const supabase = getSupabaseClient();
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) {
-        setPromoSummary(null);
-        setPromoSummaryMessage('Sesi admin belum tersedia untuk membaca ringkasan promosi.');
-        return;
-      }
-
-      const response = await fetch('/api/admin/promo-link-summary', {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: 'no-store',
-      });
-      const result = await response.json().catch(() => null) as PromoLinkSummary | { error?: string } | null;
-
-      if (!response.ok) {
-        setPromoSummary(null);
-        setPromoSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat ringkasan link posting.');
-        return;
-      }
-
-      setPromoSummary(result as PromoLinkSummary);
-      setPromoSummaryLoadedAt(new Date());
-    } catch (error) {
-      console.error('[AdminDashboardCMS] Failed to load promo summary', error);
-      setPromoSummary(null);
-      setPromoSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat ringkasan link posting.');
-    } finally {
-      setPromoSummaryLoading(false);
-    }
-  }
-
-
-  async function loadPublishingSummary() {
-    setPublishingSummaryLoading(true);
-    setPublishingSummaryMessage('');
-
-    try {
-      const supabase = getSupabaseClient();
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) {
-        setPublishingSummary(null);
-        setPublishingSummaryMessage('Sesi admin belum tersedia untuk membaca status publikasi.');
-        return;
-      }
-
-      const response = await fetch('/api/admin/social-publishing-summary', {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: 'no-store',
-      });
-      const result = await response.json().catch(() => null) as SocialPublishingSummary | { error?: string } | null;
-
-      if (!response.ok) {
-        setPublishingSummary(null);
-        setPublishingSummaryMessage(result && 'error' in result && result.error ? result.error : 'Gagal memuat status publikasi konten.');
-        return;
-      }
-
-      setPublishingSummary(result as SocialPublishingSummary);
-      setPublishingSummaryLoadedAt(new Date());
-    } catch (error) {
-      console.error('[AdminDashboardCMS] Failed to load publishing summary', error);
-      setPublishingSummary(null);
-      setPublishingSummaryMessage(error instanceof Error ? error.message : 'Gagal memuat status publikasi konten.');
-    } finally {
-      setPublishingSummaryLoading(false);
-    }
-  }
-
-
   useEffect(() => {
     loadProjects();
-    loadPromoSummary();
-    loadPublishingSummary();
   }, []);
 
   const contentHealth = useMemo(() => {
@@ -387,96 +223,11 @@ export default function AdminDashboardCMS() {
 
   const attentionPreview = useMemo(() => contentHealth.needsAttention.slice(0, 8), [contentHealth.needsAttention]);
 
-  const filteredPublishingItems = useMemo(() => {
-    const items = publishingSummary?.items || [];
-    if (publishingFilter === 'not_posted') return items.filter((item) => item.totalPostedChannels === 0);
-    if (publishingFilter === 'posted') return items.filter((item) => item.totalPostedChannels > 0);
-    if (publishingFilter === 'no_visits') return items.filter((item) => item.totalPostedChannels > 0 && item.promoVisitCount === 0);
-    return items;
-  }, [publishingFilter, publishingSummary]);
-
-  const promotionRecommendations = useMemo(() => {
-    return (publishingSummary?.items || [])
-      .filter((item) => item.recommendationLabel && item.recommendationReason)
-      .sort((a, b) => {
-        const aMissing = a.totalRequiredChannels - a.totalPostedChannels;
-        const bMissing = b.totalRequiredChannels - b.totalPostedChannels;
-        const aPostedWithoutVisits = a.totalPostedChannels > 0 && a.promoVisitCount === 0 ? 0 : 1;
-        const bPostedWithoutVisits = b.totalPostedChannels > 0 && b.promoVisitCount === 0 ? 0 : 1;
-
-        return recommendationPriorityRank[a.recommendationPriority] - recommendationPriorityRank[b.recommendationPriority]
-          || aPostedWithoutVisits - bPostedWithoutVisits
-          || bMissing - aMissing
-          || a.title.localeCompare(b.title);
-      })
-      .slice(0, 6);
-  }, [publishingSummary]);
-
-  const promotionTargets = useMemo<PromotionTargetOption[]>(() => {
-    const projectTargets = projects
-      .filter((project) => Boolean(project.slug))
-      .map((project) => ({
-        value: `project:${project.id}`,
-        label: `Proyek: ${project.title}`,
-        path: `/karya/${project.slug}`,
-        contentLabel: toUtmContentLabel(project.slug || project.title || 'project'),
-      }));
-
-    return [...staticPromotionTargets, ...projectTargets];
-  }, [projects]);
-
-  const selectedPromotionTarget = useMemo(() => {
-    return promotionTargets.find((target) => target.value === promotionTargetValue) || promotionTargets[0];
-  }, [promotionTargets, promotionTargetValue]);
-
-  const generatedPromotionUrl = useMemo(() => buildPromotionUrl({
-    target: selectedPromotionTarget,
-    source: promotionSource,
-    campaign: promotionCampaign,
-    content: promotionContent,
-  }), [selectedPromotionTarget, promotionSource, promotionCampaign, promotionContent]);
-
-  const promotionPathLabels = useMemo(() => new Map(promotionTargets.map((target) => [target.path, target.label.replace(/^Proyek: /, '')])), [promotionTargets]);
-
-  function getPromotionPathLabel(path: string) {
-    return promotionPathLabels.get(path) || path;
-  }
-
-  useEffect(() => {
-    const fallbackTarget = promotionTargets[0];
-    const currentTarget = promotionTargets.find((target) => target.value === promotionTargetValue);
-
-    if (!currentTarget && fallbackTarget) {
-      setPromotionTargetValue(fallbackTarget.value);
-      setPromotionContent(fallbackTarget.contentLabel);
-    }
-  }, [promotionTargets, promotionTargetValue]);
-
   const filteredProjects = useMemo(() => {
     if (wawasanFilter === 'with_wawasan') return projects.filter((project) => project.hasWawasan);
     if (wawasanFilter === 'without_wawasan') return projects.filter((project) => !project.hasWawasan);
     return projects;
   }, [projects, wawasanFilter]);
-
-  function handlePromotionTargetChange(value: string) {
-    const nextTarget = promotionTargets.find((target) => target.value === value);
-    setPromotionTargetValue(value);
-    setPromotionContent(nextTarget?.contentLabel || '');
-    setPromotionCopied(false);
-  }
-
-  async function copyPromotionLink() {
-    try {
-      await navigator.clipboard.writeText(generatedPromotionUrl);
-      setPromotionCopied(true);
-      toast({ type: 'success', title: 'Link disalin', description: 'Link promosi UTM siap ditempel ke caption atau bio.' });
-      window.setTimeout(() => setPromotionCopied(false), 2400);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Browser tidak mengizinkan salin otomatis.';
-      setPromotionCopied(false);
-      toast({ type: 'error', title: 'Gagal menyalin link', description: errorMessage });
-    }
-  }
 
   async function deleteProject(project: DashboardProject) {
     const confirmed = window.confirm(`Hapus project "${project.title}"?`);
@@ -553,14 +304,13 @@ export default function AdminDashboardCMS() {
     <div className="py-8 md:py-14">
       <nav aria-label="Aksi cepat dashboard" className="mb-6 grid grid-cols-2 gap-2 md:hidden">
         <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#080807]">Tambah Proyek</Link>
-        <a href="#checklist-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#D4AF37]">Checklist Publikasi</a>
-        <a href="#pembuat-link-posting" className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.025] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-white/70">Buat Link Posting</a>
+        <a href="#kesehatan-konten" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#D4AF37]">Kesehatan Konten</a>
+        <a href="#daftar-proyek" className="col-span-2 inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.025] px-4 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.12em] text-white/70">Daftar Proyek</a>
       </nav>
       <nav aria-label="Aksi cepat desktop dashboard" className="mb-8 hidden items-center gap-3 rounded-full border border-white/10 bg-white/[0.018] p-2 md:flex">
         <Link href={getAdminProjectCreateHref('/admin/dashboard')} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">Tambah Proyek</Link>
-        <a href="#pembuat-link-posting" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Buat Link Posting</a>
-        <a href="#status-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Status Publikasi</a>
-        <a href="#checklist-publikasi" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/[0.035] px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">Checklist Publikasi</a>
+        <a href="#kesehatan-konten" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Kesehatan Konten</a>
+        <a href="#daftar-proyek" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 bg-black/20 px-5 py-2.5 text-center font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/68 transition duration-300 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]">Daftar Proyek</a>
       </nav>
       <section>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -608,271 +358,7 @@ export default function AdminDashboardCMS() {
         </div>
       </section>
 
-      <section id="pembuat-link-posting" className="mt-8 rounded-[28px] border border-[#D4AF37]/16 bg-[#D4AF37]/[0.028] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Link Posting</p>
-            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Pembuat Link Posting</h2>
-            <p className="mt-4 text-sm leading-6 text-white/52">Buat link portfolio dengan penanda sumber traffic untuk IG, TikTok, Facebook, YouTube Short, dan kanal lainnya.</p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42">Medium UTM: social</div>
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <div className="space-y-2">
-            <label htmlFor="promotion-target" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Target halaman</label>
-            <select id="promotion-target" value={promotionTargetValue} onChange={(event) => handlePromotionTargetChange(event.target.value)} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20">
-              {promotionTargets.map((target) => <option key={target.value} value={target.value}>{target.label}</option>)}
-            </select>
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="promotion-source" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Kanal / Sumber</label>
-            <select id="promotion-source" value={promotionSource} onChange={(event) => { setPromotionSource(event.target.value as PromotionSource); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20">
-              {promotionSourceOptions.map((source) => <option key={source.value} value={source.value}>{source.label}</option>)}
-            </select>
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="promotion-campaign" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Kampanye</label>
-            <input id="promotion-campaign" value={promotionCampaign} onChange={(event) => { setPromotionCampaign(event.target.value); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition placeholder:text-white/24 focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20" placeholder="portfolio_content" />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="promotion-content" className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/50">Label konten opsional</label>
-            <input id="promotion-content" value={promotionContent} onChange={(event) => { setPromotionContent(event.target.value); setPromotionCopied(false); }} className="w-full rounded-xl border border-white/12 bg-[#121212] px-4 py-3 text-sm text-white/80 outline-none transition placeholder:text-white/24 focus:border-[#D4AF37]/60 focus:ring-2 focus:ring-[#D4AF37]/20" placeholder={selectedPromotionTarget.contentLabel} />
-          </div>
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/38">Link yang Dihasilkan</p>
-          <p className="mt-3 break-all text-sm leading-6 text-white/72">{generatedPromotionUrl}</p>
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <button type="button" onClick={copyPromotionLink} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#D4AF37] px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#080807] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E2C866]">Salin Link</button>
-            {promotionCopied ? <p className="text-sm leading-6 text-emerald-300">Link promosi berhasil disalin.</p> : null}
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Analitik Promosi</p>
-            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Performa Link Posting</h2>
-            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kunjungan dari link posting yang memakai UTM.</p>
-            <p className="mt-2 text-xs leading-5 text-white/40">Data ini hanya menghitung kunjungan dari link yang memiliki UTM.</p>
-          </div>
-          <div className="flex flex-col items-start gap-2 lg:items-end">
-            <button type="button" onClick={loadPromoSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
-              Muat Ulang
-            </button>
-            {promoSummaryLoadedAt ? <p className="text-xs leading-5 text-white/38">Terakhir dimuat: {formatLoadedAt(promoSummaryLoadedAt)}</p> : null}
-          </div>
-        </div>
-
-        {promoSummaryLoading ? (
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
-            {Array.from({ length: 6 }).map((_, index) => <div key={index} className="premium-skeleton h-28 rounded-2xl" />)}
-          </div>
-        ) : promoSummaryMessage ? (
-          <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{promoSummaryMessage}</p>
-        ) : promoSummary && promoSummary.total === 0 ? (
-          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada kunjungan posting. Buat link dari Pembuat Link Posting, buka link tersebut, lalu klik Muat Ulang.</p>
-        ) : promoSummary ? (
-          <>
-            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
-              <div className="rounded-2xl border border-[#D4AF37]/18 bg-[#D4AF37]/[0.035] p-5">
-                <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-[#D4AF37]/85">Total 30 Hari</p>
-                <p className="mt-5 font-display text-5xl leading-none text-white/92">{promoSummary.total}</p>
-              </div>
-              {promotionSourceOptions.map((source) => {
-                const count = promoSummary.bySource.find((item) => item.source === source.value)?.count || 0;
-                return (
-                  <div key={source.value} className="rounded-2xl border border-white/8 bg-black/20 p-5">
-                    <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/42">{source.label}</p>
-                    <p className="mt-5 font-display text-5xl leading-none text-white/90">{count}</p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
-              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Halaman paling sering dibuka dari promosi</p>
-                <div className="mt-5 space-y-3">
-                  {promoSummary.topPaths.length > 0 ? promoSummary.topPaths.slice(0, 5).map((item) => (
-                    <div key={item.path} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
-                      <span>
-                        <span className="block text-sm font-semibold leading-5 text-white/82">{getPromotionPathLabel(item.path)}</span>
-                        <span className="mt-1 block break-all text-xs leading-5 text-white/38">{item.path}</span>
-                      </span>
-                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
-                    </div>
-                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kunjungan posting.</p>}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Konten promosi teratas</p>
-                <div className="mt-5 space-y-3">
-                  {promoSummary.topContent.length > 0 ? promoSummary.topContent.slice(0, 5).map((item) => (
-                    <div key={item.content} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
-                      <span className="break-all text-sm text-white/70">{item.content}</span>
-                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
-                    </div>
-                  )) : <p className="text-sm leading-6 text-white/42">Belum ada label konten posting.</p>}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/8 bg-black/20 p-5">
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-white/45">Kampanye Teratas</p>
-                <div className="mt-5 space-y-3">
-                  {promoSummary.topCampaigns.length > 0 ? promoSummary.topCampaigns.slice(0, 5).map((item) => (
-                    <div key={item.campaign} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/[0.025] px-4 py-3">
-                      <span className="break-all text-sm text-white/70">{item.campaign}</span>
-                      <span className="font-mono text-sm font-black text-[#D4AF37]">{item.count}</span>
-                    </div>
-                  )) : <p className="text-sm leading-6 text-white/42">Belum ada kampanye promosi.</p>}
-                </div>
-              </div>
-            </div>
-          </>
-        ) : null}
-      </section>
-
-
-      <section id="checklist-publikasi" className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.018] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] md:p-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div id="status-publikasi" className="max-w-2xl scroll-mt-24">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Publikasi Manual</p>
-            <h2 className="font-display mt-4 text-3xl font-normal leading-[1.08] tracking-[-0.035em] text-white/92 md:text-4xl">Status Publikasi Konten</h2>
-            <p className="mt-4 text-sm leading-6 text-white/52">Ringkasan kanal yang sudah diposting dan performa awal dari link posting.</p>
-          </div>
-          <div className="flex flex-col items-start gap-2 lg:items-end">
-            <button type="button" onClick={loadPublishingSummary} className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#D4AF37]/35 px-5 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
-              Muat Ulang
-            </button>
-            {publishingSummaryLoadedAt ? <p className="text-xs leading-5 text-white/38">Terakhir dimuat: {formatLoadedAt(publishingSummaryLoadedAt)}</p> : null}
-          </div>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {[
-            ['all', 'Semua'],
-            ['not_posted', 'Belum diposting'],
-            ['posted', 'Sudah diposting'],
-            ['no_visits', 'Belum ada kunjungan'],
-          ].map(([value, label]) => (
-            <button key={value} type="button" onClick={() => setPublishingFilter(value as typeof publishingFilter)} className={`rounded-full border px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] transition ${publishingFilter === value ? 'border-[#D4AF37]/60 bg-[#D4AF37]/15 text-[#D4AF37]' : 'border-white/10 bg-black/20 text-white/48 hover:border-[#D4AF37]/35 hover:text-[#D4AF37]'}`}>
-              {label}
-            </button>
-          ))}
-        </div>
-
-
-        {publishingSummary ? (
-          <div className="mt-8 rounded-[24px] border border-[#D4AF37]/15 bg-[#D4AF37]/[0.045] p-5 md:p-6">
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]/85">Rekomendasi Manual</p>
-                <h3 className="mt-3 font-display text-2xl font-normal leading-tight tracking-[-0.03em] text-white/92">Rekomendasi Prioritas Posting</h3>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/52">Saran konten yang perlu diprioritaskan berdasarkan checklist publikasi dan kunjungan link posting.</p>
-              </div>
-              <p className="text-xs leading-5 text-white/38">Maksimal 6 rekomendasi teratas.</p>
-            </div>
-
-            {promotionRecommendations.length > 0 ? (
-              <>
-              <div className={`mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2 ${showAllPromotionRecommendations ? '' : '[&>article:nth-child(n+4)]:hidden md:[&>article:nth-child(n+4)]:block'}`}>
-                {promotionRecommendations.map((item) => (
-                  <article key={`recommendation:${item.contentType}:${item.slug}`} className="rounded-2xl border border-white/10 bg-black/24 p-5">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-base font-semibold leading-6 text-white/90">{item.title}</p>
-                        <p className="mt-1 text-xs text-white/36">/{item.slug}</p>
-                      </div>
-                      <span className="inline-flex w-fit rounded-full border border-[#D4AF37]/30 bg-[#D4AF37]/12 px-3 py-1.5 text-xs font-semibold text-[#D4AF37]">{item.recommendationLabel}</span>
-                    </div>
-                    <p className="mt-4 text-sm leading-6 text-white/60">{item.recommendationReason}</p>
-                    <div className="mt-4 flex flex-wrap gap-2 text-xs leading-5">
-                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white/56">{item.totalPostedChannels}/{item.totalRequiredChannels} kanal aktif</span>
-                      <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-white/56">{item.promoVisitCount} kunjungan</span>
-                    </div>
-                    <p className="mt-4 text-xs leading-5 text-white/42">Belum: {item.unpostedChannels.length > 0 ? item.unpostedChannels.join(', ') : '—'}</p>
-                    <Link href={item.href} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-10 items-center justify-center rounded-full border border-[#D4AF37]/35 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">Buka Halaman</Link>
-                  </article>
-                ))}
-              </div>
-              {promotionRecommendations.length > 3 ? (
-                <button type="button" onClick={() => setShowAllPromotionRecommendations((current) => !current)} className="mt-5 w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37] md:hidden">
-                  {showAllPromotionRecommendations ? 'Sembunyikan' : `Lihat semua (${promotionRecommendations.length})`}
-                </button>
-              ) : null}
-              </>
-            ) : (
-              <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada rekomendasi prioritas. Semua konten utama sudah memiliki aktivitas publikasi yang cukup.</p>
-            )}
-          </div>
-        ) : null}
-
-        {publishingSummaryLoading ? (
-          <div className="mt-8 space-y-3">
-            {Array.from({ length: 4 }).map((_, index) => <div key={index} className="premium-skeleton h-20 rounded-2xl" />)}
-          </div>
-        ) : publishingSummaryMessage ? (
-          <p className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{publishingSummaryMessage}</p>
-        ) : publishingSummary && publishingSummary.items.length === 0 ? (
-          <p className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/58">Belum ada data publikasi. Simpan Checklist dari Social Composer untuk mulai melihat status publikasi di dashboard.</p>
-        ) : publishingSummary ? (
-          <div className="mt-8 overflow-hidden rounded-2xl border border-white/8 bg-black/20">
-            <div className="hidden grid-cols-[1.2fr_1fr_1fr_0.45fr_0.9fr] border-b border-white/[0.07] px-5 py-4 font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/34 lg:grid">
-              <span>Konten</span>
-              <span>Sudah Diposting</span>
-              <span>Belum Diposting</span>
-              <span>Kunjungan UTM</span>
-              <span>Status</span>
-            </div>
-            {filteredPublishingItems.length > 0 ? (
-              <>
-              <div className={`divide-y divide-white/[0.07] ${showAllPublishingItems ? '' : '[&>div:nth-child(n+4)]:hidden md:[&>div:nth-child(n+4)]:grid'}`}>
-                {filteredPublishingItems.map((item) => (
-                  <div key={`${item.contentType}:${item.slug}`} className="grid gap-4 px-5 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] lg:grid-cols-[1.2fr_1fr_1fr_0.45fr_0.9fr] lg:items-start">
-                    <div>
-                      <p className="text-base font-semibold leading-6 text-white/90">{item.title}</p>
-                      <p className="mt-1 text-xs text-white/36">/{item.slug}</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Link href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-[0.14em] text-white/58 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">Buka Halaman</Link>
-                        {item.postingDate ? <span className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/42">{formatDate(item.postingDate)}</span> : null}
-                      </div>
-                    </div>
-                    <p className="text-sm leading-6 text-emerald-200/80">{item.postedChannels.length > 0 ? item.postedChannels.join(', ') : '—'}</p>
-                    <p className="text-sm leading-6 text-white/50">{item.unpostedChannels.length > 0 ? item.unpostedChannels.join(', ') : '—'}</p>
-                    <div>
-                      <p className="font-display text-4xl leading-none text-white/90">{item.promoVisitCount}</p>
-                      {item.topPromoSource ? <p className="mt-2 text-xs leading-5 text-white/38">Teratas: {getPromotionSourceLabel(item.topPromoSource)}</p> : null}
-                    </div>
-                    <div>
-                      <span className="inline-flex rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/10 px-3 py-1.5 text-xs font-semibold text-[#D4AF37]">{item.status}</span>
-                      <p className="mt-2 text-xs leading-5 text-white/38">{item.totalPostedChannels}/{item.totalRequiredChannels} kanal aktif</p>
-                      {item.notes ? <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/42">{item.notes}</p> : null}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {filteredPublishingItems.length > 3 ? (
-                <div className="border-t border-white/[0.07] p-4 md:hidden">
-                  <button type="button" onClick={() => setShowAllPublishingItems((current) => !current)} className="w-full rounded-full border border-[#D4AF37]/30 px-4 py-2.5 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-[#D4AF37]">
-                    {showAllPublishingItems ? 'Sembunyikan' : `Lihat semua (${filteredPublishingItems.length})`}
-                  </button>
-                </div>
-              ) : null}
-              </>
-            ) : (
-              <div className="px-5 py-8 text-sm leading-6 text-white/52">Tidak ada data publikasi yang sesuai filter.</div>
-            )}
-          </div>
-        ) : null}
-      </section>
-
-
-      <section className="mt-20 border-t border-white/[0.07] pt-14">
+      <section id="kesehatan-konten" className="mt-20 border-t border-white/[0.07] pt-14">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Kesiapan Konten</p>
@@ -934,7 +420,7 @@ export default function AdminDashboardCMS() {
         </div>
       </section>
 
-      <section className="mt-20 border-t border-white/[0.07] pt-14">
+      <section id="daftar-proyek" className="mt-20 border-t border-white/[0.07] pt-14">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37]/90">Proyek</p>
@@ -1010,6 +496,11 @@ export default function AdminDashboardCMS() {
                   </p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
                   <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                    {project.is_published !== false && project.slug ? (
+                      <Link href={'/karya/' + project.slug} target="_blank" rel="noreferrer" className="min-h-11 rounded-full border border-[#D4AF37]/35 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
+                        Lihat & Bagikan
+                      </Link>
+                    ) : null}
                     <Link href={getAdminProjectEditHref(project.id, '/admin/dashboard')} className="min-h-11 rounded-full border border-white/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-white/68 transition duration-300 hover:border-[#D4AF37]/40 hover:text-[#D4AF37]">
                       Edit
                     </Link>

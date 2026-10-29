@@ -6,6 +6,8 @@ export type PromotionSource =
   | "facebook"
   | "youtube_short"
   | "linkedin"
+  | "pinterest"
+  | "whatsapp"
   | "manual";
 
 export type PromotionTarget = {

@@ -12,7 +12,7 @@ import AdminEditProjectShortcut from '@/components/admin-edit-project-shortcut';
 import RevealObserver from '@/components/reveal-observer';
 import ScrollProgress from '@/components/scroll-progress';
 import ShareLinkButton from '@/components/share-link-button';
-import SocialComposerModal from '@/components/social-composer-modal';
+import ProjectShareKit from '@/components/project-share-kit';
 import { getAreaTagLabel } from '@/lib/area-tags';
 import { getPublishedProjectBySlug } from '@/lib/projects';
 import { absoluteUrl } from '@/lib/site-url';
@@ -340,7 +340,22 @@ ${projectUrl}`;
           </div>
 
         </section>
-        <SocialComposerModal contentType="karya" slug={project.slug} />
+        <ProjectShareKit
+          title={project.title}
+          slug={project.slug}
+          canonicalUrl={projectUrl}
+          summary={openingDescription}
+          context={project.konteks}
+          conflict={project.konflik}
+          designDecision={project.keputusan_desain}
+          approach={project.pendekatan}
+          impact={project.dampak || project.impact}
+          insight={project.insight_kunci}
+          category={project.category}
+          year={project.completion_year}
+          areaTags={project.area_tags}
+          coverImage={projectCoverImage}
+        />
       </div>
     </main>
   );
