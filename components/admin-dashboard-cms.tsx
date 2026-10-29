@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import { Download } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabaseClient';
 import type { Project } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
 import { getAdminProjectCreateHref, getAdminProjectEditHref } from '@/lib/admin-project-return-path';
+import { triggerBrowserDownload } from '@/components/social-composer/actions';
 
 const vercelAnalyticsUrl = 'https://vercel.com/eryawanagungtrimuda-sketchs-projects/eryawan-portfolio/analytics';
 
@@ -122,6 +124,7 @@ export default function AdminDashboardCMS() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [downloadingProjectId, setDownloadingProjectId] = useState<string | null>(null);
   const [wawasanFilter, setWawasanFilter] = useState<'all' | 'with_wawasan' | 'without_wawasan'>('all');
   const [showAllAttentionItems, setShowAllAttentionItems] = useState(false);
   const [showAllProjectsMobile, setShowAllProjectsMobile] = useState(false);
@@ -228,6 +231,56 @@ export default function AdminDashboardCMS() {
     if (wawasanFilter === 'without_wawasan') return projects.filter((project) => !project.hasWawasan);
     return projects;
   }, [projects, wawasanFilter]);
+
+  async function downloadProjectImages(project: DashboardProject) {
+    if (downloadingProjectId) return;
+
+    setDownloadingProjectId(project.id);
+
+    try {
+      const { data, error: sessionError } = await getSupabaseClient().auth.getSession();
+      const token = data.session?.access_token;
+
+      if (sessionError || !token) {
+        throw sessionError || new Error('Sesi admin tidak ditemukan. Silakan login ulang.');
+      }
+
+      const response = await fetch(
+        '/api/download-project-images?projectId=' + encodeURIComponent(project.id),
+        {
+          method: 'GET',
+          headers: { Authorization: 'Bearer ' + token },
+          cache: 'no-store',
+        },
+      );
+
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({})) as { error?: string };
+        throw new Error(result.error || 'Gagal mengunduh gambar proyek.');
+      }
+
+      const blob = await response.blob();
+      if (!blob.size) throw new Error('File ZIP kosong.');
+
+      const disposition = response.headers.get('Content-Disposition') || '';
+      const matched = disposition.match(/filename="?([^";]+)"?/i);
+      triggerBrowserDownload(blob, matched?.[1] || (project.slug + '-images.zip'));
+
+      toast({
+        type: 'success',
+        title: 'ZIP gambar siap',
+        description: 'Gambar ' + project.title + ' sudah disiapkan. Periksa folder Downloads.',
+      });
+    } catch (error) {
+      toast({
+        type: 'error',
+        title: 'Gagal mengunduh gambar',
+        description: error instanceof Error ? error.message : 'Silakan coba lagi.',
+      });
+    } finally {
+      setDownloadingProjectId(null);
+    }
+  }
 
   async function deleteProject(project: DashboardProject) {
     const confirmed = window.confirm(`Hapus project "${project.title}"?`);
@@ -471,7 +524,7 @@ export default function AdminDashboardCMS() {
 
             <div className={`divide-y divide-white/[0.07] ${showAllProjectsMobile ? '' : '[&>div:nth-child(n+4)]:hidden md:[&>div:nth-child(n+4)]:grid'}`}>
               {filteredProjects.map((project) => (
-                <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.2fr_1fr_0.55fr_0.65fr_0.6fr] md:items-center">
+                <div key={project.id} className="grid gap-4 px-6 py-5 transition duration-300 hover:bg-[#D4AF37]/[0.045] hover:shadow-[inset_2px_0_0_rgba(212,175,55,0.45)] md:grid-cols-[1.2fr_1fr_0.55fr_0.65fr_minmax(350px,1.8fr)] md:items-center">
                   <div>
                     <p className="text-base font-semibold leading-6 text-white/90">{project.title}</p>
                     <p className="mt-1 text-sm text-white/36">/{project.slug}</p>
@@ -495,7 +548,17 @@ export default function AdminDashboardCMS() {
                     )}
                   </p>
                   <p className="text-sm text-white/48">{formatDate(project.created_at)}</p>
-                  <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                  <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                    <button
+                      type="button"
+                      onClick={() => void downloadProjectImages(project)}
+                      disabled={downloadingProjectId !== null || deletingId === project.id}
+                      aria-busy={downloadingProjectId === project.id}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#D4AF37]/30 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Download size={13} aria-hidden="true" />
+                      {downloadingProjectId === project.id ? 'Menyiapkan ZIP…' : 'Unduh Gambar'}
+                    </button>
                     {project.is_published !== false && project.slug ? (
                       <Link href={'/karya/' + project.slug} target="_blank" rel="noreferrer" className="min-h-11 rounded-full border border-[#D4AF37]/35 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#D4AF37] transition duration-300 hover:bg-[#D4AF37]/10">
                         Lihat & Bagikan
