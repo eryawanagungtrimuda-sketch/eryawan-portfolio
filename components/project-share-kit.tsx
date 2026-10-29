@@ -78,7 +78,7 @@ const promotionSourceByPlatform: Record<SharePlatform, PromotionSource> = {
   pinterest: 'pinterest',
   facebook: 'facebook',
   linkedin: 'linkedin',
-  whatsapp: 'manual',
+  whatsapp: 'whatsapp',
   tiktok: 'tiktok',
   youtube: 'youtube_short',
 };
