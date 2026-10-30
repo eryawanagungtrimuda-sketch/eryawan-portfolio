@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Copy,
+  Download,
   ExternalLink,
   Facebook,
   Image as ImageIcon,
   Instagram,
+  LayoutGrid,
   Linkedin,
   Link2,
   MessageCircle,
@@ -18,10 +20,12 @@ import {
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 import { buildPromotionUrl, toUtmContentLabel, type PromotionSource } from '@/lib/utm-links';
+import { triggerBrowserDownload } from '@/components/social-composer/actions';
 
-type SharePlatform = 'instagram' | 'pinterest' | 'facebook' | 'linkedin' | 'whatsapp' | 'tiktok' | 'youtube';
+type SharePlatform = 'instagram' | 'pinterest' | 'facebook' | 'linkedin' | 'whatsapp' | 'tiktok' | 'youtube' | 'behance';
 
 type ProjectShareKitProps = {
+  projectId: string;
   title: string;
   slug: string;
   canonicalUrl: string;
@@ -52,6 +56,7 @@ const platforms: { key: SharePlatform; label: string; Icon: typeof Instagram }[]
   { key: 'whatsapp', label: 'WhatsApp', Icon: MessageCircle },
   { key: 'tiktok', label: 'TikTok', Icon: Music2 },
   { key: 'youtube', label: 'YouTube Shorts', Icon: Youtube },
+  { key: 'behance', label: 'Behance', Icon: LayoutGrid },
 ];
 
 function clean(value?: string | null) {
@@ -73,6 +78,28 @@ function buildHashtags(areaTags?: string[] | null) {
   return Array.from(new Set(['#DesainInterior', '#InteriorDesign', '#EryawanAgung', ...area])).join(' ');
 }
 
+function toBehanceTag(value: string) {
+  return clean(value).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
+}
+
+function buildBehanceTags(props: ProjectShareKitProps) {
+  const candidates = [
+    'Interior Design',
+    'Interior Architecture',
+    '3D Visualization',
+    'Architectural Visualization',
+    clean(props.category),
+    ...(props.areaTags || []).map(toBehanceTag),
+  ].filter(Boolean);
+  const seen = new Set<string>();
+  return candidates.filter((tag) => {
+    const normalized = tag.toLowerCase();
+    if (seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  }).slice(0, 10);
+}
+
 const promotionSourceByPlatform: Record<SharePlatform, PromotionSource> = {
   instagram: 'instagram',
   pinterest: 'pinterest',
@@ -81,6 +108,7 @@ const promotionSourceByPlatform: Record<SharePlatform, PromotionSource> = {
   whatsapp: 'whatsapp',
   tiktok: 'tiktok',
   youtube: 'youtube_short',
+  behance: 'behance',
 };
 
 function getTrackedProjectUrl(props: ProjectShareKitProps, platform: SharePlatform) {
@@ -107,6 +135,12 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
   const impactSentence = impact ? 'Dampak visual: ' + shorten(impact, 220) : '';
   const approachSentence = approach ? 'Pendekatan: ' + shorten(approach, 220) : '';
   const insightSentence = insight ? 'Insight desain: ' + shorten(insight, 200) : '';
+  const behanceContext = context ? 'Design context (original project notes — translate or edit before publishing): ' + shorten(context, 300) : '';
+  const behanceDecision = decision ? 'Key design decision (original project notes — translate or edit before publishing): ' + shorten(decision, 260) : '';
+  const behanceApproach = approach ? 'Design approach (original project notes — translate or edit before publishing): ' + shorten(approach, 220) : '';
+  const behanceImpact = impact ? 'Visual outcome (original project notes — translate or edit before publishing): ' + shorten(impact, 220) : '';
+  const behanceInsight = insight ? 'Key design insight (original project notes — translate or edit before publishing): ' + shorten(insight, 200) : '';
+  const behanceTags = buildBehanceTags(props).join(', ');
 
   return {
     instagram: {
@@ -200,6 +234,31 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
       ].filter(Boolean).join('\n'),
       instruction: 'Gunakan judul dan deskripsi ini saat mengunggah video pendek proyek ke YouTube Shorts.',
     },
+    behance: {
+      title: shorten(projectName + ' | Interior Design Project', 100),
+      body: [
+        'Interior Design Case Study — ' + projectName,
+        '',
+        'A visual case study by Eryawan Agung, presenting the spatial concept and design direction through architectural visualization.',
+        'Project type: ' + (category || 'Interior Design'),
+        props.year ? 'Year: ' + props.year : '',
+        '',
+        'PROJECT OVERVIEW',
+        'This presentation highlights spatial planning, furniture composition, material expression, and lighting atmosphere explored in the project. Arrange the images from the strongest overall view to supporting angles and selected details.',
+        '',
+        behanceContext,
+        behanceDecision,
+        behanceApproach,
+        behanceImpact,
+        behanceInsight,
+        '',
+        'TOOLS USED: Confirm the software used for this project before publishing (for example, SketchUp or D5 Render).',
+        'PORTFOLIO: ' + getTrackedProjectUrl(props, 'behance'),
+        '',
+        'SUGGESTED TAGS: ' + behanceTags,
+      ].filter(Boolean).join('\n'),
+      instruction: 'Buka Behance → Share Your Work → Project. Unduh gambar proyek dalam ZIP, susun cover dan render pendukung, lalu tinjau/terjemahkan catatan proyek sebelum memublikasikan.',
+    },
   };
 }
 
@@ -211,6 +270,7 @@ function getPlatformUrl(platform: SharePlatform, canonicalUrl: string, body: str
   if (platform === 'tiktok') return 'https://www.tiktok.com/upload';
   if (platform === 'youtube') return 'https://studio.youtube.com/';
   if (platform === 'pinterest') return 'https://www.pinterest.com/';
+  if (platform === 'behance') return 'https://www.behance.net/';
   return 'https://www.instagram.com/';
 }
 
@@ -221,6 +281,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
   const [activePlatform, setActivePlatform] = useState<SharePlatform>('instagram');
   const [copied, setCopied] = useState<'title' | 'body' | 'link' | null>(null);
   const [feedback, setFeedback] = useState('');
+  const [downloadingImages, setDownloadingImages] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -262,7 +323,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(kind);
-      setFeedback(kind === 'title' ? 'Judul berhasil disalin.' : kind === 'body' ? 'Caption berhasil disalin.' : 'Tautan proyek berhasil disalin.');
+      setFeedback(kind === 'title' ? 'Judul berhasil disalin.' : kind === 'body' ? (activePlatform === 'behance' ? 'Deskripsi proyek berhasil disalin.' : 'Caption berhasil disalin.') : 'Tautan proyek berhasil disalin.');
     } catch {
       setCopied(null);
       setFeedback('Browser belum mengizinkan salin otomatis. Pilih teks lalu salin secara manual.');
@@ -284,6 +345,43 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
       if (error instanceof Error && error.name === 'AbortError') return;
     }
     await copyValue(activeTrackedUrl, 'link');
+  }
+
+  async function downloadProjectImages() {
+    setDownloadingImages(true);
+    setFeedback('');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      const accessToken = data.session?.access_token;
+      if (!accessToken) throw new Error('Sesi admin tidak ditemukan. Silakan masuk kembali.');
+
+      const response = await fetch('/api/download-project-images?projectId=' + encodeURIComponent(props.projectId), {
+        headers: { Authorization: 'Bearer ' + accessToken },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        let message = 'Gagal menyiapkan ZIP gambar proyek.';
+        try {
+          const payload = await response.json();
+          if (typeof payload?.error === 'string') message = payload.error;
+        } catch {
+          // Use the fallback message when the server does not return JSON.
+        }
+        throw new Error(message);
+      }
+
+      const blob = await response.blob();
+      if (!blob.size) throw new Error('ZIP gambar kosong.');
+      const safeTitle = clean(props.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'project';
+      triggerBrowserDownload(blob, safeTitle + '-behance-images.zip');
+      setFeedback('ZIP gambar proyek berhasil disiapkan. Pilih render yang akan dipakai di Behance.');
+    } catch (error) {
+      setFeedback(error instanceof Error ? error.message : 'Gagal menyiapkan ZIP gambar proyek.');
+    } finally {
+      setDownloadingImages(false);
+    }
   }
 
   if (!ready || !isAdmin) return null;
@@ -323,7 +421,7 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
               <button type="button" onClick={() => setOpen(false)} className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/15 text-white/75 hover:border-[#D4AF37]/50 hover:text-[#D4AF37]" aria-label="Tutup Share Kit">×</button>
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
               {platforms.map(({ key, label, Icon }) => (
                 <button
                   key={key}
@@ -351,8 +449,8 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
                 ) : null}
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <label htmlFor="share-kit-caption" className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/50">Caption / Deskripsi</label>
-                    <button type="button" onClick={() => void copyValue(activeDraft.body, 'body')} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#D4AF37]/35 px-3 text-xs text-[#E6C676] hover:bg-[#D4AF37]/10"><Copy size={13} /> Salin caption</button>
+                    <label htmlFor="share-kit-caption" className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/50">{activePlatform === 'behance' ? 'Deskripsi Proyek' : 'Caption / Deskripsi'}</label>
+                    <button type="button" onClick={() => void copyValue(activeDraft.body, 'body')} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#D4AF37]/35 px-3 text-xs text-[#E6C676] hover:bg-[#D4AF37]/10"><Copy size={13} /> {activePlatform === 'behance' ? 'Salin deskripsi' : 'Salin caption'}</button>
                   </div>
                   <textarea id="share-kit-caption" readOnly value={activeDraft.body} rows={8} className="w-full resize-y rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-white/88 outline-none focus:border-[#D4AF37]/50" />
                 </div>
@@ -367,6 +465,17 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
                     <img src={props.coverImage} alt={'Cover ' + props.title} className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]" />
                     <span className="flex items-center gap-2 px-3 py-3 text-xs font-semibold text-white/75"><ImageIcon size={14} /> Buka gambar cover <ExternalLink size={12} /></span>
                   </a>
+                ) : null}
+                {activePlatform === 'behance' ? (
+                  <button
+                    type="button"
+                    onClick={() => void downloadProjectImages()}
+                    disabled={downloadingImages}
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] disabled:cursor-wait disabled:opacity-60 hover:bg-[#D4AF37]/15"
+                  >
+                    <Download size={15} />
+                    {downloadingImages ? 'Menyiapkan ZIP…' : 'Unduh semua gambar (ZIP)'}
+                  </button>
                 ) : null}
                 <button type="button" onClick={() => void copyValue(activeTrackedUrl, 'link')} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-3 text-sm font-semibold text-white/80 hover:border-[#D4AF37]/45 hover:text-[#E6C676]"><Link2 size={15} /> Salin tautan proyek</button>
                 <button type="button" onClick={() => void shareProjectLink()} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] hover:bg-[#D4AF37]/15"><Share2 size={15} /> Bagikan tautan</button>
