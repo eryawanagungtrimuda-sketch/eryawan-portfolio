@@ -8,6 +8,7 @@ export type PromotionSource =
   | "linkedin"
   | "pinterest"
   | "whatsapp"
+  | "behance"
   | "manual";
 
 export type PromotionTarget = {

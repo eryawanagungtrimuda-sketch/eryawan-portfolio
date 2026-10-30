@@ -313,9 +313,9 @@ ${projectUrl}`;
         <div className="mt-12 pb-4">
           <PublicJourneyLinks
             links={[
-              { href: relatedInsight?.slug ? `/wawasan/${relatedInsight.slug}` : '/wawasan', title: relatedInsight?.slug ? 'Baca Wawasan Terkait' : 'Baca Wawasan', description: relatedInsight?.slug ? 'Lanjutkan ke insight yang membahas keputusan dari proyek ini.' : 'Lanjutkan eksplorasi ke artikel strategi dan studi desain.' },
-              { href: '/karya', title: 'Lihat Karya Lainnya', description: 'Bandingkan pendekatan proyek lain untuk kebutuhan ruang berbeda.' },
-              { href: '/mulai-project', title: 'Mulai Pemetaan Kebutuhan', description: 'Susun brief awal dan diskusikan kebutuhan proyek Anda.' },
+              { href: relatedInsight?.slug ? `/wawasan/${relatedInsight.slug}` : "/wawasan", title: relatedInsight?.slug ? "Baca Wawasan Terkait" : "Baca Wawasan", description: relatedInsight?.slug ? "Lanjutkan ke insight yang membahas keputusan dari proyek ini." : "Lanjutkan eksplorasi ke artikel strategi dan studi desain." },
+              { href: "/karya", title: "Lihat Karya Lainnya", description: "Bandingkan pendekatan proyek lain untuk kebutuhan ruang berbeda." },
+              { href: "/mulai-project", title: "Mulai Pemetaan Kebutuhan", description: "Susun brief awal dan diskusikan kebutuhan proyek Anda." },
             ]}
           />
         </div>
@@ -341,6 +341,7 @@ ${projectUrl}`;
 
         </section>
         <ProjectShareKit
+          projectId={project.id}
           title={project.title}
           slug={project.slug}
           canonicalUrl={projectUrl}
