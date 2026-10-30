@@ -8,6 +8,8 @@ import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
 type Props = {
   projects: ProjectWithArchiveImages[];
   preview?: boolean;
+  sheetTitle?: string;
+  sheetIntro?: string;
 };
 
 function projectConcept(project: ProjectWithArchiveImages) {
@@ -24,17 +26,17 @@ function projectGalleryTeaser(project: ProjectWithArchiveImages, cover: string |
     .slice(0, 4);
 }
 
-export default function ProjectSheetDocument({ projects, preview = false }: Props) {
+export default function ProjectSheetDocument({ projects, preview = false, sheetTitle, sheetIntro }: Props) {
   return (
     <article className={`project-sheet-document${preview ? ' project-sheet-preview-paper' : ''}`}>
       <div className="project-sheet-watermark" aria-hidden="true">EA</div>
       <header className="project-sheet-heading">
         <div>
           <p className="project-sheet-kicker">KARYA DESAIN TERPILIH · PROJECT SHEET</p>
-          <h1>Bentuk yang bermakna, ruang yang berkarakter.</h1>
+          <h1>{sheetTitle || 'Bentuk yang bermakna, ruang yang berkarakter.'}</h1>
         </div>
         <p className="project-sheet-intro">
-          Pilihan karya desain Eryawan Agung Trimuda, mencakup arsitektur dan interior dengan pendekatan yang merespons konteks, bentuk, dan pengalaman ruang.
+          {sheetIntro || 'Pilihan karya desain Eryawan Agung Trimuda, mencakup arsitektur dan interior dengan pendekatan yang merespons konteks, bentuk, dan pengalaman ruang.'}
         </p>
       </header>
 

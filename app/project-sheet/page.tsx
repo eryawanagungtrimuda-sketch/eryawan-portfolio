@@ -20,7 +20,10 @@ export default async function ProjectSheetPage() {
     <main id="main-content" className="project-sheet-page">
       <nav className="project-sheet-toolbar" aria-label="Project Sheet navigation">
         <Link href="/karya">← Back to works</Link>
-        <Link className="project-sheet-download" href="/project-sheet/preview">Download Project Sheet</Link>
+        <div className="project-sheet-toolbar-actions">
+          <Link className="project-sheet-customize" href="/project-sheet/customize">Create custom sheet</Link>
+          <Link className="project-sheet-download" href="/project-sheet/preview">Download full sheet</Link>
+        </div>
       </nav>
       <ProjectSheetDocument projects={projects} />
     </main>
