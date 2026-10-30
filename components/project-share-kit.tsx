@@ -237,27 +237,14 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
     behance: {
       title: shorten(projectName + ' | Interior Design Project', 100),
       body: [
-        'Interior Design Case Study — ' + projectName,
+        'Interior design project by Eryawan Agung, exploring spatial planning, materials, furniture, and lighting.',
         '',
-        'A visual case study by Eryawan Agung, presenting the spatial concept and design direction through architectural visualization.',
-        'Project type: ' + (category || 'Interior Design'),
-        props.year ? 'Year: ' + props.year : '',
+        'LIHAT PROYEK LENGKAP:',
+        getTrackedProjectUrl(props, 'behance'),
         '',
-        'PROJECT OVERVIEW',
-        'This presentation highlights spatial planning, furniture composition, material expression, and lighting atmosphere explored in the project. Arrange the images from the strongest overall view to supporting angles and selected details.',
-        '',
-        behanceContext,
-        behanceDecision,
-        behanceApproach,
-        behanceImpact,
-        behanceInsight,
-        '',
-        'TOOLS USED: Confirm the software used for this project before publishing (for example, SketchUp or D5 Render).',
-        'PORTFOLIO: ' + getTrackedProjectUrl(props, 'behance'),
-        '',
-        'SUGGESTED TAGS: ' + behanceTags,
+        'Tags: ' + buildBehanceTags(props).slice(0, 5).join(', '),
       ].filter(Boolean).join('\n'),
-      instruction: 'Buka Behance → Share Your Work → Project. Unduh gambar proyek dalam ZIP, susun cover dan render pendukung, lalu tinjau/terjemahkan catatan proyek sebelum memublikasikan.',
+      instruction: 'Deskripsi dibuat ringkas dan menempatkan tautan proyek lengkap di bagian awal. Di Behance, pilih cover terbaik lalu susun render pendukung sesuai alur presentasi.',
     },
   };
 }
@@ -375,8 +362,8 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
       const blob = await response.blob();
       if (!blob.size) throw new Error('ZIP gambar kosong.');
       const safeTitle = clean(props.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'project';
-      triggerBrowserDownload(blob, safeTitle + '-behance-images.zip');
-      setFeedback('ZIP gambar proyek berhasil disiapkan. Pilih render yang akan dipakai di Behance.');
+      triggerBrowserDownload(blob, safeTitle + '-project-images.zip');
+      setFeedback('ZIP gambar proyek berhasil diunduh. Pilih render yang ingin digunakan untuk posting.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Gagal menyiapkan ZIP gambar proyek.');
     } finally {
@@ -466,17 +453,15 @@ export default function ProjectShareKit(props: ProjectShareKitProps) {
                     <span className="flex items-center gap-2 px-3 py-3 text-xs font-semibold text-white/75"><ImageIcon size={14} /> Buka gambar cover <ExternalLink size={12} /></span>
                   </a>
                 ) : null}
-                {activePlatform === 'behance' ? (
-                  <button
-                    type="button"
-                    onClick={() => void downloadProjectImages()}
-                    disabled={downloadingImages}
-                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] disabled:cursor-wait disabled:opacity-60 hover:bg-[#D4AF37]/15"
-                  >
-                    <Download size={15} />
-                    {downloadingImages ? 'Menyiapkan ZIP…' : 'Unduh semua gambar (ZIP)'}
-                  </button>
-                ) : null}
+                <button
+                  type="button"
+                  onClick={() => void downloadProjectImages()}
+                  disabled={downloadingImages}
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] disabled:cursor-wait disabled:opacity-60 hover:bg-[#D4AF37]/15"
+                >
+                  <Download size={15} />
+                  {downloadingImages ? 'Menyiapkan ZIP…' : 'Unduh semua gambar (ZIP)'}
+                </button>
                 <button type="button" onClick={() => void copyValue(activeTrackedUrl, 'link')} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/15 px-4 py-3 text-sm font-semibold text-white/80 hover:border-[#D4AF37]/45 hover:text-[#E6C676]"><Link2 size={15} /> Salin tautan proyek</button>
                 <button type="button" onClick={() => void shareProjectLink()} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-4 py-3 text-sm font-semibold text-[#E6C676] hover:bg-[#D4AF37]/15"><Share2 size={15} /> Bagikan tautan</button>
                 <a href={getPlatformUrl(activePlatform, activeTrackedUrl, activeDraft.body)} target="_blank" rel="noreferrer" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#D4AF37] px-4 py-3 text-sm font-semibold text-[#080807] hover:bg-[#E2C866]"><ExternalLink size={15} /> Buka {activePlatformInfo.label}</a>
