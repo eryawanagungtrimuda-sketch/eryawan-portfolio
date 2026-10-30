@@ -158,7 +158,7 @@ ${projectUrl}`;
         <section className="reveal-on-scroll pt-12 pb-8 md:pt-16 md:pb-10 lg:pt-20 lg:pb-16">
           <p className="break-words font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37] md:text-[11px]">Beranda / Karya / {project.title}</p>
           <div className="mt-7 max-w-5xl">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#C8A951]/85 md:text-[11px]">Studi Kasus Interior</p>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-[#D4AF37] md:text-[11px]">Studi Kasus Interior</p>
             <h1 className="font-display mt-5 max-w-5xl break-words text-[2.1rem] font-normal leading-[1.04] tracking-[-0.04em] sm:text-[2.8rem] md:text-7xl">{project.title}</h1>
             {openingDescription ? (
               <p className="mt-6 max-w-3xl text-base leading-[1.75] text-white/68 sm:text-lg md:text-[1.35rem] md:leading-[1.6]">{openingDescription}</p>
@@ -262,7 +262,7 @@ ${projectUrl}`;
           <section className="reveal-on-scroll rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 md:p-7">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37]">Wawasan Terkait</p>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-white/66 sm:text-base">Belum ada wawasan terkait untuk proyek ini saat ini. Anda tetap dapat melanjutkan ke daftar wawasan untuk membaca pembahasan desain lainnya.</p>
-            <Link href="/wawasan" className="mt-5 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 font-sans text-sm font-semibold text-[#D4AF37]">Lihat Wawasan</Link>
+            <Link href="/wawasan" className="mt-5 inline-flex min-h-11 items-center rounded-full border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-5 py-2.5 text-sm font-semibold text-[#D4AF37]">Lihat Wawasan</Link>
           </section>
         )}
 
@@ -313,9 +313,9 @@ ${projectUrl}`;
         <div className="mt-12 pb-4">
           <PublicJourneyLinks
             links={[
-              { href: relatedInsight?.slug ? `/wawasan/${relatedInsight.slug}` : '/wawasan', title: relatedInsight?.slug ? 'Baca Wawasan Terkait' : 'Baca Wawasan', description: relatedInsight?.slug ? 'Lanjutkan ke insight yang membahas keputusan dari proyek ini.' : 'Lanjutkan eksplorasi ke artikel strategi dan studi desain.' },
-              { href: '/karya', title: 'Lihat Karya Lainnya', description: 'Bandingkan pendekatan proyek lain untuk kebutuhan ruang berbeda.' },
-              { href: '/mulai-project', title: 'Mulai Pemetaan Kebutuhan', description: 'Susun brief awal dan diskusikan kebutuhan proyek Anda.' },
+              { href: relatedInsight?.slug ? `/wawasan/${relatedInsight.slug}` : "/wawasan", title: relatedInsight?.slug ? "Baca Wawasan Terkait" : "Baca Wawasan", description: relatedInsight?.slug ? "Lanjutkan ke insight yang membahas keputusan dari proyek ini." : "Lanjutkan eksplorasi ke artikel strategi dan studi desain." },
+              { href: "/karya", title: "Lihat Karya Lainnya", description: "Bandingkan pendekatan proyek lain untuk kebutuhan ruang berbeda." },
+              { href: "/mulai-project", title: "Mulai Pemetaan Kebutuhan", description: "Susun brief awal dan diskusikan kebutuhan proyek Anda." },
             ]}
           />
         </div>
@@ -341,6 +341,7 @@ ${projectUrl}`;
 
         </section>
         <ProjectShareKit
+          projectId={project.id}
           title={project.title}
           slug={project.slug}
           canonicalUrl={projectUrl}
