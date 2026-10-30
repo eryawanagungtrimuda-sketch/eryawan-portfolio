@@ -149,9 +149,9 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
                 value={categoryFilter}
                 onChange={(event) => {
                   const value = event.target.value;
+                  const previousAutoTitle = categoryFilter === allOption ? defaultTitle : `${categoryFilter} Portfolio`;
+                  if (sheetTitle === previousAutoTitle) setSheetTitle(value === allOption ? defaultTitle : `${value} Portfolio`);
                   setCategoryFilter(value);
-                  if (sheetTitle === defaultTitle && value !== allOption) setSheetTitle(`${value} Portfolio`);
-                  if (sheetTitle !== defaultTitle && categories.includes(sheetTitle.replace(/ Portfolio$/, '')) && value === allOption) setSheetTitle(defaultTitle);
                 }}
               >
                 <option value={allOption}>Semua kategori</option>
