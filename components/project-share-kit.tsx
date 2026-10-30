@@ -135,12 +135,6 @@ function buildDrafts(props: ProjectShareKitProps): Record<SharePlatform, ShareDr
   const impactSentence = impact ? 'Dampak visual: ' + shorten(impact, 220) : '';
   const approachSentence = approach ? 'Pendekatan: ' + shorten(approach, 220) : '';
   const insightSentence = insight ? 'Insight desain: ' + shorten(insight, 200) : '';
-  const behanceContext = context ? 'Design context (original project notes — translate or edit before publishing): ' + shorten(context, 300) : '';
-  const behanceDecision = decision ? 'Key design decision (original project notes — translate or edit before publishing): ' + shorten(decision, 260) : '';
-  const behanceApproach = approach ? 'Design approach (original project notes — translate or edit before publishing): ' + shorten(approach, 220) : '';
-  const behanceImpact = impact ? 'Visual outcome (original project notes — translate or edit before publishing): ' + shorten(impact, 220) : '';
-  const behanceInsight = insight ? 'Key design insight (original project notes — translate or edit before publishing): ' + shorten(insight, 200) : '';
-  const behanceTags = buildBehanceTags(props).join(', ');
 
   return {
     instagram: {
