@@ -15,12 +15,12 @@ import { absoluteUrl } from "@/lib/site-url";
 export const metadata: Metadata = {
   title: "Kebijakan Privasi | Eryawan Agung",
   description:
-    "Penjelasan tentang data yang dikumpulkan melalui situs Eryawan Agung, tujuan penggunaannya, penyimpanan, layanan pihak ketiga, dan cara mengajukan permintaan terkait data pribadi.",
+    "Penjelasan tentang informasi yang Anda berikan melalui situs Eryawan Agung, cara penggunaannya, dan cara mengajukan permintaan terkait informasi Anda.",
   alternates: { canonical: absoluteUrl("/kebijakan-privasi") },
   openGraph: {
     title: "Kebijakan Privasi | Eryawan Agung",
     description:
-      "Pahami bagaimana data dari formulir proyek, permintaan akses CV, dan kunjungan situs dikelola.",
+      "Ketahui informasi apa yang digunakan saat mengisi formulir atau mengunjungi situs, serta cara menghubungi kami mengenai informasi Anda.",
     url: absoluteUrl("/kebijakan-privasi"),
     images: [
       {
@@ -43,30 +43,30 @@ export const metadata: Metadata = {
 const sections = [
   {
     number: "01",
-    title: "Data yang dapat dikumpulkan",
+    title: "Informasi yang Anda berikan",
     icon: UserRound,
     paragraphs: [
-      "Jenis data bergantung pada fitur yang Anda gunakan. Anda tidak perlu memberikan data yang tidak relevan dengan permintaan Anda.",
+      "Informasi yang diminta bergantung pada formulir atau fitur yang Anda gunakan. Berikan hanya informasi yang berkaitan dengan kebutuhan Anda.",
     ],
     bullets: [
-      "Brief proyek: nama, perusahaan/brand/instansi, email, WhatsApp, jenis kebutuhan, lokasi proyek, estimasi luas, tahap proyek, timeline, kisaran anggaran, status materi pendukung, serta penjelasan kebutuhan yang Anda tulis.",
-      "Permintaan akses CV: nama, email, perusahaan/organisasi, jabatan, tujuan melihat CV, tautan LinkedIn atau situs perusahaan, dan WhatsApp bila diberikan.",
-      "Informasi kunjungan promosi: halaman yang dikunjungi, sumber/medium/kampanye promosi (parameter UTM), konten promosi, referrer, dan ID sesi sementara saat pelacakan tautan promosi yang dikenali aktif.",
-      "Interaksi situs: data peristiwa seperti klik CTA, email/WhatsApp, serta niat membuka halaman karya atau wawasan, beserta label sumber dan halaman yang relevan.",
+      "Formulir proyek: nama, perusahaan atau organisasi jika ada, email atau WhatsApp, jenis kebutuhan, lokasi dan perkiraan luas proyek, tahap proyek, rencana waktu, kisaran anggaran, ketersediaan gambar atau bahan pendukung, serta penjelasan kebutuhan Anda.",
+      "Permintaan akses CV: nama, email, perusahaan atau organisasi, jabatan, alasan meminta akses CV, tautan LinkedIn atau situs perusahaan, serta nomor WhatsApp jika Anda memilih mengisinya.",
+      "Informasi kunjungan situs: halaman yang dibuka dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi.",
+      "Interaksi di situs: informasi tentang tautan atau tombol yang dipilih agar kami memahami bagian situs yang berguna dan perlu ditingkatkan.",
     ],
   },
   {
     number: "02",
-    title: "Tujuan penggunaan data",
+    title: "Untuk apa informasi digunakan",
     icon: Eye,
     paragraphs: [
-      "Data digunakan secukupnya untuk menindaklanjuti kebutuhan yang Anda sampaikan, mengelola komunikasi profesional, meninjau permintaan akses CV, dan menjaga fungsi serta keamanan situs.",
+      "Informasi digunakan untuk menanggapi permintaan Anda, memahami kebutuhan proyek, meninjau permintaan akses CV, mengelola komunikasi, menjaga keamanan, dan memperbaiki pengalaman menggunakan situs.",
     ],
     bullets: [
-      "Menghubungi Anda kembali mengenai brief, peluang kerja, kolaborasi, atau permintaan akses CV.",
-      "Memahami konteks proyek dan menyiapkan diskusi atau penawaran yang relevan.",
-      "Mengukur performa halaman dan kampanye promosi agar informasi serta perjalanan pengunjung dapat ditingkatkan.",
-      "Menangani kendala operasional, mencegah penyalahgunaan formulir, dan memenuhi kewajiban yang berlaku.",
+      "Menghubungi Anda mengenai proyek, peluang kerja, kolaborasi, atau permintaan akses CV.",
+      "Memahami kebutuhan Anda sebelum membahas langkah berikutnya atau menyiapkan penawaran.",
+      "Mengetahui halaman yang bermanfaat dan memahami apakah informasi promosi menjangkau pengunjung.",
+      "Menangani kendala dan mencegah penyalahgunaan formulir.",
     ],
   },
   {
@@ -74,66 +74,65 @@ const sections = [
     title: "Penyimpanan dan layanan pendukung",
     icon: Database,
     paragraphs: [
-      "Data formulir proyek dan permintaan akses CV disimpan melalui layanan basis data Supabase yang digunakan situs. Situs di-host dan dapat menggunakan layanan analitik dari Vercel.",
-      "Untuk notifikasi permintaan akses CV, sistem dapat menggunakan Resend dan/atau endpoint webhook yang dikonfigurasi. Jika layanan notifikasi tersebut diaktifkan, informasi yang diperlukan untuk meninjau permintaan dapat diteruskan kepada layanan terkait.",
-      "Penyedia layanan dapat memproses data sesuai pengaturan akun, lokasi infrastruktur, dan kebijakan privasi masing-masing. Situs tidak menjual data pribadi Anda.",
+      "Informasi yang Anda kirim melalui formulir disimpan menggunakan layanan pendukung yang membantu situs berjalan. Layanan tersebut dapat membantu menyimpan informasi, mengelola situs, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan.",
+      "Layanan pendukung hanya digunakan sesuai kebutuhan fungsinya. Data pribadi Anda tidak dijual atau disewakan untuk keperluan pemasaran pihak lain.",
     ],
     bullets: [
-      "Formulir brief menyimpan data yang dikirim agar permintaan dapat ditindaklanjuti. Setelah penyimpanan berhasil, situs dapat membuka WhatsApp dengan draf pesan yang sudah diisi; pesan tersebut tidak dikirim otomatis dan Anda tetap mengendalikan apakah akan mengirimkannya.",
-      "Jika Anda memilih mengirim pesan melalui WhatsApp atau mengunjungi layanan pihak ketiga, pemrosesan selanjutnya juga mengikuti kebijakan layanan tersebut.",
+      "Setelah formulir proyek berhasil disimpan, WhatsApp dapat terbuka dengan draf pesan yang sudah disiapkan. Pesan tidak dikirim otomatis. Anda dapat memeriksa, mengubah, atau memilih untuk tidak mengirimkannya.",
+      "Jika Anda menghubungi saya melalui WhatsApp atau membuka layanan lain, penggunaan informasi selanjutnya juga mengikuti ketentuan layanan tersebut.",
     ],
   },
   {
     number: "04",
-    title: "Analitik dan penyimpanan sesi browser",
+    title: "Informasi kunjungan situs",
     icon: Activity,
     paragraphs: [
-      "Situs menggunakan Vercel Web Analytics/Insights dan pelacakan tautan promosi untuk memahami kunjungan serta efektivitas konten. Saat tautan promosi dengan sumber yang dikenali dibuka, situs dapat membaca parameter UTM dan referrer, membuat ID sesi sementara, lalu mengirim informasi kampanye dan halaman ke server.",
-      "ID sesi dan penanda untuk mencegah pencatatan berulang disimpan sementara melalui sessionStorage pada browser. Informasi tersebut digunakan untuk analitik promosi, bukan untuk meminta kata sandi atau mengakses isi perangkat Anda.",
+      "Situs dapat mencatat halaman yang dikunjungi dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi. Informasi ini membantu kami mengetahui halaman yang bermanfaat dan memahami apakah promosi menjangkau pengunjung.",
+      "Saat Anda membuka tautan promosi tertentu, situs dapat menyimpan catatan sementara untuk mengetahui apakah kunjungan berasal dari tautan tersebut. Catatan ini membantu memahami efektivitas promosi dan tidak digunakan untuk meminta kata sandi atau membaca isi perangkat Anda.",
     ],
     bullets: [
-      "Parameter kampanye dapat mencakup sumber seperti Instagram, TikTok, YouTube Shorts, Pinterest, LinkedIn, WhatsApp, atau sumber lain yang didukung.",
-      "Pengaturan browser yang membatasi penyimpanan sesi dapat membuat sebagian pelacakan tidak berfungsi; fitur utama situs tetap dirancang agar dapat digunakan.",
+      "Sumber kunjungan dapat mencakup Instagram, TikTok, YouTube, Pinterest, LinkedIn, WhatsApp, atau tautan lainnya.",
+      "Pengaturan pada perangkat Anda dapat membatasi pencatatan sebagian informasi kunjungan. Fitur utama situs tetap dirancang agar dapat digunakan.",
     ],
   },
   {
     number: "05",
-    title: "Akses, pembagian, dan kerahasiaan",
+    title: "Kerahasiaan dan pembagian informasi",
     icon: ShieldCheck,
     paragraphs: [
-      "Data hanya digunakan oleh Eryawan Agung untuk tujuan yang dijelaskan dalam kebijakan ini dan dibagikan kepada penyedia infrastruktur atau notifikasi bila diperlukan untuk menjalankan fungsi situs. Data tidak dijual atau disewakan untuk pemasaran pihak lain.",
-      "Informasi proyek dan komunikasi diperlakukan sebagai informasi profesional yang perlu dijaga. Mohon jangan mengirimkan kata sandi, data keuangan sensitif, atau informasi pribadi pihak lain yang tidak diperlukan melalui formulir.",
+      "Informasi yang Anda berikan digunakan untuk tujuan yang dijelaskan di halaman ini. Jika diperlukan, informasi dapat diproses oleh layanan pendukung untuk menyimpan data, menjalankan situs, memahami kunjungan, atau mengirim pemberitahuan.",
+      "Informasi Anda tidak dijual atau disewakan untuk pemasaran pihak lain. Jangan kirim kata sandi, informasi rekening, atau informasi sensitif lain yang tidak diperlukan melalui formulir.",
     ],
     bullets: [
-      "Akses internal dibatasi sesuai kebutuhan pengelolaan permintaan dan administrasi situs.",
-      "Jika Anda menyertakan informasi milik orang lain, pastikan Anda berhak membagikannya untuk tujuan yang dimaksud.",
+      "Akses informasi dibatasi untuk keperluan menindaklanjuti permintaan atau mengelola situs.",
+      "Pastikan Anda memiliki izin sebelum mengirim informasi milik orang lain.",
     ],
   },
   {
     number: "06",
-    title: "Lama penyimpanan",
+    title: "Berapa lama informasi disimpan",
     icon: FileText,
     paragraphs: [
-      "Data disimpan selama diperlukan untuk menanggapi permintaan, mengelola komunikasi atau proyek, menjaga keamanan, dan memenuhi kewajiban yang relevan. Lama penyimpanan dapat berbeda menurut jenis data dan konteks permintaan.",
-      "Jika data tidak lagi diperlukan, data dapat dihapus atau ditangani secara wajar sesuai kebutuhan operasional dan kewajiban yang berlaku. Permintaan penghapusan dapat diajukan melalui email yang tercantum di bawah.",
+      "Informasi disimpan selama masih diperlukan untuk menanggapi permintaan, mengelola komunikasi atau proyek, menjaga keamanan, dan memenuhi kewajiban yang berlaku. Lama penyimpanan dapat berbeda sesuai jenis informasi dan kebutuhan.",
+      "Jika informasi tidak lagi diperlukan, informasi dapat dihapus atau ditangani sesuai kebutuhan yang wajar. Anda dapat mengirim permintaan penghapusan melalui email yang tercantum di halaman ini.",
     ],
   },
   {
     number: "07",
-    title: "Pilihan dan permintaan terkait data",
+    title: "Permintaan terkait informasi Anda",
     icon: UserRound,
     paragraphs: [
-      "Anda dapat menghubungi Eryawan Agung untuk meminta informasi mengenai data yang Anda kirimkan, memperbaiki data yang tidak akurat, atau meminta penghapusan jika memungkinkan. Untuk membantu verifikasi, permintaan mungkin memerlukan informasi tambahan yang wajar.",
-      "Permintaan akan ditinjau dan ditangani sesuai konteks, keamanan, dan kewajiban yang berlaku. Sebagian catatan mungkin perlu dipertahankan jika terdapat alasan operasional atau kewajiban yang sah.",
+      "Anda dapat menghubungi saya untuk menanyakan informasi yang pernah Anda kirimkan, memperbaiki informasi yang keliru, atau meminta penghapusan jika memungkinkan.",
+      "Permintaan akan ditinjau sesuai kebutuhan dan keamanan. Dalam keadaan tertentu, sebagian catatan mungkin perlu disimpan jika masih diperlukan untuk keperluan yang sah.",
     ],
   },
   {
     number: "08",
-    title: "Keamanan dan perubahan kebijakan",
+    title: "Keamanan dan pembaruan",
     icon: ShieldCheck,
     paragraphs: [
-      "Langkah teknis dan operasional yang wajar digunakan untuk melindungi data. Namun, pengiriman melalui internet dan penyimpanan digital tidak dapat dijamin sepenuhnya bebas dari risiko.",
-      "Kebijakan ini dapat diperbarui ketika fitur, penyedia layanan, atau cara pengelolaan data berubah. Versi terbaru akan dipublikasikan di halaman ini beserta tanggal pembaruannya.",
+      "Langkah yang wajar dilakukan untuk menjaga informasi Anda. Namun, pengiriman melalui internet dan penyimpanan digital tidak dapat dijamin sepenuhnya bebas dari risiko.",
+      "Halaman ini akan diperbarui jika cara pengelolaan informasi berubah. Versi terbaru beserta tanggal pembaruannya akan tersedia di sini.",
     ],
   },
 ];
@@ -159,9 +158,9 @@ export default function KebijakanPrivasiPage() {
             Data Anda digunakan untuk tujuan yang jelas.
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
-            Kebijakan ini menjelaskan data yang dapat diterima melalui situs
-            Eryawan Agung, bagaimana data digunakan dan disimpan, serta cara
-            mengajukan permintaan terkait data pribadi Anda.
+            Kebijakan ini menjelaskan informasi yang dapat Anda berikan melalui situs
+            Eryawan Agung, alasan penggunaannya, cara pengelolaannya, serta cara
+            menghubungi saya terkait informasi Anda.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <TrackedLink
@@ -188,9 +187,9 @@ export default function KebijakanPrivasiPage() {
             <ShieldCheck className="mt-0.5 shrink-0 text-[#D4AF37]" size={19} aria-hidden="true" />
             <p className="text-sm leading-7 text-white/70">
               <span className="font-semibold text-[#F4F1EA]">Prinsip utama:</span>{" "}
-              data hanya diminta untuk kebutuhan komunikasi, peninjauan permintaan,
-              pengelolaan proyek, dan peningkatan fungsi situs. Jangan kirimkan
-              data sensitif yang tidak diperlukan melalui formulir.
+              informasi hanya digunakan untuk menanggapi permintaan, mengelola komunikasi,
+              dan memperbaiki pengalaman menggunakan situs. Jangan kirimkan
+              informasi sensitif yang tidak diperlukan melalui formulir.
             </p>
           </div>
         </section>
@@ -216,11 +215,11 @@ export default function KebijakanPrivasiPage() {
               },
               {
                 title: "Layanan pendukung",
-                detail: "Layanan teknologi mendukung operasional situs, pengelolaan data, analitik, dan notifikasi sesuai kebutuhan.",
+                detail: "Layanan pendukung membantu menyimpan informasi, menjalankan situs, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan.",
               },
               {
                 title: "Anda dapat menghubungi",
-                detail: "Kirim permintaan akses, koreksi, atau penghapusan data melalui email.",
+                detail: "Anda dapat meminta penjelasan, perbaikan, atau penghapusan informasi melalui email.",
               },
             ].map((item) => (
               <article key={item.title} className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#12110e] to-[#0b0b0a] p-5">
@@ -293,21 +292,20 @@ export default function KebijakanPrivasiPage() {
                 Ada pertanyaan tentang data Anda?
               </h2>
               <p className="mt-4 text-sm leading-7 text-white/60 sm:text-base">
-                Hubungi saya melalui email untuk permintaan akses, koreksi,
-                atau penghapusan data yang Anda kirimkan melalui situs.
+                Hubungi saya melalui email untuk menanyakan, memperbaiki, atau meminta
+                penghapusan informasi yang Anda kirimkan melalui situs.
               </p>
             </div>
             <a
               href="mailto:eryawanagungtrimuda@gmail.com?subject=Permintaan%20Terkait%20Data%20Pribadi"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center font-mono text-[11px] font-black uppercase tracking-[0.12em] text-[#080807] transition hover:bg-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
             >
-              <Mail size={15} aria-hidden="true" /> Email untuk Privasi
+              <Mail size={15} aria-hidden="true" /> Kirim Email
             </a>
           </div>
           <p className="mt-6 border-t border-white/10 pt-4 text-xs leading-6 text-white/40">
-            Terakhir diperbarui: 4 November 2026. Kebijakan ini menjelaskan
-            praktik pengelolaan data situs dan dapat diperbarui apabila praktik
-            tersebut berubah.
+            Terakhir diperbarui: 4 November 2026. Halaman ini menjelaskan cara
+            informasi dikelola dan akan diperbarui jika cara tersebut berubah.
           </p>
         </section>
 
