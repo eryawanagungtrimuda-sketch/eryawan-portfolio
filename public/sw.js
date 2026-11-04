@@ -40,16 +40,22 @@ self.addEventListener('notificationclick', function (event) {
     (async function () {
       const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
       for (const client of windows) {
-        if ('focus' in client) {
-          if ('navigate' in client) {
-            try {
-              await client.navigate(targetUrl.href);
-            } catch {
-              // Focus the existing same-origin tab even if navigation is unavailable.
-            }
-          }
-          return client.focus();
+        if (!('focus' in client)) continue;
+        let clientPath = '';
+        try {
+          clientPath = new URL(client.url).pathname;
+        } catch {
+          clientPath = '';
         }
+        if (!clientPath.startsWith('/admin')) continue;
+        if ('navigate' in client) {
+          try {
+            await client.navigate(targetUrl.href);
+          } catch {
+            // Focus the existing admin tab even if navigation is unavailable.
+          }
+        }
+        return client.focus();
       }
       return self.clients.openWindow(targetUrl.href);
     })()
