@@ -11,6 +11,11 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_ADMIN_EMAIL=eryawanagungtrimuda@gmail.com
 NEXT_PUBLIC_SITE_URL=https://domain-anda.com
+# Optional: desktop push notifications for new project inquiries (server-side only)
+SUPABASE_SERVICE_ROLE_KEY=
+WEB_PUSH_VAPID_PUBLIC_KEY=
+WEB_PUSH_VAPID_PRIVATE_KEY=
+WEB_PUSH_SUBJECT=mailto:eryawanagungtrimuda@gmail.com
 OPENAI_API_KEY=
 ```
 
@@ -32,6 +37,7 @@ File tersebut adalah snapshot production-ready yang sudah mencakup seluruh migra
 - `public.insight_images`
 - `public.project_inquiries`
 - `public.project_inquiry_proposal_drafts`
+- `public.project_inquiry_push_subscriptions` untuk langganan notifikasi desktop admin
 - foreign key `project_images.project_id → projects.id` dan relasi insight/inquiry terkait
 - helper `public.is_admin()` dan trigger `updated_at` yang dibutuhkan tabel insight/inquiry
 - grants untuk `anon` dan `authenticated`
@@ -160,6 +166,7 @@ CMS akan tetap menyimpan gambar yang berhasil, menampilkan pesan file yang gagal
 - RLS aktif di table `projects`, `project_images`, `insights`, `insight_images`, `project_inquiries`, dan `project_inquiry_proposal_drafts`.
 - Public hanya bisa membaca project/insight yang `is_published = true` beserta gambar terkait.
 - Form inquiry publik hanya bisa insert ke `project_inquiries`; data inquiry dan proposal draft hanya bisa dibaca/diubah admin.
+- Langganan notifikasi desktop disimpan di `project_inquiry_push_subscriptions` dan hanya dapat dikelola admin.
 - Insert/update/delete konten CMS dan object storage hanya untuk user authenticated yang lolos `public.is_admin()` (`eryawanagungtrimuda@gmail.com`).
 - Admin panel tetap membatasi akses UI ke email `eryawanagungtrimuda@gmail.com`, dan database RLS menjadi lapisan proteksi tambahan.
 - Jangan expose service role key.
