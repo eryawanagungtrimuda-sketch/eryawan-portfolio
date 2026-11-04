@@ -42,7 +42,21 @@ const conversationIntents = [
   "Diskusi Desain",
 ];
 
-export default function MulaiProjectPage() {
+const packageLabels: Record<string, string> = {
+  "opsi-1": "Opsi 1 — Konsep Desain Interior",
+  "opsi-2": "Opsi 2 — 3D Modeling & Render Interior",
+  "opsi-3": "Opsi 3 — Desain Interior Lengkap",
+  "opsi-4": "Opsi 4 — Desain Arsitektur Rumah Lengkap",
+};
+
+type MulaiProjectPageProps = {
+  searchParams?: { paket?: string | string[] };
+};
+
+export default function MulaiProjectPage({ searchParams }: MulaiProjectPageProps) {
+  const packageId = typeof searchParams?.paket === "string" ? searchParams.paket : "";
+  const selectedPackage = packageLabels[packageId] ?? "";
+
   return (
     <main
       id="main-content"
@@ -71,6 +85,19 @@ export default function MulaiProjectPage() {
               membutuhkan sudut pandang
               terstruktur.
             </p>
+            <TrackedLink
+              href="/layanan"
+              eventName="cta_click"
+              eventProps={{
+                source: "mulai_project_page",
+                label: "lihat_paket_jasa",
+                href_type: "internal",
+              }}
+              data-cta="mulai-project-services"
+              className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/[0.05] px-4 py-2 text-xs font-semibold text-[#D4AF37] transition hover:border-[#D4AF37]/60 hover:bg-[#D4AF37]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+            >
+              Lihat paket jasa dan tarif
+            </TrackedLink>
           </div>
 
           <div
@@ -109,7 +136,7 @@ export default function MulaiProjectPage() {
           </div>
         </section>
 
-        <ProjectBriefForm />
+        <ProjectBriefForm key={selectedPackage} selectedPackage={selectedPackage} />
       </div>
     </main>
   );
