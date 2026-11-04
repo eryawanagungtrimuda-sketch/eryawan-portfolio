@@ -98,6 +98,19 @@ export default function MulaiProjectPage({ searchParams }: MulaiProjectPageProps
             >
               Lihat paket jasa dan tarif
             </TrackedLink>
+            <TrackedLink
+              href="/kebijakan-privasi"
+              eventName="cta_click"
+              eventProps={{
+                source: "mulai_project_page",
+                label: "baca_kebijakan_privasi",
+                href_type: "internal",
+              }}
+              data-cta="mulai-project-privacy"
+              className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.02] px-4 py-2 text-xs font-semibold text-white/65 transition hover:border-[#D4AF37]/40 hover:text-[#D4AF37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807] sm:ml-2"
+            >
+              Kebijakan Privasi
+            </TrackedLink>
           </div>
 
           <div
