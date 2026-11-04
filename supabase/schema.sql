@@ -110,6 +110,16 @@ create table if not exists public.project_inquiry_proposal_drafts (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.project_inquiry_push_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  endpoint text not null unique,
+  p256dh text not null,
+  auth text not null,
+  user_agent text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Compatibility alters
 alter table public.projects add column if not exists design_category text;
 alter table public.projects add column if not exists design_style text;
@@ -205,10 +215,16 @@ create trigger update_project_inquiry_proposal_drafts_updated_at
 before update on public.project_inquiry_proposal_drafts
 for each row execute function public.update_updated_at_column();
 
+drop trigger if exists update_project_inquiry_push_subscriptions_updated_at on public.project_inquiry_push_subscriptions;
+create trigger update_project_inquiry_push_subscriptions_updated_at
+before update on public.project_inquiry_push_subscriptions
+for each row execute function public.update_updated_at_column();
+
 -- Indexes
 create index if not exists idx_project_inquiry_proposal_drafts_inquiry_id on public.project_inquiry_proposal_drafts(inquiry_id);
 create index if not exists idx_project_inquiry_proposal_drafts_status on public.project_inquiry_proposal_drafts(status);
 create index if not exists idx_project_inquiry_proposal_drafts_created_at_desc on public.project_inquiry_proposal_drafts(created_at desc);
+create index if not exists idx_project_inquiry_push_subscriptions_created_at_desc on public.project_inquiry_push_subscriptions(created_at desc);
 
 -- Admin helper
 -- Database-side CMS admin check matching the app fallback admin email.
@@ -240,6 +256,9 @@ grant insert on public.project_inquiries to anon;
 grant select, update on public.project_inquiries to authenticated;
 revoke all on public.project_inquiry_proposal_drafts from anon, authenticated;
 grant select, insert, update on public.project_inquiry_proposal_drafts to authenticated;
+revoke all on public.project_inquiry_push_subscriptions from anon, authenticated;
+grant select, insert, update, delete on public.project_inquiry_push_subscriptions to authenticated;
+grant all on public.project_inquiry_push_subscriptions to service_role;
 
 -- RLS policies
 alter table public.projects enable row level security;
@@ -248,6 +267,7 @@ alter table public.insights enable row level security;
 alter table public.insight_images enable row level security;
 alter table public.project_inquiries enable row level security;
 alter table public.project_inquiry_proposal_drafts enable row level security;
+alter table public.project_inquiry_push_subscriptions enable row level security;
 
 -- Projects: public reads only expose published projects; admins can read drafts.
 drop policy if exists "Public read projects" on public.projects;
@@ -482,6 +502,28 @@ with check (
   public.is_admin()
   and status in ('draft', 'used', 'archived')
 );
+
+-- Push subscriptions are private and manageable only by the configured admin.
+drop policy if exists project_inquiry_push_subscriptions_admin_select on public.project_inquiry_push_subscriptions;
+create policy project_inquiry_push_subscriptions_admin_select on public.project_inquiry_push_subscriptions
+for select to authenticated
+using (public.is_admin());
+
+drop policy if exists project_inquiry_push_subscriptions_admin_insert on public.project_inquiry_push_subscriptions;
+create policy project_inquiry_push_subscriptions_admin_insert on public.project_inquiry_push_subscriptions
+for insert to authenticated
+with check (public.is_admin());
+
+drop policy if exists project_inquiry_push_subscriptions_admin_update on public.project_inquiry_push_subscriptions;
+create policy project_inquiry_push_subscriptions_admin_update on public.project_inquiry_push_subscriptions
+for update to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists project_inquiry_push_subscriptions_admin_delete on public.project_inquiry_push_subscriptions;
+create policy project_inquiry_push_subscriptions_admin_delete on public.project_inquiry_push_subscriptions
+for delete to authenticated
+using (public.is_admin());
 
 -- Storage buckets
 -- Supabase Storage bucket for cover and gallery images.
