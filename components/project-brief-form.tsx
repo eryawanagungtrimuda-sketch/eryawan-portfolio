@@ -480,7 +480,7 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
           </button>
         </div>
         <p className="text-xs leading-6 text-white/45">
-          Dengan mengirim brief, Anda memahami bahwa informasi yang diberikan
+          Dengan mengirim formulir ini, Anda memahami bahwa informasi yang diberikan
           digunakan untuk menindaklanjuti permintaan sesuai{" "}
           <a href="/kebijakan-privasi" className="underline underline-offset-4 transition hover:text-[#D4AF37]">
             Kebijakan Privasi
