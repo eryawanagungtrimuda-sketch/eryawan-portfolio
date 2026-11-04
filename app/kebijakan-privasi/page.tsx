@@ -216,7 +216,7 @@ export default function KebijakanPrivasiPage() {
               },
               {
                 title: "Penyedia layanan",
-                detail: "Supabase, Vercel, dan layanan notifikasi yang diaktifkan mendukung fungsi situs.",
+                detail: "Layanan teknologi mendukung operasional situs, pengelolaan data, analitik, dan notifikasi sesuai kebutuhan.",
               },
               {
                 title: "Anda dapat menghubungi",
