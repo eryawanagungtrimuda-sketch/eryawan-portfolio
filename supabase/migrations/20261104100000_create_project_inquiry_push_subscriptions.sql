@@ -6,7 +6,7 @@ language sql
 stable
 set search_path = public
 as $$
-  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagung@gmail.com';
+  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com';
 $$;
 
 grant usage on schema public to anon, authenticated;
