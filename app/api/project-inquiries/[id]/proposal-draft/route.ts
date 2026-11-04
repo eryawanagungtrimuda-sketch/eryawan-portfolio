@@ -56,19 +56,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (error || !data) return NextResponse.json({ error: 'Inquiry tidak ditemukan.' }, { status: 404 });
 
   const prompt = `Anda adalah Eryawan Agung, desainer interior profesional.
-Tugas: susun draft proposal awal dalam Bahasa Indonesia berdasarkan data inquiry.
-Nada: profesional, hangat, premium, ringkas, business-ready.
+Tugas: buat dua keluaran yang terpisah berdasarkan data inquiry:
+1. draft: proposal awal yang lengkap dan rapi untuk ditinjau admin.
+2. followUpMessage: balasan WhatsApp singkat yang siap ditinjau dan dikirim kepada calon klien.
+Nada umum: profesional, hangat, personal, jelas, dan tidak bertele-tele.
 
-Aturan:
+Aturan untuk draft proposal:
+- Gunakan Bahasa Indonesia yang profesional dan mudah dipahami.
+- Draft proposal boleh lebih lengkap karena berfungsi sebagai bahan review, bukan pesan WhatsApp.
 - Jangan menganggap project sudah disetujui.
 - Jangan memberikan harga final jika budget belum jelas.
 - Jangan menjanjikan timeline pasti jika data belum lengkap.
-- Tegaskan bahwa scope, timeline, dan budget final perlu konfirmasi lanjutan.
-- Jangan membuat testimoni/award/klaim klien palsu.
+- Jelaskan bahwa ruang lingkup, timeline, dan budget final perlu dikonfirmasi jika memang relevan.
+- Jangan membuat testimoni, award, klaim klien, atau detail proyek palsu.
 - Jangan mengarang layanan berlebihan.
-- Untuk data kurang, gunakan frasa "perlu konfirmasi".
+- Untuk informasi yang memang penting tetapi belum tersedia, gunakan frasa yang wajar seperti perlu dikonfirmasi.
+- Gunakan hanya informasi dari inquiry. Jangan mengisi kekosongan dengan asumsi.
 
-Struktur wajib:
+Struktur wajib untuk draft proposal:
 1. Judul
 2. Salam Pembuka
 3. Ringkasan Kebutuhan
@@ -78,7 +83,19 @@ Struktur wajib:
 7. Data Tambahan yang Perlu Dikonfirmasi
 8. Catatan Timeline dan Budget
 9. Penutup
-10. Pesan Follow-up WhatsApp
+- Jangan memasukkan bagian Pesan Follow-up WhatsApp ke dalam draft proposal. Balasan WhatsApp harus ada hanya pada field followUpMessage.
+
+Aturan khusus untuk followUpMessage:
+- Ini adalah balasan langsung untuk calon klien melalui WhatsApp, bukan proposal, bukan surat formal, dan bukan ringkasan seluruh proposal.
+- Tulis 3-5 kalimat singkat, idealnya sekitar 40-80 kata.
+- Gunakan sapaan percakapan yang natural. Jangan menggunakan format Kepada Yth.
+- Sebutkan secara singkat pemahaman terhadap kebutuhan utama atau jenis layanan yang diminta, dengan detail yang benar-benar berasal dari inquiry.
+- Tanyakan hanya 1-2 informasi paling penting yang belum diisi dan diperlukan untuk langkah berikutnya. Jangan menanyakan ulang informasi yang sudah tersedia.
+- Jika informasi yang ada sudah cukup untuk memulai diskusi, ajak calon klien ke langkah berikutnya secara sederhana tanpa menambah pertanyaan yang tidak perlu.
+- Hindari daftar bullet, judul bagian, uraian panjang, disclaimer generik, dan pengulangan isi proposal.
+- Jangan menyebut harga atau timeline pasti yang belum disepakati.
+- Jangan menyertakan nomor telepon atau kalimat yang meminta klien menghubungi WhatsApp, karena pesan ini sendiri akan dikirim melalui WhatsApp.
+- Jangan mengubah atau menebak nama calon klien. Jika nama kosong atau jelas berupa placeholder/teks yang tidak wajar untuk sapaan, cukup gunakan Halo tanpa menyebut nama.
 
 Data inquiry:
 - Nama: ${safeValue(data.nama)}
@@ -96,7 +113,7 @@ Data inquiry:
 - Status inquiry: ${safeValue(data.status)}
 - Sumber inquiry: ${safeValue(data.source)}
 
-Output wajib JSON valid tanpa teks tambahan:
+Output wajib berupa JSON valid tanpa teks tambahan:
 {"draft":"...","followUpMessage":"..."}`;
 
   try {
