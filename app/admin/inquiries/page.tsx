@@ -1,5 +1,6 @@
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminInquiriesList from '@/components/admin-inquiries-list';
+import AdminInquiryNotifications from '@/components/admin-inquiry-notifications';
 import ContextualBackButton from '@/components/contextual-back-button';
 
 export default function AdminInquiriesPage() {
@@ -12,7 +13,7 @@ export default function AdminInquiriesPage() {
             <h1 className="font-display mt-4 text-5xl">Inquiry Project</h1>
             <p className="mt-3 text-white/55">Pantau brief project yang masuk dari halaman Mulai Diskusi Project.</p>
           </div>
-          <section className="py-10"><AdminInquiriesList /></section>
+          <section className="space-y-6 py-10"><AdminInquiryNotifications /><AdminInquiriesList /></section>
         </div>
       </main>
     </AdminAuthGuard>
