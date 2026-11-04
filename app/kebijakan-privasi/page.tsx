@@ -71,15 +71,15 @@ const sections = [
   },
   {
     number: "03",
-    title: "Penyimpanan dan layanan pendukung",
+    title: "Bagaimana informasi disimpan",
     icon: Database,
     paragraphs: [
-      "Informasi yang Anda kirim melalui formulir disimpan menggunakan layanan pendukung yang membantu situs berjalan. Layanan tersebut dapat membantu menyimpan informasi, mengelola situs, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan.",
-      "Layanan pendukung hanya digunakan sesuai kebutuhan fungsinya. Data pribadi Anda tidak dijual atau disewakan untuk keperluan pemasaran pihak lain.",
+      "Informasi yang Anda kirim melalui formulir disimpan menggunakan layanan yang membantu situs berjalan. Layanan tersebut membantu menyimpan informasi, mengelola situs, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan. Layanan tersebut hanya memproses informasi sejauh diperlukan untuk menjalankan fungsi ini.",
+      "Data pribadi Anda tidak dijual atau disewakan untuk keperluan pemasaran pihak lain.",
     ],
     bullets: [
       "Setelah formulir proyek berhasil disimpan, WhatsApp dapat terbuka dengan draf pesan yang sudah disiapkan. Pesan tidak dikirim otomatis. Anda dapat memeriksa, mengubah, atau memilih untuk tidak mengirimkannya.",
-      "Jika Anda menghubungi saya melalui WhatsApp atau membuka layanan lain, penggunaan informasi selanjutnya juga mengikuti ketentuan layanan tersebut.",
+      "Jika Anda memilih melanjutkan percakapan di WhatsApp, pesan yang Anda kirim di sana mengikuti kebijakan privasi WhatsApp.",
     ],
   },
   {
@@ -89,10 +89,6 @@ const sections = [
     paragraphs: [
       "Situs dapat mencatat halaman yang dikunjungi dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi. Informasi ini membantu kami mengetahui halaman yang bermanfaat dan memahami apakah promosi menjangkau pengunjung.",
       "Saat Anda membuka tautan promosi tertentu, situs dapat menyimpan catatan sementara untuk mengetahui apakah kunjungan berasal dari tautan tersebut. Catatan ini membantu memahami efektivitas promosi dan tidak digunakan untuk meminta kata sandi atau membaca isi perangkat Anda.",
-    ],
-    bullets: [
-      "Sumber kunjungan dapat mencakup Instagram, TikTok, YouTube, Pinterest, LinkedIn, WhatsApp, atau tautan lainnya.",
-      "Pengaturan pada perangkat Anda dapat membatasi pencatatan sebagian informasi kunjungan. Fitur utama situs tetap dirancang agar dapat digunakan.",
     ],
   },
   {
@@ -214,8 +210,8 @@ export default function KebijakanPrivasiPage() {
                 detail: "Data tidak dijual atau disewakan untuk pemasaran pihak lain.",
               },
               {
-                title: "Layanan pendukung",
-                detail: "Layanan pendukung membantu menyimpan informasi, menjalankan situs, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan.",
+                title: "Untuk menjalankan situs",
+                detail: "Sebagian informasi diproses melalui layanan yang membantu menyimpan data, memahami kunjungan, dan mengirim pemberitahuan yang diperlukan.",
               },
               {
                 title: "Anda dapat menghubungi",
