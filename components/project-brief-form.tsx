@@ -208,7 +208,8 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     setWhatsappHref(whatsappUrl);
     let whatsappWindow: Window | null = null;
     try {
-      whatsappWindow = window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      whatsappWindow = window.open(whatsappUrl, "_blank");
+      if (whatsappWindow) whatsappWindow.opener = null;
     } catch {
       whatsappWindow = null;
     }
