@@ -89,8 +89,21 @@ const initialState: FormState = {
   statusFile: "Belum ada file",
 };
 
-export default function ProjectBriefForm() {
-  const [form, setForm] = useState<FormState>(initialState);
+type ProjectBriefFormProps = {
+  selectedPackage?: string;
+};
+
+export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefFormProps) {
+  const initialForm = useMemo<FormState>(
+    () => ({
+      ...initialState,
+      kebutuhanUtama: selectedPackage
+        ? `Paket jasa yang ingin didiskusikan: ${selectedPackage}\n\n`
+        : "",
+    }),
+    [selectedPackage],
+  );
+  const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copyState, setCopyState] = useState("");
   const [submitState, setSubmitState] = useState<
@@ -194,7 +207,7 @@ export default function ProjectBriefForm() {
   }
 
   function handleReopenForm() {
-    setForm(initialState);
+    setForm(initialForm);
     setErrors({});
     setSubmitState("idle");
     setSubmitMessage("");
