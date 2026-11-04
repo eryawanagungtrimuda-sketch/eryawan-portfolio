@@ -77,7 +77,8 @@ export default function AdminInquiryNotifications() {
         if (cancelled) return;
         setPublicKey(result.publicKey);
 
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.register('/sw.js');
+        const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
         if (cancelled) return;
         if (subscription) {
@@ -148,7 +149,8 @@ export default function AdminInquiryNotifications() {
         return;
       }
 
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.register('/sw.js');
+      const registration = await navigator.serviceWorker.ready;
       let subscription = await registration.pushManager.getSubscription();
       if (!subscription) {
         subscription = await registration.pushManager.subscribe({
