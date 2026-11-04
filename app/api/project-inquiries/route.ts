@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
+import { sendProjectInquiryPushNotification } from '@/lib/project-inquiry-push';
+
+export const runtime = 'nodejs';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -29,5 +32,11 @@ export async function POST(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { error } = await supabase.from('project_inquiries').insert({ nama, perusahaan: perusahaan || null, email: email || null, whatsapp: whatsapp || null, jenis_kebutuhan: jenisKebutuhan, lokasi_project: lokasiProject || null, estimasi_luas: estimasiLuas || null, tahap_project: tahapProject || null, timeline: timeline || null, budget_range: budgetRange || null, kebutuhan_utama: kebutuhanUtama, status_file: statusFile || null, message_preview: messagePreview });
   if (error) return NextResponse.json({ error: 'Gagal menyimpan brief untuk saat ini.' }, { status: 500 });
+  try {
+    await sendProjectInquiryPushNotification();
+  } catch {
+    // The inquiry is already saved; notification delivery must never block the submission.
+    console.warn('Inquiry saved, but desktop notification delivery failed.');
+  }
   return NextResponse.json({ success: true });
 }
