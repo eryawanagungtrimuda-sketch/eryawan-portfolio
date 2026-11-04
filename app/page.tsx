@@ -9,6 +9,7 @@ import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
 import HomePreloadResources from '@/components/home-preload-resources';
 import { absoluteUrl } from '@/lib/site-url';
+import AdminFooterShortcut from '@/components/admin-footer-shortcut';
 import TrackedLink from '@/components/tracked-link';
 
 export const dynamic = 'force-dynamic';
@@ -752,6 +753,7 @@ export default async function Home() {
             <div className="flex min-w-0 flex-col items-start gap-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/42 sm:text-[10px] sm:tracking-[0.16em] md:items-end md:text-right">
               <p className="max-w-full break-words">© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
               <nav aria-label="Tautan informasi dan kebijakan" className="flex max-w-full flex-wrap items-center gap-x-5 gap-y-2 md:justify-end">
+                <AdminFooterShortcut />
                 <a href="/ketentuan-layanan" className="whitespace-nowrap transition hover:text-[#D4AF37]">Ketentuan Layanan</a>
                 <a href="/kebijakan-privasi" className="whitespace-nowrap transition hover:text-[#D4AF37]">Kebijakan Privasi</a>
               </nav>
