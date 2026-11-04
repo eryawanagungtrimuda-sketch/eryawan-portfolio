@@ -39,7 +39,7 @@ export const servicePackages: ServicePackage[] = [
     minimumFee: 3000000,
     description:
       "Untuk memvisualisasikan bentuk ruang, komposisi, dan suasana desain melalui model 3D serta gambar render.",
-    deliverables: ["Pemodelan 3D", "Maksimal 10 view render"],
+    deliverables: ["Pemodelan 3D"],
     exclusions: ["Tidak termasuk gambar kerja."],
     renderLimit: 10,
   },
@@ -55,7 +55,6 @@ export const servicePackages: ServicePackage[] = [
     deliverables: [
       "Gambar layout interior",
       "Pemodelan 3D",
-      "Maksimal 10 view render",
       "Gambar kerja interior dalam format PDF",
     ],
     exclusions: [
