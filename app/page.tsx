@@ -754,6 +754,8 @@ export default async function Home() {
               <p>© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
               <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-8">
                 <AdminFooterShortcut />
+                <a href="/ketentuan-layanan" className="transition hover:text-[#D4AF37]">Ketentuan Layanan</a>
+                <a href="/kebijakan-privasi" className="transition hover:text-[#D4AF37]">Kebijakan Privasi</a>
                 <span>Surabaya • Melayani Indonesia</span>
               </div>
               <p className="text-white/30">Designed as a personal portfolio by Eryawan Agung.</p>

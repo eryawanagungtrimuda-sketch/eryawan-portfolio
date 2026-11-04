@@ -479,6 +479,14 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
             Salin Brief
           </button>
         </div>
+        <p className="text-xs leading-6 text-white/45">
+          Dengan mengirim formulir ini, Anda memahami bahwa informasi yang diberikan
+          digunakan untuk menindaklanjuti permintaan sesuai{" "}
+          <a href="/kebijakan-privasi" className="underline underline-offset-4 transition hover:text-[#D4AF37]">
+            Kebijakan Privasi
+          </a>
+          .
+        </p>
         {submitMessage ? (
           <p
             className={`text-xs ${submitState === "error" ? "text-amber-300" : "text-emerald-300"}`}

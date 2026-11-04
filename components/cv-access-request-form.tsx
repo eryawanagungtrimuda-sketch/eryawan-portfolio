@@ -29,7 +29,7 @@ export default function CvAccessRequestForm() {
     <form onSubmit={submit} className="grid gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-7">
       <input className="hidden" tabIndex={-1} autoComplete="off" value={form.website_url_hidden} onChange={(e) => setForm({ ...form, website_url_hidden: e.target.value })} aria-hidden="true" name="website_url_hidden" />
       {[
-        ['full_name', 'Nama lengkap *'], ['email', 'Email *'], ['company', 'Perusahaan / Organisasi'], ['role', 'Jabatan / Role'], ['linkedin_url', 'LinkedIn atau website perusahaan (optional)'], ['whatsapp', 'WhatsApp (optional)'],
+        ['full_name', 'Nama lengkap *'], ['email', 'Email *'], ['company', 'Perusahaan / Organisasi'], ['role', 'Jabatan'], ['linkedin_url', 'LinkedIn atau situs perusahaan (opsional)'], ['whatsapp', 'WhatsApp (opsional)'],
       ].map(([key, label]) => (
         <label key={key} className="grid gap-2 text-sm text-white/72">
           <span>{label}</span>
@@ -41,6 +41,14 @@ export default function CvAccessRequestForm() {
         <textarea required rows={5} value={form.purpose} onChange={(e) => setForm({ ...form, purpose: e.target.value })} className="rounded-2xl border border-white/10 bg-[#0b0b0a] px-4 py-3 text-[#F4F1EA] outline-none transition focus:border-[#D4AF37]/60" />
       </label>
       {message ? <p className="text-sm text-red-300">{message}</p> : null}
+      <p className="text-xs leading-6 text-white/45">
+        Informasi yang Anda kirim digunakan untuk meninjau permintaan akses CV
+        sesuai{" "}
+        <a href="/kebijakan-privasi" className="underline underline-offset-4 transition hover:text-[#D4AF37]">
+          Kebijakan Privasi
+        </a>
+        .
+      </p>
       <button disabled={loading} className="min-h-12 rounded-full bg-[#C8A951] px-6 font-mono text-xs font-black uppercase tracking-[0.16em] text-[#080807] transition hover:bg-[#D7BD72] disabled:opacity-60">{loading ? 'Mengirim...' : 'Kirim Permintaan Akses'}</button>
     </form>
   );

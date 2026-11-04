@@ -95,7 +95,11 @@ export default function PublicJourneyLinks({ title = 'Lanjutkan Eksplorasi', cla
 
       <div className="mt-6 flex flex-col gap-2 border-t border-white/10 pt-4 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.16em] text-white/38 sm:flex-row sm:items-center sm:justify-between sm:text-[10px]">
         <span>© Eryawan Agung</span>
-        <span>Portfolio Desain Interior Berbasis Keputusan</span>
+        <div className="flex flex-wrap items-center gap-4">
+          <Link href="/ketentuan-layanan" className="transition hover:text-[#D4AF37]">Ketentuan Layanan</Link>
+          <Link href="/kebijakan-privasi" className="transition hover:text-[#D4AF37]">Kebijakan Privasi</Link>
+          <span>Portfolio Desain Interior Berbasis Keputusan</span>
+        </div>
       </div>
     </section>
   );
