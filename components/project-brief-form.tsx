@@ -110,6 +110,7 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     "idle" | "saving" | "success" | "error"
   >("idle");
   const [submitMessage, setSubmitMessage] = useState("");
+  const [whatsappHref, setWhatsappHref] = useState("");
   const [isFormClosed, setIsFormClosed] = useState(false);
   const isSubmittingRef = useRef(false);
   const waNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(
@@ -152,11 +153,26 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     setSubmitState("saving");
     isSubmittingRef.current = true;
 
-    const response = await fetch("/api/project-inquiries", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, messagePreview: message }),
-    });
+    let response: Response;
+    try {
+      response = await fetch("/api/project-inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, messagePreview: message }),
+      });
+    } catch {
+      setSubmitState("error");
+      setSubmitMessage(
+        "Brief belum berhasil disimpan karena koneksi bermasalah. Periksa koneksi lalu coba lagi, atau salin brief secara manual.",
+      );
+      toast({
+        type: "error",
+        title: "Brief belum tersimpan",
+        description: "Periksa koneksi lalu coba lagi, atau salin brief secara manual.",
+      });
+      isSubmittingRef.current = false;
+      return;
+    }
 
     if (!response.ok) {
       setSubmitState("error");
@@ -165,7 +181,7 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
       );
       toast({
         type: "error",
-        title: "Pengiriman brief gagal",
+        title: "Brief belum tersimpan",
         description: "Silakan coba lagi atau salin brief secara manual.",
       });
       isSubmittingRef.current = false;
@@ -175,28 +191,49 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     setSubmitState("success");
 
     if (!waNumber) {
+      setWhatsappHref("");
       setSubmitMessage(
-        "Brief berhasil disimpan, tetapi nomor WhatsApp belum dikonfigurasi.",
+        "Brief berhasil disimpan. Untuk melanjutkan percakapan, silakan buka halaman Kontak.",
       );
       toast({
         type: "info",
-        title: "Brief tersimpan",
-        description: "Nomor WhatsApp belum dikonfigurasi.",
+        title: "Brief berhasil disimpan",
+        description: "Anda dapat melanjutkan percakapan melalui halaman Kontak.",
       });
       setIsFormClosed(true);
       return;
     }
 
-    setSubmitMessage(
-      "Brief berhasil disimpan. WhatsApp sudah dibuka untuk melanjutkan percakapan.",
-    );
-    toast({
-      type: "success",
-      title: "Brief berhasil dikirim",
-      description: "WhatsApp dibuka untuk melanjutkan percakapan.",
-    });
     const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    setWhatsappHref(whatsappUrl);
+    let whatsappWindow: Window | null = null;
+    try {
+      whatsappWindow = window.open(whatsappUrl, "_blank");
+      if (whatsappWindow) whatsappWindow.opener = null;
+    } catch {
+      whatsappWindow = null;
+    }
+
+    if (whatsappWindow) {
+      setSubmitMessage(
+        "Brief berhasil disimpan. Periksa draf pesan di WhatsApp, lalu kirim sendiri jika sudah sesuai.",
+      );
+      toast({
+        type: "success",
+        title: "Brief berhasil disimpan",
+        description: "Periksa draf WhatsApp sebelum mengirim.",
+      });
+    } else {
+      setSubmitMessage(
+        "Brief berhasil disimpan. WhatsApp tidak terbuka otomatis. Klik tombol di bawah untuk melanjutkan; pesan tidak dikirim otomatis.",
+      );
+      toast({
+        type: "info",
+        title: "Brief berhasil disimpan",
+        description: "Klik tombol WhatsApp di bawah untuk melanjutkan.",
+      });
+    }
+
     setIsFormClosed(true);
   }
 
@@ -211,6 +248,7 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     setErrors({});
     setSubmitState("idle");
     setSubmitMessage("");
+    setWhatsappHref("");
     setIsFormClosed(false);
     isSubmittingRef.current = false;
   }
@@ -225,10 +263,27 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
         role="status"
         aria-live="polite"
       >
-        <p className="font-semibold">Brief sudah dikirim.</p>
+        <p className="font-semibold">Brief berhasil disimpan.</p>
         <p className="mt-2 text-emerald-100/85">
-          {submitMessage || "WhatsApp sudah dibuka dan form ditutup otomatis."}
+          {submitMessage || "Brief berhasil disimpan. Pilih langkah berikutnya untuk melanjutkan percakapan."}
         </p>
+        {whatsappHref ? (
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl border border-emerald-200/40 bg-emerald-100/10 px-4 py-2 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-100/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/50"
+          >
+            Lanjutkan di WhatsApp
+          </a>
+        ) : (
+          <a
+            href="/kontak"
+            className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl border border-emerald-200/40 bg-emerald-100/10 px-4 py-2 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-100/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/50"
+          >
+            Buka Halaman Kontak
+          </a>
+        )}
         <button
           type="button"
           onClick={handleReopenForm}
