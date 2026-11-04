@@ -257,10 +257,25 @@ export default function LayananPage() {
               </p>
             </article>
           </div>
-          <p className="mt-5 text-xs leading-6 text-white/42">
-            Rincian lengkap, jadwal, lingkup keluaran, dan kesepakatan khusus
-            dicantumkan dalam penawaran tertulis sebelum pekerjaan dimulai.
-          </p>
+          <div className="mt-5">
+            <p className="text-xs leading-6 text-white/42">
+              Rincian lengkap, jadwal, lingkup keluaran, dan kesepakatan khusus
+              dicantumkan dalam penawaran tertulis sebelum pekerjaan dimulai.
+            </p>
+            <TrackedLink
+              href="/ketentuan-layanan"
+              eventName="cta_click"
+              eventProps={{
+                source: "layanan_page",
+                label: "baca_ketentuan_layanan",
+                href_type: "internal",
+              }}
+              data-cta="layanan-view-terms"
+              className="mt-2 inline-flex min-h-9 items-center gap-2 text-xs font-semibold text-[#D4AF37] transition hover:text-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+            >
+              Baca Ketentuan Layanan Lengkap <ArrowRight size={14} aria-hidden="true" />
+            </TrackedLink>
+          </div>
         </section>
 
         <section className="mt-12 overflow-hidden rounded-3xl border border-[#D4AF37]/22 bg-[radial-gradient(circle_at_90%_20%,rgba(212,175,55,0.09),transparent_36%),#0d0d0b] p-6 sm:mt-16 sm:p-8 md:p-10">
