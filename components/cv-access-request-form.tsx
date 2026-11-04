@@ -29,7 +29,7 @@ export default function CvAccessRequestForm() {
     <form onSubmit={submit} className="grid gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-7">
       <input className="hidden" tabIndex={-1} autoComplete="off" value={form.website_url_hidden} onChange={(e) => setForm({ ...form, website_url_hidden: e.target.value })} aria-hidden="true" name="website_url_hidden" />
       {[
-        ['full_name', 'Nama lengkap *'], ['email', 'Email *'], ['company', 'Perusahaan / Organisasi'], ['role', 'Jabatan / Role'], ['linkedin_url', 'LinkedIn atau website perusahaan (optional)'], ['whatsapp', 'WhatsApp (optional)'],
+        ['full_name', 'Nama lengkap *'], ['email', 'Email *'], ['company', 'Perusahaan / Organisasi'], ['role', 'Jabatan'], ['linkedin_url', 'LinkedIn atau situs perusahaan (opsional)'], ['whatsapp', 'WhatsApp (opsional)'],
       ].map(([key, label]) => (
         <label key={key} className="grid gap-2 text-sm text-white/72">
           <span>{label}</span>
