@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kebijakan Privasi | Eryawan Agung",
     description:
-      "Pahami bagaimana data dari formulir proyek, permintaan akses CV, dan kunjungan situs dikelola.",
+      "Ketahui informasi apa yang digunakan saat mengisi formulir atau mengunjungi situs, serta cara menghubungi kami mengenai informasi Anda.",
     images: [absoluteUrl("/opengraph-image")],
   },
 };
@@ -148,7 +148,7 @@ export default function KebijakanPrivasiPage() {
 
         <section className="mt-7 overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_88%_12%,rgba(212,175,55,0.12),transparent_34%),linear-gradient(135deg,#11100c,#0b0b0a_56%,#090908)] p-6 shadow-[0_30px_80px_rgba(0,0,0,0.28)] sm:p-8 md:p-12">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.32em] text-[#D4AF37] sm:text-[11px]">
-            Privasi & Pengelolaan Data
+            Privasi Anda
           </p>
           <h1 className="font-display mt-5 max-w-4xl text-4xl font-normal leading-[1.08] tracking-[-0.035em] text-[#F6F1E8] sm:text-5xl md:text-6xl">
             Data Anda digunakan untuk tujuan yang jelas.
@@ -232,7 +232,7 @@ export default function KebijakanPrivasiPage() {
               Penjelasan Lengkap
             </p>
             <h2 id="privacy-detail-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">
-              Cara data dikelola.
+              Cara informasi digunakan dan disimpan.
             </h2>
           </div>
 
@@ -282,7 +282,7 @@ export default function KebijakanPrivasiPage() {
           <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
             <div className="max-w-3xl">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.26em] text-[#D4AF37]">
-                Kontak Privasi
+                Hubungi Saya
               </p>
               <h2 className="font-display mt-3 text-3xl leading-tight text-[#F4F1E8] sm:text-4xl">
                 Ada pertanyaan tentang data Anda?
