@@ -267,7 +267,7 @@ export default function KebijakanPrivasiPage() {
                       </div>
                       {"bullets" in section ? (
                         <ul className="mt-4 space-y-3">
-                          {section.bullets.map((bullet) => (
+                          {section.bullets?.map((bullet) => (
                             <li key={bullet} className="flex items-start gap-2.5 text-sm leading-6 text-white/65">
                               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#D4AF37]" aria-hidden="true" />
                               <span>{bullet}</span>
