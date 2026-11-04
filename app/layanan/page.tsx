@@ -163,6 +163,12 @@ export default function LayananPage() {
                         <span>{deliverable}</span>
                       </li>
                     ))}
+                    {item.renderLimit !== null ? (
+                      <li key={`render-limit-${item.id}`} className="flex items-start gap-2.5 text-sm leading-6 text-white/72">
+                        <CheckCircle2 size={16} className="mt-1 shrink-0 text-[#D4AF37]" aria-hidden="true" />
+                        <span>Maksimal {item.renderLimit} view render</span>
+                      </li>
+                    ) : null}
                   </ul>
                 </div>
                 <div className="mt-5">
