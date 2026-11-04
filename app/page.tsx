@@ -7,9 +7,9 @@ import ImpactMetricsCarousel from '@/components/impact-metrics-carousel';
 import MobileSwipeRow from '@/components/mobile-swipe-row';
 import RevealObserver from '@/components/reveal-observer';
 import MobileAdminQuickAccess from '@/components/mobile-admin-quick-access';
-import AdminFooterShortcut from '@/components/admin-footer-shortcut';
 import HomePreloadResources from '@/components/home-preload-resources';
 import { absoluteUrl } from '@/lib/site-url';
+import AdminFooterShortcut from '@/components/admin-footer-shortcut';
 import TrackedLink from '@/components/tracked-link';
 
 export const dynamic = 'force-dynamic';
@@ -741,8 +741,8 @@ export default async function Home() {
 
           <div className="mt-14 h-px w-full bg-white/8 sm:mt-20" />
 
-          <div className="mt-10 grid gap-7 sm:mt-14 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end">
-            <div>
+          <div className="mt-10 grid gap-7 sm:mt-14 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start md:gap-12 lg:gap-16">
+            <div className="min-w-0">
               <p className="font-display text-3xl leading-none tracking-[-0.03em] text-[#F4F1EA] sm:text-4xl">Eryawan Agung</p>
               <p className="mt-3 max-w-full break-words font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.14em] text-[#C8A951] sm:text-[10px] sm:tracking-[0.18em]">Interior & Residential Design / Decision-Based Design</p>
               <p className="mt-4 max-w-xl font-sans text-sm leading-7 text-white/50 sm:text-base">
@@ -750,15 +750,15 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="flex min-w-0 flex-col gap-4 break-words font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/42 sm:text-[10px] sm:tracking-[0.22em] md:items-end md:text-right md:text-[11px]">
-              <p>© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
-              <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-8">
+            <div className="flex min-w-0 flex-col items-start gap-3 font-mono text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/42 sm:text-[10px] sm:tracking-[0.16em] md:items-end md:text-right">
+              <p className="max-w-full break-words">© 2026 Eryawan Agung — Interior & Residential Design Portfolio</p>
+              <nav aria-label="Tautan informasi dan kebijakan" className="flex max-w-full flex-wrap items-center gap-x-5 gap-y-2 md:justify-end">
                 <AdminFooterShortcut />
-                <a href="/ketentuan-layanan" className="transition hover:text-[#D4AF37]">Ketentuan Layanan</a>
-                <a href="/kebijakan-privasi" className="transition hover:text-[#D4AF37]">Kebijakan Privasi</a>
-                <span>Surabaya • Melayani Indonesia</span>
-              </div>
-              <p className="text-white/30">Designed as a personal portfolio by Eryawan Agung.</p>
+                <a href="/ketentuan-layanan" className="whitespace-nowrap transition hover:text-[#D4AF37]">Ketentuan Layanan</a>
+                <a href="/kebijakan-privasi" className="whitespace-nowrap transition hover:text-[#D4AF37]">Kebijakan Privasi</a>
+              </nav>
+              <p className="text-white/52">Surabaya • Melayani Indonesia</p>
+              <p className="max-w-full text-[9px] font-medium tracking-[0.14em] text-white/30 sm:text-[10px]">Designed as a personal portfolio by Eryawan Agung.</p>
             </div>
           </div>
         </div>
