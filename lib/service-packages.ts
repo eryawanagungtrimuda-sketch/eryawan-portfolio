@@ -75,7 +75,6 @@ export const servicePackages: ServicePackage[] = [
     deliverables: [
       "Layout/denah arsitektur",
       "Pemodelan 3D",
-      "Maksimal 10 view render",
       "Gambar kerja arsitektur dalam format PDF",
     ],
     exclusions: [
