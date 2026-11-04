@@ -215,7 +215,7 @@ export default function KebijakanPrivasiPage() {
                 detail: "Data tidak dijual atau disewakan untuk pemasaran pihak lain.",
               },
               {
-                title: "Penyedia layanan",
+                title: "Layanan pendukung",
                 detail: "Layanan teknologi mendukung operasional situs, pengelolaan data, analitik, dan notifikasi sesuai kebutuhan.",
               },
               {
