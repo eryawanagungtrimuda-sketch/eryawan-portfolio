@@ -28,6 +28,19 @@ function sanitizePath(value: unknown) {
   return path;
 }
 
+function sanitizeReferrerOrigin(value: unknown) {
+  const referrer = sanitizeString(value, 2000);
+  if (!referrer) return null;
+
+  try {
+    const url = new URL(referrer);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: Request) {
   const supabase = createSupabaseAdminClient();
   if (!supabase) {
@@ -58,7 +71,7 @@ export async function POST(request: Request) {
     utm_medium: sanitizeString(payload.utm_medium, 120),
     utm_campaign: sanitizeString(payload.utm_campaign, 160),
     utm_content: sanitizeString(payload.utm_content, 200),
-    referrer: sanitizeString(payload.referrer, 500),
+    referrer: sanitizeReferrerOrigin(payload.referrer),
     session_id: sanitizeString(payload.session_id, 120),
   };
 
