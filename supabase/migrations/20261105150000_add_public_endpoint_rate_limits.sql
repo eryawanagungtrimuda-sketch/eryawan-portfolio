@@ -54,7 +54,7 @@ begin
       when public.public_endpoint_rate_limits.window_started_at
         <= v_now - make_interval(secs => p_window_seconds)
       then 1
-      else public.public_endpoint_rate_limits.request_count + 1
+      else least(public.public_endpoint_rate_limits.request_count + 1, p_limit + 1)
     end,
     window_started_at = case
       when public.public_endpoint_rate_limits.window_started_at
@@ -65,11 +65,9 @@ begin
     updated_at = v_now
   returning request_count into v_request_count;
 
-  -- Opportunistic cleanup keeps this small table from accumulating stale hashes.
-  if random() < 0.02 then
-    delete from public.public_endpoint_rate_limits
-    where updated_at < v_now - interval '7 days';
-  end if;
+  -- Clean stale hashes on the next request after seven inactive days.
+  delete from public.public_endpoint_rate_limits
+  where updated_at < v_now - interval '7 days';
 
   return v_request_count <= p_limit;
 end;
