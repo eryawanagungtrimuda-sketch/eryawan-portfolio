@@ -115,6 +115,10 @@ export type ProjectInquiry = {
   message_preview: string;
   status: ProjectInquiryStatus;
   source: string;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
   created_at: string;
   updated_at: string;
 };
