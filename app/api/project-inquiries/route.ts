@@ -4,15 +4,29 @@ import { isAllowedAdminEmail } from '@/lib/admin-auth';
 import { sendProjectInquiryPushNotification } from '@/lib/project-inquiry-push';
 import { ALLOWED_PROMO_SOURCES } from '@/lib/promo-attribution';
 import { servicePackages } from '@/lib/service-packages';
+import { enforcePublicRateLimit } from '@/lib/public-rate-limit';
 
 export const runtime = 'nodejs';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const MAX_FIELD_LENGTH = 3000;
+const MAX_REQUEST_BODY_BYTES = 32_768;
 const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,jenis_proyek,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,utm_source,utm_medium,utm_campaign,utm_content,created_at,updated_at';
 function sanitize(input: unknown, max = MAX_FIELD_LENGTH) { if (typeof input !== 'string') return ''; return input.trim().slice(0, max); }
 const legacyProjectTypes = new Set(['Interior Residential', 'Arsitektur Rumah', 'Hospitality / Hotel / Villa', 'Workspace / Office', 'Retail / Commercial']);
+
+function isLikelyAutomatedSubmission(payload: Record<string, unknown>) {
+  if (sanitize(payload.website, 300)) return true;
+
+  const startedAt = Number(payload.formStartedAt);
+  if (!Number.isFinite(startedAt) || startedAt <= 0) return false;
+
+  const elapsed = Date.now() - startedAt;
+  // A very fast completion is suspicious. Do not reject if the client clock is
+  // ahead of the server or the form was left open for a long time.
+  return elapsed >= 0 && elapsed < 1800;
+}
 
 export async function GET(request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) return NextResponse.json({ error: 'Konfigurasi server belum siap.' }, { status: 500 });
@@ -29,7 +43,38 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) return NextResponse.json({ error: 'Konfigurasi server belum siap.' }, { status: 500 });
-  let payload: Record<string, unknown>; try { payload = await request.json(); } catch { return NextResponse.json({ error: 'Payload tidak valid.' }, { status: 400 }); }
+
+  const contentLength = Number(request.headers.get('content-length') || 0);
+  if (contentLength > MAX_REQUEST_BODY_BYTES) {
+    return NextResponse.json({ error: 'Ukuran brief terlalu besar.' }, { status: 413 });
+  }
+
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return NextResponse.json({ error: 'Payload tidak valid.' }, { status: 400 });
+  }
+  if (new TextEncoder().encode(rawBody).byteLength > MAX_REQUEST_BODY_BYTES) {
+    return NextResponse.json({ error: 'Ukuran brief terlalu besar.' }, { status: 413 });
+  }
+
+  let payload: Record<string, unknown>;
+  try {
+    const parsed: unknown = JSON.parse(rawBody);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return NextResponse.json({ error: 'Payload tidak valid.' }, { status: 400 });
+    }
+    payload = parsed as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: 'Payload tidak valid.' }, { status: 400 });
+  }
+
+  // Silently accept likely bot submissions without storing them or sending notifications.
+  if (isLikelyAutomatedSubmission(payload)) {
+    return NextResponse.json({ success: true });
+  }
+
   const nama = sanitize(payload.nama ?? payload.name, 160);
   const perusahaan = sanitize(payload.perusahaan ?? payload.company, 160);
   const email = sanitize(payload.email, 160);
@@ -77,6 +122,15 @@ export async function POST(request: Request) {
   if (!nama || !jenisKebutuhan || !kebutuhanUtama || (!email && !whatsapp) || !messagePreview) {
     return NextResponse.json({ error: 'Data brief belum lengkap.' }, { status: 400 });
   }
+
+  const rateLimit = await enforcePublicRateLimit(request, 'project-inquiries', 5, 15 * 60);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Terlalu banyak pengiriman brief dari jaringan ini. Silakan tunggu 15 menit sebelum mencoba lagi.' },
+      { status: 429, headers: { 'Retry-After': String(15 * 60) } },
+    );
+  }
+
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { error } = await supabase.from('project_inquiries').insert({
     nama,
