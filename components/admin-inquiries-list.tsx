@@ -17,6 +17,11 @@ const statusStyle: Record<ProjectInquiry['status'], string> = {
   arsip: 'text-white/65 bg-white/5 border-white/20',
 };
 
+const tableHeaderClass =
+  'px-3 py-3 align-bottom text-left text-[11px] font-semibold leading-4 tracking-wide text-white/55';
+const tableCellClass =
+  'border-t border-white/10 px-3 py-4 align-top whitespace-normal break-words text-sm leading-5 text-white/80';
+
 const formatTanggalMasuk = (dateValue: string) =>
   new Intl.DateTimeFormat('id-ID', {
     day: 'numeric',
@@ -141,7 +146,7 @@ export default function AdminInquiriesList() {
   if (loading) {
     return (
       <section className="space-y-4" aria-label="Memuat inquiry" aria-busy="true">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+        <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
           <div className="premium-skeleton h-10 w-full" />
           <div className="grid gap-3 md:grid-cols-3">
             <div className="premium-skeleton h-10" />
@@ -151,13 +156,13 @@ export default function AdminInquiriesList() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-3">
+            <div key={index} className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
               <div className="premium-skeleton h-3 w-24" />
               <div className="premium-skeleton h-10 w-16" />
             </div>
           ))}
         </div>
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015] p-4 space-y-3">
+        <div className="space-y-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015] p-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="grid grid-cols-8 gap-3">
               <div className="premium-skeleton col-span-2 h-8" />
@@ -183,7 +188,7 @@ export default function AdminInquiriesList() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cari nama, perusahaan, paket, sumber, atau kebutuhan"
-          className="md:col-span-2 rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
+          className="rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37] md:col-span-2"
         />
         <select
           value={statusFilter}
@@ -232,40 +237,108 @@ export default function AdminInquiriesList() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.015]">
-        <table className="min-w-[1250px] w-full text-sm">
-          <thead>
-            <tr className="text-left text-white/45">
-              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Jenis Proyek</th><th>Paket</th><th>Sumber / Kampanye</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
+      <div
+        className="overflow-x-auto overscroll-x-contain rounded-2xl border border-white/10 bg-white/[0.015]"
+        aria-label="Daftar inquiry; geser horizontal untuk melihat semua kolom"
+      >
+        <table className="w-full min-w-[1650px] table-fixed border-collapse text-sm">
+          <colgroup>
+            <col className="w-[130px]" />
+            <col className="w-[130px]" />
+            <col className="w-[160px]" />
+            <col className="w-[160px]" />
+            <col className="w-[145px]" />
+            <col className="w-[180px]" />
+            <col className="w-[110px]" />
+            <col className="w-[130px]" />
+            <col className="w-[110px]" />
+            <col className="w-[140px]" />
+            <col className="w-[255px]" />
+          </colgroup>
+          <thead className="bg-white/[0.025]">
+            <tr>
+              <th scope="col" className={tableHeaderClass}>Nama</th>
+              <th scope="col" className={tableHeaderClass}>Perusahaan</th>
+              <th scope="col" className={tableHeaderClass}>Jenis Kebutuhan</th>
+              <th scope="col" className={tableHeaderClass}>Jenis Proyek</th>
+              <th scope="col" className={tableHeaderClass}>Paket</th>
+              <th scope="col" className={tableHeaderClass}>Sumber / Kampanye</th>
+              <th scope="col" className={tableHeaderClass}>Timeline</th>
+              <th scope="col" className={tableHeaderClass}>Range Budget</th>
+              <th scope="col" className={tableHeaderClass}>Status</th>
+              <th scope="col" className={tableHeaderClass}>Tanggal Masuk</th>
+              <th scope="col" className={tableHeaderClass}>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {filteredRows.length === 0 ? (
-              <tr className="border-t border-white/10">
-                <td colSpan={10} className="p-10 text-center">
+              <tr>
+                <td colSpan={11} className="border-t border-white/10 p-10 text-center">
                   <p className="text-base font-semibold text-white/85">Tidak ada inquiry yang cocok</p>
                   <p className="mt-1 text-sm text-white/55">Coba ubah kata kunci, status, atau tanggal filter.</p>
                 </td>
               </tr>
             ) : (
               filteredRows.map((r) => (
-                <tr key={r.id} className="border-t border-white/10">
-                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.jenis_proyek || '—'}</td><td>{r.paket_id ? getPackageLabel(r.paket_id) : '—'}</td><td className="max-w-[260px] truncate" title={getSourceLabel(r)}>{getSourceLabel(r)}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
-                  <td><span className={`rounded-full border px-3 py-1 text-xs ${statusStyle[r.status]}`}>{r.status}</span></td>
-                  <td>{formatTanggalMasuk(r.created_at)}</td>
-                  <td className="space-x-2">
-                    <Link href={`/admin/inquiries/${r.id}`} className="rounded-full border border-white/20 px-3 py-2 text-xs hover:border-[#D4AF37]/50 hover:text-[#D4AF37]">Detail</Link>
-                    {(r.status === 'baru' || r.status === 'ditinjau') && (
-                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'dihubungi')} className="rounded-full border border-[#D4AF37]/35 px-3 py-2 text-xs text-[#D4AF37] disabled:opacity-50">Tandai Dihubungi</button>
-                    )}
-                    {r.status === 'dihubungi' && (
-                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'selesai')} className="rounded-full border border-emerald-400/35 px-3 py-2 text-xs text-emerald-300 disabled:opacity-50">Tandai Selesai</button>
-                    )}
-                    {r.status === 'arsip' ? (
-                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'baru')} className="rounded-full border border-sky-400/35 px-3 py-2 text-xs text-sky-200 disabled:opacity-50">Kembalikan ke Baru</button>
-                    ) : (
-                      <button disabled={updatingId === r.id} onClick={() => patch(r.id, 'arsip')} className="rounded-full border border-white/20 px-3 py-2 text-xs text-white/70 disabled:opacity-50">Arsipkan</button>
-                    )}
+                <tr key={r.id} className="transition-colors hover:bg-white/[0.025]">
+                  <td className={`${tableCellClass} font-semibold text-white/95`}>{r.nama}</td>
+                  <td className={tableCellClass}>{r.perusahaan || '—'}</td>
+                  <td className={tableCellClass}>{r.jenis_kebutuhan}</td>
+                  <td className={tableCellClass}>{r.jenis_proyek || '—'}</td>
+                  <td className={tableCellClass}>{r.paket_id ? getPackageLabel(r.paket_id) : '—'}</td>
+                  <td className={tableCellClass} title={getSourceLabel(r)}>{getSourceLabel(r)}</td>
+                  <td className={tableCellClass}>{r.timeline || '—'}</td>
+                  <td className={tableCellClass}>{r.budget_range || '—'}</td>
+                  <td className={tableCellClass}>
+                    <span className={`inline-flex whitespace-nowrap rounded-full border px-2.5 py-1 text-xs ${statusStyle[r.status]}`}>
+                      {r.status}
+                    </span>
+                  </td>
+                  <td className={`${tableCellClass} whitespace-nowrap`}>{formatTanggalMasuk(r.created_at)}</td>
+                  <td className={tableCellClass}>
+                    <div className="flex min-w-[230px] flex-wrap items-center gap-2">
+                      <Link
+                        href={`/admin/inquiries/${r.id}`}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-3 py-2 text-xs leading-none transition hover:border-[#D4AF37]/50 hover:text-[#D4AF37]"
+                      >
+                        Detail
+                      </Link>
+                      {(r.status === 'baru' || r.status === 'ditinjau') && (
+                        <button
+                          disabled={updatingId === r.id}
+                          onClick={() => patch(r.id, 'dihubungi')}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[#D4AF37]/35 px-3 py-2 text-xs leading-none text-[#D4AF37] disabled:opacity-50"
+                        >
+                          Tandai Dihubungi
+                        </button>
+                      )}
+                      {r.status === 'dihubungi' && (
+                        <button
+                          disabled={updatingId === r.id}
+                          onClick={() => patch(r.id, 'selesai')}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-emerald-400/35 px-3 py-2 text-xs leading-none text-emerald-300 disabled:opacity-50"
+                        >
+                          Tandai Selesai
+                        </button>
+                      )}
+                      {r.status === 'arsip' ? (
+                        <button
+                          disabled={updatingId === r.id}
+                          onClick={() => patch(r.id, 'baru')}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-sky-400/35 px-3 py-2 text-xs leading-none text-sky-200 disabled:opacity-50"
+                        >
+                          Kembalikan ke Baru
+                        </button>
+                      ) : (
+                        <button
+                          disabled={updatingId === r.id}
+                          onClick={() => patch(r.id, 'arsip')}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-white/20 px-3 py-2 text-xs leading-none text-white/70 disabled:opacity-50"
+                        >
+                          Arsipkan
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))
