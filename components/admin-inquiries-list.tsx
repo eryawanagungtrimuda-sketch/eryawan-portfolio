@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry } from '@/lib/types';
 import { useToast } from '@/components/toast-provider';
+import { servicePackages } from '@/lib/service-packages';
 
 type StatusFilter = 'active' | 'all_with_archive' | ProjectInquiry['status'];
 
@@ -22,6 +23,17 @@ const formatTanggalMasuk = (dateValue: string) =>
     month: 'long',
     year: 'numeric',
   }).format(new Date(dateValue));
+
+function getPackageLabel(packageId: string | null) {
+  return servicePackages.find((item) => item.id === packageId)?.title || 'Belum dipilih';
+}
+
+function getSourceLabel(row: ProjectInquiry) {
+  if (row.utm_source) {
+    return [row.utm_source, row.utm_medium, row.utm_campaign].filter(Boolean).join(' / ');
+  }
+  return row.source === 'mulai_project' ? 'Website (tanpa UTM)' : row.source || '—';
+}
 
 export default function AdminInquiriesList() {
   const [rows, setRows] = useState<ProjectInquiry[]>([]);
@@ -77,7 +89,14 @@ export default function AdminInquiriesList() {
       if (!query.trim()) return true;
 
       const search = query.trim().toLowerCase();
-      return [row.nama, row.status, row.jenis_kebutuhan, row.perusahaan || ''].some((field) => field.toLowerCase().includes(search));
+      return [
+        row.nama,
+        row.status,
+        row.jenis_kebutuhan,
+        row.perusahaan || '',
+        getPackageLabel(row.paket_id),
+        getSourceLabel(row),
+      ].some((field) => field.toLowerCase().includes(search));
     });
   }, [dateFilter, query, rows, statusFilter]);
 
@@ -162,7 +181,7 @@ export default function AdminInquiriesList() {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Cari nama, perusahaan, status, atau kebutuhan"
+          placeholder="Cari nama, perusahaan, paket, sumber, atau kebutuhan"
           className="md:col-span-2 rounded-xl border border-white/15 bg-[#10100e] px-4 py-2 text-sm text-white/90 outline-none focus:border-[#D4AF37]"
         />
         <select
@@ -213,16 +232,16 @@ export default function AdminInquiriesList() {
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.015]">
-        <table className="min-w-[950px] w-full text-sm">
+        <table className="min-w-[1250px] w-full text-sm">
           <thead>
             <tr className="text-left text-white/45">
-              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
+              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Paket</th><th>Sumber / Kampanye</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {filteredRows.length === 0 ? (
               <tr className="border-t border-white/10">
-                <td colSpan={8} className="p-10 text-center">
+                <td colSpan={10} className="p-10 text-center">
                   <p className="text-base font-semibold text-white/85">Tidak ada inquiry yang cocok</p>
                   <p className="mt-1 text-sm text-white/55">Coba ubah kata kunci, status, atau tanggal filter.</p>
                 </td>
@@ -230,7 +249,7 @@ export default function AdminInquiriesList() {
             ) : (
               filteredRows.map((r) => (
                 <tr key={r.id} className="border-t border-white/10">
-                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
+                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.paket_id ? getPackageLabel(r.paket_id) : '—'}</td><td className="max-w-[260px] truncate" title={getSourceLabel(r)}>{getSourceLabel(r)}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
                   <td><span className={`rounded-full border px-3 py-1 text-xs ${statusStyle[r.status]}`}>{r.status}</span></td>
                   <td>{formatTanggalMasuk(r.created_at)}</td>
                   <td className="space-x-2">
