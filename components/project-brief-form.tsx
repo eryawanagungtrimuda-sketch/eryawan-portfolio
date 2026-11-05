@@ -126,11 +126,15 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
     "",
   );
   const { toast } = useToast();
+  const selectedPackage = servicePackages.find((item) => item.id === form.paketId);
+  const selectedPackageLabel = selectedPackage
+    ? `${selectedPackage.option} — ${selectedPackage.title}`
+    : "Belum dipilih";
 
   const message = useMemo(
     () =>
-      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nJenis Kebutuhan: ${form.jenisKebutuhan || "-"}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
-    [form],
+      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nJenis Kebutuhan: ${form.jenisKebutuhan || "-"}\nPaket yang Diminati: ${selectedPackageLabel}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
+    [form, selectedPackageLabel],
   );
 
   function validate() {
@@ -166,7 +170,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
       response = await fetch("/api/project-inquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, messagePreview: message }),
+        body: JSON.stringify({ ...form, ...readPromoAttribution(), messagePreview: message }),
       });
     } catch {
       setSubmitState("error");
