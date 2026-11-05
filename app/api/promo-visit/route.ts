@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase-admin';
+import { enforcePublicRateLimit } from '@/lib/public-rate-limit';
 
+export const runtime = 'nodejs';
+
+const MAX_REQUEST_BODY_BYTES = 8_192;
 const allowedSources = new Set(['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'pinterest', 'whatsapp', 'manual']);
 
 type PromoVisitPayload = {
@@ -42,14 +46,28 @@ function sanitizeReferrerOrigin(value: unknown) {
 }
 
 export async function POST(request: Request) {
-  const supabase = createSupabaseAdminClient();
-  if (!supabase) {
-    return NextResponse.json({ success: false, error: 'Promo tracking belum dikonfigurasi.' }, { status: 503 });
+  const contentLength = Number(request.headers.get('content-length') || 0);
+  if (contentLength > MAX_REQUEST_BODY_BYTES) {
+    return NextResponse.json({ success: false, error: 'Payload terlalu besar.' }, { status: 413 });
+  }
+
+  let rawBody: string;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return NextResponse.json({ success: false, error: 'Payload tidak valid.' }, { status: 400 });
+  }
+  if (new TextEncoder().encode(rawBody).byteLength > MAX_REQUEST_BODY_BYTES) {
+    return NextResponse.json({ success: false, error: 'Payload terlalu besar.' }, { status: 413 });
   }
 
   let payload: PromoVisitPayload;
   try {
-    payload = await request.json();
+    const parsed: unknown = JSON.parse(rawBody);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return NextResponse.json({ success: false, error: 'Payload tidak valid.' }, { status: 400 });
+    }
+    payload = parsed as PromoVisitPayload;
   } catch {
     return NextResponse.json({ success: false, error: 'Payload tidak valid.' }, { status: 400 });
   }
@@ -63,6 +81,17 @@ export async function POST(request: Request) {
 
   if (!path || !allowedSources.has(utmSource)) {
     return NextResponse.json({ success: false, error: 'Payload tidak valid.' }, { status: 400 });
+  }
+
+  const rateLimit = await enforcePublicRateLimit(request, 'promo-visit', 30, 10 * 60);
+  if (!rateLimit.allowed) {
+    // Tracking is best-effort. Quietly skip excess events rather than affect page UX.
+    return NextResponse.json({ success: true });
+  }
+
+  const supabase = createSupabaseAdminClient();
+  if (!supabase) {
+    return NextResponse.json({ success: false, error: 'Promo tracking belum dikonfigurasi.' }, { status: 503 });
   }
 
   const row = {
