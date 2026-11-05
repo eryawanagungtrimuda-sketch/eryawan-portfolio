@@ -93,6 +93,7 @@ export default function AdminInquiriesList() {
         row.nama,
         row.status,
         row.jenis_kebutuhan,
+        row.jenis_proyek || '',
         row.perusahaan || '',
         getPackageLabel(row.paket_id),
         getSourceLabel(row),
@@ -235,7 +236,7 @@ export default function AdminInquiriesList() {
         <table className="min-w-[1250px] w-full text-sm">
           <thead>
             <tr className="text-left text-white/45">
-              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Paket</th><th>Sumber / Kampanye</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
+              <th className="p-4">Nama</th><th>Perusahaan</th><th>Jenis Kebutuhan</th><th>Jenis Proyek</th><th>Paket</th><th>Sumber / Kampanye</th><th>Timeline</th><th>Range Budget</th><th>Status</th><th>Tanggal Masuk</th><th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -249,7 +250,7 @@ export default function AdminInquiriesList() {
             ) : (
               filteredRows.map((r) => (
                 <tr key={r.id} className="border-t border-white/10">
-                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.paket_id ? getPackageLabel(r.paket_id) : '—'}</td><td className="max-w-[260px] truncate" title={getSourceLabel(r)}>{getSourceLabel(r)}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
+                  <td className="p-4 font-semibold">{r.nama}</td><td>{r.perusahaan || '—'}</td><td>{r.jenis_kebutuhan}</td><td>{r.jenis_proyek || '—'}</td><td>{r.paket_id ? getPackageLabel(r.paket_id) : '—'}</td><td className="max-w-[260px] truncate" title={getSourceLabel(r)}>{getSourceLabel(r)}</td><td>{r.timeline || '—'}</td><td>{r.budget_range || '—'}</td>
                   <td><span className={`rounded-full border px-3 py-1 text-xs ${statusStyle[r.status]}`}>{r.status}</span></td>
                   <td>{formatTanggalMasuk(r.created_at)}</td>
                   <td className="space-x-2">

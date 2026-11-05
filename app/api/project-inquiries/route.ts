@@ -10,8 +10,9 @@ export const runtime = 'nodejs';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const MAX_FIELD_LENGTH = 3000;
-const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,utm_source,utm_medium,utm_campaign,utm_content,created_at,updated_at';
+const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,jenis_proyek,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,utm_source,utm_medium,utm_campaign,utm_content,created_at,updated_at';
 function sanitize(input: unknown, max = MAX_FIELD_LENGTH) { if (typeof input !== 'string') return ''; return input.trim().slice(0, max); }
+const legacyProjectTypes = new Set(['Interior Residential', 'Arsitektur Rumah', 'Hospitality / Hotel / Villa', 'Workspace / Office', 'Retail / Commercial']);
 
 export async function GET(request: Request) {
   if (!supabaseUrl || !supabaseAnonKey) return NextResponse.json({ error: 'Konfigurasi server belum siap.' }, { status: 500 });
@@ -33,7 +34,11 @@ export async function POST(request: Request) {
   const perusahaan = sanitize(payload.perusahaan ?? payload.company, 160);
   const email = sanitize(payload.email, 160);
   const whatsapp = sanitize(payload.whatsapp, 80);
-  const jenisKebutuhan = sanitize(payload.jenisKebutuhan ?? payload.jenis_kebutuhan, 160);
+  const rawJenisKebutuhan = sanitize(payload.jenisKebutuhan ?? payload.jenis_kebutuhan, 160);
+  const jenisProyekInput = sanitize(payload.jenisProyek ?? payload.jenis_proyek, 160);
+  const legacyJenisProyek = legacyProjectTypes.has(rawJenisKebutuhan) ? rawJenisKebutuhan : '';
+  const jenisKebutuhan = legacyJenisProyek ? 'Proyek Desain' : rawJenisKebutuhan;
+  const jenisProyek = jenisProyekInput || legacyJenisProyek;
   const lokasiProject = sanitize(payload.lokasiProject ?? payload.projectLocation, 160);
   const estimasiLuas = sanitize(payload.estimasiLuas, 120);
   const tahapProject = sanitize(payload.tahapProject, 160);
@@ -46,6 +51,21 @@ export async function POST(request: Request) {
   const selectedPackage = servicePackages.find((item) => item.id === packageIdInput);
   if (packageIdInput && !selectedPackage) {
     return NextResponse.json({ error: 'Paket yang dipilih tidak valid.' }, { status: 400 });
+  }
+  if (selectedPackage && jenisKebutuhan !== 'Proyek Desain') {
+    return NextResponse.json({ error: 'Paket hanya dapat dipilih untuk kebutuhan Proyek Desain.' }, { status: 400 });
+  }
+  if (jenisKebutuhan === 'Proyek Desain' && !jenisProyek) {
+    return NextResponse.json({ error: 'Jenis proyek wajib dipilih.' }, { status: 400 });
+  }
+  if (jenisKebutuhan !== 'Proyek Desain' && jenisProyek) {
+    return NextResponse.json({ error: 'Jenis proyek hanya berlaku untuk kebutuhan Proyek Desain.' }, { status: 400 });
+  }
+  if (selectedPackage?.id === 'opsi-4' && jenisProyek !== 'Arsitektur Rumah') {
+    return NextResponse.json({ error: 'Opsi 4 hanya berlaku untuk Arsitektur Rumah.' }, { status: 400 });
+  }
+  if (selectedPackage && selectedPackage.id !== 'opsi-4' && jenisProyek === 'Arsitektur Rumah') {
+    return NextResponse.json({ error: 'Paket interior tidak dapat dipasangkan dengan Arsitektur Rumah.' }, { status: 400 });
   }
 
   const sourceCandidate = sanitize(payload.utm_source, 80).toLowerCase();
@@ -65,6 +85,7 @@ export async function POST(request: Request) {
     whatsapp: whatsapp || null,
     paket_id: selectedPackage?.id || null,
     jenis_kebutuhan: jenisKebutuhan,
+    jenis_proyek: jenisProyek || null,
     lokasi_project: lokasiProject || null,
     estimasi_luas: estimasiLuas || null,
     tahap_project: tahapProject || null,

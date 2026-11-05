@@ -11,6 +11,7 @@ type InquiryRow = {
   whatsapp: string | null;
   paket_id: string | null;
   jenis_kebutuhan: string;
+  jenis_proyek: string | null;
   lokasi_project: string | null;
   estimasi_luas: string | null;
   tahap_project: string | null;
@@ -22,7 +23,7 @@ type InquiryRow = {
   source: string;
 };
 
-const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,status,source';
+const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,jenis_proyek,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,status,source';
 
 function safeValue(value: string | null | undefined) {
   const v = typeof value === 'string' ? value.trim() : '';
@@ -110,6 +111,7 @@ Data inquiry:
 - Email: ${safeValue(data.email)}
 - WhatsApp: ${safeValue(data.whatsapp)}
 - Jenis kebutuhan: ${safeValue(data.jenis_kebutuhan)}
+- Jenis proyek: ${safeValue(data.jenis_proyek)}
 - Paket yang diminati: ${selectedPackageLabel}
 - Lokasi project: ${safeValue(data.lokasi_project)}
 - Estimasi luas: ${safeValue(data.estimasi_luas)}

@@ -1,5 +1,6 @@
 alter table public.project_inquiries
   add column if not exists paket_id text,
+  add column if not exists jenis_proyek text,
   add column if not exists utm_source text,
   add column if not exists utm_medium text,
   add column if not exists utm_campaign text,
@@ -17,7 +18,19 @@ begin
       add constraint project_inquiries_paket_id_check
       check (paket_id is null or paket_id in ('opsi-1', 'opsi-2', 'opsi-3', 'opsi-4'));
   end if;
-end $$;
+end $;
+
+-- Move legacy project-type choices into the dedicated field without losing existing inquiry data.
+update public.project_inquiries
+set jenis_proyek = coalesce(jenis_proyek, jenis_kebutuhan),
+    jenis_kebutuhan = 'Proyek Desain'
+where jenis_kebutuhan in (
+  'Interior Residential',
+  'Arsitektur Rumah',
+  'Hospitality / Hotel / Villa',
+  'Workspace / Office',
+  'Retail / Commercial'
+);
 
 -- Preserve package selections embedded in older free-text briefs when recognizable.
 update public.project_inquiries

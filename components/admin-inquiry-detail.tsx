@@ -9,7 +9,7 @@ import { downloadProposalText } from '@/lib/proposal-export';
 import { servicePackages } from '@/lib/service-packages';
 
 function buildDraftTitle(row: ProjectInquiry) {
-  const parts = [row.jenis_kebutuhan, row.nama || row.perusahaan || ''].filter(Boolean);
+  const parts = [row.jenis_kebutuhan, row.jenis_proyek, row.nama || row.perusahaan || ''].filter(Boolean);
   return parts.length ? `Draft Proposal Awal — ${parts.join(' — ')}`.slice(0, 180) : 'Draft Proposal Awal';
 }
 
@@ -168,6 +168,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       {[
         { label: 'Nama calon klien', value: row.nama || fallbackText },
         { label: 'Jenis kebutuhan', value: row.jenis_kebutuhan || fallbackText },
+        { label: 'Jenis proyek', value: row.jenis_proyek || 'Tidak berlaku' },
         { label: 'Status inquiry', value: statusLabel[row.status] },
         { label: 'Tanggal masuk', value: formatDate(row.created_at) },
       ].map((item) => <article key={item.label} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
@@ -196,6 +197,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       <div className="mt-4 grid gap-x-6 gap-y-3 text-sm md:grid-cols-2">
         {[
           ['Jenis kebutuhan', row.jenis_kebutuhan],
+          ['Jenis proyek', row.jenis_proyek],
           ['Paket yang diminati', row.paket_id ? getPackageLabel(row.paket_id) : 'Belum dipilih'],
           ['Sumber promosi', getSourceLabel(row)],
           ['Medium promosi', row.utm_medium],
