@@ -6,7 +6,7 @@ alter table public.project_inquiries
   add column if not exists utm_campaign text,
   add column if not exists utm_content text;
 
-do $$
+do $migration$
 begin
   if not exists (
     select 1
@@ -18,7 +18,7 @@ begin
       add constraint project_inquiries_paket_id_check
       check (paket_id is null or paket_id in ('opsi-1', 'opsi-2', 'opsi-3', 'opsi-4'));
   end if;
-end $;
+end $migration$;
 
 -- Move legacy project-type choices into the dedicated field without losing existing inquiry data.
 update public.project_inquiries
