@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 const allowedStatuses = ['baru', 'ditinjau', 'dihubungi', 'selesai', 'arsip'] as const;
-const selectColumns = 'id,nama,perusahaan,email,whatsapp,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,created_at,updated_at';
+const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,utm_source,utm_medium,utm_campaign,utm_content,created_at,updated_at';
 
 async function getAuthedSupabase(request: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
