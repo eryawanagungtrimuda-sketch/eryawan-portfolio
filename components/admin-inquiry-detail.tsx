@@ -6,9 +6,10 @@ import { createSupabaseBrowserClient } from '@/lib/supabase';
 import type { ProjectInquiry, ProjectInquiryProposalDraft, ProjectInquiryProposalDraftStatus } from '@/lib/types';
 import { ProposalDraftRenderer } from '@/components/proposal-draft-renderer';
 import { downloadProposalText } from '@/lib/proposal-export';
+import { servicePackages } from '@/lib/service-packages';
 
 function buildDraftTitle(row: ProjectInquiry) {
-  const parts = [row.jenis_kebutuhan, row.nama || row.perusahaan || ''].filter(Boolean);
+  const parts = [row.jenis_kebutuhan, row.jenis_proyek, row.nama || row.perusahaan || ''].filter(Boolean);
   return parts.length ? `Draft Proposal Awal — ${parts.join(' — ')}`.slice(0, 180) : 'Draft Proposal Awal';
 }
 
@@ -30,6 +31,17 @@ const statusLabel: Record<ProjectInquiry['status'], string> = {
 
 const fallbackText = 'Belum diisi';
 const formatDate = (v: string) => new Date(v).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function getPackageLabel(packageId: string | null) {
+  return servicePackages.find((item) => item.id === packageId)?.title || 'Belum dipilih';
+}
+
+function getSourceLabel(row: ProjectInquiry) {
+  if (row.utm_source) {
+    return [row.utm_source, row.utm_medium, row.utm_campaign].filter(Boolean).join(' / ');
+  }
+  return row.source === 'mulai_project' ? 'Website (tanpa UTM)' : row.source || fallbackText;
+}
 function sanitizeWhatsappNumber(value: string) {
   const digits = value.replace(/\D/g, '');
   if (!digits) return '';
@@ -156,6 +168,7 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       {[
         { label: 'Nama calon klien', value: row.nama || fallbackText },
         { label: 'Jenis kebutuhan', value: row.jenis_kebutuhan || fallbackText },
+        { label: 'Jenis proyek', value: row.jenis_proyek || 'Tidak berlaku' },
         { label: 'Status inquiry', value: statusLabel[row.status] },
         { label: 'Tanggal masuk', value: formatDate(row.created_at) },
       ].map((item) => <article key={item.label} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
@@ -184,6 +197,12 @@ export default function AdminInquiryDetail({ id }: { id: string }) {
       <div className="mt-4 grid gap-x-6 gap-y-3 text-sm md:grid-cols-2">
         {[
           ['Jenis kebutuhan', row.jenis_kebutuhan],
+          ['Jenis proyek', row.jenis_proyek],
+          ['Paket yang diminati', row.paket_id ? getPackageLabel(row.paket_id) : 'Belum dipilih'],
+          ['Sumber promosi', getSourceLabel(row)],
+          ['Medium promosi', row.utm_medium],
+          ['Kampanye promosi', row.utm_campaign],
+          ['Konten promosi', row.utm_content],
           ['Lokasi project', row.lokasi_project],
           ['Estimasi luas', row.estimasi_luas],
           ['Tahap project', row.tahap_project],

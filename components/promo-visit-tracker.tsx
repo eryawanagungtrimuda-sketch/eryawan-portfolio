@@ -1,10 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
+import {
+  ALLOWED_PROMO_SOURCES,
+  PROMO_ATTRIBUTION_STORAGE_KEY,
+  PROMO_SESSION_KEY,
+  PROMO_TRACKED_KEYS,
+  sanitizePromoValue,
+} from '@/lib/promo-attribution';
 
-const sessionKey = 'eryawan_promo_session_id';
-const trackedKey = 'eryawan_promo_tracked_keys';
-const allowedSources = new Set(['instagram', 'tiktok', 'facebook', 'youtube_short', 'linkedin', 'pinterest', 'whatsapp', 'manual']);
+const sessionKey = PROMO_SESSION_KEY;
+const trackedKey = PROMO_TRACKED_KEYS;
+const allowedSources = ALLOWED_PROMO_SOURCES;
 
 function getSessionId() {
   try {
@@ -15,6 +22,14 @@ function getSessionId() {
       : `promo_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     window.sessionStorage.setItem(sessionKey, generated);
     return generated;
+  } catch {
+    return null;
+  }
+}
+
+function getReferrerOrigin() {
+  try {
+    return document.referrer ? new URL(document.referrer).origin : null;
   } catch {
     return null;
   }
@@ -42,17 +57,27 @@ function markTracked(dedupeKey: string) {
 export default function PromoVisitTracker() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const utmSource = (params.get('utm_source') || '').trim().toLowerCase();
+    const utmSource = sanitizePromoValue(params.get('utm_source'), 80)?.toLowerCase() || '';
     if (!utmSource || !allowedSources.has(utmSource)) return;
+
+    const attribution = {
+      utm_source: utmSource,
+      utm_medium: sanitizePromoValue(params.get('utm_medium'), 120),
+      utm_campaign: sanitizePromoValue(params.get('utm_campaign'), 160),
+      utm_content: sanitizePromoValue(params.get('utm_content'), 200),
+    };
+
+    try {
+      window.sessionStorage.setItem(PROMO_ATTRIBUTION_STORAGE_KEY, JSON.stringify(attribution));
+    } catch {
+      // Inquiry submission still works if browser session storage is unavailable.
+    }
 
     const path = window.location.pathname;
     const payload = {
       path,
-      utm_source: utmSource,
-      utm_medium: params.get('utm_medium'),
-      utm_campaign: params.get('utm_campaign'),
-      utm_content: params.get('utm_content'),
-      referrer: document.referrer || null,
+      ...attribution,
+      referrer: getReferrerOrigin(),
       session_id: getSessionId(),
     };
 

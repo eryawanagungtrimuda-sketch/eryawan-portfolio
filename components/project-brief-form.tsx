@@ -3,13 +3,17 @@
 import type { CSSProperties, FormEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/toast-provider";
+import { readPromoAttribution } from "@/lib/promo-attribution";
+import { servicePackages, type ServicePackageId } from "@/lib/service-packages";
 
 type FormState = {
   nama: string;
   perusahaan: string;
   email: string;
   whatsapp: string;
+  paketId: ServicePackageId | "";
   jenisKebutuhan: string;
+  jenisProyek: string;
   lokasiProject: string;
   estimasiLuas: string;
   tahapProject: string;
@@ -20,15 +24,27 @@ type FormState = {
 };
 
 const kebutuhanOptions = [
-  "Interior Residential",
-  "Hospitality / Hotel / Villa",
-  "Workspace / Office",
-  "Retail / Commercial",
+  "Proyek Desain",
   "Design Review",
   "Design Development",
   "Kolaborasi / Mitra Bisnis",
   "Peluang Kerja / Rekrutmen",
   "Lainnya",
+];
+const projectTypeOptions = [
+  "Interior Residential",
+  "Hospitality / Hotel / Villa",
+  "Workspace / Office",
+  "Retail / Commercial",
+  "Interior Lainnya",
+  "Arsitektur Rumah",
+];
+const interiorProjectTypeOptions = [
+  "Interior Residential",
+  "Hospitality / Hotel / Villa",
+  "Workspace / Office",
+  "Retail / Commercial",
+  "Interior Lainnya",
 ];
 const luasOptions = [
   "< 50 m²",
@@ -79,7 +95,9 @@ const initialState: FormState = {
   perusahaan: "",
   email: "",
   whatsapp: "",
+  paketId: "",
   jenisKebutuhan: "",
+  jenisProyek: "",
   lokasiProject: "",
   estimasiLuas: "",
   tahapProject: "",
@@ -90,18 +108,18 @@ const initialState: FormState = {
 };
 
 type ProjectBriefFormProps = {
-  selectedPackage?: string;
+  selectedPackageId?: ServicePackageId | "";
 };
 
-export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefFormProps) {
+export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBriefFormProps) {
   const initialForm = useMemo<FormState>(
     () => ({
       ...initialState,
-      kebutuhanUtama: selectedPackage
-        ? `Paket jasa yang ingin didiskusikan: ${selectedPackage}\n\n`
-        : "",
+      paketId: selectedPackageId,
+      jenisKebutuhan: selectedPackageId ? "Proyek Desain" : "",
+      jenisProyek: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : "",
     }),
-    [selectedPackage],
+    [selectedPackageId],
   );
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -118,11 +136,15 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     "",
   );
   const { toast } = useToast();
+  const selectedPackage = servicePackages.find((item) => item.id === form.paketId);
+  const selectedPackageLabel = selectedPackage
+    ? `${selectedPackage.option} — ${selectedPackage.title}`
+    : "Belum dipilih";
 
   const message = useMemo(
     () =>
-      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nJenis Kebutuhan: ${form.jenisKebutuhan || "-"}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
-    [form],
+      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nArah Kebutuhan: ${form.jenisKebutuhan || "-"}\nJenis Proyek: ${form.jenisProyek || "-"}\nPaket yang Diminati: ${selectedPackageLabel}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
+    [form, selectedPackageLabel],
   );
 
   function validate() {
@@ -131,7 +153,9 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
     if (!form.email.trim() && !form.whatsapp.trim())
       e.kontak = "Minimal isi Email atau WhatsApp.";
     if (!form.jenisKebutuhan)
-      e.jenisKebutuhan = "Jenis kebutuhan wajib dipilih.";
+      e.jenisKebutuhan = "Arah kebutuhan wajib dipilih.";
+    if (form.jenisKebutuhan === "Proyek Desain" && !form.jenisProyek)
+      e.jenisProyek = "Jenis proyek wajib dipilih.";
     if (!form.kebutuhanUtama.trim())
       e.kebutuhanUtama = "Kebutuhan utama wajib diisi.";
     setErrors(e);
@@ -158,7 +182,7 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
       response = await fetch("/api/project-inquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, messagePreview: message }),
+        body: JSON.stringify({ ...form, ...readPromoAttribution(), messagePreview: message }),
       });
     } catch {
       setSubmitState("error");
@@ -382,42 +406,92 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
             {errors.kontak}
           </p>
         ) : null}
+        {(!form.jenisKebutuhan || form.jenisKebutuhan === "Proyek Desain") ? (
+          <div>
+            <label htmlFor="brief-paket" className="text-sm text-white/80">
+              Paket yang diminati
+            </label>
+            <p id="brief-paket-helper" className="mt-1 text-xs leading-5 text-white/45">
+              Jika memilih paket, arah kebutuhan otomatis menjadi Proyek Desain. Untuk kolaborasi atau peluang kerja, kosongkan paket terlebih dahulu.
+            </p>
+            <select
+              id="brief-paket"
+              value={form.paketId}
+              onChange={(event) => {
+                const paketId = event.target.value as ServicePackageId | "";
+                setForm({
+                  ...form,
+                  paketId,
+                  jenisKebutuhan: paketId ? "Proyek Desain" : form.jenisKebutuhan,
+                  jenisProyek:
+                    paketId === "opsi-4"
+                      ? "Arsitektur Rumah"
+                      : paketId && form.jenisProyek === "Arsitektur Rumah"
+                        ? ""
+                        : form.jenisProyek,
+                });
+              }}
+              aria-describedby="brief-paket-helper"
+              className={inputClass}
+            >
+              <option value="">Belum memilih paket</option>
+              {servicePackages.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.option} — {item.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
         <div>
           <p id="brief-jenis-kebutuhan-label" className="text-sm text-white/80">
-            Peluang kerja, kolaborasi, atau proyek *
+            Arah kebutuhan utama *
           </p>
           <p
             id="brief-jenis-kebutuhan-helper"
             className="mt-1 text-xs leading-5 text-white/45"
           >
-            Pilih satu arah utama agar brief terbaca lebih jelas.
+            {form.paketId
+              ? "Paket yang dipilih menetapkan kebutuhan sebagai Proyek Desain. Kosongkan paket jika ingin memilih arah kebutuhan lain."
+              : "Pilih tujuan utama. Untuk Proyek Desain, Anda juga dapat menentukan jenis proyek dan paket layanan."}
           </p>
-          <div
-            role="group"
-            aria-labelledby="brief-jenis-kebutuhan-label"
-            aria-describedby={
-              errors.jenisKebutuhan
-                ? "brief-jenis-kebutuhan-error"
-                : "brief-jenis-kebutuhan-helper"
-            }
-            className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
-          >
-            {kebutuhanOptions.map((item) => (
-              <button
-                type="button"
-                key={item}
-                onClick={() => setForm({ ...form, jenisKebutuhan: item })}
-                aria-pressed={form.jenisKebutuhan === item}
-                className={`min-h-11 max-w-full break-words rounded-xl border px-3 py-2 text-left text-sm leading-6 transition ${focusRingClass} ${
-                  form.jenisKebutuhan === item
-                    ? "border-[#D4AF37] bg-[#D4AF37]/12 text-[#F3DF9C]"
-                    : "border-white/12 bg-white/[0.02] text-white/75 hover:border-[#D4AF37]/35"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+          {form.paketId ? (
+            <div className="mt-2 rounded-xl border border-[#D4AF37]/45 bg-[#D4AF37]/10 px-3 py-3 text-sm font-medium text-[#F3DF9C]">
+              Proyek Desain
+            </div>
+          ) : (
+            <div
+              role="group"
+              aria-labelledby="brief-jenis-kebutuhan-label"
+              aria-describedby={
+                errors.jenisKebutuhan
+                  ? "brief-jenis-kebutuhan-error"
+                  : "brief-jenis-kebutuhan-helper"
+              }
+              className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"
+            >
+              {kebutuhanOptions.map((item) => (
+                <button
+                  type="button"
+                  key={item}
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      jenisKebutuhan: item,
+                      paketId: "",
+                      jenisProyek: item === "Proyek Desain" ? form.jenisProyek : "",
+                    })
+                  }
+                  aria-pressed={form.jenisKebutuhan === item}
+                  className={form.jenisKebutuhan === item
+                    ? "min-h-11 max-w-full break-words rounded-xl border border-[#D4AF37] bg-[#D4AF37]/12 px-3 py-2 text-left text-sm leading-6 text-[#F3DF9C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55"
+                    : "min-h-11 max-w-full break-words rounded-xl border border-white/12 bg-white/[0.02] px-3 py-2 text-left text-sm leading-6 text-white/75 hover:border-[#D4AF37]/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55"}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
           {errors.jenisKebutuhan ? (
             <p
               id="brief-jenis-kebutuhan-error"
@@ -427,6 +501,45 @@ export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefF
             </p>
           ) : null}
         </div>
+        {form.jenisKebutuhan === "Proyek Desain" ? (
+          <div>
+            <label htmlFor="brief-jenis-proyek" className="text-sm text-white/80">
+              Jenis proyek *
+            </label>
+            <p id="brief-jenis-proyek-helper" className="mt-1 text-xs leading-5 text-white/45">
+              {form.paketId === "opsi-4"
+                ? "Opsi 4 khusus untuk desain arsitektur rumah."
+                : form.paketId
+                  ? "Pilih kategori proyek interior yang sesuai."
+                  : "Pilih kategori proyek yang akan dibahas."}
+            </p>
+            <select
+              id="brief-jenis-proyek"
+              value={form.jenisProyek}
+              onChange={(event) => setForm({ ...form, jenisProyek: event.target.value })}
+              aria-invalid={Boolean(errors.jenisProyek)}
+              aria-describedby={errors.jenisProyek ? "brief-jenis-proyek-error" : "brief-jenis-proyek-helper"}
+              className={inputClass}
+            >
+              <option value="">Pilih jenis proyek</option>
+              {(form.paketId === "opsi-4"
+                ? ["Arsitektur Rumah"]
+                : form.paketId
+                  ? interiorProjectTypeOptions
+                  : projectTypeOptions
+              ).map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+            {errors.jenisProyek ? (
+              <p id="brief-jenis-proyek-error" className="mt-2 text-xs text-amber-300">
+                {errors.jenisProyek}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
         <div>
           <label htmlFor="brief-lokasi" className="text-sm text-white/80">
             Lokasi proyek

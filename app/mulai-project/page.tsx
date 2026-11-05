@@ -4,6 +4,7 @@ import ProjectBriefForm from "@/components/project-brief-form";
 import RevealObserver from "@/components/reveal-observer";
 import { absoluteUrl } from "@/lib/site-url";
 import TrackedLink from "@/components/tracked-link";
+import { servicePackages, type ServicePackageId } from "@/lib/service-packages";
 
 export const metadata: Metadata = {
   title: "Mulai Percakapan | Eryawan Agung",
@@ -42,20 +43,15 @@ const conversationIntents = [
   "Diskusi Desain",
 ];
 
-const packageLabels: Record<string, string> = {
-  "opsi-1": "Opsi 1 — Konsep Desain Interior",
-  "opsi-2": "Opsi 2 — 3D Modeling & Render Interior",
-  "opsi-3": "Opsi 3 — Desain Interior Lengkap",
-  "opsi-4": "Opsi 4 — Desain Arsitektur Rumah Lengkap",
-};
-
 type MulaiProjectPageProps = {
   searchParams?: { paket?: string | string[] };
 };
 
 export default function MulaiProjectPage({ searchParams }: MulaiProjectPageProps) {
   const packageId = typeof searchParams?.paket === "string" ? searchParams.paket : "";
-  const selectedPackage = packageLabels[packageId] ?? "";
+  const selectedPackageId = servicePackages.some((item) => item.id === packageId)
+    ? (packageId as ServicePackageId)
+    : "";
 
   return (
     <main
@@ -149,7 +145,7 @@ export default function MulaiProjectPage({ searchParams }: MulaiProjectPageProps
           </div>
         </section>
 
-        <ProjectBriefForm key={selectedPackage} selectedPackage={selectedPackage} />
+        <ProjectBriefForm key={selectedPackageId} selectedPackageId={selectedPackageId} />
       </div>
     </main>
   );
