@@ -180,6 +180,8 @@ export default function AdminInquiryNotifications() {
     }
   };
 
+  const isPreviewEnvironment = deploymentEnvironment.toLowerCase() === 'preview';
+
   const statusMessage: Record<NotificationStatus, string> = {
     checking: 'Memeriksa status notifikasi pada browser ini...',
     active: 'Aktif di browser ini. Notifikasi inquiry baru dapat muncul meskipun tab website tidak terbuka, selama browser dan sistem operasi mendukungnya.',
@@ -190,9 +192,11 @@ export default function AdminInquiryNotifications() {
     error: 'Status notifikasi belum dapat dipastikan. Periksa koneksi dan coba lagi.',
   };
 
-  const unconfiguredMessage = missingVariables.length
-    ? `Konfigurasi notifikasi pada environment ${deploymentEnvironment} belum lengkap. Periksa Environment Variables di Vercel: ${missingVariables.join(', ')}. Setelah dilengkapi, redeploy dan muat ulang halaman.`
-    : 'Konfigurasi notifikasi server belum tersedia. Periksa Environment Variables di Vercel, lalu redeploy dan muat ulang halaman.';
+  const unconfiguredMessage = isPreviewEnvironment
+    ? 'Anda sedang membuka Vercel Preview. Environment Variables yang hanya diatur untuk Production tidak tersedia di Preview. Ini normal. Jangan menyalin secret Production ke Preview hanya untuk menghilangkan pesan ini. Setelah perubahan di-merge dan deployment Production berstatus Ready, buka eryawanagung.my.id untuk memeriksa notifikasi.'
+    : missingVariables.length
+      ? `Konfigurasi notifikasi pada environment ${deploymentEnvironment} belum lengkap. Periksa Environment Variables di Vercel: ${missingVariables.join(', ')}. Setelah dilengkapi, redeploy dan muat ulang halaman.`
+      : 'Konfigurasi notifikasi server belum tersedia. Periksa Environment Variables di Vercel, lalu redeploy dan muat ulang halaman.';
 
   const disabled =
     busy ||
@@ -237,7 +241,9 @@ export default function AdminInquiryNotifications() {
               : status === 'error'
                 ? 'Coba Lagi'
                 : status === 'unconfigured'
-                  ? 'Konfigurasi Server Diperlukan'
+                  ? isPreviewEnvironment
+                    ? 'Periksa di Production'
+                    : 'Konfigurasi Server Diperlukan'
                   : 'Aktifkan Notifikasi Desktop'}
         </button>
       </div>
