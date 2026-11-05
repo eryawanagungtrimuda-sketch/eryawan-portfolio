@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
+import { servicePackages } from '@/lib/service-packages';
 
 type InquiryRow = {
   id: string;
@@ -8,6 +9,7 @@ type InquiryRow = {
   perusahaan: string | null;
   email: string | null;
   whatsapp: string | null;
+  paket_id: string | null;
   jenis_kebutuhan: string;
   lokasi_project: string | null;
   estimasi_luas: string | null;
@@ -20,7 +22,7 @@ type InquiryRow = {
   source: string;
 };
 
-const selectColumns = 'id,nama,perusahaan,email,whatsapp,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,status,source';
+const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,status,source';
 
 function safeValue(value: string | null | undefined) {
   const v = typeof value === 'string' ? value.trim() : '';
@@ -54,6 +56,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
   const { data, error } = await auth.supabase.from('project_inquiries').select(selectColumns).eq('id', id).single<InquiryRow>();
   if (error || !data) return NextResponse.json({ error: 'Inquiry tidak ditemukan.' }, { status: 404 });
+
+  const selectedPackage = servicePackages.find((item) => item.id === data.paket_id);
+  const selectedPackageLabel = selectedPackage
+    ? `${selectedPackage.option} — ${selectedPackage.title}`
+    : 'Belum dipilih';
 
   const prompt = `Anda adalah Eryawan Agung, desainer interior profesional.
 Tugas: buat dua keluaran yang terpisah berdasarkan data inquiry:
@@ -103,6 +110,7 @@ Data inquiry:
 - Email: ${safeValue(data.email)}
 - WhatsApp: ${safeValue(data.whatsapp)}
 - Jenis kebutuhan: ${safeValue(data.jenis_kebutuhan)}
+- Paket yang diminati: ${selectedPackageLabel}
 - Lokasi project: ${safeValue(data.lokasi_project)}
 - Estimasi luas: ${safeValue(data.estimasi_luas)}
 - Tahap project: ${safeValue(data.tahap_project)}
