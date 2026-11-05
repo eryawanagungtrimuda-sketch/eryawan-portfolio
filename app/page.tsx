@@ -721,7 +721,7 @@ export default async function Home() {
 
             <div className="mt-8 flex items-center justify-center gap-8 text-white/50">
               <a
-                href="https://instagram.com/"
+                href="https://www.instagram.com/eryawanagung/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition duration-300 hover:-translate-y-0.5 hover:text-[#C8A951]"
