@@ -395,6 +395,28 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
           </p>
         ) : null}
         <div>
+          <label htmlFor="brief-paket" className="text-sm text-white/80">
+            Paket yang diminati
+          </label>
+          <p id="brief-paket-helper" className="mt-1 text-xs leading-5 text-white/45">
+            Pilihan otomatis terisi jika Anda datang dari tombol Diskusikan Paket. Anda tetap dapat mengubahnya.
+          </p>
+          <select
+            id="brief-paket"
+            value={form.paketId}
+            onChange={(event) => setForm({ ...form, paketId: event.target.value as ServicePackageId | "" })}
+            aria-describedby="brief-paket-helper"
+            className={`mt-2 w-full min-w-0 rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] ${focusRingClass}`}
+          >
+            <option value="">Belum memilih paket</option>
+            {servicePackages.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.option} — {item.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
           <p id="brief-jenis-kebutuhan-label" className="text-sm text-white/80">
             Peluang kerja, kolaborasi, atau proyek *
           </p>
