@@ -1,3 +1,17 @@
+-- Ensure the admin check used by RLS policies exists before creating policies.
+-- Keep this aligned with the existing Supabase schema's admin identity.
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+set search_path = public
+as $$
+  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com';
+$$;
+
+grant usage on schema public to anon, authenticated;
+grant execute on function public.is_admin() to anon, authenticated;
+
 create table if not exists public.project_inquiry_push_subscriptions (
   id uuid primary key default gen_random_uuid(),
   endpoint text not null unique,
