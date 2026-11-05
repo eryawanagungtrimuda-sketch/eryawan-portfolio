@@ -3,6 +3,8 @@
 import type { CSSProperties, FormEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/toast-provider";
+import { readPromoAttribution } from "@/lib/promo-attribution";
+import { servicePackages, type ServicePackageId } from "@/lib/service-packages";
 
 type FormState = {
   nama: string;
