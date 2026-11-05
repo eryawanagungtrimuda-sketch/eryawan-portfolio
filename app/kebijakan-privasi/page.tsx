@@ -87,8 +87,8 @@ const sections = [
     title: "Informasi kunjungan situs",
     icon: Activity,
     paragraphs: [
-      "Situs dapat mencatat halaman yang dikunjungi dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi. Informasi ini membantu kami mengetahui halaman yang bermanfaat dan memahami apakah promosi menjangkau pengunjung.",
-      "Saat Anda membuka tautan promosi tertentu, situs dapat menyimpan catatan sementara untuk mengetahui apakah kunjungan berasal dari tautan tersebut. Catatan ini membantu memahami efektivitas promosi dan tidak digunakan untuk meminta kata sandi atau membaca isi perangkat Anda.",
+      "Situs dapat mencatat halaman yang dikunjungi dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi. Jika Anda datang melalui tautan berparameter UTM, sumber, medium, kampanye, dan konten promosi (jika tersedia) disimpan dalam sesi browser dan dapat dicatat bersama inquiry yang Anda kirim agar efektivitas promosi dapat dievaluasi.",
+      "Catatan kunjungan promosi dapat mencakup halaman yang dibuka, asal domain rujukan, dan pengenal sesi acak. Situs tidak menyimpan isi pesan atau data sensitif dari perangkat untuk keperluan atribusi promosi. Informasi tersebut digunakan untuk memahami efektivitas promosi dan dikelola sesuai kebutuhan operasional serta ketentuan penghapusan data yang dijelaskan di halaman ini.",
     ],
   },
   {
