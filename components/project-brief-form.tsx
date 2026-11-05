@@ -11,6 +11,7 @@ type FormState = {
   perusahaan: string;
   email: string;
   whatsapp: string;
+  paketId: ServicePackageId | "";
   jenisKebutuhan: string;
   lokasiProject: string;
   estimasiLuas: string;
@@ -23,6 +24,7 @@ type FormState = {
 
 const kebutuhanOptions = [
   "Interior Residential",
+  "Arsitektur Rumah",
   "Hospitality / Hotel / Villa",
   "Workspace / Office",
   "Retail / Commercial",
@@ -81,6 +83,7 @@ const initialState: FormState = {
   perusahaan: "",
   email: "",
   whatsapp: "",
+  paketId: "",
   jenisKebutuhan: "",
   lokasiProject: "",
   estimasiLuas: "",
@@ -92,18 +95,21 @@ const initialState: FormState = {
 };
 
 type ProjectBriefFormProps = {
-  selectedPackage?: string;
+  selectedPackageId?: ServicePackageId | "";
 };
 
-export default function ProjectBriefForm({ selectedPackage = "" }: ProjectBriefFormProps) {
+export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBriefFormProps) {
   const initialForm = useMemo<FormState>(
     () => ({
       ...initialState,
-      kebutuhanUtama: selectedPackage
-        ? `Paket jasa yang ingin didiskusikan: ${selectedPackage}\n\n`
-        : "",
+      paketId: selectedPackageId,
+      jenisKebutuhan: selectedPackageId === "opsi-4"
+        ? "Arsitektur Rumah"
+        : selectedPackageId
+          ? "Interior Residential"
+          : "",
     }),
-    [selectedPackage],
+    [selectedPackageId],
   );
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
