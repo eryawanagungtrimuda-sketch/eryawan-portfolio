@@ -103,6 +103,7 @@ export type ProjectInquiry = {
   perusahaan: string | null;
   email: string | null;
   whatsapp: string | null;
+  paket_id: string | null;
   jenis_kebutuhan: string;
   lokasi_project: string | null;
   estimasi_luas: string | null;
