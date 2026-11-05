@@ -25,7 +25,7 @@ create or replace function public.consume_public_endpoint_rate_limit(
 returns boolean
 language plpgsql
 security definer
-set search_path = public, pg_temp
+set search_path = pg_catalog, public, pg_temp
 as $function$
 declare
   v_request_count integer;
