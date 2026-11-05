@@ -131,6 +131,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
   const [whatsappHref, setWhatsappHref] = useState("");
   const [isFormClosed, setIsFormClosed] = useState(false);
   const isSubmittingRef = useRef(false);
+  const formStartedAtRef = useRef(Date.now());
   const waNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(
     /[^\d]/g,
     "",
@@ -164,6 +165,9 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
 
   async function handleSend(event: FormEvent) {
     event.preventDefault();
+    const formElement = event.currentTarget as HTMLFormElement;
+    const honeypotValue = new FormData(formElement).get("website");
+    const formStartedAt = formStartedAtRef.current;
     if (
       submitState === "saving" ||
       submitState === "success" ||
@@ -182,7 +186,13 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
       response = await fetch("/api/project-inquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, ...readPromoAttribution(), messagePreview: message }),
+        body: JSON.stringify({
+          ...form,
+          ...readPromoAttribution(),
+          messagePreview: message,
+          website: typeof honeypotValue === "string" ? honeypotValue : "",
+          formStartedAt,
+        }),
       });
     } catch {
       setSubmitState("error");
@@ -199,14 +209,17 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
     }
 
     if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      const serverMessage =
+        typeof result.error === "string"
+          ? result.error
+          : "Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.";
       setSubmitState("error");
-      setSubmitMessage(
-        "Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.",
-      );
+      setSubmitMessage(serverMessage);
       toast({
         type: "error",
         title: "Brief belum tersimpan",
-        description: "Silakan coba lagi atau salin brief secara manual.",
+        description: serverMessage,
       });
       isSubmittingRef.current = false;
       return;
@@ -275,6 +288,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
     setWhatsappHref("");
     setIsFormClosed(false);
     isSubmittingRef.current = false;
+    formStartedAtRef.current = Date.now();
   }
 
   const inputClass =
@@ -322,6 +336,10 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
 
   return (
     <form onSubmit={handleSend} className="mt-8 grid min-w-0 gap-6 lg:grid-cols-2">
+      <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
+        <label htmlFor="brief-website">Leave this field empty</label>
+        <input id="brief-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
       <section style={{ "--reveal-delay": "80ms" } as CSSProperties} className="reveal-on-scroll mobile-card-reveal min-w-0 space-y-5 rounded-2xl border border-white/10 bg-[#0d0d0c] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-6">
         <div>
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#D4AF37]/85">
