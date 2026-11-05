@@ -15,6 +15,8 @@ type NotificationStatus =
 type PushConfig = {
   configured: boolean;
   publicKey: string | null;
+  missingVariables?: string[];
+  deploymentEnvironment?: string;
   error?: string;
 };
 
@@ -36,6 +38,8 @@ function getErrorMessage(error: unknown) {
 export default function AdminInquiryNotifications() {
   const [status, setStatus] = useState<NotificationStatus>('checking');
   const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [missingVariables, setMissingVariables] = useState<string[]>([]);
+  const [deploymentEnvironment, setDeploymentEnvironment] = useState('unknown');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -67,14 +71,15 @@ export default function AdminInquiryNotifications() {
         const response = await authedFetch('/api/admin/push-subscriptions');
         const result = (await response.json()) as PushConfig;
         if (!response.ok) throw new Error(result.error || 'Tidak dapat memeriksa pengaturan notifikasi.');
+        if (cancelled) return;
+
+        setMissingVariables(result.missingVariables || []);
+        setDeploymentEnvironment(result.deploymentEnvironment || 'unknown');
         if (!result.configured || !result.publicKey) {
-          if (!cancelled) {
-            setPublicKey(null);
-            setStatus('unconfigured');
-          }
+          setPublicKey(null);
+          setStatus('unconfigured');
           return;
         }
-        if (cancelled) return;
         setPublicKey(result.publicKey);
 
         await navigator.serviceWorker.register('/sw.js');
@@ -175,15 +180,23 @@ export default function AdminInquiryNotifications() {
     }
   };
 
+  const isPreviewEnvironment = deploymentEnvironment.toLowerCase() === 'preview';
+
   const statusMessage: Record<NotificationStatus, string> = {
     checking: 'Memeriksa status notifikasi pada browser ini...',
     active: 'Aktif di browser ini. Notifikasi inquiry baru dapat muncul meskipun tab website tidak terbuka, selama browser dan sistem operasi mendukungnya.',
     inactive: 'Belum aktif. Aktifkan sekali pada browser ini agar inquiry baru dapat mengirim notifikasi desktop.',
-    unconfigured: 'Fitur menunggu pengaturan server satu kali sebelum dapat diaktifkan.',
+    unconfigured: 'Konfigurasi notifikasi server belum lengkap.',
     unsupported: 'Browser atau koneksi ini tidak mendukung notifikasi desktop. Gunakan browser desktop modern melalui HTTPS.',
     'permission-denied': 'Izin notifikasi diblokir oleh browser. Izinkan notifikasi untuk website ini, lalu muat ulang halaman.',
     error: 'Status notifikasi belum dapat dipastikan. Periksa koneksi dan coba lagi.',
   };
+
+  const unconfiguredMessage = isPreviewEnvironment
+    ? 'Anda sedang membuka Vercel Preview. Environment Variables yang hanya diatur untuk Production tidak tersedia di Preview. Ini normal. Jangan menyalin secret Production ke Preview hanya untuk menghilangkan pesan ini. Setelah perubahan di-merge dan deployment Production berstatus Ready, buka eryawanagung.my.id untuk memeriksa notifikasi.'
+    : missingVariables.length
+      ? `Konfigurasi notifikasi pada environment ${deploymentEnvironment} belum lengkap. Periksa Environment Variables di Vercel: ${missingVariables.join(', ')}. Setelah dilengkapi, redeploy dan muat ulang halaman.`
+      : 'Konfigurasi notifikasi server belum tersedia. Periksa Environment Variables di Vercel, lalu redeploy dan muat ulang halaman.';
 
   const disabled =
     busy ||
@@ -207,7 +220,7 @@ export default function AdminInquiryNotifications() {
             Dapatkan pemberitahuan inquiry baru
           </h2>
           <p className="mt-2 text-sm leading-6 text-white/60" role="status">
-            {statusMessage[status]}
+            {status === 'unconfigured' ? unconfiguredMessage : statusMessage[status]}
           </p>
           {error ? (
             <p className="mt-2 text-sm leading-6 text-red-200" role="alert">
@@ -227,7 +240,11 @@ export default function AdminInquiryNotifications() {
               ? 'Nonaktifkan di browser ini'
               : status === 'error'
                 ? 'Coba Lagi'
-                : 'Aktifkan Notifikasi Desktop'}
+                : status === 'unconfigured'
+                  ? isPreviewEnvironment
+                    ? 'Periksa di Production'
+                    : 'Konfigurasi Server Diperlukan'
+                  : 'Aktifkan Notifikasi Desktop'}
         </button>
       </div>
     </section>

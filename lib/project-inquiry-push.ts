@@ -9,7 +9,18 @@ type PushSubscriptionRow = {
   auth: string;
 };
 
-function getPushEnvironment() {
+type PushEnvironment = {
+  supabaseUrl: string;
+  serviceRoleKey: string;
+  publicKey: string;
+  privateKey: string;
+  subject: string;
+};
+
+function getPushEnvironmentState(): {
+  config: PushEnvironment | null;
+  missingVariables: string[];
+} {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const publicKey = process.env.WEB_PUSH_VAPID_PUBLIC_KEY;
@@ -17,20 +28,41 @@ function getPushEnvironment() {
   const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'eryawanagungtrimuda@gmail.com').trim();
   const subject = process.env.WEB_PUSH_SUBJECT || 'mailto:' + adminEmail;
 
-  if (!supabaseUrl || !serviceRoleKey || !publicKey || !privateKey || !subject) return null;
-  return { supabaseUrl, serviceRoleKey, publicKey, privateKey, subject };
+  const missingVariables = [
+    !supabaseUrl ? 'NEXT_PUBLIC_SUPABASE_URL' : null,
+    !serviceRoleKey ? 'SUPABASE_SERVICE_ROLE_KEY' : null,
+    !publicKey ? 'WEB_PUSH_VAPID_PUBLIC_KEY' : null,
+    !privateKey ? 'WEB_PUSH_VAPID_PRIVATE_KEY' : null,
+  ].filter((name): name is string => Boolean(name));
+
+  if (missingVariables.length) {
+    return { config: null, missingVariables };
+  }
+
+  return {
+    config: {
+      supabaseUrl: supabaseUrl!,
+      serviceRoleKey: serviceRoleKey!,
+      publicKey: publicKey!,
+      privateKey: privateKey!,
+      subject,
+    },
+    missingVariables: [],
+  };
 }
 
 export function getProjectInquiryPushConfig() {
-  const config = getPushEnvironment();
+  const { config, missingVariables } = getPushEnvironmentState();
   return {
     configured: Boolean(config),
     publicKey: config?.publicKey || null,
+    missingVariables,
+    deploymentEnvironment: process.env.VERCEL_ENV || 'unknown',
   };
 }
 
 export async function sendProjectInquiryPushNotification() {
-  const config = getPushEnvironment();
+  const config = getPushEnvironmentState().config;
   if (!config) return;
 
   const supabase = createClient(config.supabaseUrl, config.serviceRoleKey, {
