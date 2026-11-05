@@ -103,11 +103,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
     () => ({
       ...initialState,
       paketId: selectedPackageId,
-      jenisKebutuhan: selectedPackageId === "opsi-4"
-        ? "Arsitektur Rumah"
-        : selectedPackageId
-          ? "Interior Residential"
-          : "",
+      jenisKebutuhan: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : "",
     }),
     [selectedPackageId],
   );
@@ -404,7 +400,18 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
           <select
             id="brief-paket"
             value={form.paketId}
-            onChange={(event) => setForm({ ...form, paketId: event.target.value as ServicePackageId | "" })}
+            onChange={(event) => {
+              const paketId = event.target.value as ServicePackageId | "";
+              setForm({
+                ...form,
+                paketId,
+                jenisKebutuhan: paketId === "opsi-4"
+                  ? "Arsitektur Rumah"
+                  : form.jenisKebutuhan === "Arsitektur Rumah"
+                    ? ""
+                    : form.jenisKebutuhan,
+              });
+            }}
             aria-describedby="brief-paket-helper"
             className={`mt-2 w-full min-w-0 rounded-xl border border-white/14 bg-[#10100e] px-4 py-3 text-sm text-white/90 outline-none transition hover:border-[#D4AF37]/35 focus:border-[#D4AF37] ${focusRingClass}`}
           >
