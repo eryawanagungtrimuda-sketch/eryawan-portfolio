@@ -165,7 +165,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
 
   async function handleSend(event: FormEvent) {
     event.preventDefault();
-    const formElement = event.currentTarget;
+    const formElement = event.currentTarget as HTMLFormElement;
     const honeypotValue = new FormData(formElement).get("website");
     const formStartedAt = formStartedAtRef.current;
     if (
