@@ -89,6 +89,7 @@ const sections = [
     paragraphs: [
       "Situs dapat mencatat halaman yang dikunjungi dan informasi umum tentang asal kunjungan, misalnya dari media sosial atau tautan promosi. Jika Anda datang melalui tautan berparameter UTM, sumber, medium, kampanye, dan konten promosi (jika tersedia) disimpan dalam sesi browser dan dapat dicatat bersama inquiry yang Anda kirim agar efektivitas promosi dapat dievaluasi.",
       "Catatan kunjungan promosi dapat mencakup halaman yang dibuka, asal domain rujukan, dan pengenal sesi acak. Situs tidak menyimpan isi pesan atau data sensitif dari perangkat untuk keperluan atribusi promosi. Informasi tersebut digunakan untuk memahami efektivitas promosi dan dikelola sesuai kebutuhan operasional serta ketentuan penghapusan data yang dijelaskan di halaman ini.",
+      "Untuk membatasi pengiriman berulang dan mencegah penyalahgunaan formulir, sistem juga menggunakan hash berkunci dari alamat IP yang diterima server. Alamat IP mentah tidak disimpan dalam tabel pembatasan. Catatan hash yang tidak aktif dibersihkan otomatis ketika ada permintaan berikutnya setelah tujuh hari tidak aktif.",
     ],
   },
   {
@@ -300,7 +301,7 @@ export default function KebijakanPrivasiPage() {
             </a>
           </div>
           <p className="mt-6 border-t border-white/10 pt-4 text-xs leading-6 text-white/40">
-            Terakhir diperbarui: 4 November 2026. Halaman ini menjelaskan cara
+            Terakhir diperbarui: 5 November 2026. Halaman ini menjelaskan cara
             informasi dikelola dan akan diperbarui jika cara tersebut berubah.
           </p>
         </section>
