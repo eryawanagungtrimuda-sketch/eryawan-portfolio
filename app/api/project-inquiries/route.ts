@@ -11,7 +11,7 @@ export const runtime = 'nodejs';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const MAX_FIELD_LENGTH = 3000;
-const MAX_REQUEST_BODY_BYTES = 32_768;
+const MAX_REQUEST_BODY_BYTES = 65_536;
 const selectColumns = 'id,nama,perusahaan,email,whatsapp,paket_id,jenis_kebutuhan,jenis_proyek,lokasi_project,estimasi_luas,tahap_project,timeline,budget_range,kebutuhan_utama,status_file,message_preview,status,source,utm_source,utm_medium,utm_campaign,utm_content,created_at,updated_at';
 function sanitize(input: unknown, max = MAX_FIELD_LENGTH) { if (typeof input !== 'string') return ''; return input.trim().slice(0, max); }
 const legacyProjectTypes = new Set(['Interior Residential', 'Arsitektur Rumah', 'Hospitality / Hotel / Villa', 'Workspace / Office', 'Retail / Commercial']);
