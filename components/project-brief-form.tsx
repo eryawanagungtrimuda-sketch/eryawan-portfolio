@@ -209,14 +209,17 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
     }
 
     if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      const serverMessage =
+        typeof result.error === "string"
+          ? result.error
+          : "Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.";
       setSubmitState("error");
-      setSubmitMessage(
-        "Brief belum berhasil disimpan. Silakan coba lagi atau salin brief secara manual.",
-      );
+      setSubmitMessage(serverMessage);
       toast({
         type: "error",
         title: "Brief belum tersimpan",
-        description: "Silakan coba lagi atau salin brief secara manual.",
+        description: serverMessage,
       });
       isSubmittingRef.current = false;
       return;
