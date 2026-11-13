@@ -130,13 +130,20 @@
 .psc-empty { margin: 0; padding: 28px 12px; color: #6c6b62; font-size: .84rem; text-align: center; }
 .psc-selection-hint { margin: 13px 0 18px; color: #717168; font-size: .76rem; line-height: 1.55; }
 .psc-selected-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.psc-selected-list li { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 8px; border-bottom: 1px solid #e2e0d8; padding: 10px 0; }
+.psc-selected-list li { display: grid; grid-template-columns: 26px 22px minmax(0, 1fr) auto; align-items: center; gap: 6px; border-bottom: 1px solid #e2e0d8; padding: 10px 0; transition: background-color .12s ease; }
+.psc-selected-list li.is-dragging { background: #f7f2e2; outline: 1px solid #c7a449; outline-offset: -1px; }
 .psc-selected-number { color: #8a6e22; font-size: .67rem; letter-spacing: .08em; }
 .psc-selected-name { color: #34342f; font-size: .78rem; line-height: 1.4; overflow-wrap: anywhere; }
+.psc-drag-handle { display: inline-flex; width: 22px; height: 28px; align-items: center; justify-content: center; border: 1px solid transparent; background: transparent; color: #8b897e; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.psc-drag-handle:hover { border-color: #d9d7ce; background: #f3eedc; color: #5e4a19; }
+.psc-drag-handle:active { cursor: grabbing; }
+.psc-drag-handle:focus-visible { outline: 2px solid #8a6e22; outline-offset: 2px; }
 .psc-reorder { display: flex; align-items: center; gap: 3px; }
 .psc-reorder button { display: inline-flex; width: 27px; height: 27px; align-items: center; justify-content: center; border: 1px solid #d9d7ce; color: #55554d; }
 .psc-reorder button:hover:not(:disabled) { border-color: #8a6e22; background: #f3eedc; }
 .psc-reorder button:disabled { cursor: not-allowed; opacity: .3; }
+.psc-reorder .psc-move-to-start { color: #8a6e22; }
+.psc-reorder .psc-move-to-start:hover:not(:disabled) { border-color: #8a6e22; background: #f3eedc; }
 .psc-selection-empty { display: flex; min-height: 180px; flex-direction: column; align-items: center; justify-content: center; border: 1px dashed #d6d3c8; padding: 20px; color: #8a6e22; text-align: center; }
 .psc-selection-empty p { margin: 12px 0 4px; color: #34342f; font-size: .88rem; font-weight: 600; }
 .psc-selection-empty span { color: #74746c; font-size: .72rem; }
