@@ -172,3 +172,28 @@
   .psc-reorder { gap: 2px; }
   .psc-reorder button { width: 24px; height: 26px; }
 }
+
+
+/* Multi-select filters for the custom Project Sheet builder */
+.psc-multi-select { position: relative; min-width: 0; }
+.psc-multi-select > summary { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: .6rem; border: 1px solid #d6d4cb; border-radius: 2px; background: #fff; padding: .7rem .75rem; color: #24241f; font-size: .78rem; cursor: pointer; list-style: none; }
+.psc-multi-select > summary::-webkit-details-marker { display: none; }
+.psc-multi-select > summary > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.psc-multi-select > summary > svg { flex: 0 0 auto; color: #77766d; transition: transform .15s ease; }
+.psc-multi-select[open] > summary { border-color: #8a6e22; outline: 2px solid rgb(138 110 34 / 12%); outline-offset: 1px; }
+.psc-multi-select[open] > summary > svg { transform: rotate(180deg); }
+.psc-multi-select > summary:focus-visible { outline: 2px solid rgb(138 110 34 / 28%); outline-offset: 2px; }
+.psc-multi-select-panel { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; width: max(100%, 250px); max-width: min(340px, calc(100vw - 56px)); border: 1px solid #d6d4cb; background: #fff; padding: 10px; box-shadow: 0 14px 34px rgb(23 23 20 / 14%); }
+.psc-multi-select-actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #eceae3; padding: 2px 3px 8px; }
+.psc-multi-select-actions > span { color: #77766d; font-size: .68rem; }
+.psc-multi-select-actions button { border: 0; background: transparent; padding: 2px; color: #7a6222; font-size: .68rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.psc-multi-select-actions button:disabled { cursor: not-allowed; opacity: .4; }
+.psc-multi-select-options { display: grid; max-height: 230px; gap: 2px; overflow-y: auto; padding-top: 6px; }
+.psc-multi-select-options label { display: flex; align-items: flex-start; gap: 9px; padding: 8px 6px; color: #34342f; font-size: .76rem; line-height: 1.4; cursor: pointer; }
+.psc-multi-select-options label:hover { background: #f7f4e9; }
+.psc-multi-select-options input { width: 15px; height: 15px; flex: 0 0 auto; margin: 1px 0 0; accent-color: #8a6e22; cursor: pointer; }
+.psc-filter-options-empty { margin: 0; padding: 8px 6px; color: #77766d; font-size: .72rem; }
+.psc-filter-note { grid-column: 1 / -1; margin: 0; color: #77766d; font-size: .67rem; line-height: 1.55; }
+@media (max-width: 600px) {
+  .psc-multi-select-panel { position: static; width: 100%; max-width: none; margin-top: 6px; box-shadow: none; }
+}
