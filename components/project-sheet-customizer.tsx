@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, FileDown, Search, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, FileDown, Search, X } from 'lucide-react';
 
 import { dedupeAreaTags } from '@/lib/area-tags';
 import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
@@ -13,8 +13,11 @@ type Props = {
   projects: ProjectWithArchiveImages[];
 };
 
-const allOption = '__all__';
 const defaultTitle = 'Selected Interior Portfolio';
+
+function categoryTitleForSelection(selectedCategories: string[]) {
+  return selectedCategories.length === 1 ? `${selectedCategories[0]} Portfolio` : defaultTitle;
+}
 
 function projectCover(project: ProjectWithArchiveImages) {
   return project.cover_image || project.archive_images?.find((image) => image.image_url)?.image_url || null;
@@ -42,8 +45,8 @@ function projectSearchText(project: ProjectWithArchiveImages) {
 
 export default function ProjectSheetCustomizer({ projects }: Props) {
   const [query, setQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState(allOption);
-  const [areaFilter, setAreaFilter] = useState(allOption);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sheetTitle, setSheetTitle] = useState(defaultTitle);
 
@@ -56,20 +59,47 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
     [projects],
   );
 
+  const selectedAreaKeys = useMemo(
+    () => new Set(selectedAreas.map((area) => area.toLocaleLowerCase('id-ID'))),
+    [selectedAreas],
+  );
+
   const filteredProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('id-ID');
     return projects.filter((project) => {
-      if (categoryFilter !== allOption && project.category !== categoryFilter) return false;
-      if (areaFilter !== allOption && !projectTags(project).some((tag) => tag.toLocaleLowerCase('id-ID') === areaFilter.toLocaleLowerCase('id-ID'))) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(project.category?.trim() || '')) return false;
+      if (selectedAreaKeys.size > 0 && !projectTags(project).some((tag) => selectedAreaKeys.has(tag.toLocaleLowerCase('id-ID')))) return false;
       if (normalizedQuery && !projectSearchText(project).includes(normalizedQuery)) return false;
       return true;
     });
-  }, [projects, query, categoryFilter, areaFilter]);
+  }, [projects, query, selectedCategories, selectedAreaKeys]);
 
   const selectedProjects = useMemo(
     () => selectedIds.map((id) => projects.find((project) => project.id === id)).filter((project): project is ProjectWithArchiveImages => Boolean(project)),
     [projects, selectedIds],
   );
+
+  function toggleCategory(category: string) {
+    const next = selectedCategories.includes(category)
+      ? selectedCategories.filter((item) => item !== category)
+      : [...selectedCategories, category];
+
+    if (sheetTitle === categoryTitleForSelection(selectedCategories)) {
+      setSheetTitle(categoryTitleForSelection(next));
+    }
+    setSelectedCategories(next);
+  }
+
+  function toggleArea(area: string) {
+    setSelectedAreas((current) => current.includes(area)
+      ? current.filter((item) => item !== area)
+      : [...current, area]);
+  }
+
+  function clearCategoryFilters() {
+    if (sheetTitle === categoryTitleForSelection(selectedCategories)) setSheetTitle(defaultTitle);
+    setSelectedCategories([]);
+  }
 
   function toggleProject(id: string) {
     setSelectedIds((current) => current.includes(id) ? current.filter((selectedId) => selectedId !== id) : [...current, id]);
@@ -143,28 +173,58 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
               <span className="sr-only">Cari proyek</span>
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama, gaya, kategori…" />
             </label>
-            <label className="psc-filter-field">
+
+            <div className="psc-filter-field">
               <span>Kategori proyek</span>
-              <select
-                value={categoryFilter}
-                onChange={(event) => {
-                  const value = event.target.value;
-                  const previousAutoTitle = categoryFilter === allOption ? defaultTitle : `${categoryFilter} Portfolio`;
-                  if (sheetTitle === previousAutoTitle) setSheetTitle(value === allOption ? defaultTitle : `${value} Portfolio`);
-                  setCategoryFilter(value);
-                }}
-              >
-                <option value={allOption}>Semua kategori</option>
-                {categories.map((category) => <option key={category} value={category}>{category}</option>)}
-              </select>
-            </label>
-            <label className="psc-filter-field">
+              <details className="psc-multi-select">
+                <summary>
+                  <span>{selectedCategories.length === 0 ? 'Semua kategori' : selectedCategories.length === 1 ? selectedCategories[0] : selectedCategories.length + ' kategori dipilih'}</span>
+                  <ChevronDown size={15} aria-hidden="true" />
+                </summary>
+                <div className="psc-multi-select-panel">
+                  <div className="psc-multi-select-actions">
+                    <span>{selectedCategories.length} dipilih</span>
+                    <button type="button" onClick={clearCategoryFilters} disabled={selectedCategories.length === 0}>Reset</button>
+                  </div>
+                  <div className="psc-multi-select-options" role="group" aria-label="Pilih kategori proyek">
+                    {categories.map((category) => (
+                      <label key={category}>
+                        <input type="checkbox" checked={selectedCategories.includes(category)} onChange={() => toggleCategory(category)} />
+                        <span>{category}</span>
+                      </label>
+                    ))}
+                    {categories.length === 0 ? <p className="psc-filter-options-empty">Belum ada kategori proyek.</p> : null}
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <div className="psc-filter-field">
               <span>Area / tag</span>
-              <select value={areaFilter} onChange={(event) => setAreaFilter(event.target.value)}>
-                <option value={allOption}>Semua area</option>
-                {areas.map((area) => <option key={area} value={area}>{area}</option>)}
-              </select>
-            </label>
+              <details className="psc-multi-select">
+                <summary>
+                  <span>{selectedAreas.length === 0 ? 'Semua area' : selectedAreas.length === 1 ? selectedAreas[0] : selectedAreas.length + ' area/tag dipilih'}</span>
+                  <ChevronDown size={15} aria-hidden="true" />
+                </summary>
+                <div className="psc-multi-select-panel">
+                  <div className="psc-multi-select-actions">
+                    <span>{selectedAreas.length} dipilih</span>
+                    <button type="button" onClick={() => setSelectedAreas([])} disabled={selectedAreas.length === 0}>Reset</button>
+                  </div>
+                  <div className="psc-multi-select-options" role="group" aria-label="Pilih area atau tag">
+                    {areas.map((area) => (
+                      <label key={area}>
+                        <input type="checkbox" checked={selectedAreas.includes(area)} onChange={() => toggleArea(area)} />
+                        <span>{area}</span>
+                      </label>
+                    ))}
+                    {areas.length === 0 ? <p className="psc-filter-options-empty">Belum ada area atau tag proyek.</p> : null}
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <p className="psc-filter-note">Pilih beberapa opsi sekaligus. Dalam satu filter, proyek yang cocok dengan salah satu pilihan akan ditampilkan. Jika kategori dan area/tag sama-sama dipilih, proyek harus cocok dengan keduanya.</p>
           </div>
 
           <div className="psc-filter-actions">
