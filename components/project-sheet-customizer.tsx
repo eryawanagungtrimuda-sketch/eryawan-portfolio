@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, ChevronDown, FileDown, Search, X } from 'lucide-react';
+import { useMemo, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { ArrowDown, ArrowUp, ArrowUpToLine, ChevronDown, FileDown, GripVertical, Search, X } from 'lucide-react';
 
 import { dedupeAreaTags } from '@/lib/area-tags';
 import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
@@ -48,6 +48,7 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [draggingProjectId, setDraggingProjectId] = useState<string | null>(null);
   const [sheetTitle, setSheetTitle] = useState(defaultTitle);
 
   const categories = useMemo(
@@ -123,6 +124,55 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
       [next[index], next[target]] = [next[target]!, next[index]!];
       return next;
     });
+  }
+
+  function moveSelectedToStart(id: string) {
+    setSelectedIds((current) => {
+      const index = current.indexOf(id);
+      if (index <= 0) return current;
+      return [id, ...current.filter((selectedId) => selectedId !== id)];
+    });
+  }
+
+  function moveSelectedToPosition(draggedId: string, targetId: string, placeAfter: boolean) {
+    setSelectedIds((current) => {
+      const sourceIndex = current.indexOf(draggedId);
+      const targetIndex = current.indexOf(targetId);
+      if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex) return current;
+
+      const insertionIndex = targetIndex + (placeAfter ? 1 : 0);
+      const destinationIndex = insertionIndex - (sourceIndex < targetIndex ? 1 : 0);
+      const next = [...current];
+      const [movedId] = next.splice(sourceIndex, 1);
+      next.splice(Math.max(0, Math.min(destinationIndex, next.length)), 0, movedId!);
+      return next;
+    });
+  }
+
+  function startSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>, projectId: string) {
+    if (event.button !== 0 && event.pointerType !== 'touch') return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDraggingProjectId(projectId);
+  }
+
+  function updateSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>, projectId: string) {
+    if (draggingProjectId !== projectId) return;
+
+    const targetRow = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-selected-project-id]');
+    const targetId = targetRow?.dataset.selectedProjectId;
+    if (!targetRow || !targetId || targetId === projectId) return;
+
+    const bounds = targetRow.getBoundingClientRect();
+    const placeAfter = event.clientY >= bounds.top + bounds.height / 2;
+    moveSelectedToPosition(projectId, targetId, placeAfter);
+  }
+
+  function endSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDraggingProjectId(null);
   }
 
   function openPreview() {
@@ -273,18 +323,35 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
             </div>
             <span className="psc-count">{selectedProjects.length} dipilih</span>
           </div>
-          <p className="psc-selection-hint">Gunakan panah untuk mengatur urutan. Proyek di posisi pertama akan muncul lebih awal.</p>
+          <p className="psc-selection-hint">Seret ikon titik untuk mengubah urutan, atau gunakan tombol ke awal untuk langsung menampilkan karya sebagai pembuka PDF. Tombol panah tetap tersedia.</p>
 
           {selectedProjects.length > 0 ? (
             <ol className="psc-selected-list">
               {selectedProjects.map((project, index) => (
-                <li key={project.id}>
+                <li
+                  key={project.id}
+                  data-selected-project-id={project.id}
+                  className={draggingProjectId === project.id ? 'is-dragging' : undefined}
+                >
                   <span className="psc-selected-number">{String(index + 1).padStart(2, '0')}</span>
+                  <button
+                    type="button"
+                    className="psc-drag-handle"
+                    aria-label={`Seret untuk mengubah urutan ${project.title}`}
+                    title="Seret untuk mengubah urutan"
+                    onPointerDown={(event) => startSelectedDrag(event, project.id)}
+                    onPointerMove={(event) => updateSelectedDrag(event, project.id)}
+                    onPointerUp={endSelectedDrag}
+                    onPointerCancel={endSelectedDrag}
+                  >
+                    <GripVertical size={16} aria-hidden="true" />
+                  </button>
                   <span className="psc-selected-name">{project.title}</span>
                   <span className="psc-reorder">
-                    <button type="button" aria-label={`Pindahkan ${project.title} ke atas`} onClick={() => moveSelected(index, -1)} disabled={index === 0}><ArrowUp size={14} /></button>
-                    <button type="button" aria-label={`Pindahkan ${project.title} ke bawah`} onClick={() => moveSelected(index, 1)} disabled={index === selectedProjects.length - 1}><ArrowDown size={14} /></button>
-                    <button type="button" aria-label={`Hapus ${project.title} dari pilihan`} onClick={() => toggleProject(project.id)}><X size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke posisi pertama`} title="Jadikan posisi pertama" className="psc-move-to-start" onClick={() => moveSelectedToStart(project.id)} disabled={index === 0}><ArrowUpToLine size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke atas`} title="Pindahkan satu posisi ke atas" onClick={() => moveSelected(index, -1)} disabled={index === 0}><ArrowUp size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke bawah`} title="Pindahkan satu posisi ke bawah" onClick={() => moveSelected(index, 1)} disabled={index === selectedProjects.length - 1}><ArrowDown size={14} /></button>
+                    <button type="button" aria-label={`Hapus ${project.title} dari pilihan`} title="Hapus dari pilihan" onClick={() => toggleProject(project.id)}><X size={14} /></button>
                   </span>
                 </li>
               ))}
