@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, FileDown, Search, X } from 'lucide-react';
+import { useMemo, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { ArrowDown, ArrowUp, ArrowUpToLine, ChevronDown, FileDown, GripVertical, Search, X } from 'lucide-react';
 
 import { dedupeAreaTags } from '@/lib/area-tags';
 import { isSupabaseStorageUrl } from '@/lib/is-supabase-storage-url';
@@ -13,8 +13,11 @@ type Props = {
   projects: ProjectWithArchiveImages[];
 };
 
-const allOption = '__all__';
 const defaultTitle = 'Selected Interior Portfolio';
+
+function categoryTitleForSelection(selectedCategories: string[]) {
+  return selectedCategories.length === 1 ? `${selectedCategories[0]} Portfolio` : defaultTitle;
+}
 
 function projectCover(project: ProjectWithArchiveImages) {
   return project.cover_image || project.archive_images?.find((image) => image.image_url)?.image_url || null;
@@ -42,9 +45,10 @@ function projectSearchText(project: ProjectWithArchiveImages) {
 
 export default function ProjectSheetCustomizer({ projects }: Props) {
   const [query, setQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState(allOption);
-  const [areaFilter, setAreaFilter] = useState(allOption);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [draggingProjectId, setDraggingProjectId] = useState<string | null>(null);
   const [sheetTitle, setSheetTitle] = useState(defaultTitle);
 
   const categories = useMemo(
@@ -56,20 +60,47 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
     [projects],
   );
 
+  const selectedAreaKeys = useMemo(
+    () => new Set(selectedAreas.map((area) => area.toLocaleLowerCase('id-ID'))),
+    [selectedAreas],
+  );
+
   const filteredProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('id-ID');
     return projects.filter((project) => {
-      if (categoryFilter !== allOption && project.category !== categoryFilter) return false;
-      if (areaFilter !== allOption && !projectTags(project).some((tag) => tag.toLocaleLowerCase('id-ID') === areaFilter.toLocaleLowerCase('id-ID'))) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(project.category?.trim() || '')) return false;
+      if (selectedAreaKeys.size > 0 && !projectTags(project).some((tag) => selectedAreaKeys.has(tag.toLocaleLowerCase('id-ID')))) return false;
       if (normalizedQuery && !projectSearchText(project).includes(normalizedQuery)) return false;
       return true;
     });
-  }, [projects, query, categoryFilter, areaFilter]);
+  }, [projects, query, selectedCategories, selectedAreaKeys]);
 
   const selectedProjects = useMemo(
     () => selectedIds.map((id) => projects.find((project) => project.id === id)).filter((project): project is ProjectWithArchiveImages => Boolean(project)),
     [projects, selectedIds],
   );
+
+  function toggleCategory(category: string) {
+    const next = selectedCategories.includes(category)
+      ? selectedCategories.filter((item) => item !== category)
+      : [...selectedCategories, category];
+
+    if (sheetTitle === categoryTitleForSelection(selectedCategories)) {
+      setSheetTitle(categoryTitleForSelection(next));
+    }
+    setSelectedCategories(next);
+  }
+
+  function toggleArea(area: string) {
+    setSelectedAreas((current) => current.includes(area)
+      ? current.filter((item) => item !== area)
+      : [...current, area]);
+  }
+
+  function clearCategoryFilters() {
+    if (sheetTitle === categoryTitleForSelection(selectedCategories)) setSheetTitle(defaultTitle);
+    setSelectedCategories([]);
+  }
 
   function toggleProject(id: string) {
     setSelectedIds((current) => current.includes(id) ? current.filter((selectedId) => selectedId !== id) : [...current, id]);
@@ -93,6 +124,55 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
       [next[index], next[target]] = [next[target]!, next[index]!];
       return next;
     });
+  }
+
+  function moveSelectedToStart(id: string) {
+    setSelectedIds((current) => {
+      const index = current.indexOf(id);
+      if (index <= 0) return current;
+      return [id, ...current.filter((selectedId) => selectedId !== id)];
+    });
+  }
+
+  function moveSelectedToPosition(draggedId: string, targetId: string, placeAfter: boolean) {
+    setSelectedIds((current) => {
+      const sourceIndex = current.indexOf(draggedId);
+      const targetIndex = current.indexOf(targetId);
+      if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex) return current;
+
+      const insertionIndex = targetIndex + (placeAfter ? 1 : 0);
+      const destinationIndex = insertionIndex - (sourceIndex < targetIndex ? 1 : 0);
+      const next = [...current];
+      const [movedId] = next.splice(sourceIndex, 1);
+      next.splice(Math.max(0, Math.min(destinationIndex, next.length)), 0, movedId!);
+      return next;
+    });
+  }
+
+  function startSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>, projectId: string) {
+    if (event.button !== 0 && event.pointerType !== 'touch') return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDraggingProjectId(projectId);
+  }
+
+  function updateSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>, projectId: string) {
+    if (draggingProjectId !== projectId) return;
+
+    const targetRow = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-selected-project-id]');
+    const targetId = targetRow?.dataset.selectedProjectId;
+    if (!targetRow || !targetId || targetId === projectId) return;
+
+    const bounds = targetRow.getBoundingClientRect();
+    const placeAfter = event.clientY >= bounds.top + bounds.height / 2;
+    moveSelectedToPosition(projectId, targetId, placeAfter);
+  }
+
+  function endSelectedDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDraggingProjectId(null);
   }
 
   function openPreview() {
@@ -143,28 +223,58 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
               <span className="sr-only">Cari proyek</span>
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama, gaya, kategori…" />
             </label>
-            <label className="psc-filter-field">
+
+            <div className="psc-filter-field">
               <span>Kategori proyek</span>
-              <select
-                value={categoryFilter}
-                onChange={(event) => {
-                  const value = event.target.value;
-                  const previousAutoTitle = categoryFilter === allOption ? defaultTitle : `${categoryFilter} Portfolio`;
-                  if (sheetTitle === previousAutoTitle) setSheetTitle(value === allOption ? defaultTitle : `${value} Portfolio`);
-                  setCategoryFilter(value);
-                }}
-              >
-                <option value={allOption}>Semua kategori</option>
-                {categories.map((category) => <option key={category} value={category}>{category}</option>)}
-              </select>
-            </label>
-            <label className="psc-filter-field">
+              <details className="psc-multi-select">
+                <summary>
+                  <span>{selectedCategories.length === 0 ? 'Semua kategori' : selectedCategories.length === 1 ? selectedCategories[0] : selectedCategories.length + ' kategori dipilih'}</span>
+                  <ChevronDown size={15} aria-hidden="true" />
+                </summary>
+                <div className="psc-multi-select-panel">
+                  <div className="psc-multi-select-actions">
+                    <span>{selectedCategories.length} dipilih</span>
+                    <button type="button" onClick={clearCategoryFilters} disabled={selectedCategories.length === 0}>Reset</button>
+                  </div>
+                  <div className="psc-multi-select-options" role="group" aria-label="Pilih kategori proyek">
+                    {categories.map((category) => (
+                      <label key={category}>
+                        <input type="checkbox" checked={selectedCategories.includes(category)} onChange={() => toggleCategory(category)} />
+                        <span>{category}</span>
+                      </label>
+                    ))}
+                    {categories.length === 0 ? <p className="psc-filter-options-empty">Belum ada kategori proyek.</p> : null}
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <div className="psc-filter-field">
               <span>Area / tag</span>
-              <select value={areaFilter} onChange={(event) => setAreaFilter(event.target.value)}>
-                <option value={allOption}>Semua area</option>
-                {areas.map((area) => <option key={area} value={area}>{area}</option>)}
-              </select>
-            </label>
+              <details className="psc-multi-select">
+                <summary>
+                  <span>{selectedAreas.length === 0 ? 'Semua area' : selectedAreas.length === 1 ? selectedAreas[0] : selectedAreas.length + ' area/tag dipilih'}</span>
+                  <ChevronDown size={15} aria-hidden="true" />
+                </summary>
+                <div className="psc-multi-select-panel">
+                  <div className="psc-multi-select-actions">
+                    <span>{selectedAreas.length} dipilih</span>
+                    <button type="button" onClick={() => setSelectedAreas([])} disabled={selectedAreas.length === 0}>Reset</button>
+                  </div>
+                  <div className="psc-multi-select-options" role="group" aria-label="Pilih area atau tag">
+                    {areas.map((area) => (
+                      <label key={area}>
+                        <input type="checkbox" checked={selectedAreas.includes(area)} onChange={() => toggleArea(area)} />
+                        <span>{area}</span>
+                      </label>
+                    ))}
+                    {areas.length === 0 ? <p className="psc-filter-options-empty">Belum ada area atau tag proyek.</p> : null}
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <p className="psc-filter-note">Pilih beberapa opsi sekaligus. Dalam satu filter, proyek yang cocok dengan salah satu pilihan akan ditampilkan. Jika kategori dan area/tag sama-sama dipilih, proyek harus cocok dengan keduanya.</p>
           </div>
 
           <div className="psc-filter-actions">
@@ -213,18 +323,35 @@ export default function ProjectSheetCustomizer({ projects }: Props) {
             </div>
             <span className="psc-count">{selectedProjects.length} dipilih</span>
           </div>
-          <p className="psc-selection-hint">Gunakan panah untuk mengatur urutan. Proyek di posisi pertama akan muncul lebih awal.</p>
+          <p className="psc-selection-hint">Seret ikon titik untuk mengubah urutan, atau gunakan tombol ke awal untuk langsung menampilkan karya sebagai pembuka PDF. Tombol panah tetap tersedia.</p>
 
           {selectedProjects.length > 0 ? (
             <ol className="psc-selected-list">
               {selectedProjects.map((project, index) => (
-                <li key={project.id}>
+                <li
+                  key={project.id}
+                  data-selected-project-id={project.id}
+                  className={draggingProjectId === project.id ? 'is-dragging' : undefined}
+                >
                   <span className="psc-selected-number">{String(index + 1).padStart(2, '0')}</span>
+                  <button
+                    type="button"
+                    className="psc-drag-handle"
+                    aria-label={`Seret untuk mengubah urutan ${project.title}`}
+                    title="Seret untuk mengubah urutan"
+                    onPointerDown={(event) => startSelectedDrag(event, project.id)}
+                    onPointerMove={(event) => updateSelectedDrag(event, project.id)}
+                    onPointerUp={endSelectedDrag}
+                    onPointerCancel={endSelectedDrag}
+                  >
+                    <GripVertical size={16} aria-hidden="true" />
+                  </button>
                   <span className="psc-selected-name">{project.title}</span>
                   <span className="psc-reorder">
-                    <button type="button" aria-label={`Pindahkan ${project.title} ke atas`} onClick={() => moveSelected(index, -1)} disabled={index === 0}><ArrowUp size={14} /></button>
-                    <button type="button" aria-label={`Pindahkan ${project.title} ke bawah`} onClick={() => moveSelected(index, 1)} disabled={index === selectedProjects.length - 1}><ArrowDown size={14} /></button>
-                    <button type="button" aria-label={`Hapus ${project.title} dari pilihan`} onClick={() => toggleProject(project.id)}><X size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke posisi pertama`} title="Jadikan posisi pertama" className="psc-move-to-start" onClick={() => moveSelectedToStart(project.id)} disabled={index === 0}><ArrowUpToLine size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke atas`} title="Pindahkan satu posisi ke atas" onClick={() => moveSelected(index, -1)} disabled={index === 0}><ArrowUp size={14} /></button>
+                    <button type="button" aria-label={`Pindahkan ${project.title} ke bawah`} title="Pindahkan satu posisi ke bawah" onClick={() => moveSelected(index, 1)} disabled={index === selectedProjects.length - 1}><ArrowDown size={14} /></button>
+                    <button type="button" aria-label={`Hapus ${project.title} dari pilihan`} title="Hapus dari pilihan" onClick={() => toggleProject(project.id)}><X size={14} /></button>
                   </span>
                 </li>
               ))}
