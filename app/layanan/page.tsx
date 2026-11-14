@@ -221,9 +221,6 @@ export default function LayananPage() {
                 <li>• 46–60 detik: Rp2.400.000</li>
                 <li>• Di atas 60 detik: penawaran khusus</li>
               </ul>
-              <p className="mt-5 rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/[0.06] px-4 py-3 text-sm leading-6 text-[#F4F1EA]/80">
-                Bonus Opsi 2–4: 1 video Render Animation gratis dengan durasi maksimal 60 detik. Jika memesan Render Animation tanpa Opsi 2–4, tarif layanan mandiri di atas berlaku.
-              </p>
               <p className="mt-5 text-xs leading-6 text-white/45">
                 Termasuk video MP4 Full HD dan dua kali revisi ringan sesuai lingkup yang disepakati. Pembuatan model 3D, pembuatan ulang gambar render, perubahan konsep besar, serta produksi ulang ekstensif tidak termasuk harga dasar. Klien memastikan memiliki hak atau izin untuk menggunakan gambar yang diserahkan.
               </p>
