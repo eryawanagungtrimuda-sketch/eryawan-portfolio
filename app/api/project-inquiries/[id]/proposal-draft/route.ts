@@ -63,6 +63,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     ? `${selectedPackage.option} — ${selectedPackage.title}`
     : 'Belum dipilih';
 
+  const selectedPackageNote =
+    data.paket_id === "render-animation"
+      ? "Render Animation mandiri menggunakan gambar render interior maupun eksterior yang disediakan klien atau dibuat Eryawan Agung. Harga mengikuti durasi video final: 5–8 detik Rp250.000; 9–15 detik Rp600.000; 16–30 detik Rp1.200.000; 31–45 detik Rp1.800.000; 46–60 detik Rp2.400.000; di atas 60 detik perlu penawaran khusus. Jangan menganggap pembuatan model 3D atau pembuatan ulang gambar render termasuk."
+      : ["opsi-2", "opsi-3", "opsi-4"].includes(data.paket_id || "")
+        ? "Opsi 2–4 sudah termasuk bonus 1 video Render Animation gratis dengan durasi maksimal 60 detik. Jangan menambahkan biaya untuk bonus ini; tarif layanan Render Animation mandiri hanya berlaku jika dipesan tanpa Opsi 2–4."
+        : "Ikuti lingkup paket yang dipilih; jangan mengarang harga atau keluaran.";
+
   const prompt = `Anda adalah Eryawan Agung, desainer interior profesional.
 Tugas: buat dua keluaran yang terpisah berdasarkan data inquiry:
 1. draft: proposal awal yang lengkap dan rapi untuk ditinjau admin.
@@ -113,7 +120,7 @@ Data inquiry:
 - Jenis kebutuhan: ${safeValue(data.jenis_kebutuhan)}
 - Jenis proyek: ${safeValue(data.jenis_proyek)}
 - Paket yang diminati: ${selectedPackageLabel}
-- Catatan layanan: ${data.paket_id === "render-animation" ? "Render Animation menggunakan gambar render interior maupun eksterior yang disediakan klien atau dibuat Eryawan Agung. Harga mengikuti durasi video final: 5–8 detik Rp250.000; 9–15 detik Rp600.000; 16–30 detik Rp1.200.000; 31–45 detik Rp1.800.000; 46–60 detik Rp2.400.000; di atas 60 detik perlu penawaran khusus. Jangan menganggap pembuatan model 3D atau pembuatan ulang gambar render termasuk." : "Ikuti lingkup paket yang dipilih; jangan mengarang harga atau keluaran."}
+- Catatan layanan: ${selectedPackageNote}
 - Lokasi project: ${safeValue(data.lokasi_project)}
 - Estimasi luas: ${safeValue(data.estimasi_luas)}
 - Tahap project: ${safeValue(data.tahap_project)}
