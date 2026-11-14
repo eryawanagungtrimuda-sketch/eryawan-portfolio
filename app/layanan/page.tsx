@@ -226,7 +226,7 @@ export default function LayananPage() {
               </p>
             </div>
             <TrackedLink
-              href="/mulai-project?paket=ai-animation"
+              href="/mulai-project?paket=render-animation"
               eventName="cta_click"
               eventProps={{ source: "layanan_page", label: "render_animation_diskusikan", content_type: "service_package", href_type: "internal" }}
               data-cta="layanan-render-animation-cta"
