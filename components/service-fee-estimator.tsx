@@ -60,7 +60,7 @@ export default function ServiceFeeEstimator() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          {servicePackages.map((item) => {
+          {servicePackages.filter((item) => item.pricingModel !== "duration").map((item) => {
             const estimate = hasValidArea
               ? Math.max(area * item.rate, item.minimumFee)
               : null;
