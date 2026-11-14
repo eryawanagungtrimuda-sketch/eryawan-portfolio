@@ -117,7 +117,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
       ...initialState,
       paketId: selectedPackageId,
       jenisKebutuhan: selectedPackageId ? "Proyek Desain" : "",
-      jenisProyek: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : selectedPackageId === "ai-animation" ? "AI Interior Animation" : "",
+      jenisProyek: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : selectedPackageId === "ai-animation" ? "Render Animation" : "",
     }),
     [selectedPackageId],
   );
@@ -445,8 +445,8 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
                     paketId === "opsi-4"
                       ? "Arsitektur Rumah"
                       : paketId === "ai-animation"
-                        ? "AI Interior Animation"
-                        : paketId && ["Arsitektur Rumah", "AI Interior Animation"].includes(form.jenisProyek)
+                        ? "Render Animation"
+                        : paketId && ["Arsitektur Rumah", "Render Animation"].includes(form.jenisProyek)
                           ? ""
                           : form.jenisProyek,
                 });
@@ -530,7 +530,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
               {form.paketId === "opsi-4"
                 ? "Opsi 4 khusus untuk desain arsitektur rumah."
                 : form.paketId === "ai-animation"
-                  ? "Layanan animasi dapat menggunakan render yang Anda miliki, termasuk dari desainer lain."
+                  ? "Render interior maupun eksterior dapat berasal dari Anda atau desainer lain."
                   : form.paketId
                     ? "Pilih kategori proyek interior yang sesuai."
                     : "Pilih kategori proyek atau layanan yang akan dibahas."}
@@ -547,7 +547,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
               {(form.paketId === "opsi-4"
                 ? ["Arsitektur Rumah"]
                 : form.paketId === "ai-animation"
-                  ? ["AI Interior Animation"]
+                  ? ["Render Animation"]
                   : form.paketId
                     ? interiorProjectTypeOptions
                     : projectTypeOptions
