@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     "Lihat layanan desain interior, arsitektur rumah, dan AI Interior Animation Eryawan Agung beserta lingkup dan harga awal.",
   alternates: { canonical: absoluteUrl("/layanan") },
   openGraph: {
-    title: "Paket Jasa Desain Interior & Arsitektur | Eryawan Agung",
+    title: "Layanan Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
     description:
-      "Pilihan paket desain interior dan arsitektur rumah dengan lingkup, tarif, minimum biaya, dan estimasi awal yang transparan.",
+      "Pilihan paket desain interior dan arsitektur rumah serta AI Interior Animation dengan lingkup dan harga yang transparan.",
     url: absoluteUrl("/layanan"),
     images: [
       {
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Paket Jasa Desain Interior & Arsitektur | Eryawan Agung",
+    title: "Layanan Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
     description:
-      "Pilihan paket desain interior dan arsitektur rumah dengan lingkup, tarif, minimum biaya, dan estimasi awal yang transparan.",
+      "Pilihan paket desain interior dan arsitektur rumah serta AI Interior Animation dengan lingkup dan harga yang transparan.",
     images: [absoluteUrl("/opengraph-image")],
   },
 };
@@ -61,10 +61,7 @@ export default function LayananPage() {
             Pilih lingkup desain yang sesuai dengan kebutuhan ruang Anda.
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
-            Empat pilihan layanan untuk kebutuhan konsep interior, visualisasi
-            3D, desain interior lengkap, hingga desain arsitektur rumah. Setiap
-            paket memiliki lingkup dan batas keluaran yang dijelaskan sejak
-            awal agar ekspektasi proyek lebih jelas.
+            Empat paket desain interior dan arsitektur, ditambah layanan AI Interior Animation untuk mengubah gambar render menjadi video. Lingkup dan harga dijelaskan sejak awal agar ekspektasi proyek lebih jelas.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <TrackedLink
