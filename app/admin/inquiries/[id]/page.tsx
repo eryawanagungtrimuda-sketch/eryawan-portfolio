@@ -1,5 +1,6 @@
 import AdminAuthGuard from '@/components/admin-auth-guard';
 import AdminInquiryDetail from '@/components/admin-inquiry-detail';
+import AdminInvoiceWorkspace from '@/components/admin-invoice-workspace';
 import ContextualBackButton from '@/components/contextual-back-button';
 
 export default async function AdminInquiryDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -11,7 +12,7 @@ export default async function AdminInquiryDetailPage({ params }: { params: Promi
           <ContextualBackButton fallbackHref="/admin/inquiries" label="← Kembali ke Sebelumnya" className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/35 hover:text-[#D4AF37]" />
           <h1 className="mt-4 text-4xl">Detail Inquiry Project</h1>
           <p className="mt-2 max-w-3xl text-sm text-white/65">Ringkasan brief, kontak, status, dan draft proposal untuk calon project ini.</p>
-          <section className="py-8"><AdminInquiryDetail id={id} /></section>
+          <section className="space-y-8 py-8"><AdminInquiryDetail id={id} /><AdminInvoiceWorkspace inquiryId={id} /></section>
         </div>
       </main>
     </AdminAuthGuard>
