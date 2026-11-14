@@ -4,7 +4,7 @@ insert into storage.buckets (id, name, public)
 values ('invoice-assets', 'invoice-assets', true)
 on conflict (id) do nothing;
 
-do $
+do $invoice_bucket_guard$
 begin
   if not exists (
     select 1
@@ -15,19 +15,19 @@ begin
     raise exception 'Bucket invoice-assets already exists but is not public. The migration will not change an existing bucket''s visibility. Review it manually before retrying.';
   end if;
 end;
-$;
+$invoice_bucket_guard$;
 
 -- Keep invoice timestamps isolated from the shared helper used by other tables.
 create or replace function public.set_project_invoice_updated_at()
 returns trigger
 language plpgsql
 set search_path = pg_catalog
-as $
+as $invoice_timestamp$
 begin
   new.updated_at = now();
   return new;
 end;
-$;
+$invoice_timestamp$;
 
 create table if not exists public.project_invoice_settings (
   id smallint primary key default 1 check (id = 1),
@@ -154,7 +154,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = pg_catalog, public
-as $
+as $invoice_number$
 declare
   target_year integer;
   next_number integer;
@@ -170,7 +170,7 @@ begin
   end if;
   return new;
 end;
-$$;
+$invoice_number$;
 
 drop trigger if exists assign_project_invoice_number_before_insert on public.project_invoices;
 create trigger assign_project_invoice_number_before_insert
