@@ -1,10 +1,33 @@
-create or replace function public.update_updated_at_column()
-returns trigger as $$
+-- Create the dedicated public QRIS bucket only when it does not exist.
+-- Never change the visibility of an existing bucket implicitly.
+insert into storage.buckets (id, name, public)
+values ('invoice-assets', 'invoice-assets', true)
+on conflict (id) do nothing;
+
+do $
+begin
+  if not exists (
+    select 1
+    from storage.buckets as bucket
+    where bucket.id = 'invoice-assets'
+      and bucket.public is true
+  ) then
+    raise exception 'Bucket invoice-assets already exists but is not public. The migration will not change an existing bucket''s visibility. Review it manually before retrying.';
+  end if;
+end;
+$;
+
+-- Keep invoice timestamps isolated from the shared helper used by other tables.
+create or replace function public.set_project_invoice_updated_at()
+returns trigger
+language plpgsql
+set search_path = pg_catalog
+as $
 begin
   new.updated_at = now();
   return new;
 end;
-$$ language plpgsql;
+$;
 
 create table if not exists public.project_invoice_settings (
   id smallint primary key default 1 check (id = 1),
@@ -38,7 +61,7 @@ create table if not exists public.project_invoice_number_sequences (
 
 create table if not exists public.project_invoices (
   id uuid primary key default gen_random_uuid(),
-  inquiry_id uuid not null references public.project_inquiries(id) on delete cascade,
+  inquiry_id uuid not null references public.project_inquiries(id) on delete restrict,
   invoice_number text not null unique,
   installment_stage text not null check (installment_stage in ('dp', 'progress', 'final')),
   installment_percentage integer not null check (
@@ -81,7 +104,7 @@ on public.project_invoices (inquiry_id, created_at desc);
 
 create table if not exists public.project_invoice_payments (
   id uuid primary key default gen_random_uuid(),
-  invoice_id uuid not null references public.project_invoices(id) on delete cascade,
+  invoice_id uuid not null references public.project_invoices(id) on delete restrict,
   amount bigint not null check (amount > 0),
   paid_at date not null default current_date,
   payment_method text not null default 'qris_shopee' check (payment_method = 'qris_shopee'),
@@ -97,7 +120,7 @@ on public.project_invoice_payments (invoice_id, paid_at desc);
 
 create table if not exists public.project_invoice_reminder_drafts (
   id uuid primary key default gen_random_uuid(),
-  invoice_id uuid not null references public.project_invoices(id) on delete cascade,
+  invoice_id uuid not null references public.project_invoices(id) on delete restrict,
   channel text not null check (channel in ('whatsapp', 'email')),
   reminder_type text not null check (reminder_type in ('h_minus_1', 'due_today', 'overdue')),
   status text not null default 'draft' check (status in ('draft', 'waiting_approval', 'approved', 'sent', 'archived')),
@@ -116,7 +139,7 @@ on public.project_invoice_reminder_drafts (invoice_id, created_at desc);
 
 create table if not exists public.project_invoice_audit_log (
   id uuid primary key default gen_random_uuid(),
-  invoice_id uuid not null references public.project_invoices(id) on delete cascade,
+  invoice_id uuid not null references public.project_invoices(id) on delete restrict,
   event_key text not null,
   actor_email text not null,
   metadata jsonb not null default '{}'::jsonb,
@@ -130,8 +153,8 @@ create or replace function public.assign_project_invoice_number()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
-as $$
+set search_path = pg_catalog, public
+as $
 declare
   target_year integer;
   next_number integer;
@@ -157,22 +180,26 @@ for each row execute function public.assign_project_invoice_number();
 drop trigger if exists update_project_invoice_settings_updated_at on public.project_invoice_settings;
 create trigger update_project_invoice_settings_updated_at
 before update on public.project_invoice_settings
-for each row execute function public.update_updated_at_column();
+for each row execute function public.set_project_invoice_updated_at();
 
 drop trigger if exists update_project_inquiry_billing_profiles_updated_at on public.project_inquiry_billing_profiles;
 create trigger update_project_inquiry_billing_profiles_updated_at
 before update on public.project_inquiry_billing_profiles
-for each row execute function public.update_updated_at_column();
+for each row execute function public.set_project_invoice_updated_at();
 
 drop trigger if exists update_project_invoices_updated_at on public.project_invoices;
 create trigger update_project_invoices_updated_at
 before update on public.project_invoices
-for each row execute function public.update_updated_at_column();
+for each row execute function public.set_project_invoice_updated_at();
 
 drop trigger if exists update_project_invoice_reminders_updated_at on public.project_invoice_reminder_drafts;
 create trigger update_project_invoice_reminders_updated_at
 before update on public.project_invoice_reminder_drafts
-for each row execute function public.update_updated_at_column();
+for each row execute function public.set_project_invoice_updated_at();
+
+-- These functions are trigger-only; do not expose direct execution to API roles.
+revoke all on function public.assign_project_invoice_number() from public, anon, authenticated;
+revoke all on function public.set_project_invoice_updated_at() from public, anon, authenticated;
 
 alter table public.project_invoice_settings enable row level security;
 alter table public.project_inquiry_billing_profiles enable row level security;
@@ -236,10 +263,6 @@ drop policy if exists project_invoice_audit_log_admin_insert on public.project_i
 create policy project_invoice_audit_log_admin_insert on public.project_invoice_audit_log
 for insert to authenticated
 with check (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
-
-insert into storage.buckets (id, name, public)
-values ('invoice-assets', 'invoice-assets', true)
-on conflict (id) do update set public = true;
 
 drop policy if exists invoice_assets_admin_insert on storage.objects;
 create policy invoice_assets_admin_insert on storage.objects
