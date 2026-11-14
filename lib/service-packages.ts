@@ -88,20 +88,20 @@ export const servicePackages: ServicePackage[] = [
   {
     id: "ai-animation",
     option: "Layanan Tambahan",
-    title: "AI Interior Animation",
-    label: "Animasi berbasis AI",
+    title: "Render Animation",
+    label: "Animasi dari Gambar Render",
     rate: 0,
     minimumFee: 250000,
     description:
-      "Mengubah gambar render interior menjadi video animasi menggunakan AI Google Flow, untuk presentasi, portofolio, atau promosi. Gambar dapat disediakan klien.",
+      "Mengubah gambar render interior maupun eksterior menjadi video animasi untuk presentasi desain, portofolio, atau promosi. Gambar dapat dibuat oleh Eryawan Agung maupun disediakan klien, termasuk hasil desain dari desainer lain.",
     deliverables: [
       "Video final MP4 Full HD",
       "Dua kali revisi ringan sesuai lingkup yang disepakati",
-      "Dapat menggunakan render buatan Eryawan Agung atau render milik klien",
+      "Dapat menggunakan render interior atau eksterior buatan Eryawan Agung maupun milik klien",
     ],
     exclusions: [
       "Harga berdasarkan durasi video final, bukan jumlah gambar render.",
-      "Pembuatan model 3D dan render ulang tidak termasuk.",
+      "Pembuatan model 3D dan pembuatan ulang gambar render tidak termasuk.",
       "Durasi di atas 60 detik memerlukan penawaran khusus.",
     ],
     renderLimit: null,
