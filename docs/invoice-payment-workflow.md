@@ -28,14 +28,18 @@ Fitur tersedia di halaman detail setiap inquiry melalui Panel Inquiry.
 - Tombol WhatsApp/email hanya membuka aplikasi dengan isi pesan yang telah disiapkan. Admin harus melampirkan PDF invoice secara manual jika diperlukan.
 - Tidak ada pengiriman invoice atau pengingat otomatis.
 - Tidak ada pengingat yang berjalan berdasarkan jadwal otomatis; admin memilih dan membuat draf saat diperlukan.
-- QRIS yang diunggah disimpan pada bucket publik agar gambar dapat tampil pada invoice klien. Unggah hanya QRIS resmi yang memang boleh dibagikan kepada pembayar.
+- QRIS disimpan pada bucket publik `invoice-assets` agar gambar tampil pada invoice yang dibagikan kepada klien. Bucket dibuat publik hanya jika belum ada; bila bucket bernama sama sudah ada tetapi privat, migrasi berhenti dan tidak mengubah visibilitas bucket tersebut. Tinjau bucket secara manual sebelum menjalankan ulang migrasi. Unggah hanya QRIS resmi yang memang boleh dibagikan kepada pembayar.
+- Data invoice, pembayaran, pengingat, dan audit log dilindungi dari penghapusan berantai melalui relasi data. Invoice yang sudah memiliki riwayat harus dibatalkan, bukan dihapus.
+- Migrasi memakai fungsi timestamp khusus invoice agar tidak mengganti fungsi umum yang digunakan tabel lain.
 - Invoice lama menyimpan salinan identitas dan path QRIS saat invoice disetujui, sehingga perubahan pengaturan tidak mengubah invoice yang sudah disetujui.
 
 ## Checklist penerapan
 
-1. Tinjau dan merge PR terlebih dahulu.
-2. Jalankan migrasi \`supabase/migrations/20261114130000_create_invoice_payment_workflow.sql\` pada database Supabase yang dituju.
-3. Pastikan migrasi berhasil sebelum menguji halaman invoice.
-4. Isi identitas penagih dan unggah QRIS resmi melalui Panel Inquiry.
-5. Uji alur dengan inquiry uji dan nominal kecil; jangan mengirim invoice nyata sebelum detail dan tampilan PDF diperiksa.
-6. Jangan menjalankan pengiriman nyata saat pengujian awal.
+1. Tinjau PR dan pastikan pemeriksaan otomatis lulus sebelum merge.
+2. Sebelum migrasi Production, pastikan cadangan database terbaru tersedia dan dapat dipulihkan.
+3. Jalankan migrasi `supabase/migrations/20261114130000_create_invoice_payment_workflow.sql` hanya pada database Supabase yang sudah dipastikan benar.
+4. Jika bucket `invoice-assets` sudah ada tetapi privat, migrasi akan berhenti dan tidak otomatis mengubahnya menjadi publik. Tinjau konfigurasi bucket terlebih dahulu, lalu jalankan ulang hanya setelah masalahnya diselesaikan.
+5. Pastikan migrasi berhasil sebelum menguji halaman invoice.
+6. Isi identitas penagih dan unggah QRIS resmi melalui Panel Inquiry.
+7. Uji alur dengan inquiry uji dan nominal kecil; jangan mengirim invoice nyata sebelum detail dan tampilan PDF diperiksa.
+8. Jangan menjalankan pengiriman nyata saat pengujian awal.
