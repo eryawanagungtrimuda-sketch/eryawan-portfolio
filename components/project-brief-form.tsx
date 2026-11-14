@@ -117,7 +117,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
       ...initialState,
       paketId: selectedPackageId,
       jenisKebutuhan: selectedPackageId ? "Proyek Desain" : "",
-      jenisProyek: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : selectedPackageId === "ai-animation" ? "Render Animation" : "",
+      jenisProyek: selectedPackageId === "opsi-4" ? "Arsitektur Rumah" : selectedPackageId === "render-animation" ? "Render Animation" : "",
     }),
     [selectedPackageId],
   );
@@ -444,7 +444,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
                   jenisProyek:
                     paketId === "opsi-4"
                       ? "Arsitektur Rumah"
-                      : paketId === "ai-animation"
+                      : paketId === "render-animation"
                         ? "Render Animation"
                         : paketId && ["Arsitektur Rumah", "Render Animation"].includes(form.jenisProyek)
                           ? ""
@@ -524,12 +524,12 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
         {form.jenisKebutuhan === "Proyek Desain" ? (
           <div>
             <label htmlFor="brief-jenis-proyek" className="text-sm text-white/80">
-              {form.paketId === "ai-animation" ? "Jenis layanan *" : "Jenis proyek *"}
+              {form.paketId === "render-animation" ? "Jenis layanan *" : "Jenis proyek *"}
             </label>
             <p id="brief-jenis-proyek-helper" className="mt-1 text-xs leading-5 text-white/45">
               {form.paketId === "opsi-4"
                 ? "Opsi 4 khusus untuk desain arsitektur rumah."
-                : form.paketId === "ai-animation"
+                : form.paketId === "render-animation"
                   ? "Render interior maupun eksterior dapat berasal dari Anda atau desainer lain."
                   : form.paketId
                     ? "Pilih kategori proyek interior yang sesuai."
@@ -546,7 +546,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
               <option value="">Pilih jenis proyek</option>
               {(form.paketId === "opsi-4"
                 ? ["Arsitektur Rumah"]
-                : form.paketId === "ai-animation"
+                : form.paketId === "render-animation"
                   ? ["Render Animation"]
                   : form.paketId
                     ? interiorProjectTypeOptions
