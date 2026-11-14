@@ -7,14 +7,14 @@ import { servicePackages } from "@/lib/service-packages";
 import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "Jasa Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
+  title: "Jasa Desain Interior, Arsitektur & Render Animation | Eryawan Agung",
   description:
-    "Lihat layanan desain interior, arsitektur rumah, dan AI Interior Animation Eryawan Agung beserta lingkup dan harga awal.",
+    "Lihat layanan desain interior, arsitektur rumah, dan Render Animation interior maupun eksterior dari Eryawan Agung beserta lingkup dan harga awal.",
   alternates: { canonical: absoluteUrl("/layanan") },
   openGraph: {
-    title: "Layanan Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
+    title: "Layanan Desain Interior, Arsitektur & Render Animation | Eryawan Agung",
     description:
-      "Pilihan paket desain interior dan arsitektur rumah serta AI Interior Animation dengan lingkup dan harga yang transparan.",
+      "Pilihan paket desain interior dan arsitektur rumah serta Render Animation untuk gambar interior maupun eksterior, dengan lingkup dan harga yang transparan.",
     url: absoluteUrl("/layanan"),
     images: [
       {
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Layanan Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
+    title: "Layanan Desain Interior, Arsitektur & Render Animation | Eryawan Agung",
     description:
-      "Pilihan paket desain interior dan arsitektur rumah serta AI Interior Animation dengan lingkup dan harga yang transparan.",
+      "Pilihan paket desain interior dan arsitektur rumah serta Render Animation untuk gambar interior maupun eksterior, dengan lingkup dan harga yang transparan.",
     images: [absoluteUrl("/opengraph-image")],
   },
 };
@@ -61,7 +61,7 @@ export default function LayananPage() {
             Pilih lingkup desain yang sesuai dengan kebutuhan ruang Anda.
           </h1>
           <p className="mt-5 max-w-3xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
-            Empat paket desain interior dan arsitektur, ditambah layanan AI Interior Animation untuk mengubah gambar render menjadi video. Lingkup dan harga dijelaskan sejak awal agar ekspektasi proyek lebih jelas.
+            Empat paket desain interior dan arsitektur, ditambah layanan Render Animation untuk mengubah gambar render interior maupun eksterior menjadi video. Lingkup dan harga dijelaskan sejak awal agar ekspektasi proyek lebih jelas.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <TrackedLink
@@ -203,13 +203,13 @@ export default function LayananPage() {
           </div>
         </section>
 
-        <section id="ai-interior-animation" aria-labelledby="ai-animation-title" className="mt-12 scroll-mt-6 sm:mt-16">
+        <section id="render-animation" aria-labelledby="render-animation-title" className="mt-12 scroll-mt-6 sm:mt-16">
           <div className="grid gap-6 overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-[radial-gradient(circle_at_88%_12%,rgba(212,175,55,0.12),transparent_34%),linear-gradient(135deg,#11100c,#0b0b0a_56%,#090908)] p-6 sm:p-8 md:grid-cols-[1fr_auto] md:items-center md:p-10">
             <div className="max-w-3xl">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Layanan Tambahan</p>
-              <h2 id="ai-animation-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">AI Interior Animation</h2>
+              <h2 id="render-animation-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">Render Animation</h2>
               <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
-                Mengubah gambar render interior menjadi video animasi menggunakan AI Google Flow. Render dapat berasal dari Eryawan Agung maupun disediakan klien, termasuk hasil desain dari desainer lain.
+                Mengubah gambar render interior maupun eksterior menjadi video animasi untuk presentasi desain, portofolio, atau promosi. Gambar render dapat dibuat oleh Eryawan Agung maupun disediakan klien, termasuk hasil desain dari desainer lain.
               </p>
               <p className="mt-5 font-display text-3xl text-[#F4F1EA]">Mulai Rp250.000</p>
               <p className="mt-2 text-sm leading-6 text-white/50">Harga berdasarkan durasi video final, bukan jumlah gambar render.</p>
@@ -222,18 +222,18 @@ export default function LayananPage() {
                 <li>• Di atas 60 detik: penawaran khusus</li>
               </ul>
               <p className="mt-5 text-xs leading-6 text-white/45">
-                Termasuk dua kali revisi ringan dan video MP4 Full HD. Pembuatan model 3D, render ulang, serta perubahan konsep atau generasi ulang ekstensif tidak termasuk harga dasar. Klien memastikan memiliki hak atau izin untuk menggunakan gambar yang diserahkan.
+                Termasuk video MP4 Full HD dan dua kali revisi ringan sesuai lingkup yang disepakati. Pembuatan model 3D, pembuatan ulang gambar render, perubahan konsep besar, serta produksi ulang ekstensif tidak termasuk harga dasar. Klien memastikan memiliki hak atau izin untuk menggunakan gambar yang diserahkan.
               </p>
             </div>
             <TrackedLink
               href="/mulai-project?paket=ai-animation"
               eventName="cta_click"
-              eventProps={{ source: "layanan_page", label: "ai_animation_diskusikan", content_type: "service_package", href_type: "internal" }}
-              data-cta="layanan-ai-animation-cta"
+              eventProps={{ source: "layanan_page", label: "render_animation_diskusikan", content_type: "service_package", href_type: "internal" }}
+              data-cta="layanan-render-animation-cta"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center text-sm font-bold text-[#080807] transition hover:bg-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
-              aria-label="Diskusikan layanan AI Interior Animation"
+              aria-label="Diskusikan layanan Render Animation"
             >
-              Diskusikan AI Animation <ArrowRight size={16} aria-hidden="true" />
+              Diskusikan Render Animation <ArrowRight size={16} aria-hidden="true" />
             </TrackedLink>
           </div>
         </section>
