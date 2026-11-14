@@ -144,7 +144,7 @@ export default function ProjectBriefForm({ selectedPackageId = "" }: ProjectBrie
 
   const message = useMemo(
     () =>
-      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nArah Kebutuhan: ${form.jenisKebutuhan || "-"}\nJenis Proyek: ${form.jenisProyek || "-"}\nPaket yang Diminati: ${selectedPackageLabel}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
+      `Halo Eryawan, saya ingin memulai percakapan.\n\nNama: ${form.nama || "-"}\nPerusahaan / Brand / Instansi: ${form.perusahaan || "-"}\nEmail: ${form.email || "-"}\nWhatsApp: ${form.whatsapp || "-"}\n\nArah Kebutuhan: ${form.jenisKebutuhan || "-"}\nJenis Proyek: ${form.jenisProyek || "-"}\nPaket yang Diminati: ${selectedPackageLabel}${["opsi-2", "opsi-3", "opsi-4"].includes(form.paketId) ? "\nBonus Paket: 1 video Render Animation gratis (maksimal 60 detik)" : ""}\nLokasi Proyek: ${form.lokasiProject || "-"}\nEstimasi Luas: ${form.estimasiLuas || "-"}\nTahap Saat Ini: ${form.tahapProject || "-"}\nTimeline: ${form.timeline || "-"}\nRange Budget: ${form.budgetRange || "-"}\nStatus File: ${form.statusFile || "-"}\n\nKonteks Kebutuhan:\n${form.kebutuhanUtama || "-"}\n\nSaya ingin dibantu membaca kebutuhan ini dan menentukan langkah awal yang paling tepat.`,
     [form, selectedPackageLabel],
   );
 
