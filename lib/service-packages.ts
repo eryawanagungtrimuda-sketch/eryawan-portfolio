@@ -1,4 +1,4 @@
-export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4";
+export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4" | "ai-animation";
 
 export type ServicePackage = {
   id: ServicePackageId;
@@ -11,6 +11,8 @@ export type ServicePackage = {
   deliverables: string[];
   exclusions: string[];
   renderLimit: number | null;
+  pricingModel?: "area" | "duration";
+  priceLabel?: string;
 };
 
 export const servicePackages: ServicePackage[] = [
@@ -82,5 +84,28 @@ export const servicePackages: ServicePackage[] = [
       "File AutoCAD (.dwg/.dxf) tidak disediakan.",
     ],
     renderLimit: 10,
+  },
+  {
+    id: "ai-animation",
+    option: "Layanan Tambahan",
+    title: "AI Interior Animation",
+    label: "Animasi berbasis AI",
+    rate: 0,
+    minimumFee: 250000,
+    description:
+      "Mengubah gambar render interior menjadi video animasi menggunakan AI Google Flow, untuk presentasi, portofolio, atau promosi. Gambar dapat disediakan klien.",
+    deliverables: [
+      "Video final MP4 Full HD",
+      "Dua kali revisi ringan sesuai lingkup yang disepakati",
+      "Dapat menggunakan render buatan Eryawan Agung atau render milik klien",
+    ],
+    exclusions: [
+      "Harga berdasarkan durasi video final, bukan jumlah gambar render.",
+      "Pembuatan model 3D dan render ulang tidak termasuk.",
+      "Durasi di atas 60 detik memerlukan penawaran khusus.",
+    ],
+    renderLimit: null,
+    pricingModel: "duration",
+    priceLabel: "Mulai Rp250.000",
   },
 ];
