@@ -41,7 +41,7 @@ export const servicePackages: ServicePackage[] = [
     minimumFee: 3000000,
     description:
       "Untuk memvisualisasikan bentuk ruang, komposisi, dan suasana desain melalui model 3D serta gambar render.",
-    deliverables: ["Pemodelan 3D", "Bonus: 1 video Render Animation gratis (maksimal 60 detik)"],
+    deliverables: ["Pemodelan 3D", "Free: 1 video Render Animation (maksimal 60 detik)"],
     exclusions: ["Tidak termasuk gambar kerja."],
     renderLimit: 10,
   },
@@ -58,7 +58,7 @@ export const servicePackages: ServicePackage[] = [
       "Gambar layout interior",
       "Pemodelan 3D",
       "Gambar kerja interior dalam format PDF",
-      "Bonus: 1 video Render Animation gratis (maksimal 60 detik)",
+      "Free: 1 video Render Animation (maksimal 60 detik)",
     ],
     exclusions: [
       "File sumber SketchUp (.skp) dan SketchUp LayOut (.layout) tidak termasuk paket standar.",
@@ -79,7 +79,7 @@ export const servicePackages: ServicePackage[] = [
       "Layout/denah arsitektur",
       "Pemodelan 3D",
       "Gambar kerja arsitektur dalam format PDF",
-      "Bonus: 1 video Render Animation gratis (maksimal 60 detik)",
+      "Free: 1 video Render Animation (maksimal 60 detik)",
     ],
     exclusions: [
       "File sumber SketchUp (.skp) dan SketchUp LayOut (.layout) tidak termasuk paket standar.",
