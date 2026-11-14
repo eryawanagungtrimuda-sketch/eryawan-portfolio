@@ -7,9 +7,9 @@ import { servicePackages } from "@/lib/service-packages";
 import { absoluteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "Paket Jasa Desain Interior & Arsitektur | Eryawan Agung",
+  title: "Jasa Desain Interior, Arsitektur & AI Animation | Eryawan Agung",
   description:
-    "Lihat paket jasa desain interior dan arsitektur rumah Eryawan Agung, lingkup pekerjaan, tarif per m², minimum biaya, dan estimasi biaya awal.",
+    "Lihat layanan desain interior, arsitektur rumah, dan AI Interior Animation Eryawan Agung beserta lingkup dan harga awal.",
   alternates: { canonical: absoluteUrl("/layanan") },
   openGraph: {
     title: "Paket Jasa Desain Interior & Arsitektur | Eryawan Agung",
@@ -111,7 +111,7 @@ export default function LayananPage() {
               Pilihan Layanan
             </p>
             <h2 id="paket-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">
-              Empat paket, lingkup yang jelas.
+              Empat paket desain, lingkup yang jelas.
             </h2>
             <p className="mt-4 text-sm leading-7 text-white/58 sm:text-base">
               Pilih berdasarkan keluaran yang Anda butuhkan. Jika masih ragu,
@@ -121,7 +121,7 @@ export default function LayananPage() {
           </div>
 
           <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {servicePackages.map((item) => (
+            {servicePackages.filter((item) => item.pricingModel !== "duration").map((item) => (
               <article
                 key={item.id}
                 className="flex min-w-0 flex-col rounded-[24px] border border-white/10 bg-gradient-to-b from-[#12110e] to-[#0b0b0a] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.18)] sm:p-6"
@@ -203,6 +203,41 @@ export default function LayananPage() {
                 </div>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section id="ai-interior-animation" aria-labelledby="ai-animation-title" className="mt-12 scroll-mt-6 sm:mt-16">
+          <div className="grid gap-6 overflow-hidden rounded-3xl border border-[#D4AF37]/25 bg-[radial-gradient(circle_at_88%_12%,rgba(212,175,55,0.12),transparent_34%),linear-gradient(135deg,#11100c,#0b0b0a_56%,#090908)] p-6 sm:p-8 md:grid-cols-[1fr_auto] md:items-center md:p-10">
+            <div className="max-w-3xl">
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Layanan Tambahan</p>
+              <h2 id="ai-animation-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">AI Interior Animation</h2>
+              <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
+                Mengubah gambar render interior menjadi video animasi menggunakan AI Google Flow. Render dapat berasal dari Eryawan Agung maupun disediakan klien, termasuk hasil desain dari desainer lain.
+              </p>
+              <p className="mt-5 font-display text-3xl text-[#F4F1EA]">Mulai Rp250.000</p>
+              <p className="mt-2 text-sm leading-6 text-white/50">Harga berdasarkan durasi video final, bukan jumlah gambar render.</p>
+              <ul className="mt-5 grid gap-2 text-sm leading-6 text-white/72 sm:grid-cols-2">
+                <li>• 5–8 detik: Rp250.000</li>
+                <li>• 9–15 detik: Rp600.000</li>
+                <li>• 16–30 detik: Rp1.200.000</li>
+                <li>• 31–45 detik: Rp1.800.000</li>
+                <li>• 46–60 detik: Rp2.400.000</li>
+                <li>• Di atas 60 detik: penawaran khusus</li>
+              </ul>
+              <p className="mt-5 text-xs leading-6 text-white/45">
+                Termasuk dua kali revisi ringan dan video MP4 Full HD. Pembuatan model 3D, render ulang, serta perubahan konsep atau generasi ulang ekstensif tidak termasuk harga dasar. Klien memastikan memiliki hak atau izin untuk menggunakan gambar yang diserahkan.
+              </p>
+            </div>
+            <TrackedLink
+              href="/mulai-project?paket=ai-animation"
+              eventName="cta_click"
+              eventProps={{ source: "layanan_page", label: "ai_animation_diskusikan", content_type: "service_package", href_type: "internal" }}
+              data-cta="layanan-ai-animation-cta"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#D4AF37] bg-[#D4AF37] px-6 py-3 text-center text-sm font-bold text-[#080807] transition hover:bg-[#E2C866] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080807]"
+              aria-label="Diskusikan layanan AI Interior Animation"
+            >
+              Diskusikan AI Animation <ArrowRight size={16} aria-hidden="true" />
+            </TrackedLink>
           </div>
         </section>
 
