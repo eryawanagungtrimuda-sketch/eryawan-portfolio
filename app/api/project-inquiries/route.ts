@@ -106,8 +106,8 @@ export async function POST(request: Request) {
   if (jenisKebutuhan !== 'Proyek Desain' && jenisProyek) {
     return NextResponse.json({ error: 'Jenis proyek hanya berlaku untuk kebutuhan Proyek Desain.' }, { status: 400 });
   }
-  if (selectedPackage?.id === 'ai-animation' && jenisProyek !== 'AI Interior Animation') {
-    return NextResponse.json({ error: 'Layanan AI Interior Animation harus dipilih sebagai jenis layanan.' }, { status: 400 });
+  if (selectedPackage?.id === 'ai-animation' && jenisProyek !== 'Render Animation') {
+    return NextResponse.json({ error: 'Layanan Render Animation harus dipilih sebagai jenis layanan.' }, { status: 400 });
   }
   if (selectedPackage?.id === 'opsi-4' && jenisProyek !== 'Arsitektur Rumah') {
     return NextResponse.json({ error: 'Opsi 4 hanya berlaku untuk Arsitektur Rumah.' }, { status: 400 });
