@@ -1,4 +1,4 @@
-export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4" | "ai-animation";
+export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4" | "render-animation";
 
 export type ServicePackage = {
   id: ServicePackageId;
@@ -86,7 +86,7 @@ export const servicePackages: ServicePackage[] = [
     renderLimit: 10,
   },
   {
-    id: "ai-animation",
+    id: "render-animation",
     option: "Layanan Tambahan",
     title: "Render Animation",
     label: "Animasi dari Gambar Render",
