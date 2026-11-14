@@ -113,7 +113,7 @@ Data inquiry:
 - Jenis kebutuhan: ${safeValue(data.jenis_kebutuhan)}
 - Jenis proyek: ${safeValue(data.jenis_proyek)}
 - Paket yang diminati: ${selectedPackageLabel}
-- Catatan layanan: ${data.paket_id === "ai-animation" ? "Render Animation menggunakan gambar render interior maupun eksterior yang disediakan klien atau dibuat Eryawan Agung. Harga mengikuti durasi video final: 5–8 detik Rp250.000; 9–15 detik Rp600.000; 16–30 detik Rp1.200.000; 31–45 detik Rp1.800.000; 46–60 detik Rp2.400.000; di atas 60 detik perlu penawaran khusus. Jangan menganggap pembuatan model 3D atau pembuatan ulang gambar render termasuk." : "Ikuti lingkup paket yang dipilih; jangan mengarang harga atau keluaran."}
+- Catatan layanan: ${data.paket_id === "render-animation" ? "Render Animation menggunakan gambar render interior maupun eksterior yang disediakan klien atau dibuat Eryawan Agung. Harga mengikuti durasi video final: 5–8 detik Rp250.000; 9–15 detik Rp600.000; 16–30 detik Rp1.200.000; 31–45 detik Rp1.800.000; 46–60 detik Rp2.400.000; di atas 60 detik perlu penawaran khusus. Jangan menganggap pembuatan model 3D atau pembuatan ulang gambar render termasuk." : "Ikuti lingkup paket yang dipilih; jangan mengarang harga atau keluaran."}
 - Lokasi project: ${safeValue(data.lokasi_project)}
 - Estimasi luas: ${safeValue(data.estimasi_luas)}
 - Tahap project: ${safeValue(data.tahap_project)}
