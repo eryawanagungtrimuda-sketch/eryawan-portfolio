@@ -209,7 +209,7 @@ export default function LayananPage() {
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-[#D4AF37]">Layanan Tambahan</p>
               <h2 id="render-animation-title" className="font-display mt-3 text-3xl leading-tight tracking-[-0.025em] text-[#F4F1EA] sm:text-4xl">Render Animation</h2>
               <p className="mt-4 text-sm leading-7 text-white/65 sm:text-base">
-                Mengubah gambar render interior maupun eksterior menjadi video animasi untuk presentasi desain, portofolio, atau promosi. Gambar render dapat dibuat oleh Eryawan Agung maupun disediakan klien, termasuk hasil desain dari desainer lain.
+                Mengubah gambar render interior maupun eksterior menjadi video animasi untuk presentasi desain, portofolio, atau promosi. Hasil render dapat dibuat oleh Eryawan Agung maupun dari klien.
               </p>
               <p className="mt-5 font-display text-3xl text-[#F4F1EA]">Mulai Rp250.000</p>
               <p className="mt-2 text-sm leading-6 text-white/50">Harga berdasarkan durasi video final, bukan jumlah gambar render.</p>
@@ -221,6 +221,9 @@ export default function LayananPage() {
                 <li>• 46–60 detik: Rp2.400.000</li>
                 <li>• Di atas 60 detik: penawaran khusus</li>
               </ul>
+              <p className="mt-5 rounded-xl border border-[#D4AF37]/20 bg-[#D4AF37]/[0.06] px-4 py-3 text-sm leading-6 text-[#F4F1EA]/80">
+                Bonus Opsi 2–4: 1 video Render Animation gratis dengan durasi maksimal 60 detik. Jika memesan Render Animation tanpa Opsi 2–4, tarif layanan mandiri di atas berlaku.
+              </p>
               <p className="mt-5 text-xs leading-6 text-white/45">
                 Termasuk video MP4 Full HD dan dua kali revisi ringan sesuai lingkup yang disepakati. Pembuatan model 3D, pembuatan ulang gambar render, perubahan konsep besar, serta produksi ulang ekstensif tidak termasuk harga dasar. Klien memastikan memiliki hak atau izin untuk menggunakan gambar yang diserahkan.
               </p>
@@ -263,11 +266,11 @@ export default function LayananPage() {
             <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6">
               <h3 className="text-sm font-semibold text-white/88">Render dan perubahan tambahan</h3>
               <p className="mt-3 text-sm leading-7 text-white/60">
-                Opsi 2–4 mencakup maksimal 10 view render; jumlah aktual
-                mengikuti kebutuhan dan kompleksitas proyek. Render tambahan
-                dikenakan Rp300.000 per view apabila menggunakan model yang
-                sudah ada tanpa pemodelan atau perubahan besar. Perubahan
-                lingkup besar ditawarkan terpisah.
+                Opsi 2–4 mencakup maksimal 10 view render dan bonus 1 video
+                Render Animation gratis dengan durasi maksimal 60 detik.
+                Render tambahan dikenakan Rp300.000 per view apabila
+                menggunakan model yang sudah ada tanpa pemodelan atau
+                perubahan besar. Perubahan lingkup besar ditawarkan terpisah.
               </p>
             </article>
             <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6">
