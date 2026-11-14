@@ -1,4 +1,4 @@
-export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4";
+export type ServicePackageId = "opsi-1" | "opsi-2" | "opsi-3" | "opsi-4" | "render-animation";
 
 export type ServicePackage = {
   id: ServicePackageId;
@@ -11,6 +11,8 @@ export type ServicePackage = {
   deliverables: string[];
   exclusions: string[];
   renderLimit: number | null;
+  pricingModel?: "area" | "duration";
+  priceLabel?: string;
 };
 
 export const servicePackages: ServicePackage[] = [
@@ -39,7 +41,7 @@ export const servicePackages: ServicePackage[] = [
     minimumFee: 3000000,
     description:
       "Untuk memvisualisasikan bentuk ruang, komposisi, dan suasana desain melalui model 3D serta gambar render.",
-    deliverables: ["Pemodelan 3D"],
+    deliverables: ["Pemodelan 3D", "Free: 1 video Render Animation (maksimal 60 detik)"],
     exclusions: ["Tidak termasuk gambar kerja."],
     renderLimit: 10,
   },
@@ -56,6 +58,7 @@ export const servicePackages: ServicePackage[] = [
       "Gambar layout interior",
       "Pemodelan 3D",
       "Gambar kerja interior dalam format PDF",
+      "Free: 1 video Render Animation (maksimal 60 detik)",
     ],
     exclusions: [
       "File sumber SketchUp (.skp) dan SketchUp LayOut (.layout) tidak termasuk paket standar.",
@@ -76,11 +79,35 @@ export const servicePackages: ServicePackage[] = [
       "Layout/denah arsitektur",
       "Pemodelan 3D",
       "Gambar kerja arsitektur dalam format PDF",
+      "Free: 1 video Render Animation (maksimal 60 detik)",
     ],
     exclusions: [
       "File sumber SketchUp (.skp) dan SketchUp LayOut (.layout) tidak termasuk paket standar.",
       "File AutoCAD (.dwg/.dxf) tidak disediakan.",
     ],
     renderLimit: 10,
+  },
+  {
+    id: "render-animation",
+    option: "Layanan Tambahan",
+    title: "Render Animation",
+    label: "Animasi dari Gambar Render",
+    rate: 0,
+    minimumFee: 250000,
+    description:
+      "Mengubah gambar render interior maupun eksterior menjadi video animasi untuk presentasi desain, portofolio, atau promosi. Hasil render dapat dibuat oleh Eryawan Agung maupun dari klien.",
+    deliverables: [
+      "Video final MP4 Full HD",
+      "Dua kali revisi ringan sesuai lingkup yang disepakati",
+      "Dapat menggunakan render interior atau eksterior buatan Eryawan Agung maupun milik klien",
+    ],
+    exclusions: [
+      "Harga berdasarkan durasi video final, bukan jumlah gambar render.",
+      "Pembuatan model 3D dan pembuatan ulang gambar render tidak termasuk.",
+      "Durasi di atas 60 detik memerlukan penawaran khusus.",
+    ],
+    renderLimit: null,
+    pricingModel: "duration",
+    priceLabel: "Mulai Rp250.000",
   },
 ];
