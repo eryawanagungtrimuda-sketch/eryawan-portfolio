@@ -32,18 +32,20 @@ Fitur tersedia di halaman detail setiap inquiry melalui Panel Inquiry.
 - Data invoice, pembayaran, pengingat, dan audit log dilindungi dari penghapusan berantai melalui relasi data. Invoice yang sudah memiliki riwayat harus dibatalkan, bukan dihapus.
 - Migrasi memakai fungsi timestamp khusus invoice agar tidak mengganti fungsi umum yang digunakan tabel lain.
 - Invoice lama menyimpan salinan identitas dan path QRIS saat invoice disetujui, sehingga perubahan pengaturan tidak mengubah invoice yang sudah disetujui.
-- Pencatatan pembayaran dilakukan melalui transaksi database yang mengunci invoice saat menghitung sisa tagihan, sehingga permintaan bersamaan tidak dapat mencatat pembayaran melebihi sisa tagihan.
-- Persetujuan dan penandaan terkirim untuk pengingat memeriksa kembali status invoice dan total pembayaran di dalam transaksi yang sama.
-- Audit invoice, pembayaran, dan perubahan status pengingat ditulis oleh trigger database dalam transaksi yang sama. Jika pencatatan audit gagal, perubahan terkait ikut dibatalkan.
+- Pembuatan invoice, pencatatan pembayaran, pembuatan pengingat, dan perubahan status dijalankan melalui RPC database yang memeriksa JWT admin serta mengunci baris invoice/biaya yang relevan.
+- Role API tidak dapat menulis langsung ke tabel invoice, pembayaran, pengingat, atau audit log; operasi tulis workflow harus melalui RPC tervalidasi.
+- Nominal invoice harus sesuai termin 50% / 30% / sisa 20%. Migrasi berhenti jika mendeteksi data lama yang tidak konsisten agar dapat direkonsiliasi secara manual.
+- Perubahan total biaya ditolak ketika masih ada invoice aktif untuk inquiry tersebut.
+- Audit invoice, pembayaran, dan perubahan pengingat ditulis oleh trigger database dalam transaksi yang sama. Jika pencatatan audit gagal, perubahan terkait ikut dibatalkan.
 
 
 ## Checklist penerapan
 
 1. Tinjau PR dan pastikan pemeriksaan otomatis lulus sebelum merge.
-2. Sebelum migrasi Production, pastikan cadangan database terbaru tersedia dan dapat dipulihkan.
-3. Jalankan migrasi `supabase/migrations/20261114130000_create_invoice_payment_workflow.sql`, lalu `supabase/migrations/20261118110000_harden_invoice_payment_workflow.sql`, hanya pada database Supabase yang sudah dipastikan benar dan setelah cadangan diperiksa.
-4. Jika bucket `invoice-assets` sudah ada tetapi privat, migrasi akan berhenti dan tidak otomatis mengubahnya menjadi publik. Tinjau konfigurasi bucket terlebih dahulu, lalu jalankan ulang hanya setelah masalahnya diselesaikan.
-5. Pastikan migrasi berhasil sebelum menguji halaman invoice.
-6. Isi identitas penagih dan unggah QRIS resmi melalui Panel Inquiry.
-7. Uji alur dengan inquiry uji dan nominal kecil; jangan mengirim invoice nyata sebelum detail dan tampilan PDF diperiksa.
-8. Jangan menjalankan pengiriman nyata saat pengujian awal.
+2. Jalankan kedua migrasi berurutan terlebih dahulu pada database staging/branch terpisah, bukan Production. Pastikan target database benar sebelum menjalankan perintah apa pun.
+3. Jika migrasi berhenti karena data lama tidak konsisten atau bucket `invoice-assets` sudah ada tetapi privat, jangan menghapus pemeriksaan atau memaksa perubahan. Tinjau dan rekonsiliasi penyebabnya secara manual.
+4. Uji pembuatan invoice, tiga termin, persetujuan/pengiriman, pembayaran parsial/lunas, pengingat, audit log, dan akses non-admin pada staging.
+5. Buat cadangan Production terbaru dan lakukan uji restore ke database terpisah sebelum meminta persetujuan penerapan Production.
+6. Setelah staging lulus, backup/restore tervalidasi, dan persetujuan eksplisit diberikan, jalankan migrasi pertama lalu kedua pada database Production yang sudah diverifikasi.
+7. Isi identitas penagih dan unggah QRIS resmi melalui Panel Inquiry setelah migrasi berhasil.
+8. Jangan mengirim invoice atau pengingat nyata saat pengujian awal.
