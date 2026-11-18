@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { isAllowedAdminEmail } from '@/lib/admin-auth';
 
 export async function getAdminRequestContext(request: Request) {
@@ -22,18 +22,3 @@ export async function getAdminRequestContext(request: Request) {
   return { supabase, email: data.user.email || '' };
 }
 
-export async function writeInvoiceAudit(
-  supabase: SupabaseClient,
-  invoiceId: string,
-  eventKey: string,
-  actorEmail: string,
-  metadata: Record<string, unknown> = {},
-) {
-  const { error } = await supabase.from('project_invoice_audit_log').insert({
-    invoice_id: invoiceId,
-    event_key: eventKey,
-    actor_email: actorEmail,
-    metadata,
-  });
-  if (error) console.warn('[invoice-audit] Could not write audit event', { eventKey, code: error.code });
-}
