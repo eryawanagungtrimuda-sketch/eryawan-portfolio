@@ -1,6 +1,86 @@
 -- Keep invoice payment, reminder transitions, and their audit entries atomic.
 -- This migration is additive; it does not run until explicitly applied to a database.
 
+-- Preflight legacy rows and enforce installment math at the database boundary.
+-- Fail closed if existing records need manual reconciliation before hardening.
+do $invoice_integrity_preflight$
+begin
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    where invoice_row.amount_due <> case invoice_row.installment_stage
+      when 'dp' then round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
+      when 'progress' then round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
+      when 'final' then invoice_row.total_project_fee
+        - round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
+        - round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
+    end
+  ) then
+    raise exception 'Invoice amounts do not match their installment percentages. Reconcile existing invoices before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoice_payments as payment_row
+    join public.project_invoices as invoice_row on invoice_row.id = payment_row.invoice_id
+    group by payment_row.invoice_id, invoice_row.amount_due
+    having sum(payment_row.amount::numeric) > invoice_row.amount_due::numeric
+  ) then
+    raise exception 'Existing payments exceed an invoice balance. Reconcile payment records before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    left join public.project_inquiry_billing_profiles as profile_row
+      on profile_row.inquiry_id = invoice_row.inquiry_id
+    where invoice_row.invoice_status <> 'cancelled'
+      and (
+        profile_row.inquiry_id is null
+        or invoice_row.total_project_fee <> profile_row.agreed_total_fee
+      )
+  ) then
+    raise exception 'An active invoice differs from its agreed billing profile. Reconcile the fee before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    left join (
+      select payment_row.invoice_id, sum(payment_row.amount::numeric) as paid_total
+      from public.project_invoice_payments as payment_row
+      group by payment_row.invoice_id
+    ) as payment_totals on payment_totals.invoice_id = invoice_row.id
+    where invoice_row.payment_status <> case
+      when coalesce(payment_totals.paid_total, 0) >= invoice_row.amount_due then 'paid'
+      when coalesce(payment_totals.paid_total, 0) > 0 then 'partial'
+      else 'unpaid'
+    end
+  ) then
+    raise exception 'Invoice payment_status does not match its payment history. Reconcile statuses before applying this migration.';
+  end if;
+
+  if not exists (
+    select 1
+    from pg_catalog.pg_constraint
+    where conrelid = 'public.project_invoices'::regclass
+      and conname = 'project_invoices_amount_due_matches_stage'
+  ) then
+    alter table public.project_invoices
+      add constraint project_invoices_amount_due_matches_stage
+      check (
+        amount_due = case installment_stage
+          when 'dp' then round(total_project_fee::numeric * 50 / 100)::bigint
+          when 'progress' then round(total_project_fee::numeric * 30 / 100)::bigint
+          when 'final' then total_project_fee
+            - round(total_project_fee::numeric * 50 / 100)::bigint
+            - round(total_project_fee::numeric * 30 / 100)::bigint
+        end
+      );
+  end if;
+end;
+$invoice_integrity_preflight$;
+
 create or replace function public.record_project_invoice_payment(
   p_invoice_id uuid,
   p_amount bigint,
@@ -805,82 +885,7 @@ when (
 )
 execute function public.audit_project_invoice_reminder_row();
 
--- Preflight legacy rows and enforce installment math at the database boundary.
--- Fail closed if existing records need manual reconciliation before hardening.
-do $invoice_integrity_preflight$
-begin
-  if exists (
-    select 1
-    from public.project_invoices as invoice_row
-    where invoice_row.amount_due <> case invoice_row.installment_stage
-      when 'dp' then round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
-      when 'progress' then round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
-      when 'final' then invoice_row.total_project_fee
-        - round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
-        - round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
-    end
-  ) then
-    raise exception 'Invoice amounts do not match their installment percentages. Reconcile existing invoices before applying this migration.';
-  end if;
 
-  if exists (
-    select 1
-    from public.project_invoice_payments as payment_row
-    join public.project_invoices as invoice_row on invoice_row.id = payment_row.invoice_id
-    group by payment_row.invoice_id, invoice_row.amount_due
-    having sum(payment_row.amount::numeric) > invoice_row.amount_due::numeric
-  ) then
-    raise exception 'Existing payments exceed an invoice balance. Reconcile payment records before applying this migration.';
-  end if;
-
-  if exists (
-    select 1
-    from public.project_invoices as invoice_row
-    join public.project_inquiry_billing_profiles as profile_row
-      on profile_row.inquiry_id = invoice_row.inquiry_id
-    where invoice_row.invoice_status <> 'cancelled'
-      and invoice_row.total_project_fee <> profile_row.agreed_total_fee
-  ) then
-    raise exception 'An active invoice differs from its agreed billing profile. Reconcile the fee before applying this migration.';
-  end if;
-
-  if exists (
-    select 1
-    from public.project_invoices as invoice_row
-    left join (
-      select payment_row.invoice_id, sum(payment_row.amount::numeric) as paid_total
-      from public.project_invoice_payments as payment_row
-      group by payment_row.invoice_id
-    ) as payment_totals on payment_totals.invoice_id = invoice_row.id
-    where invoice_row.payment_status <> case
-      when coalesce(payment_totals.paid_total, 0) >= invoice_row.amount_due then 'paid'
-      when coalesce(payment_totals.paid_total, 0) > 0 then 'partial'
-      else 'unpaid'
-    end
-  ) then
-    raise exception 'Invoice payment_status does not match its payment history. Reconcile statuses before applying this migration.';
-  end if;
-
-  if not exists (
-    select 1
-    from pg_catalog.pg_constraint
-    where conrelid = 'public.project_invoices'::regclass
-      and conname = 'project_invoices_amount_due_matches_stage'
-  ) then
-    alter table public.project_invoices
-      add constraint project_invoices_amount_due_matches_stage
-      check (
-        amount_due = case installment_stage
-          when 'dp' then round(total_project_fee::numeric * 50 / 100)::bigint
-          when 'progress' then round(total_project_fee::numeric * 30 / 100)::bigint
-          when 'final' then total_project_fee
-            - round(total_project_fee::numeric * 50 / 100)::bigint
-            - round(total_project_fee::numeric * 30 / 100)::bigint
-        end
-      );
-  end if;
-end;
-$invoice_integrity_preflight$;
 
 -- RPCs are the only write path for invoice/payment/reminder workflow state.
 revoke all on function public.create_project_invoice(uuid, text, date, date) from public, anon, authenticated;
