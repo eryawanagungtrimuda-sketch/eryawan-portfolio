@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAdminRequestContext, writeInvoiceAudit } from '@/lib/admin-api-auth';
+import { getAdminRequestContext } from '@/lib/admin-api-auth';
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const stageLabels: Record<string, string> = {
@@ -103,12 +103,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ inv
     console.error('[invoice-reminder][POST]', { code: error?.code });
     return NextResponse.json({ error: 'Gagal membuat draf pengingat.' }, { status: 500 });
   }
-
-  await writeInvoiceAudit(auth.supabase, invoiceId, 'reminder_draft_created', auth.email, {
-    reminder_id: reminder.id,
-    channel,
-    reminder_type: reminderType,
-  });
 
   return NextResponse.json({ data: reminder }, { status: 201 });
 }
