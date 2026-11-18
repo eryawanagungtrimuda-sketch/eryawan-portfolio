@@ -555,3 +555,6 @@ grant execute on function public.transition_project_invoice_reminder(uuid, text,
 revoke all on function public.audit_project_invoice_row() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_payment_row() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_reminder_row() from public, anon, authenticated;
+
+-- Refresh PostgREST so the new RPC functions are discoverable after migration.
+notify pgrst, 'reload schema';
