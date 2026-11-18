@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAdminRequestContext } from '@/lib/admin-api-auth';
+import { invoiceRpcErrorResponse } from '@/lib/invoice-rpc-errors';
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const stageLabels: Record<string, string> = {
@@ -59,15 +60,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ inv
   if (invoice.invoice_status !== 'approved' && invoice.invoice_status !== 'sent') {
     return NextResponse.json({ error: 'Invoice harus disetujui sebelum draf pengingat dibuat.' }, { status: 409 });
   }
-  const { data: paymentRows, error: paymentRowsError } = await auth.supabase
-    .from('project_invoice_payments')
-    .select('amount')
-    .eq('invoice_id', invoiceId);
-  if (paymentRowsError) return NextResponse.json({ error: 'Gagal memeriksa status pembayaran.' }, { status: 500 });
-  const paidTotal = (paymentRows || []).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-  if (paidTotal >= Number(invoice.amount_due)) {
-    return NextResponse.json({ error: 'Invoice sudah lunas; pengingat pembayaran tidak diperlukan.' }, { status: 409 });
-  }
   if (channel === 'whatsapp' && !invoice.client_whatsapp_snapshot) {
     return NextResponse.json({ error: 'Nomor WhatsApp klien belum tersedia.' }, { status: 400 });
   }
@@ -85,24 +77,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ inv
     ? 'Halo ' + clientName + ', izin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') sebesar ' + amount + '. Jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee pada invoice. Jika sudah membayar, mohon kabari agar pembayaran dapat kami verifikasi. Terima kasih.'
     : 'Yth. ' + clientName + ',\n\nKami ingin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') sebesar ' + amount + '.\n\nTanggal jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee yang tercantum pada invoice. Jika pembayaran telah dilakukan, mohon abaikan pengingat ini dan informasikan kepada kami agar dapat kami verifikasi.\n\nTerima kasih,\nEryawan Agung';
 
-  const { data: reminder, error } = await auth.supabase
-    .from('project_invoice_reminder_drafts')
-    .insert({
-      invoice_id: invoiceId,
-      channel,
-      reminder_type: reminderType,
-      status: 'draft',
-      subject,
-      message_body: message,
-      created_by: auth.email,
-    })
-    .select('*')
-    .single();
+  const { data, error } = await auth.supabase.rpc('create_project_invoice_reminder', {
+    p_invoice_id: invoiceId,
+    p_channel: channel,
+    p_reminder_type: reminderType,
+    p_subject: subject,
+    p_message_body: message,
+  });
 
-  if (error || !reminder) {
-    console.error('[invoice-reminder][POST]', { code: error?.code });
-    return NextResponse.json({ error: 'Gagal membuat draf pengingat.' }, { status: 500 });
+  if (error) return invoiceRpcErrorResponse(error, 'Gagal membuat draf pengingat.');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return NextResponse.json({ error: 'Respons pembuatan pengingat tidak valid.' }, { status: 500 });
   }
 
-  return NextResponse.json({ data: reminder }, { status: 201 });
+  return NextResponse.json({ data }, { status: 201 });
 }
