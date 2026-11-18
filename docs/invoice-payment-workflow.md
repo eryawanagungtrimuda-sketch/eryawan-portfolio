@@ -32,12 +32,16 @@ Fitur tersedia di halaman detail setiap inquiry melalui Panel Inquiry.
 - Data invoice, pembayaran, pengingat, dan audit log dilindungi dari penghapusan berantai melalui relasi data. Invoice yang sudah memiliki riwayat harus dibatalkan, bukan dihapus.
 - Migrasi memakai fungsi timestamp khusus invoice agar tidak mengganti fungsi umum yang digunakan tabel lain.
 - Invoice lama menyimpan salinan identitas dan path QRIS saat invoice disetujui, sehingga perubahan pengaturan tidak mengubah invoice yang sudah disetujui.
+- Pencatatan pembayaran dilakukan melalui transaksi database yang mengunci invoice saat menghitung sisa tagihan, sehingga permintaan bersamaan tidak dapat mencatat pembayaran melebihi sisa tagihan.
+- Persetujuan dan penandaan terkirim untuk pengingat memeriksa kembali status invoice dan total pembayaran di dalam transaksi yang sama.
+- Audit invoice, pembayaran, dan perubahan status pengingat ditulis oleh trigger database dalam transaksi yang sama. Jika pencatatan audit gagal, perubahan terkait ikut dibatalkan.
+
 
 ## Checklist penerapan
 
 1. Tinjau PR dan pastikan pemeriksaan otomatis lulus sebelum merge.
 2. Sebelum migrasi Production, pastikan cadangan database terbaru tersedia dan dapat dipulihkan.
-3. Jalankan migrasi `supabase/migrations/20261114130000_create_invoice_payment_workflow.sql` hanya pada database Supabase yang sudah dipastikan benar.
+3. Jalankan migrasi `supabase/migrations/20261114130000_create_invoice_payment_workflow.sql`, lalu `supabase/migrations/20261118110000_harden_invoice_payment_workflow.sql`, hanya pada database Supabase yang sudah dipastikan benar dan setelah cadangan diperiksa.
 4. Jika bucket `invoice-assets` sudah ada tetapi privat, migrasi akan berhenti dan tidak otomatis mengubahnya menjadi publik. Tinjau konfigurasi bucket terlebih dahulu, lalu jalankan ulang hanya setelah masalahnya diselesaikan.
 5. Pastikan migrasi berhasil sebelum menguji halaman invoice.
 6. Isi identitas penagih dan unggah QRIS resmi melalui Panel Inquiry.
