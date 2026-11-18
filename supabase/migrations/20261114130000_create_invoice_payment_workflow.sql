@@ -153,7 +153,7 @@ create or replace function public.assign_project_invoice_number()
 returns trigger
 language plpgsql
 security definer
-set search_path = pg_catalog, public
+set search_path = pg_catalog
 as $invoice_number$
 declare
   target_year integer;
