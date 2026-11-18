@@ -361,11 +361,17 @@ security invoker
 set search_path = pg_catalog
 as $guard_billing_fee$
 begin
+  if old.inquiry_id is distinct from new.inquiry_id then
+    raise exception using
+      errcode = 'P0001',
+      message = 'Billing profile tidak dapat dipindahkan ke inquiry lain.';
+  end if;
+
   if old.agreed_total_fee is distinct from new.agreed_total_fee
     and exists (
       select 1
       from public.project_invoices as invoice_row
-      where invoice_row.inquiry_id = new.inquiry_id
+      where invoice_row.inquiry_id = old.inquiry_id
         and invoice_row.invoice_status <> 'cancelled'
     ) then
     raise exception using
@@ -379,7 +385,7 @@ $guard_billing_fee$;
 
 drop trigger if exists guard_project_inquiry_billing_profile_fee on public.project_inquiry_billing_profiles;
 create trigger guard_project_inquiry_billing_profile_fee
-before update of agreed_total_fee on public.project_inquiry_billing_profiles
+before update of inquiry_id, agreed_total_fee on public.project_inquiry_billing_profiles
 for each row execute function public.guard_project_inquiry_billing_profile_fee();
 
 create or replace function public.transition_project_invoice_reminder(
