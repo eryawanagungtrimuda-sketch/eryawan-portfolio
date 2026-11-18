@@ -907,6 +907,9 @@ revoke all on function public.audit_project_invoice_row() from public, anon, aut
 revoke all on function public.audit_project_invoice_payment_row() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_reminder_row() from public, anon, authenticated;
 
+-- Keep the internal invoice-number sequence inaccessible to API roles.
+revoke all on public.project_invoice_number_sequences from public, anon, authenticated;
+
 -- Remove direct REST write access that could bypass the RPC validation.
 revoke all on public.project_invoices from public, anon, authenticated;
 grant select on public.project_invoices to authenticated;
