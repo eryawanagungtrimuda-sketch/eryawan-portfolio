@@ -160,6 +160,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     ? await auth.supabase.from('project_inquiry_billing_profiles').update(values).eq('inquiry_id', id).select('*').single()
     : await auth.supabase.from('project_inquiry_billing_profiles').insert(values).select('*').single();
 
+  if (saved.error?.code === 'P0001') {
+    return NextResponse.json({
+      error: saved.error.message || 'Total biaya tidak dapat diubah setelah invoice aktif dibuat.',
+    }, { status: 409 });
+  }
+
   if (saved.error || !saved.data) {
     console.error('[invoices][PATCH profile]', { code: saved.error?.code });
     return NextResponse.json({ error: 'Gagal menyimpan total biaya proyek.' }, { status: 500 });
