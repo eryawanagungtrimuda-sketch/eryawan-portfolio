@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAdminRequestContext, writeInvoiceAudit } from '@/lib/admin-api-auth';
+import { getAdminRequestContext } from '@/lib/admin-api-auth';
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const stageConfig = {
@@ -247,12 +247,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     }
     return NextResponse.json({ error: 'Gagal membuat draf invoice.' }, { status: 500 });
   }
-
-  await writeInvoiceAudit(auth.supabase, invoice.id, 'invoice_created', auth.email, {
-    stage: typedStage,
-    amount_due: amountDue,
-    invoice_number: invoice.invoice_number,
-  });
 
   return NextResponse.json({ data: invoice }, { status: 201 });
 }
