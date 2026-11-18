@@ -10,7 +10,7 @@ create or replace function public.record_project_invoice_payment(
 )
 returns jsonb
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $record_payment$
 declare
@@ -102,7 +102,7 @@ create or replace function public.transition_project_invoice(
 )
 returns jsonb
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $invoice_transition$
 declare
@@ -228,6 +228,160 @@ begin
 end;
 $invoice_transition$;
 
+create or replace function public.create_project_invoice(
+  p_inquiry_id uuid,
+  p_stage text,
+  p_issue_date date,
+  p_due_date date
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $create_invoice$
+declare
+  v_actor_email text := lower(coalesce(auth.jwt() ->> 'email', ''));
+  v_profile public.project_inquiry_billing_profiles%rowtype;
+  v_inquiry public.project_inquiries%rowtype;
+  v_invoice public.project_invoices%rowtype;
+  v_dp_amount bigint;
+  v_progress_amount bigint;
+  v_amount_due bigint;
+  v_project_label text;
+begin
+  if v_actor_email <> 'eryawanagungtrimuda@gmail.com' then
+    raise exception using errcode = '42501', message = 'Forbidden.';
+  end if;
+
+  if p_stage is null or p_stage not in ('dp', 'progress', 'final') then
+    raise exception using errcode = '22023', message = 'Termin pembayaran tidak valid.';
+  end if;
+
+  if p_issue_date is null or p_due_date is null or p_due_date < p_issue_date then
+    raise exception using errcode = '22023', message = 'Tanggal jatuh tempo harus sama atau setelah tanggal invoice.';
+  end if;
+
+  -- Lock the agreed fee so concurrent invoice creation and fee changes serialize.
+  select profile_row.*
+  into v_profile
+  from public.project_inquiry_billing_profiles as profile_row
+  where profile_row.inquiry_id = p_inquiry_id
+  for update;
+
+  if not found then
+    raise exception using errcode = '22023', message = 'Simpan total biaya yang disepakati sebelum membuat invoice.';
+  end if;
+
+  if v_profile.agreed_total_fee < 100 or v_profile.agreed_total_fee > 1000000000000 then
+    raise exception using errcode = '22023', message = 'Total biaya proyek harus antara Rp100 dan Rp1.000.000.000.000.';
+  end if;
+
+  select inquiry_row.*
+  into v_inquiry
+  from public.project_inquiries as inquiry_row
+  where inquiry_row.id = p_inquiry_id;
+
+  if not found then
+    raise exception using errcode = 'P0002', message = 'Inquiry tidak ditemukan.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    where invoice_row.inquiry_id = p_inquiry_id
+      and invoice_row.installment_stage = p_stage
+      and invoice_row.invoice_status <> 'cancelled'
+  ) then
+    raise exception using errcode = 'P0001', message = 'Invoice untuk termin ini sudah ada. Batalkan invoice lama jika memang perlu membuat pengganti.';
+  end if;
+
+  v_dp_amount := round(v_profile.agreed_total_fee::numeric * 50 / 100)::bigint;
+  v_progress_amount := round(v_profile.agreed_total_fee::numeric * 30 / 100)::bigint;
+  v_amount_due := case p_stage
+    when 'dp' then v_dp_amount
+    when 'progress' then v_progress_amount
+    else v_profile.agreed_total_fee - v_dp_amount - v_progress_amount
+  end;
+
+  v_project_label := coalesce(
+    nullif(
+      concat_ws(
+        ' — ',
+        nullif(btrim(coalesce(v_inquiry.jenis_kebutuhan, '')), ''),
+        nullif(btrim(coalesce(v_inquiry.jenis_proyek, '')), '')
+      ),
+      ''
+    ),
+    'Layanan desain'
+  );
+
+  insert into public.project_invoices (
+    inquiry_id,
+    installment_stage,
+    installment_percentage,
+    total_project_fee,
+    amount_due,
+    issue_date,
+    due_date,
+    invoice_status,
+    payment_status,
+    client_name_snapshot,
+    client_email_snapshot,
+    client_whatsapp_snapshot,
+    project_label_snapshot,
+    created_by
+  )
+  values (
+    p_inquiry_id,
+    p_stage,
+    case p_stage when 'dp' then 50 when 'progress' then 30 else 20 end,
+    v_profile.agreed_total_fee,
+    v_amount_due,
+    p_issue_date,
+    p_due_date,
+    'draft',
+    'unpaid',
+    coalesce(nullif(btrim(coalesce(v_inquiry.nama, '')), ''), 'Calon klien'),
+    nullif(btrim(coalesce(v_inquiry.email, '')), ''),
+    nullif(btrim(coalesce(v_inquiry.whatsapp, '')), ''),
+    v_project_label,
+    v_actor_email
+  )
+  returning *
+  into v_invoice;
+
+  return to_jsonb(v_invoice);
+end;
+$create_invoice$;
+
+create or replace function public.guard_project_inquiry_billing_profile_fee()
+returns trigger
+language plpgsql
+security invoker
+set search_path = pg_catalog
+as $guard_billing_fee$
+begin
+  if old.agreed_total_fee is distinct from new.agreed_total_fee
+    and exists (
+      select 1
+      from public.project_invoices as invoice_row
+      where invoice_row.inquiry_id = new.inquiry_id
+        and invoice_row.invoice_status <> 'cancelled'
+    ) then
+    raise exception using
+      errcode = 'P0001',
+      message = 'Total biaya tidak dapat diubah setelah invoice aktif dibuat.';
+  end if;
+
+  return new;
+end;
+$guard_billing_fee$;
+
+drop trigger if exists guard_project_inquiry_billing_profile_fee on public.project_inquiry_billing_profiles;
+create trigger guard_project_inquiry_billing_profile_fee
+before update of agreed_total_fee on public.project_inquiry_billing_profiles
+for each row execute function public.guard_project_inquiry_billing_profile_fee();
+
 create or replace function public.transition_project_invoice_reminder(
   p_reminder_id uuid,
   p_action text,
@@ -236,7 +390,7 @@ create or replace function public.transition_project_invoice_reminder(
 )
 returns jsonb
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $reminder_transition$
 declare
@@ -367,10 +521,112 @@ begin
 end;
 $reminder_transition$;
 
+create or replace function public.create_project_invoice_reminder(
+  p_invoice_id uuid,
+  p_channel text,
+  p_reminder_type text,
+  p_subject text,
+  p_message_body text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $create_reminder$
+declare
+  v_actor_email text := lower(coalesce(auth.jwt() ->> 'email', ''));
+  v_invoice public.project_invoices%rowtype;
+  v_reminder public.project_invoice_reminder_drafts%rowtype;
+  v_paid_total numeric;
+  v_message_body text;
+  v_subject text;
+begin
+  if v_actor_email <> 'eryawanagungtrimuda@gmail.com' then
+    raise exception using errcode = '42501', message = 'Forbidden.';
+  end if;
+
+  if p_channel is null or p_channel not in ('whatsapp', 'email') then
+    raise exception using errcode = '22023', message = 'Saluran pengingat tidak valid.';
+  end if;
+
+  if p_reminder_type is null or p_reminder_type not in ('h_minus_1', 'due_today', 'overdue') then
+    raise exception using errcode = '22023', message = 'Jenis pengingat tidak valid.';
+  end if;
+
+  v_message_body := left(btrim(coalesce(p_message_body, '')), 4000);
+  if v_message_body = '' then
+    raise exception using errcode = '22023', message = 'Isi pesan pengingat tidak boleh kosong.';
+  end if;
+
+  v_subject := case
+    when p_channel = 'email'
+      then coalesce(nullif(left(btrim(coalesce(p_subject, '')), 200), ''), 'Pengingat pembayaran — Eryawan Agung')
+    else null
+  end;
+
+  -- Serialize reminder creation against payment recording and invoice transitions.
+  select invoice_row.*
+  into v_invoice
+  from public.project_invoices as invoice_row
+  where invoice_row.id = p_invoice_id
+  for update;
+
+  if not found then
+    raise exception using errcode = 'P0002', message = 'Invoice tidak ditemukan.';
+  end if;
+
+  if v_invoice.invoice_status not in ('approved', 'sent') then
+    raise exception using errcode = 'P0001', message = 'Invoice harus disetujui sebelum draf pengingat dibuat.';
+  end if;
+
+  if p_channel = 'whatsapp'
+    and nullif(btrim(coalesce(v_invoice.client_whatsapp_snapshot, '')), '') is null then
+    raise exception using errcode = '22023', message = 'Nomor WhatsApp klien belum tersedia.';
+  end if;
+
+  if p_channel = 'email'
+    and nullif(btrim(coalesce(v_invoice.client_email_snapshot, '')), '') is null then
+    raise exception using errcode = '22023', message = 'Email klien belum tersedia.';
+  end if;
+
+  select coalesce(sum(payment_row.amount), 0)::numeric
+  into v_paid_total
+  from public.project_invoice_payments as payment_row
+  where payment_row.invoice_id = p_invoice_id;
+
+  if v_paid_total >= v_invoice.amount_due then
+    raise exception using errcode = 'P0001', message = 'Invoice sudah lunas; pengingat pembayaran tidak diperlukan.';
+  end if;
+
+  insert into public.project_invoice_reminder_drafts (
+    invoice_id,
+    channel,
+    reminder_type,
+    status,
+    subject,
+    message_body,
+    created_by
+  )
+  values (
+    p_invoice_id,
+    p_channel,
+    p_reminder_type,
+    'draft',
+    v_subject,
+    v_message_body,
+    v_actor_email
+  )
+  returning *
+  into v_reminder;
+
+  return to_jsonb(v_reminder);
+end;
+$create_reminder$;
+
 create or replace function public.audit_project_invoice_row()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $audit_invoice$
 declare
@@ -417,7 +673,7 @@ $audit_invoice$;
 create or replace function public.audit_project_invoice_payment_row()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $audit_payment$
 declare
@@ -467,7 +723,7 @@ $audit_payment$;
 create or replace function public.audit_project_invoice_reminder_row()
 returns trigger
 language plpgsql
-security invoker
+security definer
 set search_path = pg_catalog
 as $audit_reminder$
 declare
@@ -543,18 +799,139 @@ when (
 )
 execute function public.audit_project_invoice_reminder_row();
 
--- Only the authenticated admin can invoke the workflow functions directly.
+-- Preflight legacy rows and enforce installment math at the database boundary.
+-- Fail closed if existing records need manual reconciliation before hardening.
+do $invoice_integrity_preflight$
+begin
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    where invoice_row.amount_due <> case invoice_row.installment_stage
+      when 'dp' then round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
+      when 'progress' then round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
+      when 'final' then invoice_row.total_project_fee
+        - round(invoice_row.total_project_fee::numeric * 50 / 100)::bigint
+        - round(invoice_row.total_project_fee::numeric * 30 / 100)::bigint
+    end
+  ) then
+    raise exception 'Invoice amounts do not match their installment percentages. Reconcile existing invoices before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoice_payments as payment_row
+    join public.project_invoices as invoice_row on invoice_row.id = payment_row.invoice_id
+    group by payment_row.invoice_id, invoice_row.amount_due
+    having sum(payment_row.amount::numeric) > invoice_row.amount_due::numeric
+  ) then
+    raise exception 'Existing payments exceed an invoice balance. Reconcile payment records before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    join public.project_inquiry_billing_profiles as profile_row
+      on profile_row.inquiry_id = invoice_row.inquiry_id
+    where invoice_row.invoice_status <> 'cancelled'
+      and invoice_row.total_project_fee <> profile_row.agreed_total_fee
+  ) then
+    raise exception 'An active invoice differs from its agreed billing profile. Reconcile the fee before applying this migration.';
+  end if;
+
+  if exists (
+    select 1
+    from public.project_invoices as invoice_row
+    left join (
+      select payment_row.invoice_id, sum(payment_row.amount::numeric) as paid_total
+      from public.project_invoice_payments as payment_row
+      group by payment_row.invoice_id
+    ) as payment_totals on payment_totals.invoice_id = invoice_row.id
+    where invoice_row.payment_status <> case
+      when coalesce(payment_totals.paid_total, 0) >= invoice_row.amount_due then 'paid'
+      when coalesce(payment_totals.paid_total, 0) > 0 then 'partial'
+      else 'unpaid'
+    end
+  ) then
+    raise exception 'Invoice payment_status does not match its payment history. Reconcile statuses before applying this migration.';
+  end if;
+
+  if not exists (
+    select 1
+    from pg_catalog.pg_constraint
+    where conrelid = 'public.project_invoices'::regclass
+      and conname = 'project_invoices_amount_due_matches_stage'
+  ) then
+    alter table public.project_invoices
+      add constraint project_invoices_amount_due_matches_stage
+      check (
+        amount_due = case installment_stage
+          when 'dp' then round(total_project_fee::numeric * 50 / 100)::bigint
+          when 'progress' then round(total_project_fee::numeric * 30 / 100)::bigint
+          when 'final' then total_project_fee
+            - round(total_project_fee::numeric * 50 / 100)::bigint
+            - round(total_project_fee::numeric * 30 / 100)::bigint
+        end
+      );
+  end if;
+end;
+$invoice_integrity_preflight$;
+
+-- RPCs are the only write path for invoice/payment/reminder workflow state.
+revoke all on function public.create_project_invoice(uuid, text, date, date) from public, anon, authenticated;
 revoke all on function public.record_project_invoice_payment(uuid, bigint, date, text, text) from public, anon, authenticated;
 revoke all on function public.transition_project_invoice(uuid, text, text) from public, anon, authenticated;
+revoke all on function public.create_project_invoice_reminder(uuid, text, text, text, text) from public, anon, authenticated;
 revoke all on function public.transition_project_invoice_reminder(uuid, text, text, text) from public, anon, authenticated;
+grant execute on function public.create_project_invoice(uuid, text, date, date) to authenticated;
 grant execute on function public.record_project_invoice_payment(uuid, bigint, date, text, text) to authenticated;
 grant execute on function public.transition_project_invoice(uuid, text, text) to authenticated;
+grant execute on function public.create_project_invoice_reminder(uuid, text, text, text, text) to authenticated;
 grant execute on function public.transition_project_invoice_reminder(uuid, text, text, text) to authenticated;
 
 -- Trigger functions are not API entry points.
+revoke all on function public.assign_project_invoice_number() from public, anon, authenticated;
+revoke all on function public.set_project_invoice_updated_at() from public, anon, authenticated;
+revoke all on function public.guard_project_inquiry_billing_profile_fee() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_row() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_payment_row() from public, anon, authenticated;
 revoke all on function public.audit_project_invoice_reminder_row() from public, anon, authenticated;
+
+-- Remove direct REST write access that could bypass the RPC validation.
+revoke all on public.project_invoices from public, anon, authenticated;
+grant select on public.project_invoices to authenticated;
+
+revoke all on public.project_invoice_payments from public, anon, authenticated;
+grant select on public.project_invoice_payments to authenticated;
+
+revoke all on public.project_invoice_reminder_drafts from public, anon, authenticated;
+grant select on public.project_invoice_reminder_drafts to authenticated;
+
+revoke all on public.project_invoice_audit_log from public, anon, authenticated;
+grant select on public.project_invoice_audit_log to authenticated;
+
+drop policy if exists project_invoices_admin_all on public.project_invoices;
+drop policy if exists project_invoices_admin_select on public.project_invoices;
+create policy project_invoices_admin_select on public.project_invoices
+for select to authenticated
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
+
+drop policy if exists project_invoice_payments_admin_all on public.project_invoice_payments;
+drop policy if exists project_invoice_payments_admin_select on public.project_invoice_payments;
+create policy project_invoice_payments_admin_select on public.project_invoice_payments
+for select to authenticated
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
+
+drop policy if exists project_invoice_reminders_admin_all on public.project_invoice_reminder_drafts;
+drop policy if exists project_invoice_reminders_admin_select on public.project_invoice_reminder_drafts;
+create policy project_invoice_reminders_admin_select on public.project_invoice_reminder_drafts
+for select to authenticated
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
+
+drop policy if exists project_invoice_audit_log_admin_select on public.project_invoice_audit_log;
+drop policy if exists project_invoice_audit_log_admin_insert on public.project_invoice_audit_log;
+create policy project_invoice_audit_log_admin_select on public.project_invoice_audit_log
+for select to authenticated
+using (lower(coalesce(auth.jwt() ->> 'email', '')) = 'eryawanagungtrimuda@gmail.com');
 
 -- Refresh PostgREST so the new RPC functions are discoverable after migration.
 notify pgrst, 'reload schema';
