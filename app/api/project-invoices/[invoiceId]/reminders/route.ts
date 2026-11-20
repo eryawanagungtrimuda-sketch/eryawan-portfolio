@@ -14,10 +14,6 @@ const reminderLabels: Record<string, string> = {
   overdue: 'pengingat atas tagihan yang melewati jatuh tempo',
 };
 
-function formatRupiah(value: number) {
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
-}
-
 function formatDate(value: string) {
   return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
     .format(new Date(value + 'T00:00:00Z'));
@@ -68,14 +64,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ inv
   }
 
   const clientName = invoice.client_name_snapshot || 'Bapak/Ibu';
-  const amount = formatRupiah(Number(invoice.amount_due));
   const dueDate = formatDate(invoice.due_date);
   const stage = stageLabels[invoice.installment_stage] || 'termin pembayaran';
   const reminderLabel = reminderLabels[reminderType];
   const subject = channel === 'email' ? 'Pengingat pembayaran ' + invoice.invoice_number + ' — Eryawan Agung' : null;
   const message = channel === 'whatsapp'
-    ? 'Halo ' + clientName + ', izin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') sebesar ' + amount + '. Jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee pada invoice. Jika sudah membayar, mohon kabari agar pembayaran dapat kami verifikasi. Terima kasih.'
-    : 'Yth. ' + clientName + ',\n\nKami ingin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') sebesar ' + amount + '.\n\nTanggal jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee yang tercantum pada invoice. Jika pembayaran telah dilakukan, mohon abaikan pengingat ini dan informasikan kepada kami agar dapat kami verifikasi.\n\nTerima kasih,\nEryawan Agung';
+    ? 'Halo ' + clientName + ', izin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') dengan sisa tagihan sebesar {{SISA_TAGIHAN}}. Jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee pada invoice. Jika sudah membayar, mohon kabari agar pembayaran dapat kami verifikasi. Terima kasih.'
+    : 'Yth. ' + clientName + ',\n\nKami ingin menyampaikan ' + reminderLabel + ' untuk invoice ' + invoice.invoice_number + ' (' + stage + ') dengan sisa tagihan sebesar {{SISA_TAGIHAN}}.\n\nTanggal jatuh tempo: ' + dueDate + '. Pembayaran dapat dilakukan melalui QRIS Shopee yang tercantum pada invoice. Jika pembayaran telah dilakukan, mohon abaikan pengingat ini dan informasikan kepada kami agar dapat kami verifikasi.\n\nTerima kasih,\nEryawan Agung';
 
   const { data, error } = await auth.supabase.rpc('create_project_invoice_reminder', {
     p_invoice_id: invoiceId,
